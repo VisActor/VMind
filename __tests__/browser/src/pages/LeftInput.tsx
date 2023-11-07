@@ -11,8 +11,8 @@ import {
   mockUserInput8,
   carSaleMockData
 } from '../constants/mockData';
-import { excel2csv } from '../../excel';
-import VMind from '../../index';
+import { excel2csv } from '../../../../src/excel';
+import VMind from '../../../../src/index';
 
 const TextArea = Input.TextArea;
 type IPropsType = {
