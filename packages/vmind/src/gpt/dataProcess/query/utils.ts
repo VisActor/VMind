@@ -1,5 +1,5 @@
 import { isString } from 'lodash';
-import { Query } from '../../../calculator';
+import { Query } from '@visactor/calculator';
 import { detectFieldType } from '../../../common/dataProcess/utils';
 import { DataItem, SimpleFieldInfo } from '../../../typings';
 import { ASTParserContext, ASTParserPipe } from './type';

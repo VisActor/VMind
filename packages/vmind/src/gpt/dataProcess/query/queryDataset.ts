@@ -4,7 +4,7 @@ import { mergeMap, parseRespondField, patchQueryInput, preprocessSQL, replaceOpe
 import { parseSqlAST } from './parseSqlAST';
 import { isArray } from 'lodash';
 import { DataQueryResponse, SQLAst } from './type';
-import { Query, query } from '../../../calculator';
+import { Query, query } from '@visactor/calculator';
 import { parseGPTResponse, requestGPT } from '../../utils';
 import { getQueryDatasetPrompt } from '../prompts';
 

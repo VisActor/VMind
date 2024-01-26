@@ -77,7 +77,7 @@
     "json5": "~2.2.3",
     "dayjs": "~1.11.10",
     "js-yaml": "~4.1.0",
-    "ts-pattern": "~5.0.6",
-    "node-sql-parser": "~4.17.0"
+    "node-sql-parser": "~4.17.0",
+    "@visactor/calculator": "workspace:*"
   }
 }

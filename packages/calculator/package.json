@@ -1,0 +1,42 @@
+{
+  "name": "@visactor/calculator",
+  "version": "0.0.0",
+  "description": "SQL-like query executor with DSL",
+  "main": "lib",
+  "module": "es",
+  "types": "es",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./es/index.js",
+      "require": "./lib/index.js"
+    }
+  },
+  "files": [
+    "README.md",
+    "dist",
+    "lib",
+    "es"
+  ],
+  "scripts": {
+    "clean": "rimraf es lib dist build *.tsbuildinfo",
+    "test": "jest --passWithNoTests",
+    "test:coverage": "jest --coverage",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build": "npm-run-all clean --parallel build:esm build:cjs"
+  },
+  "dependencies": {
+    "ts-pattern": "~4.1.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.0",
+    "@types/node": "*",
+    "jest": "^26.0.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.0.0",
+    "ts-node": "10.9.0",
+    "typescript": "4.9.5"
+  }
+}
