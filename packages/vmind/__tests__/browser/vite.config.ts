@@ -3,8 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import libCss from 'vite-plugin-libcss';
 import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
-// https://vitejs.dev/config/
-import pkg from '../../../vchart/package.json';
+
 //import css from 'vite-plugin-css';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -27,8 +26,7 @@ export default defineConfig(({ mode }) => {
       }) as any
     ],
     define: {
-      __DEV__: true,
-      __VERSION__: JSON.stringify(pkg.version)
+      __DEV__: true
     },
     server: {
       host: '0.0.0.0',
@@ -37,8 +35,6 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@visactor/vchart': path.resolve(__dirname, '../../../vchart/src/index.ts'),
-        '@visactor/vutils-extension': path.resolve(__dirname, '../../../vutils-extension/src/index.ts')
         // ...localConf.resolve?.alias
       }
     },
