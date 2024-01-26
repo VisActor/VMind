@@ -1,0 +1,65 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
+  "rushVersion": "5.94.1",
+  "pnpmVersion": "7.32.1",
+  "nodeSupportedVersionRange": ">=14.15.0 <15.0.0 || >=16.13.0 <17.0.0 || >=18.15.0 <19.0.0",
+  "suppressNodeLtsWarning": true,
+  "ensureConsistentVersions": true,
+  "projectFolderMinDepth": 1,
+  "projectFolderMaxDepth": 2,
+  "allowMostlyStandardPackageNames": false,
+  "gitPolicy": {
+    "versionBumpCommitMessage": "Bump versions [skip ci]",
+    "changeLogUpdateCommitMessage": "Update changelogs [skip ci]"
+  },
+  "repository": {
+    "url": "https://github.com/VisActor/VMind",
+    "defaultBranch": "main",
+    "defaultRemote": "origin"
+  },
+  "allowedProjectTags": [
+    "tool",
+    "share",
+    "package",
+    "doc"
+  ],
+  "projects": [
+    {
+      "packageName": "@internal/bundler",
+      "projectFolder": "tools/bundler",
+      "tags": [
+        "tool"
+      ],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@internal/typescript-json-schema",
+      "projectFolder": "tools/typescript-json-schema",
+      "tags": [
+        "tool"
+      ],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@internal/eslint-config",
+      "projectFolder": "share/eslint-config",
+      "tags": [
+        "share"
+      ],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@internal/ts-config",
+      "projectFolder": "share/ts-config",
+      "tags": [
+        "share"
+      ],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@visactor/vmind",
+      "projectFolder": "packages/vmind",
+      "shouldPublish": true
+    }
+  ]
+}

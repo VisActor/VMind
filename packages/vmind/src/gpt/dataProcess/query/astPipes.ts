@@ -10,7 +10,7 @@ import {
   Query,
   WhereCondition,
   WhereFilterNode
-} from '../../../calculator';
+} from '@visactor/calculator';
 import { ASTParserContext, ASTParserPipe, SQLAst } from './type';
 import { checkIsColumnNode, getOriginalString, toFirstUpperCase } from './utils';
 import { SimpleFieldInfo } from '../../../typings';
