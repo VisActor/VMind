@@ -6,7 +6,10 @@
     "baseUrl": "./",
     "rootDir": "./src",
     "outDir": "./esm",
-    "composite": true
+    "composite": true,
+    "paths": {
+      "@visactor/calculator": ["../calculator/src"],
+    }
   },
   "ts-node": {
     "transpileOnly": true,
@@ -16,6 +19,8 @@
   },
   "include": ["src"],
   "references": [
-
+    {
+      "path": "../calculator"
+    }
   ]
 }

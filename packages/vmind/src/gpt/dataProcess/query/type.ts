@@ -1,5 +1,5 @@
 import { Select } from 'node-sql-parser';
-import { Query } from '../../../calculator';
+import { Query } from '@visactor/calculator';
 import { DataItem, SimpleFieldInfo } from '../../../typings';
 
 export type SQLAst = Select;
