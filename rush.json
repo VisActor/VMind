@@ -59,7 +59,10 @@
     {
       "packageName": "@visactor/vmind",
       "projectFolder": "packages/vmind",
-      "shouldPublish": true
+      "shouldPublish": true,
+      "tags": [
+        "package"
+      ]
     }
   ]
 }

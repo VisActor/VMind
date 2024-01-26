@@ -33,6 +33,6 @@ do
   fi
 
   # 其他推送逻辑...
-  node common/scripts/install-run-rush.js test --only tag:package
+  #node common/scripts/install-run-rush.js test --only tag:package
 done
 
