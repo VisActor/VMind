@@ -84,7 +84,6 @@ importers:
       vite-plugin-css: ~1.0.4
       vite-plugin-libcss: ~1.1.1
     dependencies:
-      '@types/js-yaml': 4.0.9
       '@visactor/calculator': link:../calculator
       '@visactor/chart-advisor': 0.1.10
       '@visactor/vdataset': 0.17.4
@@ -107,6 +106,7 @@ importers:
       '@rollup/plugin-dynamic-import-vars': 2.1.2
       '@rushstack/eslint-patch': 1.1.4
       '@types/jest': 26.0.24
+      '@types/js-yaml': 4.0.9
       '@types/lodash': 4.14.182
       '@types/node': 20.11.6
       '@types/react': 18.2.48
@@ -2773,7 +2773,7 @@ packages:
 
   /@types/js-yaml/4.0.9:
     resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
-    dev: false
+    dev: true
 
   /@types/json-schema/7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
