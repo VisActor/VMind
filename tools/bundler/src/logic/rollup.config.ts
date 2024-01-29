@@ -38,13 +38,6 @@ export function getRollupOptions(
     input: entry,
     external: getExternal(rawPackageJson, config.external),
     ...config.rollupOptions,
-    onwarn: function (warning) {
-      // eslint-disable-next-line no-console
-      console.log(warning.code, warning.message);
-      if (warning.code === 'THIS_IS_UNDEFINED' || warning.code === 'SOURCEMAP_ERROR') {
-        return;
-      }
-    },
     plugins: [
       resolve(),
       commonjs(),

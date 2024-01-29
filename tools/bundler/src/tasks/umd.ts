@@ -29,8 +29,13 @@ export async function buildUmd(config: Config, projectRoot: string, rawPackageJs
 
   const rollupOptions = getRollupOptions(projectRoot, entry, rawPackageJson, babelPlugins, { ...config, minify });
   DebugConfig('RollupOptions', JSON.stringify(rollupOptions));
-  const bundle = await rollup(rollupOptions);
-
+  let bundle;
+  try {
+    bundle = await rollup(rollupOptions);
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('error--------', e);
+  }
   const dest = path.resolve(projectRoot, config.outputDir.umd!);
   await generateOutputs(bundle, [
     {
