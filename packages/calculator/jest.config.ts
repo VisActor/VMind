@@ -1,11 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require('path');
-
 module.exports = {
   preset: 'ts-jest',
   runner: 'jest-electron/runner',
   testEnvironment: 'jest-electron/environment',
-  testMatch: ['<rootDir>/__tests__/unit/*.test.(js|ts)'],
+  testMatch: ['<rootDir>/src/**/*.test.(ts|tsx)'],
   silent: true,
   globals: {
     'ts-jest': {
