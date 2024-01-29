@@ -16,12 +16,12 @@ function run() {
   let hotfixType = '';
   const cwd = process.cwd();
   const rushJson = getPackageJson(path.join(__dirname, '../../rush.json'));
-  const package = rushJson.projects.find((project) => project.packageName === '@visactor/vchart');
-  
+  const package = rushJson.projects.find((project) => project.packageName === '@visactor/vmind');
+
   if (!package) {
     return;
   }
-  const pkgJsonPath = path.join( __dirname, '../../', package.projectFolder, 'package.json')
+  const pkgJsonPath = path.join(__dirname, '../../', package.projectFolder, 'package.json')
   const pkgJson = getPackageJson(pkgJsonPath)
   const currentVersion = pkgJson.version;
   const preReleaseName = '';
@@ -64,10 +64,6 @@ function run() {
       stdio: 'inherit',
       shell: false,
     });
-    spawnSync('sh', ['-c', `rush build --only @visactor/lark-vchart`], {
-      stdio: 'inherit',
-      shell: false,
-    });
 
     // 3. publish to npm
     spawnSync('sh', ['-c', `rush publish --publish --include-all --tag ${hotfixType}`], {
@@ -82,7 +78,7 @@ function run() {
     });
 
     if (package) {
-      const pkgJsonPath = path.join( __dirname, '../../', package.projectFolder, 'package.json')
+      const pkgJsonPath = path.join(__dirname, '../../', package.projectFolder, 'package.json')
       const pkgJson = getPackageJson(pkgJsonPath)
 
       // 5. add the the changes
