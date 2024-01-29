@@ -37,7 +37,7 @@ cjs
 build
 build-es5
 *.zip
-
+packages/calculator/lib
 
 *.zip
 stats.html
@@ -101,3 +101,5 @@ docs/public/documents
 
 # env files
 .env.local
+packages/calculator/tsconfig.cjs.tsbuildinfo
+packages/calculator/tsconfig.esm.tsbuildinfo

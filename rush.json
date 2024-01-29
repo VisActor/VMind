@@ -67,7 +67,7 @@
     {
       "packageName": "@visactor/calculator",
       "projectFolder": "packages/calculator",
-      "shouldPublish": false,
+      "shouldPublish": true,
       "tags": [
         "package"
       ]

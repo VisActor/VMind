@@ -2,7 +2,7 @@
   "extends": "@internal/ts-config/tsconfig.base.json",
   "compilerOptions": {
     "declaration": true, //Generates corresponding d.ts files.
-
+    "composite": true,
     "baseUrl": ".",
     "rootDir": "src",
     "outDir": "es",
