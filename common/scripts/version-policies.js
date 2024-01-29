@@ -15,11 +15,11 @@ const parseNextBumpFromVersion = (
 ) => {
   const res = parseVersion(versionString);
 
-  if (res) {  
+  if (res) {
     if (res.patch === 0) {
       return res.minor == 0 ? MAJOR : MINOR;
     }
-  
+
     return PATCH
   }
 
@@ -43,34 +43,34 @@ const writeNextBump = (
 }
 
 const readNextBumpFromChanges = () => {
-  const changeRoot = path.join(__dirname, '../changes/@visactor/vchart');
+  const changeRoot = path.join(__dirname, '../changes/@visactor/vmind');
   const filenames = fs.readdirSync(changeRoot);
 
   if (filenames && filenames.length) {
-  const changeType = [];
+    const changeType = [];
 
-  filenames.forEach(fileName => {
-    const json = JSON.parse(fs.readFileSync(path.join(changeRoot, fileName)).toString());
+    filenames.forEach(fileName => {
+      const json = JSON.parse(fs.readFileSync(path.join(changeRoot, fileName)).toString());
 
-    if (json.changes && json.changes.length) {
-      json.changes.forEach(change => {
-        if (change.type && !changeType.includes(change.type)) {
-          changeType.push(change.type);
-        }
-      })
-    }
-  });
+      if (json.changes && json.changes.length) {
+        json.changes.forEach(change => {
+          if (change.type && !changeType.includes(change.type)) {
+            changeType.push(change.type);
+          }
+        })
+      }
+    });
 
-  return changeType.includes(MAJOR) ? MAJOR : changeType.includes(MINOR) ? MINOR : PATCH;
- } else {
-  process.exit(1);
- }
+    return changeType.includes(MAJOR) ? MAJOR : changeType.includes(MINOR) ? MINOR : PATCH;
+  } else {
+    process.exit(1);
+  }
 }
 
 const checkAndUpdateNextBump = (version) => {
   let nextBump = PATCH;
 
-   if (version && NEXT_BUMPMS.includes(version)) {
+  if (version && NEXT_BUMPMS.includes(version)) {
     nextBump = version;
   } else if (version) {
     nextBump = parseNextBumpFromVersion(version);
