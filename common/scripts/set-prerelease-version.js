@@ -8,12 +8,12 @@ const setJsonFileByKey = require('./set-json-file');
 function writePrereleaseVersion(nextBump, preReleaseName, nextVersionStr, buildName) {
   const rushJson = getPackageJson(path.join(__dirname, '../../rush.json'));
   const projects = rushJson.projects;
-  const mainPackage = projects.find((project) => project.packageName === '@visactor/vchart');
+  const mainPackage = projects.find((project) => project.packageName === '@visactor/vmind');
 
   if (!mainPackage) {
     return;
   }
-  
+
   const mainPkgJsonPath = path.join(__dirname, '../../', mainPackage.projectFolder, 'package.json')
   const mainPkgJson = getPackageJson(mainPkgJsonPath)
   const mainVersion = mainPkgJson.version;
@@ -53,7 +53,7 @@ function writePrereleaseVersion(nextBump, preReleaseName, nextVersionStr, buildN
   console.log(`next version is ${nextVersion}`);
 
   projects.forEach(project => {
-    const pkgJsonPath = path.join( __dirname, '../../', project.projectFolder, 'package.json')
+    const pkgJsonPath = path.join(__dirname, '../../', project.projectFolder, 'package.json')
     let jsonFile = fs.readFileSync(pkgJsonPath, { encoding: 'utf-8' })
     const pkgJson = JSON.parse(jsonFile);
 
@@ -85,7 +85,7 @@ function writePrereleaseVersion(nextBump, preReleaseName, nextVersionStr, buildN
 
     fs.writeFileSync(pkgJsonPath, jsonFile)
   });
-  
+
 
 }
 

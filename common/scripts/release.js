@@ -30,10 +30,6 @@ function run() {
     stdio: 'inherit',
     shell: false,
   });
-  spawnSync('sh', ['-c', `rush build --only @visactor/lark-vchart`], {
-    stdio: 'inherit',
-    shell: false,
-  });
 
   // 3. publish to npm
   spawnSync('sh', ['-c', 'rush publish --publish --include-all'], {
@@ -48,10 +44,10 @@ function run() {
   });
 
   const rushJson = getPackageJson(path.join(__dirname, '../../rush.json'));
-  const package = rushJson.projects.find((project) => project.name === '@visactor/vchart');
+  const package = rushJson.projects.find((project) => project.name === '@visactor/vmind');
 
   if (package) {
-    const pkgJsonPath = path.join( __dirname, '../../', project.projectFolder, 'package.json')
+    const pkgJsonPath = path.join(__dirname, '../../', project.projectFolder, 'package.json')
     const pkgJson = getPackageJson(pkgJsonPath)
 
     // 5. add tag
