@@ -89,6 +89,7 @@ class VMind {
       return queryDatasetWithGPT(userPrompt, fieldInfo, dataset, this._options);
     }
     if ([Model.SKYLARK, Model.SKYLARK2].includes(this._model)) {
+      console.error('Please user GPT model');
       return { fieldInfo: [], dataset };
     }
     console.error('unsupported model in data query!');
