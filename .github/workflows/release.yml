@@ -104,6 +104,6 @@ jobs:
           base: main
           head: ${{ github.ref_name }}
           labels: release # default labels, the action will throw error if not specified
-          reviewers: kkxxkk2019 # default reviewers, the action will throw error if not specified
+          reviewers: da730 # default reviewers, the action will throw error if not specified
           body: |
             ${{ steps.changelog.outputs.markdown }}
