@@ -213,3 +213,4 @@ Under development, stay tuned
 #### Pie chart
 
 ![Alt text](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/VChart-Video-3.gif)
+
