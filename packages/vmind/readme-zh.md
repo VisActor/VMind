@@ -138,7 +138,7 @@ const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csv, userInput);
 ```typescript
 const describe = 'show me the changes in sales rankings of various car brand';
 //调用图表生成接口，获得 spec 和图表动画时长
-const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset);
+const { spec, time } = await vmind.generateChart(describe, fieldInfo, dataset);
 ```
 
 这样我们就得到了对应动态图表的 VChart spec。我们可以基于该 spec 渲染图表：
@@ -164,7 +164,7 @@ vchart.renderAsync();
 //describe使用中英文均可
 //指定生成科技感风格的图表
 const describe = 'show me the changes in sales rankings of various car brand,tech style';
-const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset);
+const { spec, time } = await vmind.generateChart(describe, fieldInfo, dataset);
 ```
 
 也可以指定 VMind 支持的图表类型，字段映射等等。比如：
@@ -173,7 +173,7 @@ const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset);
 //指定生成折线图，汽车厂商做 x 轴
 const describe =
   'show me the changes in sales rankings of various car brands,tech style.Using a line chart, Manufacturer makes the x-axis';
-const { spec, time } = await(vmind.generateChart(csvData, describe));
+const { spec, time } = await(vmind.generateChart(csvData, describe, dataset));
 ```
 
 #### 自定义大模型调用方式
@@ -195,6 +195,33 @@ const vmind = new VMind(openAIKey:string, params:{
 
 在 url 中指定您的大模型服务 url（默认为https://api.openai.com/v1/chat/completions）
 在随后的调用中，VMind 会使用 params 中的参数请求大模型服务 url
+
+#### 数据聚合
+📢 Note: 数据聚合功能只支持GPT系列模型，更多模型正在接入中。
+
+在使用图表库绘制柱状图、折线图等图表时，若传入的数据不是聚合后的数据，会影响可视化效果。同时由于没有对字段进行筛选和排序，某些图表展示意图无法满足，例如：帮我展示使用量最多的10个部门，帮我展示北方各商品的销售额等。
+
+VMind 1.2.2版本开始支持智能数据聚合功能。该功能会将用户传入的数据作为一张数据表，使用大模型根据用户的指令生成SQL查询，从数据表中查询数据，并通过GROUP BY和SQL聚合函数对数据进行分组聚合、排序、筛选。目前支持的SQL语句：SELECT, GROUP BY, WHERE, HAVING, ORDER BY, LIMIT。目前支持的聚合函数：MAX(), MIN(), SUM(), COUNT(), AVG()。不支持子查询、JOIN、条件语句等复杂的SQL操作。
+
+
+使用VMind对象的`dataQuery`函数对数据进行聚合。该方法有3个参数：
+- userInput：用户输入。使用与generateChart相同的输入即可
+- fieldInfo：数据集字段信息。与generateChart相同，可使用parseCSVData获得，或者由用户自己构建。
+- dataset：数据集。与generateChart相同，可使用parseCSVData获得，或者由用户自己构建。
+
+
+```typescript
+const { fieldInfo, dataset } = await vmind?.dataQuery(userInput, fieldInfo, dataset);
+```
+
+
+该方法返回的fieldInfo和dataset是数据聚合后的字段信息和数据集，可用于后续的图表生成。
+`generateChart`函数默认会在生成图表之前，使用相同的用户输入进行一次数据聚合。可通过传入第四个参数来禁用数据聚合：
+```typescript
+const userInput = 'show me the changes in sales rankings of various car brand';
+const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset, false); //pass false as the forth parameter to disable data aggregation before generating a chart.
+```
+
 
 #### 对话式编辑
 
