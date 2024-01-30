@@ -138,7 +138,7 @@ We want to show "the changes in sales rankings of various car brands". Call the 
 ```typescript
 const describe = 'show me the changes in sales rankings of various car brand';
 //Call the chart generation interface to get spec and chart animation duration
-const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset);
+const { spec, time } = await vmind.generateChart(describe, fieldInfo, dataset);
 ```
 
 In this way, we get the VChart spec of the corresponding dynamic chart. We can render the chart based on this spec:
@@ -164,7 +164,7 @@ Users can specify different theme styles (currently only gpt chart generation su
 //describe can be in both Chinese and English
 //Specify to generate a tech-style chart
 const describe = 'show me the changes in sales rankings of various car brand,tech style';
-const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset);
+const { spec, time } = await vmind.generateChart(describe, fieldInfo, dataset);
 ```
 
 You can also specify the chart type, field mapping, etc. supported by VMind. For example:
@@ -173,7 +173,7 @@ You can also specify the chart type, field mapping, etc. supported by VMind. For
 //Specify to generate a line chart, with car manufacturers as the x-axis
 const describe =
   'show me the changes in sales rankings of various car brands,tech style.Using a line chart, Manufacturer makes the x-axis';
-const { spec, time } = await(vmind.generateChart(csvData, describe));
+const { spec, time } = await(vmind.generateChart(csvData, describe, dataset));
 ```
 
 #### Customizing LLM Request Method
@@ -196,6 +196,35 @@ temperature?: number;//recommended to set to 0
 Specify your LLM service url in url (default is https://api.openai.com/v1/chat/completions)
 In subsequent calls, VMind will use the parameters in params to request the LLM service url.
 
+
+
+#### Data Aggregation
+📢 Note: The data aggregation function only supports GPT series models, more models will come soon.
+
+When using the chart library to draw bar charts, line charts, etc., if the data is not aggregated, it will affect the visualization effect. At the same time, because no filtering and sorting of fields has been done, some visualization intentions cannot be met, for example: show me the top 10 departments with the most cost, show me the sales of various products in the north, etc.
+
+VMind supports intelligent data aggregation since version 1.2.2. This function uses the data input by the user as a data table, uses a LLM to generate SQL queries according to the user's command, queries data from the data table, and uses GROUP BY and SQL aggregation methods to group, aggregate, sort, and filter data. Supported SQL statements include: SELECT, GROUP BY, WHERE, HAVING, ORDER BY, LIMIT. Supported aggregation methods are: MAX(), MIN(), SUM(), COUNT(), AVG(). Complex SQL operations such as subqueries, JOIN, and conditional statements are not supported.
+
+
+Use the `dataQuery` function of the VMind object to aggregate data. This method has three parameters:
+- userInput: user input. You can use the same input as generateChart
+- fieldInfo: Dataset field information. The same as generateChart, it can be obtained by parseCSVData, or built by the user.
+- dataset: Dataset. The same as generateChart, it can be obtained by parseCSVData, or built by the user.
+
+
+```typescript
+const { fieldInfo, dataset } = await vmind?.dataQuery(userInput, fieldInfo, dataset);
+```
+
+
+The fieldInfo and dataset returned by this method are the field information and dataset after data aggregation, which can be used for chart generation.
+By default, the `generateChart` function will perform a data aggregation using the same user input before generating the chart. You can disable data aggregation by passing in the fourth parameter:
+```typescript
+const userInput = 'show me the changes in sales rankings of various car brand';
+const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset, false); //pass false as the forth parameter to disable data aggregation before generating a chart.
+```
+
+
 #### Dialog-based editing
 
 Under development, stay tuned
@@ -213,3 +242,4 @@ Under development, stay tuned
 #### Pie chart
 
 ![Alt text](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/VChart-Video-3.gif)
+
