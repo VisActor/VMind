@@ -57,5 +57,5 @@ jobs:
           title: '[Auto Sync] Sync the code from branch main to branch develop after release ${{ steps.package-version.outputs.current_version }}'
           base: develop
           head: sync/main-${{ steps.package-version.outputs.current_version }}
-          reviewers: xile611
+          reviewers: da730
           body: 'Sync the code from branch main to branch develop after release ${{ steps.package-version.outputs.current_version }}'
