@@ -1,0 +1,79 @@
+{
+  "menu": "scripts",
+  "children": [
+    {
+      "path": "VMind_Website_Guide",
+      "title": {
+        "zh": "VMind站点指引",
+        "en": "VMind Website Guide"
+      }
+    },
+    {
+      "path": "Getting_Started",
+      "title": {
+        "zh": "快速上手",
+        "en": "Getting Started"
+      }
+    },
+    {
+      "path": "Basic",
+      "title": {
+        "zh": "入门",
+        "en": "Basic"
+      },
+      "children": [
+        {
+          "path": "How_to_Get_VRender",
+          "title": {
+            "zh": "如何获取VRender",
+            "en": "How to Get VRender"
+          }
+        },
+        {
+          "path": "How_to_Import_VRender",
+          "title": {
+            "zh": "如何在项目中引用 VRender",
+            "en": "How to Import VRender"
+          }
+        }
+      ]
+    },
+    {
+      "path": "Basic_Tutorial",
+      "title": {
+        "zh": "基础教程",
+        "en": "Basic Tutorial"
+      },
+      "children": [
+        {
+          "path": "Events_and_Animation",
+          "title": {
+            "zh": "了解事件和动画",
+            "en": "Events and Animation"
+          }
+        },
+        {
+          "path": "Animate",
+          "title": {
+            "zh": "动画",
+            "en": "Animate"
+          }
+        },
+        {
+          "path": "Cross_platform_Interface",
+          "title": {
+            "zh": "跨端接口",
+            "en": "Cross platform Interface"
+          }
+        },
+        {
+          "path": "Extensions_and_Plugins",
+          "title": {
+            "zh": "扩展和插件",
+            "en": "Extensions and Plugins"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "menu": "guide",
+    "type": "markdown"
+  },
+  {
+    "menu": "api",
+    "type": "markdown"
+  },
+  {
+    "menu": "examples",
+    "type": "markdown"
+  }
+]
