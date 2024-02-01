@@ -9,6 +9,13 @@
       }
     },
     {
+      "path": "Intro_to_VMind",
+      "title": {
+        "zh": "VMind简介",
+        "en": "Introduction to VMind"
+      }
+    },
+    {
       "path": "Getting_Started",
       "title": {
         "zh": "快速上手",
@@ -48,29 +55,43 @@
         {
           "path": "Events_and_Animation",
           "title": {
-            "zh": "了解事件和动画",
-            "en": "Events and Animation"
+            "zh": "创建VMind对象",
+            "en": "Create VMind Object"
           }
         },
         {
           "path": "Animate",
           "title": {
-            "zh": "动画",
-            "en": "Animate"
+            "zh": "数据格式与数据处理",
+            "en": "Data Format and Data Process"
           }
         },
         {
-          "path": "Cross_platform_Interface",
+          "path": "Animate",
           "title": {
-            "zh": "跨端接口",
-            "en": "Cross platform Interface"
+            "zh": "图表智能生成",
+            "en": "Intelligent Chart Generation"
           }
         },
         {
           "path": "Extensions_and_Plugins",
           "title": {
-            "zh": "扩展和插件",
-            "en": "Extensions and Plugins"
+            "zh": "智能数据聚合",
+            "en": "Intelligent Data Aggregation"
+          }
+        },
+        {
+          "path": "Extensions_and_Plugins",
+          "title": {
+            "zh": "自定义LLM接入方式",
+            "en": "Custom LLM Access Function"
+          }
+        },
+        {
+          "path": "Extensions_and_Plugins",
+          "title": {
+            "zh": "导出图表视频/GIF",
+            "en": "Export Chart Video/GIF"
           }
         }
       ]
