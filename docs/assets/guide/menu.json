@@ -30,17 +30,17 @@
       },
       "children": [
         {
-          "path": "How_to_Get_VRender",
+          "path": "How_to_Get_VMind",
           "title": {
-            "zh": "如何获取VRender",
-            "en": "How to Get VRender"
+            "zh": "如何获取VMind",
+            "en": "How to Get VMind"
           }
         },
         {
-          "path": "How_to_Import_VRender",
+          "path": "How_to_Import_VMind",
           "title": {
-            "zh": "如何在项目中引用 VRender",
-            "en": "How to Import VRender"
+            "zh": "如何在项目中引用 VMind",
+            "en": "How to Import VMind"
           }
         }
       ]
@@ -55,8 +55,8 @@
         {
           "path": "Events_and_Animation",
           "title": {
-            "zh": "创建VMind对象",
-            "en": "Create VMind Object"
+            "zh": "创建VMind实例",
+            "en": "Create VMind Instance"
           }
         },
         {

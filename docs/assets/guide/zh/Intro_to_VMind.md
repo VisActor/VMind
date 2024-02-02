@@ -47,7 +47,7 @@ VMind的核心能力包括图表智能生成、图表智能编辑和智能配色
 
 
 
-## VMind的实际运用
+## VMind使用场景
 ### 数据视频
 数据视频是一种将数据内容通过图表、动画、标注、旁白等形式进行展示和解读的视频类型。这种方式能够将原本抽象的数据转化为直观的图形，以更加生动有趣的方式呈现，使观众更容易理解和接受。
 
@@ -68,16 +68,13 @@ VMind的核心能力包括图表智能生成、图表智能编辑和智能配色
 
 ### 图表智能助手
 借助VMind打造的图表智能助手，你可以利用大语言模型的function call能力，判断用户的意图并调用VMind接口，实现图表的生成和数据的解读，从而降低数据可视化的难度。
-你可以在[Cici](https://ciciai.com/bot/fUuxvgvv)体验VMind图表智能助手。
 
 
-![VMind图表智能助手](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant_1.png)
+__你可以在[Cici](https://ciciai.com/bot/fUuxvgvv)体验VMind图表助手。__
 
 
-![VMind图表智能助手](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant_2.png)
+![VMind图表智能助手](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_assistant.png)
 
-
-![VMind图表智能助手](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant_3.png)
 
 
 
