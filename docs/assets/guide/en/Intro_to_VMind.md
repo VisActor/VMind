@@ -66,14 +66,8 @@ When using VMind to make data videos, users only need to describe the content th
 With the intelligent chart assistant built with VMind, you can use the function call capability of the large language model to judge the user's intent and call the VMind interface to realize chart generation and data interpretation, thereby reducing the difficulty of data visualization.
 
 
-You can experience the VMind Intelligent Chart Assistant on [Cici](https://ciciai.com/bot/fUuxvgvv).
+__You can try the VMind Chart Assistant on [Cici](https://ciciai.com/bot/fUuxvgvv).__
 
 
-![VMind Intelligent Chart Assistant](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant_1.png)
-
-
-![VMind Intelligent Chart Assistant](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant_2.png)
-
-
-![VMind Intelligent Chart Assistant](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant_3.png)
+![VMind Intelligent Chart Assistant](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_assistant.png)
 
