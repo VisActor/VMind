@@ -24,6 +24,8 @@ export const generateChartWithGPT = async (
   let dataset: DataItem[] = propsDataset;
   let fieldInfo: SimpleFieldInfo[] = propsFieldInfo;
   let chartSource: string = options.model;
+  console.log(propsDataset, fieldInfo);
+
   try {
     if (enableDataQuery) {
       const { dataset: queryDataset, fieldInfo: fieldInfoNew } = await queryDatasetWithGPT(
@@ -52,6 +54,7 @@ export const generateChartWithGPT = async (
       chartType = patchResult.chartTypeNew;
       cell = patchResult.cellNew;
     }
+    console.log(dataset);
   } catch (err) {
     console.warn(err);
     console.warn('LLM generation error, use rule generation.');
