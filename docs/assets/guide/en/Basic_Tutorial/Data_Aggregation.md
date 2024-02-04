@@ -231,6 +231,8 @@ The returned fieldInfo is as follows:
 
 With this information, we can directly use fieldInfo and dataset to generate charts. You can find the specific operation steps in the [Intelligent Chart Generation](./Chart_Generation.md) section.
 
+📢 **Attention: The dataQuery method will pass the userPrompt and fieldInfo to the large model to generate SQL, and the detailed data in the dataset will not be passed.**
+
 Finally, we will get the following bar chart:
 
 

@@ -181,11 +181,11 @@ const sourceFieldInfo = [
     }
 ]
 
-const describe=`展示各商品销售额`
+const userPrompt=`展示各商品销售额`
 const vmind = new VMind(options)
 
-//调用dataQuery传入describe，sourceFieldInfo和sourceDataset，执行数据聚合
-const { fieldInfo, dataset } = vmind.dataQuery(describe, sourceFieldInfo, sourceDataset);
+//调用dataQuery传入userPrompt，sourceFieldInfo和sourceDataset，执行数据聚合
+const { fieldInfo, dataset } = vmind.dataQuery(userPrompt, sourceFieldInfo, sourceDataset);
 ```
 
 在这个例子中，dataQuery函数返回的dataset如下：
@@ -229,6 +229,8 @@ const { fieldInfo, dataset } = vmind.dataQuery(describe, sourceFieldInfo, source
 ```
 
 有了这些信息，我们就可以直接使用fieldInfo和dataset生成图表了。具体的操作步骤，你可以在[图表智能生成](./Chart_Generation.md)章节中找到。
+
+📢 **注意：dataQuery方法会将userPrompt和fieldInfo传递给大模型用于生成SQL，dataset中的明细数据并不会被传递。**
 
 最后，我们将得到如下的柱状图：
 
@@ -358,11 +360,11 @@ const sourceFieldInfo = [
 假设我们想要展示北方区域销售额排名前三的商品，我们可以这样做：
 
 ```ts
-const describe = `帮我展示north区域排名前三的商品销售额`
+const userPrompt = `帮我展示north区域排名前三的商品销售额`
 const vmind = new VMind(options)
 
-// 调用dataQuery方法，传入describe，sourceFieldInfo和sourceDataset，执行数据聚合
-const { fieldInfo, dataset } = vmind.dataQuery(describe, sourceFieldInfo, sourceDataset);
+// 调用dataQuery方法，传入userPrompt，sourceFieldInfo和sourceDataset，执行数据聚合
+const { fieldInfo, dataset } = vmind.dataQuery(userPrompt, sourceFieldInfo, sourceDataset);
 ```
 
 在dataQuery方法执行过程中，会生成如下的SQL语句：

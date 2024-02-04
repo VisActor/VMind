@@ -31,8 +31,8 @@ import VMind from '@visactor/vmind';
 ```
 
 ## 初始化VMind实例
-首先我们需要初始化一个VMind实例，并用它完成后续操作。VMind目前仅支持OpenAI GPT-3.5模型，你需要提供[OpenAI API key](https://platform.openai.com/account/api-keys)才能使用。未来我们将支持更多的大模型，并允许用户自定义调用大模型的方法。
-使用以下代码初始化一个VMind实例：
+首先我们需要初始化一个VMind实例，并用它完成后续操作。VMind目前仅支持OpenAI GPT-3.5模型，你需要提供[OpenAI API key](https://platform.openai.com/account/api-keys)才能使用。未来我们将支持更多的大语言模型，欢迎访问[Github页面](https://github.com/VisActor/VMind/issues/new/choose)提出你的需求。
+
 ```js
 const vmind = new VMind(openAIKey); //传入您的openAI key
 ```

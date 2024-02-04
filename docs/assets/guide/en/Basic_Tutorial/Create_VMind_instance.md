@@ -20,9 +20,9 @@ export interface ILLMOptions {
   temperature?: number;
   showThoughts?: boolean;
   customRequestFunc?: {
-  chartAdvisor: requestFunc;
-  dataProcess: requestFunc;
-  dataQuery: requestFunc;
+    chartAdvisor: requestFunc;
+    dataProcess: requestFunc;
+    dataQuery: requestFunc;
   };
   [key: string]: any;
 }
@@ -37,8 +37,8 @@ import VMind, { Model } from '@visactor/vmind'
 const vmind = new VMind({
     model: Model.GPT3_5, //use gpt-3.5-turbo model
     headers: { //specify the header when calling the LLM service
-    Authorization: `Bearer ${OPENAI_API_KEY}` //Your OPENAI_API_KEY
-}
+      Authorization: `Bearer ${OPENAI_API_KEY}` //Your OPENAI_API_KEY
+  }
 })
 ```
 In the following sections, we will explain the parameters in ILLMOptions in detail.

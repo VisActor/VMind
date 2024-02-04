@@ -19,9 +19,9 @@ export interface ILLMOptions {
   temperature?: number;
   showThoughts?: boolean;
   customRequestFunc?: {
-  chartAdvisor: requestFunc;
-  dataProcess: requestFunc;
-  dataQuery: requestFunc;
+    chartAdvisor: requestFunc;
+    dataProcess: requestFunc;
+    dataQuery: requestFunc;
   };
   [key: string]: any;
 }
@@ -36,8 +36,8 @@ import VMind, { Model } from '@visactor/vmind'
 const vmind = new VMind({
   model: Model.GPT3_5, //使用gpt-3.5-turbo模型
   headers: { //指定调用LLM服务时的header
-  Authorization: `Bearer ${OPENAI_API_KEY}` //Your OPENAI_API_KEY
-}
+    Authorization: `Bearer ${OPENAI_API_KEY}` //Your OPENAI_API_KEY
+  }
 })
 ```
 在接下来的章节，我们将对ILLMOptions中的参数进行详细的解释。
