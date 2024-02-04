@@ -67,17 +67,17 @@
           }
         },
         {
+          "path": "Data_Aggregation",
+          "title": {
+            "zh": "智能数据聚合",
+            "en": "Intelligent Data Aggregation"
+          }
+        },
+        {
           "path": "Animate",
           "title": {
             "zh": "图表智能生成",
             "en": "Intelligent Chart Generation"
-          }
-        },
-        {
-          "path": "Extensions_and_Plugins",
-          "title": {
-            "zh": "智能数据聚合",
-            "en": "Intelligent Data Aggregation"
           }
         },
         {

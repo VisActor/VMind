@@ -164,6 +164,10 @@ const vmind = new VMind(options)
 const { fieldInfo, dataset } = vmind.parseCSVData(csv);
 
 ```
+
+For the creation of the VMind instance and the detailed configuration in options, please refer to [Creating VMind Instance](./Create_VMind_Instance.md)
+
+
 In this example, the returned dataset is the same as the product sales dataset in the previous chapter, and the returned fieldInfo is as follows:
 ```json
 [
@@ -184,6 +188,11 @@ In this example, the returned dataset is the same as the product sales dataset i
 }
 ]
 ```
+
+
+For the creation of the VMind instance and the detailed configuration in options, please refer to [Creating VMind Instance](./Create_VMind_Instance.md)
+
+
 The dataset and fieldInfo can be directly used for chart generation and data aggregation in VMind.
 
 Since this function does not pass the data to the large language model, it cannot obtain the field description in fieldInfo. You can also supplement it to get better chart generation results.

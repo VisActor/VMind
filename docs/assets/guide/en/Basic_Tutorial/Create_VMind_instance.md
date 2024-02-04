@@ -11,20 +11,20 @@ The complete type definition of options is as follows:
 
 ```ts
 export interface ILLMOptions {
-url?: string; //URL of your LLM service. For gpt, default is openAI API.
-/** llm request header, which has higher priority */
-headers?: HeadersInit; // this will be used directly as the header of the LLM request.
-method?: 'POST' | 'GET'; //post or get
-model?: Model;
-max_tokens?: number;
-temperature?: number;
-showThoughts?: boolean;
-customRequestFunc?: {
-chartAdvisor: requestFunc;
-dataProcess: requestFunc;
-dataQuery: requestFunc;
-};
-[key: string]: any;
+  url?: string; //URL of your LLM service. For gpt, default is openAI API.
+  /** llm request header, which has higher priority */
+  headers?: HeadersInit; // this will be used directly as the header of the LLM request.
+  method?: 'POST' | 'GET'; //post or get
+  model?: Model;
+  max_tokens?: number;
+  temperature?: number;
+  showThoughts?: boolean;
+  customRequestFunc?: {
+  chartAdvisor: requestFunc;
+  dataProcess: requestFunc;
+  dataQuery: requestFunc;
+  };
+  [key: string]: any;
 }
 
 ```
@@ -35,9 +35,9 @@ If you plan to use the LLM service provided by OpenAI official and authenticate 
 import VMind, { Model } from '@visactor/vmind'
 
 const vmind = new VMind({
-model: Model.GPT3_5, //use gpt-3.5-turbo model
-headers: { //specify the header when calling the LLM service
-Authorization: `Bearer ${OPENAI_API_KEY}` //Your OPENAI_API_KEY
+    model: Model.GPT3_5, //use gpt-3.5-turbo model
+    headers: { //specify the header when calling the LLM service
+    Authorization: `Bearer ${OPENAI_API_KEY}` //Your OPENAI_API_KEY
 }
 })
 ```
@@ -65,10 +65,10 @@ The currently supported model types are:
 //models that VMind support
 //more models is under developing
 export enum Model {
-GPT3_5 = 'gpt-3.5-turbo',
-GPT4 = 'gpt-4',
-SKYLARK = 'skylark-pro',
-SKYLARK2 = 'skylark2-pro-4k'
+  GPT3_5 = 'gpt-3.5-turbo',
+  GPT4 = 'gpt-4',
+  SKYLARK = 'skylark-pro',
+  SKYLARK2 = 'skylark2-pro-4k'
 }
 ```
 
@@ -92,20 +92,20 @@ VMind calls the LLM service through the requestGPT method by HTTP request. Howev
 This parameter has three requestFunc type values, the complete type definition is as follows:
 ```ts
 type customRequestFunc= {
-chartAdvisor: requestFunc;
-dataProcess: requestFunc;
-dataQuery: requestFunc;
+  chartAdvisor: requestFunc;
+  dataProcess: requestFunc;
+  dataQuery: requestFunc;
 };
 
 type requestFunc = (prompt: string, userMessage: string, options: ILLMOptions | undefined) => Promise<LLMResponse>;
 
 export type LLMResponse = {
-choices: {
-index: number;
-message: any;
-}[];
-usage: any;
-[key: string]: any;
+  choices: {
+    index: number;
+    message: any;
+  }[];
+  usage: any;
+  [key: string]: any;
 };
 ```
 
@@ -115,28 +115,28 @@ Here is an example of using RPC for intelligent chart generation:
 import VMind, { Model } from '@visactor/vmind'
 
 const vmind = new VMind({
-model: Model.GPT3_5,
-customRequestFunc: {
-chartAdvisor: async (_prompt: string,
-userMessage: string,
-_options: ILLMOptions | undefined) => {
-const resp = await call_RPC_LLM_Service(_prompt, userMessage, _options)
+  model: Model.GPT3_5,
+  customRequestFunc: {
+    chartAdvisor: async (_prompt: string,
+    userMessage: string,
+    _options: ILLMOptions | undefined) => {
+      const resp = await call_RPC_LLM_Service(_prompt, userMessage, _options)
 
-const { result } = resp
-const content = result.content.content
-const gptResponse = {
-usage: {}, //token usage information
-choices: [{
-index: 0,
-message: {
-role: 'assistant',
-content //Put the model's generated results into content
-}
-}]
-}
-return gptResponse //return chat completion object, see https://platform.openai.com/docs/api-reference/chat/object
-}
-}
+      const { result } = resp
+      const content = result.content.content
+      const gptResponse = {
+        usage: {}, //token usage information
+        choices: [{
+        index: 0,
+        message: {
+          role: 'assistant',
+          content //Put the model's generated results into content
+        }
+        }]
+      }
+      return gptResponse //return chat completion object, see https://platform.openai.com/docs/api-reference/chat/object
+    }
+  }
 })
 
 const { spec } = await vmind.generateChart(userInput, fieldInfo, dataset); //Call generateChart for chart generation
