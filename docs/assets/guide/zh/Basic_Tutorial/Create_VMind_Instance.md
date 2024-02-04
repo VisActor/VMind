@@ -34,9 +34,9 @@ export interface ILLMOptions {
 import VMind, { Model } from '@visactor/vmind'
 
 const vmind = new VMind({
-model: Model.GPT3_5, //使用gpt-3.5-turbo模型
-headers: { //指定调用LLM服务时的header
-Authorization: `Bearer ${OPENAI_API_KEY}` //Your OPENAI_API_KEY
+  model: Model.GPT3_5, //使用gpt-3.5-turbo模型
+  headers: { //指定调用LLM服务时的header
+  Authorization: `Bearer ${OPENAI_API_KEY}` //Your OPENAI_API_KEY
 }
 })
 ```
@@ -64,10 +64,10 @@ import { Model } from '@visactor/vmind'
 //models that VMind support
 //more models is under developing
 export enum Model {
-GPT3_5 = 'gpt-3.5-turbo',
-GPT4 = 'gpt-4',
-SKYLARK = 'skylark-pro',
-SKYLARK2 = 'skylark2-pro-4k'
+  GPT3_5 = 'gpt-3.5-turbo',
+  GPT4 = 'gpt-4',
+  SKYLARK = 'skylark-pro',
+  SKYLARK2 = 'skylark2-pro-4k'
 }
 ```
 
@@ -91,20 +91,20 @@ VMind通过requestGPT方法，通过HTTP请求进行LLM服务的调用。然而�
 该参数有三个requestFunc类型的值，完整的类型定义如下：
 ```ts
 type customRequestFunc= {
-chartAdvisor: requestFunc;
-dataProcess: requestFunc;
-dataQuery: requestFunc;
+  chartAdvisor: requestFunc;
+  dataProcess: requestFunc;
+  dataQuery: requestFunc;
 };
 
 type requestFunc = (prompt: string, userMessage: string, options: ILLMOptions | undefined) => Promise<LLMResponse>;
 
 export type LLMResponse = {
-choices: {
-index: number;
-message: any;
-}[];
-usage: any;
-[key: string]: any;
+  choices: {
+    index: number;
+    message: any;
+  }[];
+  usage: any;
+  [key: string]: any;
 };
 ```
 
@@ -114,28 +114,28 @@ chartAdvisor，dataProcess和dataQuery分别对应图表生成，数据处理和
 import VMind, { Model } from '@visactor/vmind'
 
 const vmind = new VMind({
-model: Model.GPT3_5,
-customRequestFunc: {
-chartAdvisor: async (_prompt: string,
-userMessage: string,
-_options: ILLMOptions | undefined) => {
-const resp = await call_RPC_LLM_Service(_prompt, userMessage, _options)
+  model: Model.GPT3_5,
+  customRequestFunc: {
+    chartAdvisor: async (_prompt: string,
+    userMessage: string,
+    _options: ILLMOptions | undefined) => {
+      const resp = await call_RPC_LLM_Service(_prompt, userMessage, _options)
 
-const { result } = resp
-const content = result.content.content
-const gptResponse = {
-  usage: {}, //token用量信息
-  choices: [{
-  index: 0,
-  message: {
-  role: 'assistant',
-  content //将模型的生成结果放入content中
-}
-}]
-}
-return gptResponse //返回chat completion object，见https://platform.openai.com/docs/api-reference/chat/object
-}
-}
+      const { result } = resp
+      const content = result.content.content
+      const gptResponse = {
+        usage: {}, //token用量信息
+        choices: [{
+        index: 0,
+        message: {
+          role: 'assistant',
+          content //将模型的生成结果放入content中
+      }
+      }]
+      }
+      return gptResponse //返回chat completion object，见https://platform.openai.com/docs/api-reference/chat/object
+    }
+  }
 })
 
 const { spec } = await vmind.generateChart(userInput, fieldInfo, dataset); //调用generateChart进行图表生成
