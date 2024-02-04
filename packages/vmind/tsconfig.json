@@ -8,7 +8,6 @@
     "outDir": "./esm",
     "composite": true,
     "paths": {
-      "@visactor/calculator": ["../calculator/src"],
     }
   },
   "ts-node": {
