@@ -53,14 +53,14 @@
       },
       "children": [
         {
-          "path": "Events_and_Animation",
+          "path": "Create_VMind_Instance",
           "title": {
             "zh": "创建VMind实例",
             "en": "Create VMind Instance"
           }
         },
         {
-          "path": "Animate",
+          "path": "Data_Process",
           "title": {
             "zh": "数据格式与数据处理",
             "en": "Data Format and Data Process"
