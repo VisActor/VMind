@@ -81,17 +81,10 @@
           }
         },
         {
-          "path": "Extensions_and_Plugins",
+          "path": "Custom_Request",
           "title": {
-            "zh": "自定义LLM接入方式",
+            "zh": "自定义LLM调用",
             "en": "Custom LLM Access Function"
-          }
-        },
-        {
-          "path": "Extensions_and_Plugins",
-          "title": {
-            "zh": "导出图表视频/GIF",
-            "en": "Export Chart Video/GIF"
           }
         }
       ]
