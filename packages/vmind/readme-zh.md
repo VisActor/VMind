@@ -136,9 +136,9 @@ const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csv, userInput);
 我们想要展示的内容为“各品牌汽车销量排行的变化”。调用 generateChart 方法，将数据和展示内容描述直接传递给 VMind：
 
 ```typescript
-const describe = 'show me the changes in sales rankings of various car brand';
+const userPrompt = 'show me the changes in sales rankings of various car brand';
 //调用图表生成接口，获得 spec 和图表动画时长
-const { spec, time } = await vmind.generateChart(describe, fieldInfo, dataset);
+const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
 这样我们就得到了对应动态图表的 VChart spec。我们可以基于该 spec 渲染图表：
@@ -161,19 +161,19 @@ vchart.renderAsync();
 用户可以指定不同的主题风格（目前只有 gpt 版图表生成支持该功能）。例如，用户可以指定生成科技感风格的图表：
 
 ```typescript
-//describe使用中英文均可
+//userPrompt使用中英文均可
 //指定生成科技感风格的图表
-const describe = 'show me the changes in sales rankings of various car brand,tech style';
-const { spec, time } = await vmind.generateChart(describe, fieldInfo, dataset);
+const userPrompt = 'show me the changes in sales rankings of various car brand,tech style';
+const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
 也可以指定 VMind 支持的图表类型，字段映射等等。比如：
 
 ```typescript
 //指定生成折线图，汽车厂商做 x 轴
-const describe =
+const userPrompt =
   'show me the changes in sales rankings of various car brands,tech style.Using a line chart, Manufacturer makes the x-axis';
-const { spec, time } = await(vmind.generateChart(csvData, describe, dataset));
+const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
 #### 自定义大模型调用方式
