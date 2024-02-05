@@ -1,3 +1,6 @@
+import type { FFmpeg } from '@ffmpeg/ffmpeg';
+import type { VChart } from '@visactor/vchart';
+
 export interface ILLMOptions {
   url?: string; //URL of your LLM service. For gpt, default is openAI API.
   /** llm request header, which has higher priority */
@@ -78,6 +81,12 @@ export type Pipe = (src: any, context: Context) => any;
 export type TimeType = {
   totalTime: number;
   frameArr: any[];
+};
+
+export type OuterPackages = {
+  VChart: VChart;
+  FFmpeg: FFmpeg;
+  fetchFile: (data: string | Buffer | Blob | File) => Promise<Uint8Array>;
 };
 
 export enum DataType {
