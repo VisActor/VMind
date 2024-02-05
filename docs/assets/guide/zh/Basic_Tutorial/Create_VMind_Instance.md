@@ -19,9 +19,9 @@ export interface ILLMOptions {
   temperature?: number;
   showThoughts?: boolean;
   customRequestFunc?: {
-    chartAdvisor: requestFunc;
-    dataProcess: requestFunc;
-    dataQuery: requestFunc;
+    chartAdvisor: RequestFunc;
+    dataProcess: RequestFunc;
+    dataQuery: RequestFunc;
   };
   [key: string]: any;
 }
@@ -91,12 +91,12 @@ VMind通过requestGPT方法，通过HTTP请求进行LLM服务的调用。然而�
 该参数有三个requestFunc类型的值，完整的类型定义如下：
 ```ts
 type customRequestFunc= {
-  chartAdvisor: requestFunc;
-  dataProcess: requestFunc;
-  dataQuery: requestFunc;
+  chartAdvisor: RequestFunc;
+  dataProcess: RequestFunc;
+  dataQuery: RequestFunc;
 };
 
-type requestFunc = (prompt: string, userMessage: string, options: ILLMOptions | undefined) => Promise<LLMResponse>;
+type RequestFunc = (prompt: string, userMessage: string, options: ILLMOptions | undefined) => Promise<LLMResponse>;
 
 export type LLMResponse = {
   choices: {

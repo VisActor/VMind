@@ -20,9 +20,9 @@ export interface ILLMOptions {
   temperature?: number;
   showThoughts?: boolean;
   customRequestFunc?: {
-    chartAdvisor: requestFunc;
-    dataProcess: requestFunc;
-    dataQuery: requestFunc;
+    chartAdvisor: RequestFunc;
+    dataProcess: RequestFunc;
+    dataQuery: RequestFunc;
   };
   [key: string]: any;
 }
@@ -89,15 +89,15 @@ In VMind, showThoughts defaults to true.
 ## Customizing the method of calling the LLM service through customRequestFunc
 
 VMind calls the LLM service through the requestGPT method by HTTP request. However, you can customize the method of calling the LLM in each task through the customRequestFunc parameter. For example, you can request your own LLM service in the form of RPC.
-This parameter has three requestFunc type values, the complete type definition is as follows:
+This parameter has three RequestFunc type values, the complete type definition is as follows:
 ```ts
 type customRequestFunc= {
-  chartAdvisor: requestFunc;
-  dataProcess: requestFunc;
-  dataQuery: requestFunc;
+  chartAdvisor: RequestFunc;
+  dataProcess: RequestFunc;
+  dataQuery: RequestFunc;
 };
 
-type requestFunc = (prompt: string, userMessage: string, options: ILLMOptions | undefined) => Promise<LLMResponse>;
+type RequestFunc = (prompt: string, userMessage: string, options: ILLMOptions | undefined) => Promise<LLMResponse>;
 
 export type LLMResponse = {
   choices: {
