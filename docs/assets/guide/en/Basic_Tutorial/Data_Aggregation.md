@@ -181,11 +181,11 @@ const sourceFieldInfo = [
     }
 ]
 
-const describe=`Show the sales of each product`
+const userPrompt=`Show the sales of each product`
 const vmind = new VMind(options)
 
-// Call dataQuery with describe, sourceFieldInfo, and sourceDataset to perform data aggregation
-const { fieldInfo, dataset } = vmind.dataQuery(describe, sourceFieldInfo, sourceDataset);
+// Call dataQuery with userPrompt, sourceFieldInfo, and sourceDataset to perform data aggregation
+const { fieldInfo, dataset } = vmind.dataQuery(userPrompt, sourceFieldInfo, sourceDataset);
 ```
 
 In this example, the dataset returned by the dataQuery function is as follows:
@@ -361,11 +361,11 @@ const sourceFieldInfo = [
 Suppose we want to show the top three products in terms of sales in the north region, we can do this:
 
 ```ts
-const describe = `Show me the top three products in terms of sales in the north region`
+const userPrompt = `Show me the top three products in terms of sales in the north region`
 const vmind = new VMind(options)
 
-// Call the dataQuery method, pass in describe, sourceFieldInfo, and sourceDataset to perform data aggregation
-const { fieldInfo, dataset } = vmind.dataQuery(describe, sourceFieldInfo, sourceDataset);
+// Call the dataQuery method, pass in userPrompt, sourceFieldInfo, and sourceDataset to perform data aggregation
+const { fieldInfo, dataset } = vmind.dataQuery(userPrompt, sourceFieldInfo, sourceDataset);
 ```
 
 During the execution of the dataQuery method, the following SQL statement will be generated:

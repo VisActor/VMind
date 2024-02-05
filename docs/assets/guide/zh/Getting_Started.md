@@ -111,9 +111,9 @@ const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csvData, userInpu
 
 我们想要展示的内容为“各品牌汽车销量排行的变化”。调用generateChart方法，将数据和展示内容描述直接传递给VMind：
 ```typescript
-const describe='show me the changes in sales rankings of various car brand'
+const userPrompt='show me the changes in sales rankings of various car brand'
 //调用图表生成接口，获得spec和图表动画时长
- const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset);
+ const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
 接下来，我们就可以使用 VChart 绘制生成的图表。
@@ -142,8 +142,8 @@ vchart.renderSync();
 我们还可对图表提更多的要求，例如：
 
 ```typescript
-const describe = '帮我展示不同区域各商品销售额，使用折线图，region做x轴';
-const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset);
+const userPrompt = '帮我展示不同区域各商品销售额，使用折线图，region做x轴';
+const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
 生成的图表如下：
