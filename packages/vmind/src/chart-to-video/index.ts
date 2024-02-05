@@ -22,7 +22,7 @@ export async function _chatToVideoWasm(
   if (frameArr && frameArr.length) {
     spec.player && (spec.player.auto = false);
   }
-  // defaultTicker.mode = 'manual';
+  defaultTicker.mode = 'manual';
   spec.width = 720;
   spec.height = 480;
   const canvas = document.createElement('canvas');
