@@ -3,6 +3,7 @@ import './index.scss';
 import { Button, Input, Card, Space, Modal, Spin } from '@arco-design/web-react';
 import VChart from '@visactor/vchart';
 import VMind from '../../../../src';
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 const TextArea = Input.TextArea;
 
 type IPropsType = {
@@ -53,7 +54,15 @@ export function ChartPreview(props: IPropsType) {
       return;
     }
     setGenerating(true);
-    const src = await vmind.exportVideo(spec, time, VChart);
+    const ffmpeg = createFFmpeg({
+      log: true
+    });
+    await ffmpeg.load();
+    const src = await vmind.exportVideo(spec, time, {
+      VChart,
+      FFmpeg: ffmpeg,
+      fetchFile
+    } as any);
     setSrc(src);
     setOutType('video');
     setGenerating(false);
@@ -65,7 +74,15 @@ export function ChartPreview(props: IPropsType) {
       return;
     }
     setGenerating(true);
-    const src = await vmind.exportGIF(spec, time, VChart);
+    const ffmpeg = createFFmpeg({
+      log: true
+    });
+    await ffmpeg.load();
+    const src = await vmind.exportGIF(spec, time, {
+      VChart,
+      FFmpeg: ffmpeg,
+      fetchFile
+    } as any);
     setSrc(src);
     setOutType('gif');
     setGenerating(false);
