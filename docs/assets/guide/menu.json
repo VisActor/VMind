@@ -1,0 +1,93 @@
+{
+  "menu": "scripts",
+  "children": [
+    {
+      "path": "VMind_Website_Guide",
+      "title": {
+        "zh": "VMind站点指引",
+        "en": "VMind Website Guide"
+      }
+    },
+    {
+      "path": "Intro_to_VMind",
+      "title": {
+        "zh": "VMind简介",
+        "en": "Introduction to VMind"
+      }
+    },
+    {
+      "path": "Getting_Started",
+      "title": {
+        "zh": "快速上手",
+        "en": "Getting Started"
+      }
+    },
+    {
+      "path": "Basic",
+      "title": {
+        "zh": "入门",
+        "en": "Basic"
+      },
+      "children": [
+        {
+          "path": "How_to_Get_VMind",
+          "title": {
+            "zh": "如何获取VMind",
+            "en": "How to Get VMind"
+          }
+        },
+        {
+          "path": "How_to_Import_VMind",
+          "title": {
+            "zh": "如何在项目中引用 VMind",
+            "en": "How to Import VMind"
+          }
+        }
+      ]
+    },
+    {
+      "path": "Basic_Tutorial",
+      "title": {
+        "zh": "基础教程",
+        "en": "Basic Tutorial"
+      },
+      "children": [
+        {
+          "path": "Create_VMind_Instance",
+          "title": {
+            "zh": "创建VMind实例",
+            "en": "Create VMind Instance"
+          }
+        },
+        {
+          "path": "Data_Process",
+          "title": {
+            "zh": "数据格式与数据处理",
+            "en": "Data Format and Data Process"
+          }
+        },
+        {
+          "path": "Data_Aggregation",
+          "title": {
+            "zh": "智能数据聚合",
+            "en": "Intelligent Data Aggregation"
+          }
+        },
+        {
+          "path": "Chart_Generation",
+          "title": {
+            "zh": "图表智能生成",
+            "en": "Intelligent Chart Generation"
+          }
+        },
+        {
+          "path": "Custom_Request",
+          "title": {
+            "zh": "自定义LLM调用",
+            "en": "Custom LLM Access Function"
+          }
+        }
+      ]
+    }
+  ]
+}

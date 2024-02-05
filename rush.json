@@ -57,6 +57,14 @@
       "shouldPublish": false
     },
     {
+      "packageName": "@internal/docs",
+      "projectFolder": "docs",
+      "tags": [
+        "doc"
+      ],
+      "shouldPublish": false
+    },
+    {
       "packageName": "@visactor/vmind",
       "projectFolder": "packages/vmind",
       "shouldPublish": true,

@@ -24,6 +24,7 @@ export const generateChartWithGPT = async (
   let dataset: DataItem[] = propsDataset;
   let fieldInfo: SimpleFieldInfo[] = propsFieldInfo;
   let chartSource: string = options.model;
+
   try {
     if (enableDataQuery) {
       const { dataset: queryDataset, fieldInfo: fieldInfoNew } = await queryDatasetWithGPT(
