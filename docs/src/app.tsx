@@ -33,7 +33,7 @@ const menuRoutes: RouteObject[] = menu.map(menuItem => {
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate replace to="/vmind/examples" />
+    element: <Navigate replace to="/vmind/guide" />
   },
   ...menuRoutes
 ]);
