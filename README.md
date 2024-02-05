@@ -136,9 +136,9 @@ const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csv, userInput);
 We want to show "the changes in sales rankings of various car brands". Call the generateChart method and pass the data and display content description directly to VMind:
 
 ```typescript
-const describe = 'show me the changes in sales rankings of various car brand';
+const userPrompt = 'show me the changes in sales rankings of various car brand';
 //Call the chart generation interface to get spec and chart animation duration
-const { spec, time } = await vmind.generateChart(describe, fieldInfo, dataset);
+const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
 In this way, we get the VChart spec of the corresponding dynamic chart. We can render the chart based on this spec:
@@ -161,19 +161,19 @@ Thanks to the capabilities of the large language model, users can describe more 
 Users can specify different theme styles (currently only gpt chart generation supports this feature). For example, users can specify to generate a tech-style chart:
 
 ```typescript
-//describe can be in both Chinese and English
+//userPrompt can be in both Chinese and English
 //Specify to generate a tech-style chart
-const describe = 'show me the changes in sales rankings of various car brand,tech style';
-const { spec, time } = await vmind.generateChart(describe, fieldInfo, dataset);
+const userPrompt = 'show me the changes in sales rankings of various car brand,tech style';
+const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
 You can also specify the chart type, field mapping, etc. supported by VMind. For example:
 
 ```typescript
 //Specify to generate a line chart, with car manufacturers as the x-axis
-const describe =
+const userPrompt =
   'show me the changes in sales rankings of various car brands,tech style.Using a line chart, Manufacturer makes the x-axis';
-const { spec, time } = await(vmind.generateChart(csvData, describe, dataset));
+const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
 #### Customizing LLM Request Method

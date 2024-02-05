@@ -215,9 +215,9 @@ Mirinda,east,830
 Mirinda,west,532
 Mirinda,north,498`
 
-const describe=`展示各商品在不同区域销售额`
+const userPrompt=`展示各商品在不同区域销售额`
 const vmind = new VMind(options)
-const { fieldInfo, dataset } = vmind.parseCSVData(parseCSVDataWithLLM, describe);
+const { fieldInfo, dataset } = vmind.parseCSVData(csv, userPrompt);
 ```
 
 关于VMind实例的创建以及options中的详细配置，可以参见[创建VMind实例](./Create_VMind_Instance.md)

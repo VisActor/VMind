@@ -66,23 +66,23 @@ And to generate a chart with VMind, you only need to:
 For example, we want to use the following product sales data to show the sales of various products in different regions:
 
 | Product Name | region | Sales |
-| -------- | ------ | ------ |
-| Cola | south | 2350 |
-| Cola | east | 1027 |
-| Cola | west | 1027 |
-| Cola | north | 1027 |
-| Sprite | south | 215 |
-| Sprite | east | 654 |
-| Sprite | west | 159 |
-| Sprite | north | 28 |
-| Fanta | south | 345 |
-| Fanta | east | 654 |
-| Fanta | west | 2100 |
-| Fanta | north | 1679 |
-| Red Bull | south | 1476 |
-| Red Bull | east | 830 |
-| Red Bull | west | 532 |
-| Red Bull | north | 498 |
+| ------------ | ------ | ----- |
+| Cola         | south  | 2350  |
+| Cola         | east   | 1027  |
+| Cola         | west   | 1027  |
+| Cola         | north  | 1027  |
+| Sprite       | south  | 215   |
+| Sprite       | east   | 654   |
+| Sprite       | west   | 159   |
+| Sprite       | north  | 28    |
+| Fanta        | south  | 345   |
+| Fanta        | east   | 654   |
+| Fanta        | west   | 2100  |
+| Fanta        | north  | 1679  |
+| Red Bull     | south  | 1476  |
+| Red Bull     | east   | 830   |
+| Red Bull     | west   | 532   |
+| Red Bull     | north  | 498   |
 
 In order to use csv data in the subsequent process, you need to call the data processing method, extract the field information in the data, and convert it into a structured dataset. VMind provides methods based on rules and large models to obtain field information:
 ```ts
@@ -111,9 +111,9 @@ const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csvData, userInpu
 
 The content we want to show is "the changes in the sales rankings of various car brands". Call the generateChart method and pass the data and display content description directly to VMind:
 ```typescript
-const describe='show me the changes in sales rankings of various car brand'
+const userPrompt='show me the changes in sales rankings of various car brand'
 //Call the chart generation interface to get spec and chart animation duration
-const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset);
+const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
 Next, we can use VChart to draw the generated chart.
@@ -142,8 +142,8 @@ The generated chart is as follows:
 We can also make more requests for the chart, for example:
 
 ```typescript
-const describe = 'Help me show the sales of various products in different regions, use line charts, and use region as the x-axis';
-const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset);
+const userPrompt = 'Help me show the sales of various products in different regions, use line charts, and use region as the x-axis';
+const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
 The generated chart is as follows:

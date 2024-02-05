@@ -221,8 +221,8 @@ Mirinda,east,830
 Mirinda,west,532
 Mirinda,north,498`
 
-const describe=`Show the sales of each product in different regions`
+const userPrompt=`Show the sales of each product in different regions`
 const vmind = new VMind(options)
-const { fieldInfo, dataset } = vmind.parseCSVData(parseCSVDataWithLLM, describe);
+const { fieldInfo, dataset } = vmind.parseCSVData(csv, userPrompt);
 ```
 In this example, the returned dataset and fieldInfo are the same as the product sales dataset in the previous chapter.
