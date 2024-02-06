@@ -7,7 +7,7 @@ generateChart函数用于图表智能生成。
 ## 支持模型：
 - GPT-3.5
 - GPT-4
-- skylark2-pro
+- [skylark2-pro](https://www.volcengine.com/product/yunque)
 
 ## 接口参数：
 
