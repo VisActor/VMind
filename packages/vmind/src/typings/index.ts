@@ -1,5 +1,4 @@
 import type { FFmpeg } from '@ffmpeg/ffmpeg';
-import type { VChart } from '@visactor/vchart';
 import type { ManualTicker, DefaultTimeline } from '@visactor/vrender-core';
 
 export interface ILLMOptions {
@@ -85,7 +84,7 @@ export type TimeType = {
 };
 
 export type OuterPackages = {
-  VChart: VChart;
+  VChart: any;
   FFmpeg: FFmpeg;
   fetchFile: (data: string | Buffer | Blob | File) => Promise<Uint8Array>;
   ManualTicker: typeof ManualTicker;
