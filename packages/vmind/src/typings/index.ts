@@ -1,6 +1,6 @@
 import type { FFmpeg } from '@ffmpeg/ffmpeg';
 import type { VChart } from '@visactor/vchart';
-
+import type { ManualTicker, DefaultTimeline } from '@visactor/vrender-core';
 export interface ILLMOptions {
   url?: string; //URL of your LLM service. For gpt, default is openAI API.
   /** llm request header, which has higher priority */
@@ -87,6 +87,8 @@ export type OuterPackages = {
   VChart: VChart;
   FFmpeg: FFmpeg;
   fetchFile: (data: string | Buffer | Blob | File) => Promise<Uint8Array>;
+  ManualTicker: typeof ManualTicker;
+  defaultTimeline: DefaultTimeline;
 };
 
 export enum DataType {
