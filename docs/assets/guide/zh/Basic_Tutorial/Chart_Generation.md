@@ -254,18 +254,18 @@ const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset,
 
 ## VMind支持的图表类型
 VMind目前支持VChart中常见的13种图表类型：
-- 柱状图
-- 折线图
-- 饼图
-- 散点图
-- 双轴图
-- 词云
-- 玫瑰图
-- 雷达图
-- 箱型图
-- 漏斗图
-- 桑基图
-- 瀑布图
+- [柱状图](https://www.visactor.io/vchart/demo/bar-chart/basic-column)
+- [折线图](hhttps://www.visactor.io/vchart/demo/line-chart/basic-line)
+- [饼图](https://www.visactor.io/vchart/demo/pie-chart/basic-pie)
+- [散点图](https://www.visactor.io/vchart/demo/scatter-chart/basic-scatter)
+- [双轴图](https://www.visactor.io/vchart/demo/combination/dual-axis)
+- [词云](https://www.visactor.io/vchart/demo/word-cloud-chart/word-cloud-basic)
+- [玫瑰图](https://www.visactor.io/vchart/demo/rose-chart/basic-rose)
+- [雷达图](https://www.visactor.io/vchart/demo/radar-chart/basic-radar)
+- [箱型图](https://www.visactor.io/vchart/demo/box-plot/basic-box-plot)
+- [漏斗图](https://www.visactor.io/vchart/demo/funnel-chart/basic-funnel)
+- [桑基图](https://www.visactor.io/vchart/demo/sankey-chart/basic-sankey)
+- [瀑布图](https://www.visactor.io/vchart/demo/waterfall/basic-waterfall)
 - [动态条形图（ranking bar）](https://www.visactor.io/vchart/demo/storytelling/ranking-bar)
 
 根据`userPrompt`和`fieldInfo`的不同，这些图表类型都有可能被大语言模型推荐。
