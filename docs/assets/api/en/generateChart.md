@@ -7,7 +7,7 @@ The generateChart function is used for intelligent chart generation.
 ## Supported Models:
 - GPT-3.5
 - GPT-4
-- skylark2-pro
+- [skylark2-pro](https://www.volcengine.com/product/yunque)
 
 ## Interface Parameters:
 
