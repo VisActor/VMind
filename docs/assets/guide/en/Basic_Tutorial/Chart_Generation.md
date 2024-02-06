@@ -253,19 +253,19 @@ This can reduce the process of calling the large model once, reduce token consum
 
 ## Chart Types Supported by VMind
 VMind currently supports 13 common chart types in VChart:
-- Bar chart
-- Line chart
-- Pie chart
-- Scatter plot
-- Dual-axis chart
-- Word cloud
-- Rose chart
-- Radar chart
-- Box plot
-- Funnel chart
-- Sankey diagram
-- Waterfall chart
-- [Dynamic bar chart (ranking bar)](https://www.visactor.io/vchart/demo/storytelling/ranking-bar)
+- [Bar Chart](https://www.visactor.io/vchart/demo/bar-chart/basic-column)
+- [Line Chart](hhttps://www.visactor.io/vchart/demo/line-chart/basic-line)
+- [Pie Chart](https://www.visactor.io/vchart/demo/pie-chart/basic-pie)
+- [Scatter Chart](https://www.visactor.io/vchart/demo/scatter-chart/basic-scatter)
+- [Dual Axis Chart](https://www.visactor.io/vchart/demo/combination/dual-axis)
+- [Word Cloud](https://www.visactor.io/vchart/demo/word-cloud-chart/word-cloud-basic)
+- [Rose Chart](https://www.visactor.io/vchart/demo/rose-chart/basic-rose)
+- [Radar Chart](https://www.visactor.io/vchart/demo/radar-chart/basic-radar)
+- [Box Plot](https://www.visactor.io/vchart/demo/box-plot/basic-box-plot)
+- [Funnel Chart](https://www.visactor.io/vchart/demo/funnel-chart/basic-funnel)
+- [Sankey Chart](https://www.visactor.io/vchart/demo/sankey-chart/basic-sankey)
+- [Waterfall Chart](https://www.visactor.io/vchart/demo/waterfall/basic-waterfall)
+- [Dynamic Bar Chart (ranking bar)](https://www.visactor.io/vchart/demo/storytelling/ranking-bar)
 
 Depending on the `userPrompt` and `fieldInfo`, these chart types may all be recommended by the large language model.
 
