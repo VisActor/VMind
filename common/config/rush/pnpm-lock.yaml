@@ -104,7 +104,7 @@ importers:
       '@visactor/chart-advisor': 0.1.10
       '@visactor/vchart': ^1.9.0
       '@visactor/vdataset': ~0.17.4
-      '@visactor/vrender-core': ^0.17.19
+      '@visactor/vrender-core': ^0.17.23
       '@visactor/vutils': ~0.17.4
       '@vitejs/plugin-react': 3.1.0
       axios: ^1.4.0
@@ -135,7 +135,6 @@ importers:
       '@visactor/calculator': link:../calculator
       '@visactor/chart-advisor': 0.1.10
       '@visactor/vdataset': 0.17.4
-      '@visactor/vrender-core': 0.17.23
       '@visactor/vutils': 0.17.4
       axios: 1.6.7
       dayjs: 1.11.10
@@ -161,6 +160,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.30.0_cow5zg7tx6c3eisi5a4ud5kwia
       '@typescript-eslint/parser': 5.30.0_vwud3sodsb5zxmzckoj7rdwdbq
       '@visactor/vchart': 1.9.2
+      '@visactor/vrender-core': 0.17.23
       '@vitejs/plugin-react': 3.1.0_vite@3.2.6
       dotenv: 16.3.2
       eslint: 8.18.0
@@ -3243,6 +3243,7 @@ packages:
     dependencies:
       '@visactor/vutils': 0.17.4
       color-convert: 2.0.1
+    dev: true
 
   /@visactor/vrender-kits/0.17.23:
     resolution: {integrity: sha512-3Mnr5y62ZTeZweaEGNLMM8Wf3vkf2K8aTiW4kinXkk0Am0k78v/0kdkwaYEnNM89uJ4zRVXPkkLG6h+/4KMo8Q==}

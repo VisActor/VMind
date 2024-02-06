@@ -1,18 +1,15 @@
-import { ManualTicker, defaultTimeline } from '@visactor/vrender-core';
-import type { FFmpeg } from '@ffmpeg/ffmpeg';
 import { cloneDeep } from 'lodash';
-import { TimeType } from '../typings';
+import { OuterPackages, TimeType } from '../typings';
 
 let idx = 0;
 export async function _chatToVideoWasm(
-  VChart: any,
-  ffmpeg: FFmpeg,
-  fetchFile: (data: string | Buffer | Blob | File) => Promise<Uint8Array>,
   fps: number,
   propsSpec: any,
   propsTime: TimeType,
-  outName = 'out'
+  outName = 'out',
+  outerPackages: OuterPackages
 ) {
+  const { ManualTicker, defaultTimeline, VChart, fetchFile, FFmpeg } = outerPackages;
   idx++;
   const defaultTicker = new ManualTicker();
   const spec = cloneDeep(propsSpec);
@@ -93,11 +90,11 @@ export async function _chatToVideoWasm(
     // defaultTicker.mode = 'raf'
     // const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
     // console.log(new Uint8Array(imageData.data.buffer))
-    ffmpeg.FS('writeFile', `vchart${idx}.${num}.png`, await fetchFile((blob as any).data));
+    FFmpeg.FS('writeFile', `vchart${idx}.${num}.png`, await fetchFile((blob as any).data));
   }
 
   vchart.release();
-  await ffmpeg.run(
+  await FFmpeg.run(
     '-framerate',
     '30',
     '-pattern_type',
@@ -112,7 +109,7 @@ export async function _chatToVideoWasm(
   );
   for (let i = 0; i <= frame; i++) {
     const num = `0000${i}`.slice(-3);
-    ffmpeg.FS('unlink', `vchart${idx}.${num}.png`);
+    FFmpeg.FS('unlink', `vchart${idx}.${num}.png`);
   }
   // defaultTicker.mode = 'raf';
 }
