@@ -17,15 +17,15 @@ After you complete [Getting Started](./Getting_Started), you can learn about the
 
 The VMind documentation provides detailed information on functions and APIs. Depending on your needs, you can view the following sections:
 
-- [Tutorials](./todo): Introduces the basic concepts of VMind and various usage methods.
+- [Tutorials](./Basic_Tutorial/Create_VMind_Instance): Introduces the basic concepts of VMind and various usage methods.
 
-- [API](./todo): Provides detailed descriptions of all available interfaces of VMind.
+- [API](../api/VMind_Instance): Provides detailed descriptions of all available interfaces of VMind.
 
-- [Examples](./todo): Provides some functional examples of VMind.
+<!--- [Examples](./todo): Provides some functional examples of VMind.
 
 ## Examples
 
-The example page provides many practical application cases of VMind. Each example provides a detailed description, key configuration information, and source code.
+The example page provides many practical application cases of VMind. Each example provides a detailed description, key configuration information, and source code.-->
 
 ## How to Use the Search Function
 
