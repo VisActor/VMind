@@ -4,7 +4,7 @@
 VisActor is a full-process visualization solution, which takes "visual storytelling" and "intelligence" as its core development direction. The components of VisActor that carry the ability of "visual storytelling" mainly include VChart, VTable, and VGrammar, all of which provide simple and easy-to-use interfaces. However, we hope that in some typical scenarios, users can generate charts and narrative works without writing code, thereby reducing the learning cost and complexity for users. The powerful generation ability of the large language model provides a natural language interaction interface for the VisActor visualization system, allowing us to directly call various functions of visualization components such as VChart and VTable through natural language, thereby completing visualization creation simply, quickly, and with high quality.
 
 
-![VMind](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_intro.png)
+![VMind](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_intro_eng.png)
 
 
 VMind is an intelligent visualization component built on the basic capabilities of visualization component libraries such as VChart and VTable. We hope that in some typical scenarios, users can generate charts and narrative works with just one sentence, thereby reducing the learning cost and complexity for users.
@@ -13,7 +13,7 @@ VMind is an intelligent visualization component built on the basic capabilities 
 Intelligence is the future core direction of VisActor. Only on this basis can we truly reduce the access and development costs of developers and allow them to focus on things outside of visualization. VMind is an intelligent visualization component in the VisActor system. It provides intelligent interfaces in various ways such as rule algorithms, artificial intelligence, machine learning, and large language models to minimize the mental burden of developers using visualization components.
 
 
-![VMind Architecture Diagram](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_structure.png)
+![VMind Architecture Diagram](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_structure_eng.png)
 
 
 In the VMind component, the bottom layer is the chart rendering, animation, annotation capabilities, VChart documentation provided by the VChart chart library, and the natural language understanding and code generation capabilities provided by the large model. Among them, the data processing and interaction layer is responsible for processing user input data and natural language, including data aggregation modules for field parsing, data conversion, aggregation, etc., and the interaction communication module is responsible for handling communication between users and VMind, VMind and the large model, including user intent recognition, Prompt management, model communication, result parsing.
@@ -21,7 +21,7 @@ In the VMind component, the bottom layer is the chart rendering, animation, anno
 ## VMind Core Capabilities
 
 
-![VMind Capability Diagram](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_abilities.png)
+![VMind Capability Diagram](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_abilities_eng.png)
 
 
 The core capabilities of VMind include intelligent chart generation, intelligent chart editing, and intelligent color matching.
@@ -34,7 +34,7 @@ Advanced capabilities are further applications of core capabilities, including c
 ## VMind Chart Creation Process
 
 
-![VMind Capability Diagram](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_flow.png)
+![VMind Capability Diagram](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_progress_eng.png)
 
 
 Based on VMind's intelligent chart generation, conversational editing, and intelligent color matching modules, we can summarize the full process of using VMind for chart creation:
