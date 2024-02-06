@@ -5,6 +5,8 @@ import VChart from '@visactor/vchart';
 import { ManualTicker, defaultTimeline } from '@visactor/vrender-core';
 import VMind from '../../../../src';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
+import { createCanvas } from 'canvas';
+
 const TextArea = Input.TextArea;
 
 type IPropsType = {
@@ -64,7 +66,8 @@ export function ChartPreview(props: IPropsType) {
       FFmpeg: ffmpeg,
       fetchFile,
       ManualTicker,
-      defaultTimeline
+      defaultTimeline,
+      createCanvas
     } as any);
     setSrc(src);
     setOutType('video');
@@ -86,7 +89,8 @@ export function ChartPreview(props: IPropsType) {
       FFmpeg: ffmpeg,
       fetchFile,
       ManualTicker,
-      defaultTimeline
+      defaultTimeline,
+      createCanvas
     } as any);
     setSrc(src);
     setOutType('gif');

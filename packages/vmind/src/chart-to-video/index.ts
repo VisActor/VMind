@@ -9,21 +9,26 @@ export async function _chatToVideoWasm(
   outName = 'out',
   outerPackages: OuterPackages
 ) {
-  const { ManualTicker, defaultTimeline, VChart, fetchFile, FFmpeg } = outerPackages;
+  const { ManualTicker, defaultTimeline, VChart, fetchFile, FFmpeg, createCanvas } = outerPackages;
+
   idx++;
   const defaultTicker = new ManualTicker();
   const spec = cloneDeep(propsSpec);
   const time = cloneDeep(propsTime);
   const { totalTime, frameArr } = time;
+
+  const width = spec.width ?? 720;
+  const height = spec.height ?? 480;
+  spec.width = width;
+  spec.height = height;
+
   // 关闭player
   if (frameArr && frameArr.length) {
     spec.player && (spec.player.auto = false);
   }
   defaultTicker.mode = 'manual';
-  spec.width = 720;
-  spec.height = 480;
-  const canvas = document.createElement('canvas');
-  document.body.appendChild(canvas);
+
+  const canvas = createCanvas(width, height);
   const vchart = new VChart(spec, {
     renderCanvas: canvas,
     mode: 'desktop-browser',
