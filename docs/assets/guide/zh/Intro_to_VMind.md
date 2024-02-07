@@ -3,7 +3,7 @@
 VisActor是一款全流程可视化解决方案，它以“可视化叙事”和“智能化”为核心发展方向。VisActor承载“可视化叙事” 能力的组件主要有VChart、VTable 和 VGrammar，它们都提供了简单易用的接口。然而，我们希望在一些典型场景中，用户能够无需编写代码就能生成图表和叙事作品，以此降低用户的学习成本和使用复杂度。大语言模型的强大生成能力为VisActor可视化体系提供了一个自然语言的交互接口，使我们能够通过自然语言直接调用VChart、VTable等可视化组件的各项功能，从而简单、快速、高质量地完成可视化创作。
 
 
-![VMind](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_intro.png)
+![VMind](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_intro_ch.png)
 
 
 VMind是在VChart、VTable等可视化组件库的基础能力之上，构建的一个智能可视化组件。我们希望在一些典型场景中，用户能够只需一句话就能生成图表和叙事作品，以此降低用户的学习成本和使用复杂度。
@@ -12,7 +12,7 @@ VMind是在VChart、VTable等可视化组件库的基础能力之上，构建的
 智能化是VisActor的未来核心方向，只有在此基础上，我们才能真正降低开发者的接入和研发成本，让他们能够将注意力集中在可视化之外。VMind是VisActor体系中的智能可视化组件，它基于规则算法、人工智能、机器学习、大语言模型等多种方式提供智能化接口，以最大限度降低开发者使用可视化组件的心智负担。
 
 
-![VMind架构图](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_structure.png)
+![VMind架构图](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_structrure_ch.png)
 
 
 在VMind组件中，最底层是由VChart图表库提供的图表渲染、动画、标注能力、VChart文档，以及大语言模型提供的自然语言理解、代码生成能力。其中，数据处理与交互层负责处理用户输入的数据和自然语言，包括数据聚合模块进行字段解析、数据转换、聚合等操作，交互通信模块负责处理用户与VMind、VMind与大语言模型之间的通信，包括用户意图识别、Prompt管理，模型通信，结果解析。
@@ -21,7 +21,7 @@ VMind是在VChart、VTable等可视化组件库的基础能力之上，构建的
 ## VMind核心能力
 
 
-![VMind能力图](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_abilities.png)
+![VMind能力图](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_abilities_ch.png)
 
 
 VMind的核心能力包括图表智能生成、图表智能编辑和智能配色。
@@ -35,7 +35,7 @@ VMind的核心能力包括图表智能生成、图表智能编辑和智能配色
 ## VMind图表创作流程
 
 
-![VMind能力图](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_flow.png)
+![VMind能力图](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_progress_ch.png)
 
 
 基于VMind的图表智能生成、对话式编辑和智能配色模块，我们可以概括出使用VMind进行图表创作的全流程：
