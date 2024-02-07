@@ -97,9 +97,9 @@ class VMind {
   }
 
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages) {
-    const { VChart, FFmpeg, fetchFile } = outerPackages;
+    const { VChart, FFmpeg, fetchFile, ManualTicker } = outerPackages;
     const outName = `out`;
-    await _chatToVideoWasm(VChart, FFmpeg, fetchFile, this._FPS, spec, time, outName);
+    await _chatToVideoWasm(this._FPS, spec, time, outName, outerPackages);
     const data = FFmpeg.FS('readFile', `${outName}.mp4`);
     return data.buffer;
   }
@@ -107,7 +107,7 @@ class VMind {
   async exportGIF(spec: any, time: TimeType, outerPackages: OuterPackages) {
     const { VChart, FFmpeg, fetchFile } = outerPackages;
     const outName = `out`;
-    await _chatToVideoWasm(VChart, FFmpeg, fetchFile, this._FPS, spec, time, outName);
+    await _chatToVideoWasm(this._FPS, spec, time, outName, outerPackages);
     // 调色板
     await FFmpeg.run('-i', `${outName}.mp4`, '-filter_complex', '[0:v] palettegen', 'palette.png');
     await FFmpeg.run(
