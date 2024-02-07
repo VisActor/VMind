@@ -58,11 +58,12 @@ export function ChartPreview(props: IPropsType) {
       log: true
     });
     await ffmpeg.load();
-    const src = await vmind.exportVideo(spec, time, {
+    const data = await vmind.exportVideo(spec, time, {
       VChart,
       FFmpeg: ffmpeg,
       fetchFile
     } as any);
+    const src = URL.createObjectURL(new Blob([data], { type: 'video/mp4' }));
     setSrc(src);
     setOutType('video');
     setGenerating(false);
@@ -78,11 +79,12 @@ export function ChartPreview(props: IPropsType) {
       log: true
     });
     await ffmpeg.load();
-    const src = await vmind.exportGIF(spec, time, {
+    const data = await vmind.exportGIF(spec, time, {
       VChart,
       FFmpeg: ffmpeg,
       fetchFile
     } as any);
+    const src = URL.createObjectURL(new Blob([data], { type: 'video/mp4' }));
     setSrc(src);
     setOutType('gif');
     setGenerating(false);
