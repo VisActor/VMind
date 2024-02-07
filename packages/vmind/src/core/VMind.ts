@@ -101,8 +101,7 @@ class VMind {
     const outName = `out`;
     await _chatToVideoWasm(VChart, FFmpeg, fetchFile, this._FPS, spec, time, outName);
     const data = FFmpeg.FS('readFile', `${outName}.mp4`);
-    const objUrl = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
-    return objUrl;
+    return data.buffer;
   }
 
   async exportGIF(spec: any, time: TimeType, outerPackages: OuterPackages) {
@@ -121,8 +120,7 @@ class VMind {
       'out.gif'
     );
     const data = FFmpeg.FS('readFile', 'out.gif');
-    const objUrl = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
-    return objUrl;
+    return data.buffer;
   }
 }
 
