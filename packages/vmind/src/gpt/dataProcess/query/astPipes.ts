@@ -210,6 +210,19 @@ export const orderBy: any = (query: Partial<Query>, context: ASTParserContext) =
         result.column = orderConfig.column;
         result.aggregate = orderConfig.aggregate;
       }
+      //query in calculator package does not support alias reference in other parts outside select.
+      //check if the order by column is a derived column using aggregation methods in select
+      //if so, replace the column with the original name and aggregation method.
+      if (!result.aggregate && !fieldInfo.find(field => field.fieldName === result.column)) {
+        //result.column is a derived field. replace with the original field
+        const originalColumn: any = query.select.columns.find(
+          column => column.alias === result.column || (column as any).column === result.column
+        );
+        if (originalColumn) {
+          result.column = originalColumn.column ?? originalColumn.alias;
+          result.aggregate = originalColumn.aggregate;
+        }
+      }
       return {
         type: type ? toFirstUpperCase(type) : OrderType.Asc,
         ...result

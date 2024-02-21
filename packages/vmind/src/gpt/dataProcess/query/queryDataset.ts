@@ -31,7 +31,6 @@ export const queryDatasetWithGPT = async (
   const { validFieldInfo, replaceMap: operatorReplaceMap } = replaceOperator(fieldInfo);
   const patchedInput = patchQueryInput(userInput);
   const { SimQuery, fieldInfo: responseFieldInfo } = await getQuerySQL(patchedInput, validFieldInfo, options);
-  console.log(SimQuery, responseFieldInfo);
   const { validStr, replaceMap: preprocessReplaceMap } = preprocessSQL(SimQuery, fieldInfo);
   const replaceMap = mergeMap(preprocessReplaceMap, operatorReplaceMap);
   const parser = new NodeSQLParser.Parser();
@@ -61,8 +60,6 @@ const getQuerySQL = async (userInput: string, fieldInfo: SimpleFieldInfo[], opti
 
   const requestFunc = options.customRequestFunc?.dataQuery ?? requestGPT;
   const QueryDatasetPrompt = getQueryDatasetPrompt2(options.showThoughts);
-  console.log(QueryDatasetPrompt);
-  console.log(queryDatasetMessage);
   const dataProcessRes = await requestFunc(QueryDatasetPrompt, queryDatasetMessage, options);
   const dataQueryResponse: DataQueryResponse = parseGPTResponseAsJSON(dataProcessRes);
   const { SimQuery, fieldInfo: responseFiledInfo } = dataQueryResponse;
