@@ -105,7 +105,7 @@ export const detectFieldType = (dataset: DataItem[], column: string): SimpleFiel
     role,
     domain:
       role === ROLE.DIMENSION
-        ? (uniqArray(domain) as string[]).splice(20)
+        ? (uniqArray(domain) as string[]).slice(0, 20)
         : [Math.min(...(domain as number[])), Math.max(...(domain as number[]))]
   };
 };

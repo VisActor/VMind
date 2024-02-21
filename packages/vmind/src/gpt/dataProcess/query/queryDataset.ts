@@ -1,11 +1,18 @@
 import { DataItem, ILLMOptions, SimpleFieldInfo } from '../../../typings';
 import NodeSQLParser from 'node-sql-parser';
-import { mergeMap, parseRespondField, patchQueryInput, preprocessSQL, replaceOperator } from './utils';
+import {
+  mergeMap,
+  parseGPTQueryResponse,
+  parseRespondField,
+  patchQueryInput,
+  preprocessSQL,
+  replaceOperator
+} from './utils';
 import { parseSqlAST } from './parseSqlAST';
 import { isArray } from 'lodash';
 import { DataQueryResponse, SQLAst } from './type';
 import { Query, query } from '@visactor/calculator';
-import { parseGPTResponse, requestGPT } from '../../utils';
+import { parseGPTResponse as parseGPTResponseAsJSON, requestGPT } from '../../utils';
 import { getQueryDatasetPrompt2 } from '../prompts';
 
 /**
@@ -24,6 +31,7 @@ export const queryDatasetWithGPT = async (
   const { validFieldInfo, replaceMap: operatorReplaceMap } = replaceOperator(fieldInfo);
   const patchedInput = patchQueryInput(userInput);
   const { SimQuery, fieldInfo: responseFieldInfo } = await getQuerySQL(patchedInput, validFieldInfo, options);
+  console.log(SimQuery, responseFieldInfo);
   const { validStr, replaceMap: preprocessReplaceMap } = preprocessSQL(SimQuery, fieldInfo);
   const replaceMap = mergeMap(preprocessReplaceMap, operatorReplaceMap);
   const parser = new NodeSQLParser.Parser();
@@ -34,6 +42,9 @@ export const queryDatasetWithGPT = async (
   const dataset = query(queryObject as Query);
 
   const fieldInfoNew = parseRespondField(responseFieldInfo, dataset, replaceMap);
+  if (dataset.length === 0) {
+    console.warn('empty dataset after query!');
+  }
   return {
     dataset: dataset.length === 0 ? sourceDataset : dataset,
     fieldInfo: dataset.length === 0 ? fieldInfo : fieldInfoNew
@@ -53,7 +64,13 @@ const getQuerySQL = async (userInput: string, fieldInfo: SimpleFieldInfo[], opti
   console.log(QueryDatasetPrompt);
   console.log(queryDatasetMessage);
   const dataProcessRes = await requestFunc(QueryDatasetPrompt, queryDatasetMessage, options);
-  const dataQueryResponse: DataQueryResponse = parseGPTResponse(dataProcessRes);
-  console.log(dataQueryResponse);
+  const dataQueryResponse: DataQueryResponse = parseGPTResponseAsJSON(dataProcessRes);
+  const { SimQuery, fieldInfo: responseFiledInfo } = dataQueryResponse;
+  if (!SimQuery || !responseFiledInfo) {
+    //try to parse the response with another format
+    const choices = dataProcessRes.choices;
+    const content = choices[0].message.content;
+    return parseGPTQueryResponse(content);
+  }
   return dataQueryResponse;
 };
