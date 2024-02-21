@@ -39,6 +39,16 @@ export const patchChartTypeAndCell = (chartTypeOutter: string, cell: any, datase
   const { x, y } = cell;
 
   let chartType = chartTypeOutter;
+
+  // patch the "axis" field to x
+  if (cell.axis && (!cell.x || !cell.y)) {
+    if (!cell.x) {
+      cell.x = cell.axis;
+    } else if (!cell.y) {
+      cell.y = cell.axis;
+    }
+  }
+
   // y轴字段有多个时，处理方式:
   // 1. 图表类型为: 箱型图, 图表类型不做矫正
   // 2. 图表类型为: 柱状图 或 折线图, 图表类型矫正为双轴图
