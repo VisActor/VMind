@@ -13,7 +13,7 @@ import { isArray } from 'lodash';
 import { DataQueryResponse, SQLAst } from './type';
 import { Query, query } from '@visactor/calculator';
 import { parseGPTResponse as parseGPTResponseAsJSON, requestGPT } from '../../utils';
-import { getQueryDatasetPrompt2 } from '../prompts';
+import { getQueryDatasetPrompt } from '../prompts';
 
 /**
  * query the source dataset according to user's input and fieldInfo to get aggregated dataset
@@ -59,7 +59,7 @@ const getQuerySQL = async (userInput: string, fieldInfo: SimpleFieldInfo[], opti
   const queryDatasetMessage = `User's Command: ${userInput}\nColumn Information: ${JSON.stringify(fieldInfo)}`;
 
   const requestFunc = options.customRequestFunc?.dataQuery ?? requestGPT;
-  const QueryDatasetPrompt = getQueryDatasetPrompt2(options.showThoughts);
+  const QueryDatasetPrompt = getQueryDatasetPrompt(options.showThoughts ?? true);
   const dataProcessRes = await requestFunc(QueryDatasetPrompt, queryDatasetMessage, options);
   const dataQueryResponse: DataQueryResponse = parseGPTResponseAsJSON(dataProcessRes);
   const { SimQuery, fieldInfo: responseFiledInfo } = dataQueryResponse;
