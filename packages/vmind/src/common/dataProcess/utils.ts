@@ -1,6 +1,7 @@
 import { sampleSize, isNumber, isInteger } from 'lodash';
 import { DataItem, DataType, ROLE, SimpleFieldInfo } from '../../typings';
 import dayjs from 'dayjs';
+import { uniqArray } from '@visactor/vutils';
 export const readTopNLine = (csvFile: string, n: number) => {
   // get top n lines of a csv file
   let res = '';
@@ -29,6 +30,10 @@ function validateDate(date: any) {
   return dayjs(date, 'YYYY-MM-DD').isValid() || dayjs(date, 'MM-DD').isValid();
 }
 
+export function removeEmptyLines(str: string) {
+  return str.replace(/\n\s*\n/g, '\n');
+}
+
 export const detectFieldType = (dataset: DataItem[], column: string): SimpleFieldInfo => {
   let fieldType: DataType | undefined = undefined;
   //detect field type based on rules
@@ -36,6 +41,7 @@ export const detectFieldType = (dataset: DataItem[], column: string): SimpleFiel
   //date=>string
   //int=>float=>string
   //detect field type from strict to loose
+
   dataset.every(data => {
     const value = data[column];
     const numberValue = Number(value);
@@ -88,10 +94,19 @@ export const detectFieldType = (dataset: DataItem[], column: string): SimpleFiel
       return true;
     }
   });
+  const role = [DataType.STRING, DataType.DATE].includes(fieldType) ? ROLE.DIMENSION : ROLE.MEASURE;
+
+  //calculate domain of the column
+  const domain: (string | number)[] = dataset.map(d => (role === ROLE.DIMENSION ? d[column] : Number(d[column])));
+
   return {
     fieldName: column,
     type: fieldType,
-    role: [DataType.STRING, DataType.DATE].includes(fieldType) ? ROLE.DIMENSION : ROLE.MEASURE
+    role,
+    domain:
+      role === ROLE.DIMENSION
+        ? (uniqArray(domain) as string[]).splice(20)
+        : [Math.min(...(domain as number[])), Math.max(...(domain as number[]))]
   };
 };
 export const getFieldInfoFromDataset = (dataset: DataItem[], columns: string[]): SimpleFieldInfo[] => {

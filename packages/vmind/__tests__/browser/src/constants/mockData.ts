@@ -3625,15 +3625,14 @@ Xiaomi,0.1,4087,131345
  * 雷达图
  */
 export const mockUserInput14 = {
-  csv: `key,value
+  csv: `dimension,performance
 Strength,5
 Speed,5
 Shooting,3
 Endurance,5
 Precision,5
-Growth,5
-  `,
-  input: '帮我展示个人在不同方面的绩效，他是否是六边形战士'
+Growth,5`,
+  input: '帮我展示这个人在不同方面的绩效，他是否是六边形战士'
 };
 
 /**

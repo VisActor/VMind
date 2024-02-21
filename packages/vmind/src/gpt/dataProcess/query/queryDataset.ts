@@ -6,7 +6,7 @@ import { isArray } from 'lodash';
 import { DataQueryResponse, SQLAst } from './type';
 import { Query, query } from '@visactor/calculator';
 import { parseGPTResponse, requestGPT } from '../../utils';
-import { getQueryDatasetPrompt } from '../prompts';
+import { getQueryDatasetPrompt2 } from '../prompts';
 
 /**
  * query the source dataset according to user's input and fieldInfo to get aggregated dataset
@@ -23,8 +23,8 @@ export const queryDatasetWithGPT = async (
 ) => {
   const { validFieldInfo, replaceMap: operatorReplaceMap } = replaceOperator(fieldInfo);
   const patchedInput = patchQueryInput(userInput);
-  const { sql, fieldInfo: responseFieldInfo } = await getQuerySQL(patchedInput, validFieldInfo, options);
-  const { validStr, replaceMap: preprocessReplaceMap } = preprocessSQL(sql, fieldInfo);
+  const { SimQuery, fieldInfo: responseFieldInfo } = await getQuerySQL(patchedInput, validFieldInfo, options);
+  const { validStr, replaceMap: preprocessReplaceMap } = preprocessSQL(SimQuery, fieldInfo);
   const replaceMap = mergeMap(preprocessReplaceMap, operatorReplaceMap);
   const parser = new NodeSQLParser.Parser();
 
@@ -49,8 +49,11 @@ const getQuerySQL = async (userInput: string, fieldInfo: SimpleFieldInfo[], opti
   const queryDatasetMessage = `User's Command: ${userInput}\nColumn Information: ${JSON.stringify(fieldInfo)}`;
 
   const requestFunc = options.customRequestFunc?.dataQuery ?? requestGPT;
-  const QueryDatasetPrompt = getQueryDatasetPrompt(options.showThoughts);
+  const QueryDatasetPrompt = getQueryDatasetPrompt2(options.showThoughts);
+  console.log(QueryDatasetPrompt);
+  console.log(queryDatasetMessage);
   const dataProcessRes = await requestFunc(QueryDatasetPrompt, queryDatasetMessage, options);
   const dataQueryResponse: DataQueryResponse = parseGPTResponse(dataProcessRes);
+  console.log(dataQueryResponse);
   return dataQueryResponse;
 };
