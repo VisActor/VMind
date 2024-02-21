@@ -11,9 +11,9 @@ export interface ILLMOptions {
   temperature?: number;
   showThoughts?: boolean;
   customRequestFunc?: {
-    chartAdvisor: RequestFunc;
-    dataProcess: RequestFunc;
-    dataQuery: RequestFunc;
+    chartAdvisor?: RequestFunc;
+    dataProcess?: RequestFunc;
+    dataQuery?: RequestFunc;
   };
   [key: string]: any;
 }
@@ -25,6 +25,7 @@ export type SimpleFieldInfo = {
   description?: string; //additional description of the field. This will help the model have a more comprehensive understanding of this field, improving the quality of chart generation.
   type: DataType;
   role: ROLE;
+  domain?: (string | number)[];
 };
 export type GPTDataProcessResult = {
   fieldInfo: SimpleFieldInfo[];

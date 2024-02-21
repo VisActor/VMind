@@ -1,4 +1,6 @@
-import { isString } from 'lodash';
+import { isArray, isString } from 'lodash';
+import JSON5 from 'json5';
+
 import { Query } from '@visactor/calculator';
 import { detectFieldType } from '../../../common/dataProcess/utils';
 import { DataItem, SimpleFieldInfo } from '../../../typings';
@@ -226,6 +228,27 @@ export const mergeMap = (map1: Map<string, string>, map2: Map<string, string>) =
 export const patchQueryInput = (userInput: string) => {
   return (
     userInput +
-    " Don't use JOIN, UNION or subquery. Don't use Rank(), PERCENTILE_CONT, CASE WHEN. Don't use conditional statement."
+    " Don't use unsupported keywords and methods in the SELECT of SimQuery. Don't use non-existent columns and dimension values in the WHERE of SimQuery."
   );
+};
+
+export const parseGPTQueryResponse = (response: string) => {
+  const SimQuery = response.match(/SimQuery:\n?```(.*?)```/s)[1];
+  const fieldInfoStr = response.match(/fieldInfo:\n?```(.*?)```/s)[1];
+  let fieldInfo = [];
+  try {
+    const tempFieldInfo = JSON5.parse(fieldInfoStr);
+    if (isArray(tempFieldInfo)) {
+      fieldInfo = tempFieldInfo;
+    } else {
+      fieldInfo = tempFieldInfo.fieldInfo;
+    }
+  } catch (e) {
+    //fieldInfoStr is not a json string; try to wrap it with []
+    fieldInfo = JSON5.parse(`[${fieldInfoStr}]`);
+  }
+  return {
+    SimQuery,
+    fieldInfo
+  };
 };
