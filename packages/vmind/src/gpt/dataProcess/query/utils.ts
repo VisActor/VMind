@@ -226,7 +226,10 @@ export const mergeMap = (map1: Map<string, string>, map2: Map<string, string>) =
 };
 
 export const patchQueryInput = (userInput: string) => {
-  return userInput;
+  return (
+    userInput +
+    " Don't use unsupported keywords and methods in the SELECT of SimQuery. Don't use non-existent columns and dimension values in the WHERE of SimQuery."
+  );
 };
 
 export const parseGPTQueryResponse = (response: string) => {
