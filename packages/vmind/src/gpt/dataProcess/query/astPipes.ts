@@ -156,21 +156,23 @@ export const select: ASTParserPipe = (query: Partial<Query>, context: ASTParserC
   return {
     ...query,
     select: {
-      columns: (columns ?? []).map(column => {
-        const result: any = {};
-        const { as, expr } = column;
-        if (checkIsColumnNode(expr, columnAlias, fieldInfo)) {
-          result.column = getOriginalString(expr.column ?? expr.value, replaceMap);
-        } else if (expr.type === 'aggr_func') {
-          const aggrFuncConf: any = parseAggrFunc(expr, columnAlias, fieldInfo, replaceMap);
-          result.column = aggrFuncConf.column;
-          result.aggregate = aggrFuncConf.aggregate;
-        }
-        if (as) {
-          result.alias = getOriginalString(as, replaceMap);
-        }
-        return result;
-      }),
+      columns: (columns ?? [])
+        .map(column => {
+          const result: any = {};
+          const { as, expr } = column;
+          if (checkIsColumnNode(expr, columnAlias, fieldInfo)) {
+            result.column = getOriginalString(expr.column ?? expr.value, replaceMap);
+          } else if (expr.type === 'aggr_func') {
+            const aggrFuncConf: any = parseAggrFunc(expr, columnAlias, fieldInfo, replaceMap);
+            result.column = aggrFuncConf.column;
+            result.aggregate = aggrFuncConf.aggregate;
+          }
+          if (as) {
+            result.alias = getOriginalString(as, replaceMap);
+          }
+          return result;
+        })
+        .filter(c => c.column),
       distinct: Boolean(distinct)
     }
   };

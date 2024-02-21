@@ -224,8 +224,5 @@ export const mergeMap = (map1: Map<string, string>, map2: Map<string, string>) =
 };
 
 export const patchQueryInput = (userInput: string) => {
-  return (
-    userInput +
-    " Don't use JOIN, UNION or subquery. Don't use Rank(), PERCENTILE_CONT, CASE WHEN. Don't use conditional statement."
-  );
+  return userInput;
 };
