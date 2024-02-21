@@ -7,7 +7,8 @@ export async function _chatToVideoWasm(
   propsSpec: any,
   propsTime: TimeType,
   outName = 'out',
-  outerPackages: OuterPackages
+  outerPackages: OuterPackages,
+  mode?: 'node' | 'desktop-browser'
 ) {
   const { ManualTicker, defaultTimeline, VChart, fetchFile, FFmpeg, createCanvas } = outerPackages;
 
@@ -31,7 +32,7 @@ export async function _chatToVideoWasm(
   const canvas = createCanvas(width, height);
   const vchart = new VChart(spec, {
     renderCanvas: canvas,
-    mode: 'desktop-browser',
+    mode: 'node',
     dpr: 1,
     disableDirtyBounds: true,
     ticker: defaultTicker,
@@ -74,28 +75,33 @@ export async function _chatToVideoWasm(
     vchart.getStage().render();
     const num = `0000${i}`.slice(-3);
 
-    const size = { width: canvas.width, height: canvas.height };
-    const blob = await new Promise((resolve, reject) => {
-      canvas.toBlob((blob: any) => {
-        if (blob) {
-          const info = {
-            data: blob,
-            format: 'PNG',
-            size
-          };
-          console.log(`BBB--------${info}`);
-          resolve(info);
-        } else {
-          console.log('no blob');
-          reject('no blob');
-        }
-      }, `image/png`);
-    });
+    if (mode === 'node') {
+      const buffer = (canvas as any).toBuffer();
+      FFmpeg.FS('writeFile', `vchart${idx}.${num}.png`, buffer);
+    } else {
+      const size = { width: canvas.width, height: canvas.height };
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob((blob: any) => {
+          if (blob) {
+            const info = {
+              data: blob,
+              format: 'PNG',
+              size
+            };
+            console.log(`BBB--------${info}`);
+            resolve(info);
+          } else {
+            console.log('no blob');
+            reject('no blob');
+          }
+        }, `image/png`);
+      });
+      FFmpeg.FS('writeFile', `vchart${idx}.${num}.png`, await fetchFile((blob as any).data));
+    }
 
     // defaultTicker.mode = 'raf'
     // const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
     // console.log(new Uint8Array(imageData.data.buffer))
-    FFmpeg.FS('writeFile', `vchart${idx}.${num}.png`, await fetchFile((blob as any).data));
   }
 
   vchart.release();

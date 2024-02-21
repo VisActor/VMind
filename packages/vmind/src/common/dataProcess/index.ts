@@ -15,8 +15,6 @@ export const parseCSVWithVChart = (csvString: string) => {
   return dataView;
 };
 
-export const getDataView = (dataset: DataItem[]) => {};
-
 export const getDataset = (csvString: string): { dataset: DataItem[]; columns: string[] } => {
   //get dataset from csv string
   const dataView = parseCSVWithVChart(csvString);
