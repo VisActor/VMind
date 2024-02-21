@@ -96,18 +96,18 @@ class VMind {
     return { fieldInfo: [], dataset };
   }
 
-  async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages) {
+  async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {
     const { VChart, FFmpeg, fetchFile, ManualTicker } = outerPackages;
     const outName = `out`;
-    await _chatToVideoWasm(this._FPS, spec, time, outName, outerPackages);
+    await _chatToVideoWasm(this._FPS, spec, time, outName, outerPackages, mode);
     const data = FFmpeg.FS('readFile', `${outName}.mp4`);
     return data.buffer;
   }
 
-  async exportGIF(spec: any, time: TimeType, outerPackages: OuterPackages) {
+  async exportGIF(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {
     const { VChart, FFmpeg, fetchFile } = outerPackages;
     const outName = `out`;
-    await _chatToVideoWasm(this._FPS, spec, time, outName, outerPackages);
+    await _chatToVideoWasm(this._FPS, spec, time, outName, outerPackages, mode);
     // 调色板
     await FFmpeg.run('-i', `${outName}.mp4`, '-filter_complex', '[0:v] palettegen', 'palette.png');
     await FFmpeg.run(
