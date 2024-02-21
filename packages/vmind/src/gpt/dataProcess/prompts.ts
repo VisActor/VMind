@@ -344,9 +344,9 @@ export const getQueryDatasetPrompt2 = (
 - SimQuery is a simplified SQL-like language. Supported keywords in SimQuery: ["SELECT", "FROM", "WHERE", "GROUP BY", "HAVING", "ORDER BY", "LIMIT"].
 - A SimQuery query looks like this: "SELECT columnA, SUM(columnB) as sum_b FROM dataSource WHERE columnA = value1 GROUP BY columnA HAVING sum_b>0 ORDER BY sum_b LIMIT 10".
 - Columns in SELECT can only be original columns or aggregated columns. Supported aggregation methods in SimQuery: ["MAX()", "MIN()", "SUM()", "COUNT()", "AVG()"].
-- The "WHERE" and "HAVING" in SimQuery can only use original columns or aggregated columns in dataSource. Supported Operators in SimQuery:[ ">", ">=", "<", "<=", "=", "!=", "in", "not in", "is null", "is not null", "between", "not between", "like", "not like"]. Don't use non-existent columns.
-- Don't use unsupported keywords such as CASE WHEN or PERCENTILE_CONT. Don't use unsupported aggregation methods on columns. Don't use unsupported operators. Unsupported keywords, methods and operators will cause system crash. If current keywords and methods can't meet your needs, just simple select the column without any process.
-- Make your SimQuery as simple as possible.
+- The "WHERE" and "HAVING" in SimQuery can only use original columns or aggregated columns in dataSource. Supported Operators in SimQuery:[ ">", ">=", "<", "<=", "=", "!=", "in", "not in", "is null", "is not null", "between", "not between", "like", "not like"].
+- Don't use unsupported keywords such as CASE WHEN or PERCENTILE_CONT in SELECT. Don't use unsupported aggregation methods on columns. Don't use unsupported operators. Unsupported keywords, methods and operators will cause system crash. If current keywords and methods can't meet your needs, just simple select the columns without any process.
+- Don't use non-existent columns in SELECT and WHERE. Don't use values that is not in the domain of dimensions in WHERE. If domain of the dimensions can't meet your needs, just ignore this part of user's command and don't filter the data.
 
 You need to follow the steps below.
 
