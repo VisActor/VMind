@@ -1,9 +1,9 @@
 import { LOCATION, SimpleFieldInfo, VizSchema } from '../typings';
 
 /**
- * generate vizSchema from fieldInfo
- * @param fieldInfo SimpleFieldInfo
- * @returns
+ * Generate a vizSchema from fieldInfo
+ * @param fieldInfo SimpleFieldInfo[] - An array of field information, each element contains the field name, description, type, and role, etc.
+ * @returns Partial<VizSchema> - Returns a partial VizSchema object, containing the transformed field information.
  */
 export const getSchemaFromFieldInfo = (fieldInfo: SimpleFieldInfo[]): Partial<VizSchema> => {
   const schema = {
