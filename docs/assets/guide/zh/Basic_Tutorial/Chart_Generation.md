@@ -44,7 +44,7 @@ const vmind = new VMind(options)
 const userPrompt = 'show me the changes in sales rankings of various car brand';
 const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
-你可以在[创建VMind实例](./Create_VMind_Instance.md)中了解如何创建VMind实例和options中的参数信息，在[数据格式与数据处理](./Data_Process.md)章节中获取更多关于fieldInfo和dataset的相关信息。
+你可以在[创建VMind实例](./Create_VMind_Instance)中了解如何创建VMind实例和options中的参数信息，在[数据格式与数据处理](./Data_Process)章节中获取更多关于fieldInfo和dataset的相关信息。
 
 你可以对spec进行二次加工，改变图表的颜色、样式、动画等配置，也可以直接渲染VChart图表：
 
@@ -236,11 +236,11 @@ VMind还支持[动态条形图（ranking bar）](https://www.visactor.io/vchart/
 ![](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_dynamic_bar.gif)
 
 
-为了让VMind生成符合预期的图表，你需要在`userPrompt`中尽可能清晰地描述你的展示意图和目的。此外，你还需要确保数据集的字段名称具有一定的语义，或者在字段信息中添加字段描述，具体请参见[数据格式与数据处理](./Data_Process.md)章节。
+为了让VMind生成符合预期的图表，你需要在`userPrompt`中尽可能清晰地描述你的展示意图和目的。此外，你还需要确保数据集的字段名称具有一定的语义，或者在字段信息中添加字段描述，具体请参见[数据格式与数据处理](./Data_Process)章节。
 
 
 ### enableDataQuery
-在[数据聚合](./Data_Aggregation.md)章节中，我们已经介绍过，为了满足`展示销售额最多的10个部门`或`展示北方区域各商品的销售额`等图表展示需求，我们需要先对数据进行聚合，然后再生成图表。在默认情况下，`generateChart`函数会在执行过程中调用一次`dataQuery`，使用相同的`userPrompt`，`fieldInfo`和`dataset`对数据进行聚合，然后使用聚合后的数据完成后续的图表生成步骤。
+在[数据聚合](./Data_Aggregation)章节中，我们已经介绍过，为了满足`展示销售额最多的10个部门`或`展示北方区域各商品的销售额`等图表展示需求，我们需要先对数据进行聚合，然后再生成图表。在默认情况下，`generateChart`函数会在执行过程中调用一次`dataQuery`，使用相同的`userPrompt`，`fieldInfo`和`dataset`对数据进行聚合，然后使用聚合后的数据完成后续的图表生成步骤。
 
 然而，如果你确定你的数据无需进行进一步的聚合、筛选和排序就可以满足用户的图表展示需求，你可以通过将`enableDataQuery`设置为`false`来关闭这一流程：
 ```ts
@@ -250,7 +250,7 @@ const vmind = new VMind(options)
 const userPrompt = 'show me the changes in sales rankings of various car brand';
 const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset, false); //将enableDataQuery设置为false，关闭数据聚合
 ```
-这样做可以减少一次调用大模型的过程，降低token消耗，提高图表生成速度。关于VMind数据聚合的更多信息，请参考[数据聚合](./Data_Aggregation.md)章节。
+这样做可以减少一次调用大模型的过程，降低token消耗，提高图表生成速度。关于VMind数据聚合的更多信息，请参考[数据聚合](./Data_Aggregation)章节。
 
 ## VMind支持的图表类型
 VMind目前支持VChart中常见的13种图表类型：

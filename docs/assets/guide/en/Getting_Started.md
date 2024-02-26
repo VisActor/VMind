@@ -47,7 +47,7 @@ headers: { //Specify the header when calling the large model service
 })
 ```
 
-When initializing the VMind instance, you can specify the url of the large model service, the type of model, custom model request methods and other parameters. For detailed tutorials, please go to the [Create VMind Instance](./Basic_Tutorial/Create_VMind_Instance.md) chapter
+When initializing the VMind instance, you can specify the url of the large model service, the type of model, custom model request methods and other parameters. For detailed tutorials, please go to the [Create VMind Instance](./Basic_Tutorial/Create_VMind_Instance) chapter
 
 ## Chart Intelligent Generation Module
 
