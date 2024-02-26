@@ -360,7 +360,7 @@ const sourceFieldInfo = [
 假设我们想要展示北方区域销售额排名前三的商品，我们可以这样做：
 
 ```ts
-const userPrompt = `帮我展示north区域排名前三的商品销售额`
+const userPrompt = `帮我展示北方排名前三的商品销售额`
 const vmind = new VMind(options)
 
 // 调用dataQuery方法，传入userPrompt，sourceFieldInfo和sourceDataset，执行数据聚合

@@ -361,7 +361,7 @@ const sourceFieldInfo = [
 Suppose we want to show the top three products in terms of sales in the north region, we can do this:
 
 ```ts
-const userPrompt = `Show me the top three products in terms of sales in the north region`
+const userPrompt = `Show me the top three products in terms of sales in the north`
 const vmind = new VMind(options)
 
 // Call the dataQuery method, pass in userPrompt, sourceFieldInfo, and sourceDataset to perform data aggregation
