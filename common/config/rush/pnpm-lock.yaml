@@ -12,6 +12,7 @@ importers:
       '@types/markdown-it': ^13.0.0
       '@types/react': ^18.0.0
       '@types/react-dom': ^18.0.0
+      '@visactor/vutils': ~0.17.4
       '@vitejs/plugin-react': 3.1.0
       axios: ^1.4.0
       chalk: ^3.0.0
@@ -31,6 +32,7 @@ importers:
       yargs: ^17.1.1
     dependencies:
       '@arco-design/web-react': 2.46.1_tmih5ryase7m737mtcsxs5l4a4
+      '@visactor/vutils': 0.17.4
       axios: 1.6.7
       highlight.js: 11.9.0
       lodash: 4.17.21

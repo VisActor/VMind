@@ -96,7 +96,7 @@ Next, we will detail the usage of the VMind data aggregation function.
 
 
 ## dataQuery
-The dataQuery function of the VMind object is a powerful data aggregation tool. It takes three parameters: userPrompt for user display intent, fieldInfo for dataset field information, and the original dataset. Detailed information about fieldInfo and dataset can be found in [Data Format and Data Processing](./Data_Process.md). VMind will write SQL statements based on the user's display intent, execute queries on the dataset, and the query results will be stored in the dataset property of the function return value; at the same time, the fields in the query results may change, and the updated field information will also be stored in the fieldInfo property of the return result.
+The dataQuery function of the VMind object is a powerful data aggregation tool. It takes three parameters: userPrompt for user display intent, fieldInfo for dataset field information, and the original dataset. Detailed information about fieldInfo and dataset can be found in [Data Format and Data Processing](./Data_Process). VMind will write SQL statements based on the user's display intent, execute queries on the dataset, and the query results will be stored in the dataset property of the function return value; at the same time, the fields in the query results may change, and the updated field information will also be stored in the fieldInfo property of the return result.
 
 Next, let's see how to use the dataQuery function through an example:
 ```ts
@@ -229,7 +229,7 @@ The returned fieldInfo is as follows:
 
 ```
 
-With this information, we can directly use fieldInfo and dataset to generate charts. You can find the specific operation steps in the [Intelligent Chart Generation](./Chart_Generation.md) section.
+With this information, we can directly use fieldInfo and dataset to generate charts. You can find the specific operation steps in the [Intelligent Chart Generation](./Chart_Generation) section.
 
 📢 **Attention: The dataQuery method will pass the userPrompt and fieldInfo to the large model to generate SQL, and the detailed data in the dataset will not be passed.**
 

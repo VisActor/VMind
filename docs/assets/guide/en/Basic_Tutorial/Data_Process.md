@@ -165,7 +165,7 @@ const { fieldInfo, dataset } = vmind.parseCSVData(csv);
 
 ```
 
-For the creation of the VMind instance and the detailed configuration in options, please refer to [Creating VMind Instance](./Create_VMind_Instance.md)
+For the creation of the VMind instance and the detailed configuration in options, please refer to [Creating VMind Instance](./Create_VMind_Instance)
 
 
 In this example, the returned dataset is the same as the product sales dataset in the previous chapter, and the returned fieldInfo is as follows:
@@ -190,7 +190,7 @@ In this example, the returned dataset is the same as the product sales dataset i
 ```
 
 
-For the creation of the VMind instance and the detailed configuration in options, please refer to [Creating VMind Instance](./Create_VMind_Instance.md)
+For the creation of the VMind instance and the detailed configuration in options, please refer to [Creating VMind Instance](./Create_VMind_Instance)
 
 
 The dataset and fieldInfo can be directly used for chart generation and data aggregation in VMind.
