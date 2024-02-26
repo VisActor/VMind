@@ -164,7 +164,7 @@ const { fieldInfo, dataset } = vmind.parseCSVData(csv);
 
 ```
 
-关于VMind实例的创建以及options中的详细配置，可以参见[创建VMind实例](./Create_VMind_Instance.md)
+关于VMind实例的创建以及options中的详细配置，可以参见[创建VMind实例](./Create_VMind_Instance)
 
 
 在这个例子中，该函数返回的dataset与上一章的商品销售数据集dataset相同，返回的fieldInfo如下：
@@ -220,7 +220,7 @@ const vmind = new VMind(options)
 const { fieldInfo, dataset } = vmind.parseCSVData(csv, userPrompt);
 ```
 
-关于VMind实例的创建以及options中的详细配置，可以参见[创建VMind实例](./Create_VMind_Instance.md)
+关于VMind实例的创建以及options中的详细配置，可以参见[创建VMind实例](./Create_VMind_Instance)
 
 
 在这个例子中，返回的dataset和fieldInfo均与上一章的商品销售数据集dataset相同。
