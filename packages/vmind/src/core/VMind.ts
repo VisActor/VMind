@@ -5,7 +5,7 @@ import { parseCSVDataWithGPT } from '../gpt/dataProcess';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
 import { generateChartWithSkylark } from '../skylark/chart-generation';
 import { queryDatasetWithGPT } from '../gpt/dataProcess/query/queryDataset';
-import { generateChartWithAdvisor } from 'src/common/chartAdvisor';
+import { generateChartWithAdvisor } from '../common/chartAdvisor';
 
 class VMind {
   private _FPS = 30;
