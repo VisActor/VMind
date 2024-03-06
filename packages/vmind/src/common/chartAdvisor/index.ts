@@ -18,7 +18,7 @@ export const generateChartWithAdvisor = (
   animationDuration?: number
 ) => {
   const advisorRes = getAdvisedChartsWithDataset(originDataset);
-  return advisorRes.map(res => {
+  const resultList = advisorRes.map(res => {
     const { chartType, cell, dataset } = res;
     const spec = vizDataToSpec(
       dataset,
@@ -34,4 +34,6 @@ export const generateChartWithAdvisor = (
       time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
     };
   });
+  console.info(resultList);
+  return resultList;
 };

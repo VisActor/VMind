@@ -52,9 +52,14 @@ export const getFieldInfoFromDataset = (dataset: DataItem[]): SimpleFieldInfo[] 
   if (!dataset || !dataset.length) {
     return [];
   }
-  const columns = dataset.reduce((prev, cur) => {
-    const dataKeys = Object.keys(cur);
-    return [...prev, ...dataKeys];
-  }, []);
-  return getFieldInfo(dataset, columns);
+  const columns = new Set();
+  dataset.forEach(data => {
+    const dataKeys = Object.keys(data);
+    dataKeys.forEach(column => {
+      if (!columns.has(column)) {
+        columns.add(column);
+      }
+    });
+  });
+  return getFieldInfo(dataset, Array.from(columns) as string[]);
 };
