@@ -1,7 +1,30 @@
 import { chartAdvisor, DataTypeName, ChartType } from '@visactor/chart-advisor';
-import { Cell, VizSchema } from '../../typings';
+import { Cell, DataItem, VizSchema } from '../../typings';
+import { getFieldInfoFromDataset } from '../dataProcess';
+import { getSchemaFromFieldInfo } from '../schema';
 
-export const chartAdvisorHandler = (schema: Partial<VizSchema>, dataset: any[]) => {
+export const getAdvisedChartsWithDataset = (dataset: DataItem[]) => {
+  const fieldInfo = getFieldInfoFromDataset(dataset);
+  const schema = getSchemaFromFieldInfo(fieldInfo);
+  const { scores } = getAdvisedChartList(schema, dataset);
+
+  return scores
+    .filter(d => availableChartTypeList.includes(d.chartType))
+    .map(result => ({
+      chartType: chartTypeMap(result.chartType).toUpperCase(),
+      cell: getCell(result.cell),
+      dataset: result.dataset
+    }));
+};
+
+/**
+ * call @visactor/chart-advisor to get the list of advised charts
+ * sorted by scores of each chart type
+ * @param schema
+ * @param dataset
+ * @returns
+ */
+const getAdvisedChartList = (schema: Partial<VizSchema>, dataset: any[]) => {
   const dimensionList: any = schema.fields
     .filter(d => d.role === 'dimension')
     .map(d => ({
@@ -16,6 +39,16 @@ export const chartAdvisorHandler = (schema: Partial<VizSchema>, dataset: any[]) 
     }));
   const aliasMap = Object.fromEntries(schema.fields.map(d => [d.id, d.alias]));
   const advisorResult = chartAdvisor({ originDataset: dataset, dimensionList, measureList, aliasMap });
+  return advisorResult;
+};
+/**
+ * get one recommended chart type using @visactor/chart-advisor
+ * @param schema
+ * @param dataset
+ * @returns
+ */
+export const chartAdvisorHandler = (schema: Partial<VizSchema>, dataset: any[]) => {
+  const advisorResult = getAdvisedChartList(schema, dataset);
   const result = advisorResult.scores.find(d => availableChartTypeList.includes(d.chartType));
   return {
     chartType: chartTypeMap(result.chartType).toUpperCase(),
