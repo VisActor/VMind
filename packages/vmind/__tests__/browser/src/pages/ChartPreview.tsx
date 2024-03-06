@@ -126,6 +126,7 @@ export function ChartPreview(props: IPropsType) {
     //defaultTicker.mode = 'raf';
     const { specList } = props;
     specList.forEach((spec: any, index: number) => {
+      (document.getElementById(`chart-${index}`) as any).innerHTML = '';
       const cs = new VChart(spec, {
         dom: `chart-${index}`,
         mode: 'desktop-browser',
@@ -185,9 +186,11 @@ export function ChartPreview(props: IPropsType) {
           </div>
           <div className="right-chart-content">
             <div id="chart"></div>
-            {(props.specList ?? []).map((spec, index: number) => (
-              <div key={`chart-${index}`} id={`chart-${index}`}></div>
-            ))}
+            <div id="chartListContainer">
+              {(props.specList ?? []).map((spec, index: number) => (
+                <div key={`chart-${index}`} id={`chart-${index}`}></div>
+              ))}
+            </div>
           </div>
           {props.spec ? (
             <div>
