@@ -11,6 +11,7 @@ const TextArea = Input.TextArea;
 
 type IPropsType = {
   spec: any;
+  specList?: any;
   time:
     | {
         totalTime: number;
@@ -121,6 +122,21 @@ export function ChartPreview(props: IPropsType) {
     cs.renderAsync();
   }, [chartSpace, props, props.spec, props.time]);
 
+  useEffect(() => {
+    //defaultTicker.mode = 'raf';
+    const { specList } = props;
+    specList.forEach((spec: any, index: number) => {
+      (document.getElementById(`chart-${index}`) as any).innerHTML = '';
+      const cs = new VChart(spec, {
+        dom: `chart-${index}`,
+        mode: 'desktop-browser',
+        dpr: 2,
+        disableDirtyBounds: true
+      });
+      cs.renderAsync();
+    });
+  }, [props]);
+
   return (
     <div className="right-chart">
       <Modal
@@ -170,6 +186,11 @@ export function ChartPreview(props: IPropsType) {
           </div>
           <div className="right-chart-content">
             <div id="chart"></div>
+            <div id="chartListContainer">
+              {(props.specList ?? []).map((spec, index: number) => (
+                <div key={`chart-${index}`} id={`chart-${index}`}></div>
+              ))}
+            </div>
           </div>
           {props.spec ? (
             <div>

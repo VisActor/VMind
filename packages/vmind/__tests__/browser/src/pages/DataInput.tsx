@@ -38,6 +38,7 @@ import {
 import VMind from '../../../../src/index';
 import { Model } from '../../../../src/index';
 import { queryDataset } from '../../../../src/gpt/dataProcess';
+import { isArray } from 'lodash';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -52,6 +53,7 @@ type IPropsType = {
     },
     costTime: number
   ) => void;
+  onSpecListGenerate: any;
 };
 const demoDataList: { [key: string]: any } = {
   pie: mockUserInput2,
@@ -95,8 +97,8 @@ export function DataInput(props: IPropsType) {
   const [cache, setCache] = useState<boolean>(false);
   const [showThoughts, setShowThoughts] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);
-  const [url, setUrl] = React.useState(ModelConfigMap[model].url ?? OPENAI_API_URL);
-  const [apiKey, setApiKey] = React.useState(ModelConfigMap[model].key);
+  const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
+  const [apiKey, setApiKey] = React.useState(ModelConfigMap[model]?.key);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -122,10 +124,16 @@ export function DataInput(props: IPropsType) {
     //const { fieldInfo: fieldInfoQuery, dataset: datasetQuery } = await vmind?.dataQuery(describe, fieldInfo, dataset);
     //const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csv, describe);
     const startTime = new Date().getTime();
-    const { spec, time } = await vmind.generateChart(describe, fieldInfo, dataset);
+    const chartGenerationRes = await vmind.generateChart(describe, fieldInfo, dataset);
     const endTime = new Date().getTime();
-    const costTime = endTime - startTime;
-    props.onSpecGenerate(spec, time as any, costTime);
+    if (isArray(chartGenerationRes)) {
+      props.onSpecListGenerate(chartGenerationRes.map(res => res.spec));
+    } else {
+      const { spec, time } = chartGenerationRes;
+      const costTime = endTime - startTime;
+      props.onSpecGenerate(spec, time as any, costTime);
+    }
+
     setLoading(false);
   }, [vmind, csv, describe, props]);
 
@@ -257,6 +265,7 @@ export function DataInput(props: IPropsType) {
           <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
 
           <Radio value={Model.SKYLARK}>skylark pro</Radio>
+          <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
         </RadioGroup>
       </div>
       <div style={{ width: '90%', marginBottom: 10 }}>

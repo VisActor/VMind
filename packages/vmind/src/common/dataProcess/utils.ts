@@ -109,7 +109,7 @@ export const detectFieldType = (dataset: DataItem[], column: string): SimpleFiel
         : [Math.min(...(domain as number[])), Math.max(...(domain as number[]))]
   };
 };
-export const getFieldInfoFromDataset = (dataset: DataItem[], columns: string[]): SimpleFieldInfo[] => {
+export const getFieldInfo = (dataset: DataItem[], columns: string[]): SimpleFieldInfo[] => {
   let sampledDataset = dataset;
   if (dataset.length > 1000) {
     //sample the dataset if too large

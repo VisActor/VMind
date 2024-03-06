@@ -103,7 +103,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.30.0
       '@typescript-eslint/parser': 5.30.0
       '@visactor/calculator': workspace:*
-      '@visactor/chart-advisor': 0.1.10
+      '@visactor/chart-advisor': 0.1.11
       '@visactor/vchart': ^1.9.0
       '@visactor/vdataset': ~0.17.4
       '@visactor/vrender-core': ^0.17.23
@@ -136,7 +136,7 @@ importers:
       vite-plugin-libcss: ~1.1.1
     dependencies:
       '@visactor/calculator': link:../calculator
-      '@visactor/chart-advisor': 0.1.10
+      '@visactor/chart-advisor': 0.1.11
       '@visactor/vdataset': 0.17.4
       '@visactor/vutils': 0.17.4
       axios: 1.6.7
@@ -3129,8 +3129,8 @@ packages:
     resolution: {integrity: sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==}
     dev: true
 
-  /@visactor/chart-advisor/0.1.10:
-    resolution: {integrity: sha512-br8EoI6uz2GwxjkHTUNOGkVhnTzNrf96h4LIeAz0IojXLxplqTp4USmKW8IRkgk9PJs5sDcB+/9cgZBpz5vR4A==}
+  /@visactor/chart-advisor/0.1.11:
+    resolution: {integrity: sha512-+sJh7Xe/UtDP+ndKNHs7RhiERaAtFTZUoHsiySD6QMin95j6nnfyFwN8kfvY0GdfCJ2JxYgBVvrwsUeSam59oQ==}
     dependencies:
       lodash: 4.17.21
     dev: false

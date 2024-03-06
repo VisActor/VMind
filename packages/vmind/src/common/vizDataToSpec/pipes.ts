@@ -48,7 +48,7 @@ export const data = (spec: any, context: Context) => {
   // spec.data = [dataset]
   spec.data = {
     id: 'data',
-    values: dataset
+    values: dataset.flat(4)
   };
 
   return spec;
@@ -550,8 +550,7 @@ export const radarAxis = (spec: any, context: Context) => {
     {
       orient: 'radius', // radius axis
       zIndex: 100,
-      min: 0,
-      max: 8,
+
       domainLine: {
         visible: false
       },

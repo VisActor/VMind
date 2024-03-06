@@ -2,9 +2,10 @@ import { _chatToVideoWasm } from '../chart-to-video';
 import { generateChartWithGPT } from '../gpt/chart-generation/NLToChart';
 import { ILLMOptions, TimeType, Model, SimpleFieldInfo, DataItem, OuterPackages } from '../typings';
 import { parseCSVDataWithGPT } from '../gpt/dataProcess';
-import { parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
+import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
 import { generateChartWithSkylark } from '../skylark/chart-generation';
 import { queryDatasetWithGPT } from '../gpt/dataProcess/query/queryDataset';
+import { generateChartWithAdvisor } from '../common/chartAdvisor';
 
 class VMind {
   private _FPS = 30;
@@ -45,6 +46,15 @@ class VMind {
   }
 
   /**
+   * get fieldInfo only by raw dataset
+   * @param dataset
+   * @returns fieldInfo
+   */
+  getFieldInfo(dataset: DataItem[]) {
+    return getFieldInfoFromDataset(dataset);
+  }
+
+  /**
    *
    * @param userPrompt user's visualization intention (what aspect they want to show in the data)
    * @param fieldInfo information about fields in the dataset. field name, type, etc. You can get fieldInfo using parseCSVData or parseCSVDataWithLLM
@@ -74,6 +84,9 @@ class VMind {
     }
     if ([Model.SKYLARK, Model.SKYLARK2].includes(this._model)) {
       return generateChartWithSkylark(userPrompt, fieldInfo, dataset, this._options, colorPalette, animationDuration);
+    }
+    if (Model.CHART_ADVISOR === this._model) {
+      return generateChartWithAdvisor(dataset, colorPalette, animationDuration);
     }
     console.error('unsupported model in chart generation!');
     return { spec: undefined, time: undefined, dataSource: undefined, tokens: undefined } as any;
