@@ -88,7 +88,7 @@
     "canvas": "^2.11.2"
   },
   "dependencies": {
-    "@visactor/chart-advisor": "0.1.10",
+    "@visactor/chart-advisor": "0.1.11",
     "@visactor/vdataset": "~0.17.4",
     "@visactor/vutils": "~0.17.4",
     "axios": "^1.4.0",

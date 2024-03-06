@@ -1,6 +1,6 @@
 import { DataSet, DataView, csvParser, fold } from '@visactor/vdataset';
 import { DataItem, DataType, SimpleFieldInfo } from '../../typings';
-import { getFieldInfoFromDataset } from './utils';
+import { getFieldInfo } from './utils';
 import { isNil } from 'lodash';
 
 export const parseCSVWithVChart = (csvString: string) => {
@@ -43,7 +43,23 @@ const convertNumberField = (dataset: DataItem[], fieldInfo: SimpleFieldInfo[]) =
 export const parseCSVData = (csvString: string): { fieldInfo: SimpleFieldInfo[]; dataset: DataItem[] } => {
   //parse the CSV string to get information about the fields(fieldInfo) and dataset object
   const { dataset, columns } = getDataset(csvString);
-  const fieldInfo = getFieldInfoFromDataset(dataset, columns);
+  const fieldInfo = getFieldInfo(dataset, columns);
   convertNumberField(dataset, fieldInfo);
   return { fieldInfo, dataset };
+};
+
+export const getFieldInfoFromDataset = (dataset: DataItem[]): SimpleFieldInfo[] => {
+  if (!dataset || !dataset.length) {
+    return [];
+  }
+  const columns = new Set();
+  dataset.forEach(data => {
+    const dataKeys = Object.keys(data);
+    dataKeys.forEach(column => {
+      if (!columns.has(column)) {
+        columns.add(column);
+      }
+    });
+  });
+  return getFieldInfo(dataset, Array.from(columns) as string[]);
 };
