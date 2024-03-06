@@ -7,10 +7,9 @@ export const getAdvisedChartsWithDataset = (dataset: DataItem[]) => {
   const fieldInfo = getFieldInfoFromDataset(dataset);
   const schema = getSchemaFromFieldInfo(fieldInfo);
   const { scores } = getAdvisedChartList(schema, dataset);
-
   return scores
-    .filter(d => availableChartTypeList.includes(d.chartType))
-    .map(result => ({
+    .filter((d: any) => availableChartTypeList.includes(d.chartType) && d.score - 0 >= 0.00000001)
+    .map((result: any) => ({
       chartType: chartTypeMap(result.chartType).toUpperCase(),
       cell: getCell(result.cell),
       dataset: result.dataset
@@ -85,7 +84,8 @@ const availableChartTypeList = [
   ChartType.DUAL_AXIS,
   ChartType.WORD_CLOUD,
   ChartType.FUNNEL,
-  ChartType.SANKEY
+  ChartType.SANKEY,
+  ChartType.RADAR
 ];
 
 const chartTypeMap = (advisorChartType: ChartType) => {
@@ -116,6 +116,8 @@ const chartTypeMap = (advisorChartType: ChartType) => {
     return 'Funnel Chart';
   } else if (ChartType.SANKEY === advisorChartType) {
     return 'Sankey Chart';
+  } else if (ChartType.RADAR === advisorChartType) {
+    return 'Radar Chart';
   }
   throw 'no matched chart type';
 };
