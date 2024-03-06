@@ -48,7 +48,7 @@ const getAdvisedChartList = (schema: Partial<VizSchema>, dataset: any[]) => {
  */
 export const chartAdvisorHandler = (schema: Partial<VizSchema>, dataset: any[]) => {
   const advisorResult = getAdvisedChartList(schema, dataset);
-  const result = advisorResult.scores.find(d => availableChartTypeList.includes(d.chartType));
+  const result = advisorResult.scores.find((d: any) => availableChartTypeList.includes(d.chartType));
   return {
     chartType: chartTypeMap(result.chartType).toUpperCase(),
     cell: getCell(result.cell),
@@ -128,9 +128,9 @@ const getCell = (cell: any): Cell => {
   keys.forEach((key: string) => {
     const channel = cell[key];
     if (Array.isArray(channel) && channel.length === 1) {
-      result[key] = channel[0];
+      result[key] = String(channel[0]);
     } else {
-      result[key] = channel;
+      result[key] = Array.isArray(channel) ? channel.map(c => String(c)) : channel;
     }
   });
   return result;

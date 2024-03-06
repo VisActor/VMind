@@ -2,6 +2,7 @@ import { getAdvisedChartsWithDataset } from './chartAdvisorHandler';
 import { vizDataToSpec } from '../vizDataToSpec';
 import { estimateVideoTime } from '../vizDataToSpec/utils';
 import { DataItem } from 'src/typings';
+import { uniqBy } from 'lodash';
 
 export { chartAdvisorHandler } from './chartAdvisorHandler';
 
@@ -18,7 +19,7 @@ export const generateChartWithAdvisor = (
   animationDuration?: number
 ) => {
   const advisorRes = getAdvisedChartsWithDataset(originDataset);
-  const resultList = advisorRes.map(res => {
+  const resultList = uniqBy(advisorRes, 'chartType').map((res: any) => {
     const { chartType, cell, dataset } = res;
     const spec = vizDataToSpec(
       dataset,
