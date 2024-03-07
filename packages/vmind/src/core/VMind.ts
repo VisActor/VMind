@@ -1,6 +1,6 @@
 import { _chatToVideoWasm } from '../chart-to-video';
 import { generateChartWithGPT } from '../gpt/chart-generation/NLToChart';
-import { ILLMOptions, TimeType, Model, SimpleFieldInfo, DataItem, OuterPackages } from '../typings';
+import { ILLMOptions, TimeType, Model, SimpleFieldInfo, DataItem, OuterPackages, ModelType } from '../typings';
 import { parseCSVDataWithGPT } from '../gpt/dataProcess';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
 import { generateChartWithSkylark } from '../skylark/chart-generation';
@@ -10,7 +10,7 @@ import { generateChartWithAdvisor } from '../common/chartAdvisor';
 class VMind {
   private _FPS = 30;
   private _options: ILLMOptions | undefined;
-  private _model: Model;
+  private _model: Model | string;
 
   constructor(options?: ILLMOptions) {
     this._options = { ...(options ?? {}) };
@@ -37,7 +37,7 @@ class VMind {
    * @returns
    */
   parseCSVDataWithLLM(csvString: string, userPrompt: string) {
-    if ([Model.GPT3_5, Model.GPT4].includes(this._model)) {
+    if (this.getModelType() === ModelType.GPT) {
       return parseCSVDataWithGPT(csvString, userPrompt, this._options);
     }
     console.error('Unsupported Model!');
@@ -52,6 +52,15 @@ class VMind {
    */
   getFieldInfo(dataset: DataItem[]) {
     return getFieldInfoFromDataset(dataset);
+  }
+
+  private getModelType() {
+    if (this._model.includes(ModelType.GPT)) {
+      return ModelType.GPT;
+    } else if (this._model.includes(ModelType.SKYLARK)) {
+      return ModelType.SKYLARK;
+    }
+    return ModelType.CHART_ADVISOR;
   }
 
   /**
@@ -71,7 +80,7 @@ class VMind {
     colorPalette?: string[],
     animationDuration?: number
   ) {
-    if ([Model.GPT3_5, Model.GPT4].includes(this._model)) {
+    if (this.getModelType() === ModelType.GPT) {
       return generateChartWithGPT(
         userPrompt,
         fieldInfo,
@@ -82,10 +91,10 @@ class VMind {
         animationDuration
       );
     }
-    if ([Model.SKYLARK, Model.SKYLARK2].includes(this._model)) {
+    if (this.getModelType() === ModelType.SKYLARK) {
       return generateChartWithSkylark(userPrompt, fieldInfo, dataset, this._options, colorPalette, animationDuration);
     }
-    if (Model.CHART_ADVISOR === this._model) {
+    if (this.getModelType() === ModelType.CHART_ADVISOR) {
       return generateChartWithAdvisor(fieldInfo, dataset, colorPalette, animationDuration);
     }
     console.error('unsupported model in chart generation!');
@@ -97,10 +106,10 @@ class VMind {
     fieldInfo: SimpleFieldInfo[],
     dataset: DataItem[]
   ) {
-    if ([Model.GPT3_5, Model.GPT4].includes(this._model)) {
+    if (this.getModelType() === ModelType.GPT) {
       return queryDatasetWithGPT(userPrompt, fieldInfo, dataset, this._options);
     }
-    if ([Model.SKYLARK, Model.SKYLARK2].includes(this._model)) {
+    if (this.getModelType() === ModelType.SKYLARK) {
       console.error('Please user GPT model');
       return { fieldInfo: [], dataset };
     }

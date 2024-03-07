@@ -10,7 +10,8 @@ export const getAdvisedChartsWithDataset = (fieldInfo: SimpleFieldInfo[], datase
     .map((result: any) => ({
       chartType: chartTypeMap(result.chartType).toUpperCase(),
       cell: getCell(result.cell),
-      dataset: result.dataset
+      dataset: result.dataset,
+      score: result.score
     }));
 };
 
