@@ -1,10 +1,8 @@
 import { chartAdvisor, DataTypeName, ChartType } from '@visactor/chart-advisor';
-import { Cell, DataItem, VizSchema } from '../../typings';
-import { getFieldInfoFromDataset } from '../dataProcess';
+import { Cell, DataItem, SimpleFieldInfo, VizSchema } from '../../typings';
 import { getSchemaFromFieldInfo } from '../schema';
 
-export const getAdvisedChartsWithDataset = (dataset: DataItem[]) => {
-  const fieldInfo = getFieldInfoFromDataset(dataset);
+export const getAdvisedChartsWithDataset = (fieldInfo: SimpleFieldInfo[], dataset: DataItem[]) => {
   const schema = getSchemaFromFieldInfo(fieldInfo);
   const { scores } = getAdvisedChartList(schema, dataset);
   return scores

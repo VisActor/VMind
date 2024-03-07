@@ -86,7 +86,7 @@ class VMind {
       return generateChartWithSkylark(userPrompt, fieldInfo, dataset, this._options, colorPalette, animationDuration);
     }
     if (Model.CHART_ADVISOR === this._model) {
-      return generateChartWithAdvisor(dataset, colorPalette, animationDuration);
+      return generateChartWithAdvisor(fieldInfo, dataset, colorPalette, animationDuration);
     }
     console.error('unsupported model in chart generation!');
     return { spec: undefined, time: undefined, dataSource: undefined, tokens: undefined } as any;
