@@ -53,6 +53,7 @@ export const generateChartWithSkylark = async (
   spec.background = '#00000033';
   return {
     chartSource,
+    chartType,
     spec,
     time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
   };
@@ -109,7 +110,3 @@ export const chartAdvisorSkylark = async (
     cell: omit(fieldMapResJson, ['thoughts', 'usage'])
   };
 };
-
-export const getFieldMapSkylark = async (chartType: string, userInput: string) => {};
-
-const getChartChannel = (chartType: string) => {};

@@ -75,6 +75,7 @@ export const generateChartWithGPT = async (
   return {
     chartSource,
     spec,
+    chartType,
     time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
   };
 };

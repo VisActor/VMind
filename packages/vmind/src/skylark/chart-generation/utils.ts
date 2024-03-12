@@ -134,7 +134,8 @@ export const requestSkyLark = async (prompt: string, message: string, options: I
           }
         ],
         max_tokens: options?.max_tokens ?? 500,
-        temperature: options?.temperature ?? 0
+        temperature: options?.temperature ?? 0,
+        stream: false
       }
     }).then(response => response.data);
 
