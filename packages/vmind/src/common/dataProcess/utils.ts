@@ -34,6 +34,14 @@ export function removeEmptyLines(str: string) {
   return str.replace(/\n\s*\n/g, '\n');
 }
 
+export const getFieldDomain = (dataset: DataItem[], column: string, role: ROLE) => {
+  //calculate domain of the column
+  const domain: (string | number)[] = dataset.map(d => (role === ROLE.DIMENSION ? d[column] : Number(d[column])));
+  return role === ROLE.DIMENSION
+    ? (uniqArray(domain) as string[]).slice(0, 20)
+    : [Math.min(...(domain as number[])), Math.max(...(domain as number[]))];
+};
+
 export const detectFieldType = (dataset: DataItem[], column: string): SimpleFieldInfo => {
   let fieldType: DataType | undefined = undefined;
   //detect field type based on rules
@@ -95,18 +103,13 @@ export const detectFieldType = (dataset: DataItem[], column: string): SimpleFiel
     }
   });
   const role = [DataType.STRING, DataType.DATE].includes(fieldType) ? ROLE.DIMENSION : ROLE.MEASURE;
-
-  //calculate domain of the column
-  const domain: (string | number)[] = dataset.map(d => (role === ROLE.DIMENSION ? d[column] : Number(d[column])));
+  const domain = getFieldDomain(dataset, column, role);
 
   return {
     fieldName: column,
     type: fieldType,
     role,
-    domain:
-      role === ROLE.DIMENSION
-        ? (uniqArray(domain) as string[]).slice(0, 20)
-        : [Math.min(...(domain as number[])), Math.max(...(domain as number[]))]
+    domain
   };
 };
 export const getFieldInfo = (dataset: DataItem[], columns: string[]): SimpleFieldInfo[] => {
