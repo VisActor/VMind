@@ -26,7 +26,7 @@ export const getDataset = (csvString: string): { dataset: DataItem[]; columns: s
 /**
  * convert number string to number in dataset
  */
-const convertNumberField = (dataset: DataItem[], fieldInfo: SimpleFieldInfo[]) => {
+export const convertNumberField = (dataset: DataItem[], fieldInfo: SimpleFieldInfo[]) => {
   const numberFields = fieldInfo
     .filter(field => [DataType.INT, DataType.FLOAT].includes(field.type))
     .map(field => field.fieldName);
