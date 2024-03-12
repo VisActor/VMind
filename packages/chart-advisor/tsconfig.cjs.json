@@ -1,0 +1,21 @@
+/**
+ * NOTE: this file is symlink to '@aeolian/dev-config/tsconfig/build.cjs.json'
+ */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "target": "es2018",
+    "module": "CommonJS",
+    "noEmit": false,
+    "sourceMap": false,
+  },
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.stories.tsx",
+    "**/*.mock.ts",
+    "**/tests",
+    "**/mocks",
+  ],
+}
