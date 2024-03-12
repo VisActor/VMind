@@ -1,3 +1,6 @@
+import type { FFmpeg } from '@ffmpeg/ffmpeg';
+import type { ManualTicker, DefaultTimeline } from '@visactor/vrender-core';
+
 export interface ILLMOptions {
   url?: string; //URL of your LLM service. For gpt, default is openAI API.
   /** llm request header, which has higher priority */
@@ -8,20 +11,21 @@ export interface ILLMOptions {
   temperature?: number;
   showThoughts?: boolean;
   customRequestFunc?: {
-    chartAdvisor: requestFunc;
-    dataProcess: requestFunc;
-    dataQuery: requestFunc;
+    chartAdvisor?: RequestFunc;
+    dataProcess?: RequestFunc;
+    dataQuery?: RequestFunc;
   };
   [key: string]: any;
 }
 
-type requestFunc = (prompt: string, userMessage: string, options: ILLMOptions | undefined) => Promise<LLMResponse>;
+type RequestFunc = (prompt: string, userMessage: string, options: ILLMOptions | undefined) => Promise<LLMResponse>;
 
 export type SimpleFieldInfo = {
   fieldName: string;
   description?: string; //additional description of the field. This will help the model have a more comprehensive understanding of this field, improving the quality of chart generation.
   type: DataType;
   role: ROLE;
+  domain?: (string | number)[];
 };
 export type GPTDataProcessResult = {
   fieldInfo: SimpleFieldInfo[];
@@ -78,6 +82,15 @@ export type Pipe = (src: any, context: Context) => any;
 export type TimeType = {
   totalTime: number;
   frameArr: any[];
+};
+
+export type OuterPackages = {
+  VChart: any;
+  FFmpeg: FFmpeg;
+  fetchFile: (data: string | Buffer | Blob | File) => Promise<Uint8Array>;
+  ManualTicker: typeof ManualTicker;
+  defaultTimeline: DefaultTimeline;
+  createCanvas: any;
 };
 
 export enum DataType {

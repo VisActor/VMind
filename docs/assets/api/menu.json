@@ -1,0 +1,40 @@
+{
+  "menu": "scripts",
+  "children": [
+    {
+      "path": "VMind_Instance",
+      "title": {
+        "zh": "VMind实例",
+        "en": "VMind Instance"
+      }
+    },
+    {
+      "path": "parseCSVData",
+      "title": {
+        "zh": "parseCSVData",
+        "en": "parseCSVData"
+      }
+    },
+    {
+      "path": "parseCSVDataWithLLM",
+      "title": {
+        "zh": "parseCSVDataWithLLM",
+        "en": "parseCSVDataWithLLM"
+      }
+    },
+    {
+      "path": "dataQuery",
+      "title": {
+        "zh": "dataQuery",
+        "en": "dataQuery"
+      }
+    },
+    {
+      "path": "generateChart",
+      "title": {
+        "zh": "generateChart",
+        "en": "generateChart"
+      }
+    }
+  ]
+}

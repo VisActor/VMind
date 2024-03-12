@@ -1,0 +1,10 @@
+[
+  {
+    "menu": "guide",
+    "type": "markdown"
+  },
+  {
+    "menu": "api",
+    "type": "markdown"
+  }
+]

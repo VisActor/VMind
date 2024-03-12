@@ -1,35 +1,38 @@
-import { ManualTicker, defaultTimeline } from '@visactor/vrender-core';
-import type { FFmpeg } from '@ffmpeg/ffmpeg';
 import { cloneDeep } from 'lodash';
-import { TimeType } from '../typings';
+import { OuterPackages, TimeType } from '../typings';
 
 let idx = 0;
 export async function _chatToVideoWasm(
-  VChart: any,
-  ffmpeg: FFmpeg,
-  fetchFile: (data: string | Buffer | Blob | File) => Promise<Uint8Array>,
   fps: number,
   propsSpec: any,
   propsTime: TimeType,
-  outName = 'out'
+  outName = 'out',
+  outerPackages: OuterPackages,
+  mode?: 'node' | 'desktop-browser'
 ) {
+  const { ManualTicker, defaultTimeline, VChart, fetchFile, FFmpeg, createCanvas } = outerPackages;
+
   idx++;
   const defaultTicker = new ManualTicker();
   const spec = cloneDeep(propsSpec);
   const time = cloneDeep(propsTime);
   const { totalTime, frameArr } = time;
+
+  const width = spec.width ?? 720;
+  const height = spec.height ?? 480;
+  spec.width = width;
+  spec.height = height;
+
   // 关闭player
   if (frameArr && frameArr.length) {
     spec.player && (spec.player.auto = false);
   }
-  // defaultTicker.mode = 'manual';
-  spec.width = 720;
-  spec.height = 480;
-  const canvas = document.createElement('canvas');
-  document.body.appendChild(canvas);
+  defaultTicker.mode = 'manual';
+
+  const canvas = createCanvas(width, height);
   const vchart = new VChart(spec, {
     renderCanvas: canvas,
-    mode: 'desktop-browser',
+    mode: 'node',
     dpr: 1,
     disableDirtyBounds: true,
     ticker: defaultTicker,
@@ -72,32 +75,37 @@ export async function _chatToVideoWasm(
     vchart.getStage().render();
     const num = `0000${i}`.slice(-3);
 
-    const size = { width: canvas.width, height: canvas.height };
-    const blob = await new Promise((resolve, reject) => {
-      canvas.toBlob((blob: any) => {
-        if (blob) {
-          const info = {
-            data: blob,
-            format: 'PNG',
-            size
-          };
-          console.log(`BBB--------${info}`);
-          resolve(info);
-        } else {
-          console.log('no blob');
-          reject('no blob');
-        }
-      }, `image/png`);
-    });
+    if (mode === 'node') {
+      const buffer = (canvas as any).toBuffer();
+      FFmpeg.FS('writeFile', `vchart${idx}.${num}.png`, buffer);
+    } else {
+      const size = { width: canvas.width, height: canvas.height };
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob((blob: any) => {
+          if (blob) {
+            const info = {
+              data: blob,
+              format: 'PNG',
+              size
+            };
+            console.log(`BBB--------${info}`);
+            resolve(info);
+          } else {
+            console.log('no blob');
+            reject('no blob');
+          }
+        }, `image/png`);
+      });
+      FFmpeg.FS('writeFile', `vchart${idx}.${num}.png`, await fetchFile((blob as any).data));
+    }
 
     // defaultTicker.mode = 'raf'
     // const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
     // console.log(new Uint8Array(imageData.data.buffer))
-    ffmpeg.FS('writeFile', `vchart${idx}.${num}.png`, await fetchFile((blob as any).data));
   }
 
   vchart.release();
-  await ffmpeg.run(
+  await FFmpeg.run(
     '-framerate',
     '30',
     '-pattern_type',
@@ -112,7 +120,7 @@ export async function _chatToVideoWasm(
   );
   for (let i = 0; i <= frame; i++) {
     const num = `0000${i}`.slice(-3);
-    ffmpeg.FS('unlink', `vchart${idx}.${num}.png`);
+    FFmpeg.FS('unlink', `vchart${idx}.${num}.png`);
   }
   // defaultTicker.mode = 'raf';
 }

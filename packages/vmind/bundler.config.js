@@ -4,11 +4,10 @@
 const json = require('@rollup/plugin-json');
 
 module.exports = {
-  formats: ['cjs', 'es', 'umd'],
+  formats: ['cjs', 'es'],
   outputDir: {
     es: 'esm',
     cjs: 'cjs',
-    umd: 'build'
   },
   name: 'VMind',
   umdOutputFilename: 'index',

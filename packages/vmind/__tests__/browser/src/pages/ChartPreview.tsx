@@ -2,7 +2,11 @@ import React, { useState, useCallback, useEffect } from 'react';
 import './index.scss';
 import { Button, Input, Card, Space, Modal, Spin } from '@arco-design/web-react';
 import VChart from '@visactor/vchart';
+import { ManualTicker, defaultTimeline } from '@visactor/vrender-core';
 import VMind from '../../../../src';
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
+import { createCanvas } from 'canvas';
+
 const TextArea = Input.TextArea;
 
 type IPropsType = {
@@ -53,7 +57,19 @@ export function ChartPreview(props: IPropsType) {
       return;
     }
     setGenerating(true);
-    const src = await vmind.exportVideo(spec, time, VChart);
+    const ffmpeg = createFFmpeg({
+      log: true
+    });
+    await ffmpeg.load();
+    const data = await vmind.exportVideo(spec, time, {
+      VChart,
+      FFmpeg: ffmpeg,
+      fetchFile,
+      ManualTicker,
+      defaultTimeline,
+      createCanvas
+    } as any);
+    const src = URL.createObjectURL(new Blob([data], { type: 'video/mp4' }));
     setSrc(src);
     setOutType('video');
     setGenerating(false);
@@ -65,7 +81,19 @@ export function ChartPreview(props: IPropsType) {
       return;
     }
     setGenerating(true);
-    const src = await vmind.exportGIF(spec, time, VChart);
+    const ffmpeg = createFFmpeg({
+      log: true
+    });
+    await ffmpeg.load();
+    const data = await vmind.exportGIF(spec, time, {
+      VChart,
+      FFmpeg: ffmpeg,
+      fetchFile,
+      ManualTicker,
+      defaultTimeline,
+      createCanvas
+    } as any);
+    const src = URL.createObjectURL(new Blob([data], { type: 'video/mp4' }));
     setSrc(src);
     setOutType('gif');
     setGenerating(false);

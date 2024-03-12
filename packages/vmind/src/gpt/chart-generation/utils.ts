@@ -39,6 +39,16 @@ export const patchChartTypeAndCell = (chartTypeOutter: string, cell: any, datase
   const { x, y } = cell;
 
   let chartType = chartTypeOutter;
+
+  // patch the "axis" field to x
+  if (cell.axis && (!cell.x || !cell.y)) {
+    if (!cell.x) {
+      cell.x = cell.axis;
+    } else if (!cell.y) {
+      cell.y = cell.axis;
+    }
+  }
+
   // y轴字段有多个时，处理方式:
   // 1. 图表类型为: 箱型图, 图表类型不做矫正
   // 2. 图表类型为: 柱状图 或 折线图, 图表类型矫正为双轴图
@@ -77,13 +87,20 @@ export const patchChartTypeAndCell = (chartTypeOutter: string, cell: any, datase
       const {
         lower_whisker,
         lowerWhisker,
-        lowerBox,
         min,
         lower,
+        lowerBox,
+        lower_box,
         q1,
+        lower_quartile,
+        lowerQuartile,
+        midline,
         median,
         q3,
         upperBox,
+        upper_box,
+        upper_quartile,
+        upperQuartile,
         upper_whisker,
         upperWhisker,
         max,
@@ -98,15 +115,22 @@ export const patchChartTypeAndCell = (chartTypeOutter: string, cell: any, datase
             lowerWhisker,
             min,
             lower,
-            q1,
             lowerBox,
+            lower_box,
+            q1,
+            lower_quartile,
+            lowerQuartile,
+            midline,
             median,
-            upperBox,
             q3,
+            upperBox,
+            upper_box,
+            upper_quartile,
+            upperQuartile,
             upper_whisker,
+            upperWhisker,
             max,
-            upper,
-            upperWhisker
+            upper
           ].filter(Boolean)
         }
       };

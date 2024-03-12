@@ -1,7 +1,6 @@
 import { _chatToVideoWasm } from '../chart-to-video';
 import { generateChartWithGPT } from '../gpt/chart-generation/NLToChart';
-import { ILLMOptions, TimeType, Model, SimpleFieldInfo, DataItem } from '../typings';
-import type { FFmpeg } from '@ffmpeg/ffmpeg';
+import { ILLMOptions, TimeType, Model, SimpleFieldInfo, DataItem, OuterPackages } from '../typings';
 import { parseCSVDataWithGPT } from '../gpt/dataProcess';
 import { parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
 import { generateChartWithSkylark } from '../skylark/chart-generation';
@@ -97,32 +96,21 @@ class VMind {
     return { fieldInfo: [], dataset };
   }
 
-  async exportVideo(
-    spec: any,
-    time: TimeType,
-    VChart: any,
-    ffmpeg: FFmpeg,
-    fetchFile: (data: string | Buffer | Blob | File) => Promise<Uint8Array>
-  ) {
+  async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {
+    const { VChart, FFmpeg, fetchFile, ManualTicker } = outerPackages;
     const outName = `out`;
-    await _chatToVideoWasm(VChart, ffmpeg, fetchFile, this._FPS, spec, time, outName);
-    const data = ffmpeg.FS('readFile', `${outName}.mp4`);
-    const objUrl = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
-    return objUrl;
+    await _chatToVideoWasm(this._FPS, spec, time, outName, outerPackages, mode);
+    const data = FFmpeg.FS('readFile', `${outName}.mp4`);
+    return data.buffer;
   }
 
-  async exportGIF(
-    spec: any,
-    time: TimeType,
-    VChart: any,
-    ffmpeg: FFmpeg,
-    fetchFile: (data: string | Buffer | Blob | File) => Promise<Uint8Array>
-  ) {
+  async exportGIF(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {
+    const { VChart, FFmpeg, fetchFile } = outerPackages;
     const outName = `out`;
-    await _chatToVideoWasm(VChart, ffmpeg, fetchFile, this._FPS, spec, time, outName);
+    await _chatToVideoWasm(this._FPS, spec, time, outName, outerPackages, mode);
     // 调色板
-    await ffmpeg.run('-i', `${outName}.mp4`, '-filter_complex', '[0:v] palettegen', 'palette.png');
-    await ffmpeg.run(
+    await FFmpeg.run('-i', `${outName}.mp4`, '-filter_complex', '[0:v] palettegen', 'palette.png');
+    await FFmpeg.run(
       '-i',
       `${outName}.mp4`,
       '-i',
@@ -131,9 +119,8 @@ class VMind {
       '[0:v][1:v] paletteuse',
       'out.gif'
     );
-    const data = ffmpeg.FS('readFile', 'out.gif');
-    const objUrl = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
-    return objUrl;
+    const data = FFmpeg.FS('readFile', 'out.gif');
+    return data.buffer;
   }
 }
 
