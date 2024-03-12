@@ -17,9 +17,9 @@ The main features of `@visactor/vmind` include:
 
 ## Development Guide
 
-### Demo Page
+### Docs Page
 
-Enter the VChart repository and execute:
+Enter the VMind repository and execute:
 
 ```bash
 # Install dependencies
@@ -28,11 +28,10 @@ $ rush update
 $ rush docs
 ```
 
-Select VMind from the top navigation bar, enter your OpenAI Key, click generate chart, and you can experience VMind.
 
 ### Start the Development Page
 
-Enter the VChart repository and execute:
+Enter the VMind repository and execute:
 
 ```bash
 # Install dependencies
