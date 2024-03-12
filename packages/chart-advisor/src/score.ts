@@ -41,7 +41,7 @@ export const scorer: Scorer = params => {
   const datasetWithoutFold = cloneDeep(inputDataSet);
   let originDataset = inputDataSet;
 
-  //后端版本中多度量可能没有扁平化
+  //多度量可能没有扁平化
   if (measureList.length > 1 && !originDataset[0].hasOwnProperty(FOLD_NAME)) {
     originDataset = fold(
       originDataset,
