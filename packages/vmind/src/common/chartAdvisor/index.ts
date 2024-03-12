@@ -35,6 +35,11 @@ export const generateChartWithAdvisor = (
       spec,
       chartType,
       score,
+      usage: {
+        prompt_tokens: 0,
+        completion_tokens: 0,
+        total_tokens: 0
+      },
       time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
     };
   });
