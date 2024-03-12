@@ -240,7 +240,7 @@ export const assignScatterPlot = (
       size: [],
       angle: []
     };
-    return { voidCell, dataset };
+    return { scatterCell: voidCell, dataset };
   }
 
   // 提取color分组字段
