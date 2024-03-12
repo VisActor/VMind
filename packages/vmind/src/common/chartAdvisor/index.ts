@@ -1,7 +1,7 @@
 import { getAdvisedChartsWithDataset } from './chartAdvisorHandler';
 import { vizDataToSpec } from '../vizDataToSpec';
 import { estimateVideoTime } from '../vizDataToSpec/utils';
-import { DataItem } from 'src/typings';
+import { DataItem, SimpleFieldInfo } from 'src/typings';
 import { uniqBy } from 'lodash';
 
 export { chartAdvisorHandler } from './chartAdvisorHandler';
@@ -14,13 +14,14 @@ export { chartAdvisorHandler } from './chartAdvisorHandler';
  * @returns spec and animation duration of the generated charts
  */
 export const generateChartWithAdvisor = (
+  fieldInfo: SimpleFieldInfo[],
   originDataset: DataItem[],
   colorPalette?: string[],
   animationDuration?: number
 ) => {
-  const advisorRes = getAdvisedChartsWithDataset(originDataset);
+  const advisorRes = getAdvisedChartsWithDataset(fieldInfo, originDataset);
   const resultList = uniqBy(advisorRes, 'chartType').map((res: any) => {
-    const { chartType, cell, dataset } = res;
+    const { chartType, cell, dataset, score } = res;
     const spec = vizDataToSpec(
       dataset,
       chartType,
@@ -32,6 +33,8 @@ export const generateChartWithAdvisor = (
     return {
       chartSource: 'chartAdvisor',
       spec,
+      chartType,
+      score,
       time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
     };
   });

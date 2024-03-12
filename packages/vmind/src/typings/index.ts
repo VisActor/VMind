@@ -6,7 +6,7 @@ export interface ILLMOptions {
   /** llm request header, which has higher priority */
   headers?: HeadersInit; // this will be used directly as the header of the LLM request.
   method?: 'POST' | 'GET'; //post or get
-  model?: Model;
+  model?: Model | string;
   max_tokens?: number;
   temperature?: number;
   showThoughts?: boolean;
@@ -135,8 +135,14 @@ export enum Model {
   CHART_ADVISOR = 'chart-advisor'
 }
 
+export enum ModelType {
+  GPT = 'gpt',
+  SKYLARK = 'skylark',
+  CHART_ADVISOR = 'chart-advisor'
+}
+
 export type ChartGenerationProps = {
-  model: Model; //models to finish data generation task
+  model: Model | string; //models to finish data generation task
   userPrompt: string; //user's intent of visualization, usually aspect in data that they want to visualize
   dataFields: FieldInfo[];
 };
