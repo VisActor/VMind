@@ -36,7 +36,8 @@ export const parseCSVDataWithGPT = async (csvFile: string, userInput: string, op
       usefulFields: dataProcessResJson['USEFUL_FIELDS'],
       dataset: convertNumberField(dataset, fieldInfo),
       error: dataProcessResJson['error'],
-      thought: dataProcessResJson['thought']
+      thought: dataProcessResJson['thought'],
+      usage: dataProcessRes['usage']
     };
   } else {
     //传统方法做兜底

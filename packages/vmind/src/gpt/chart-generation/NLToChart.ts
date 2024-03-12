@@ -8,6 +8,7 @@ import { chartAdvisorHandler } from '../../common/chartAdvisor';
 import { estimateVideoTime } from '../../common/vizDataToSpec/utils';
 import { getSchemaFromFieldInfo } from '../../common/schema';
 import { queryDatasetWithGPT } from '../dataProcess/query/queryDataset';
+import { calculateTokenUsage } from '../..//common/utils';
 
 export const generateChartWithGPT = async (
   userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
@@ -19,6 +20,8 @@ export const generateChartWithGPT = async (
   animationDuration?: number
 ) => {
   const colors = colorPalette;
+  let queryDatasetUsage;
+  let advisorUsage;
   let chartType;
   let cell;
   let dataset: DataItem[] = propsDataset;
@@ -27,14 +30,14 @@ export const generateChartWithGPT = async (
 
   try {
     if (enableDataQuery) {
-      const { dataset: queryDataset, fieldInfo: fieldInfoNew } = await queryDatasetWithGPT(
-        userPrompt,
-        fieldInfo,
-        propsDataset,
-        options
-      );
+      const {
+        dataset: queryDataset,
+        fieldInfo: fieldInfoNew,
+        usage
+      } = await queryDatasetWithGPT(userPrompt, fieldInfo, propsDataset, options);
       dataset = queryDataset;
       fieldInfo = fieldInfoNew;
+      queryDatasetUsage = usage;
     }
   } catch (err) {
     console.warn('data query error!');
@@ -48,6 +51,7 @@ export const generateChartWithGPT = async (
 
     const chartTypeRes = resJson['CHART_TYPE'].toUpperCase();
     const cellRes = resJson['FIELD_MAP'];
+    advisorUsage = resJson['usage'];
     const patchResult = patchChartTypeAndCell(chartTypeRes, cellRes, dataset);
     if (checkChartTypeAndCell(patchResult.chartTypeNew, patchResult.cellNew, fieldInfo)) {
       chartType = patchResult.chartTypeNew;
@@ -76,7 +80,8 @@ export const generateChartWithGPT = async (
     chartSource,
     spec,
     chartType,
-    time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
+    time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined),
+    usage: calculateTokenUsage([queryDatasetUsage, advisorUsage])
   };
 };
 
@@ -111,5 +116,6 @@ export const chartAdvisorGPT = async (
   if (!SUPPORTED_CHART_LIST.includes(advisorResJson['CHART_TYPE'])) {
     throw Error('Unsupported Chart Type. Please Change User Input');
   }
-  return advisorResJson;
+
+  return { ...advisorResJson, usage: advisorRes.usage };
 };
