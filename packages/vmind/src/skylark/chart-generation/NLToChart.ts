@@ -85,7 +85,7 @@ export const chartAdvisorSkylark = async (
   const chartRecommendRes = await requestSkyLark(chartRecommendPrompt, userMessage, options);
   const chartRecommendResJSON = parseSkylarkResponse(chartRecommendRes);
   if (chartRecommendResJSON.error) {
-    throw Error('Network Error!');
+    throw Error(chartRecommendResJSON.message);
   }
   if (!SUPPORTED_CHART_LIST.includes(chartRecommendResJSON['charttype'])) {
     throw Error('Unsupported Chart Type. Please Change User Input');

@@ -40,8 +40,8 @@ export const generateChartWithGPT = async (
       queryDatasetUsage = usage;
     }
   } catch (err) {
-    console.warn('data query error!');
-    console.warn(err);
+    console.error('data query error!');
+    console.error(err);
   }
 
   const schema = getSchemaFromFieldInfo(fieldInfo);
@@ -111,7 +111,7 @@ export const chartAdvisorGPT = async (
   const advisorResJson: GPTChartAdvisorResult = parseGPTResponse(advisorRes) as unknown as GPTChartAdvisorResult;
 
   if (advisorResJson.error) {
-    throw Error('Network Error!');
+    throw Error((advisorResJson as any).message);
   }
   if (!SUPPORTED_CHART_LIST.includes(advisorResJson['CHART_TYPE'])) {
     throw Error('Unsupported Chart Type. Please Change User Input');
