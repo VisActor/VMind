@@ -47,8 +47,8 @@ export const parseSkylarkResponse = (larkResponse: LLMResponse): Record<string, 
     resJson.usage = usage;
     //replace all the keys to lower case.
     return Object.keys(resJson).reduce((prev, cur) => ({ ...prev, [cur.toLocaleLowerCase()]: resJson[cur] }), {});
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    return { error: true };
+    return { error: true, message: err.message };
   }
 };

@@ -34,7 +34,7 @@ export const requestGPT = async (
         stream: false
         //response_format: { type: 'json_object' } //Only models after gpt-3.5-turbo-1106 support this parameter.
       }
-    }).then(response => response.data);
+    }).then((response: any) => response.data);
 
     return res;
   } catch (err: any) {
@@ -68,16 +68,23 @@ export const parseGPTJson = (JsonStr: string, prefix?: string) => {
 };
 
 export const parseGPTResponse = (GPTRes: LLMResponse) => {
-  if (GPTRes.error) {
+  try {
+    if (GPTRes.error) {
+      return {
+        error: true,
+        ...GPTRes.error
+      };
+    }
+    const choices = GPTRes.choices;
+    const content = choices[0].message.content;
+    const resJson: GPTDataProcessResult = parseGPTJson(content, '```');
+    return resJson;
+  } catch (err: any) {
     return {
       error: true,
-      ...GPTRes.error
+      message: err.message
     };
   }
-  const choices = GPTRes.choices;
-  const content = choices[0].message.content;
-  const resJson: GPTDataProcessResult = parseGPTJson(content, '```');
-  return resJson;
 };
 
 export const replaceAll = (originStr: string, replaceStr: string, newStr: string) => {
