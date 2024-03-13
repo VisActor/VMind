@@ -39,7 +39,8 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@visactor/calculator': path.resolve(__dirname, '../../../calculator/src/index.ts')
+        '@visactor/calculator': path.resolve(__dirname, '../../../calculator/src/index.ts'),
+        '@visactor/chart-advisor': path.resolve(__dirname, '../../../chart-advisor/src/index.ts')
         // ...localConf.resolve?.alias
       }
     },
