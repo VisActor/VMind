@@ -4,7 +4,6 @@
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
-  "author": "chengda <sduchd@gmail.com>",
   "license": "MIT",
   "files": [
     "cjs",
@@ -88,7 +87,7 @@
     "canvas": "^2.11.2"
   },
   "dependencies": {
-    "@visactor/chart-advisor": "0.1.11",
+    "@visactor/chart-advisor": "workspace:*",
     "@visactor/vdataset": "~0.17.4",
     "@visactor/vutils": "~0.17.4",
     "axios": "^1.4.0",
