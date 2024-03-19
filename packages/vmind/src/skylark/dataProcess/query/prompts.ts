@@ -1,4 +1,4 @@
-export const VMIND_DATA_SOURCE = 'VMind_data_source';
+import { VMIND_DATA_SOURCE } from '../../../common/dataProcess/dataQuery';
 
 export const getQueryDatasetPrompt = (
   showThoughts: boolean

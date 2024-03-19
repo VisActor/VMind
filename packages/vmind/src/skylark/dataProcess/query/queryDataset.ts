@@ -1,10 +1,11 @@
 import { DataItem, ILLMOptions, SimpleFieldInfo } from '../../../typings';
 import { DataQueryResponse } from './type';
-import { VMIND_DATA_SOURCE, getQueryDatasetPrompt } from './prompts';
+import { getQueryDatasetPrompt } from './prompts';
 import alasql from 'alasql';
 import { requestSkyLark } from '../../chart-generation/utils';
 import { parseRespondField } from '../../../gpt/dataProcess/query/utils';
 import { parseSkylarkResponseAsJSON } from './utils';
+import { VMIND_DATA_SOURCE, queryDataset } from '../../../common/dataProcess/dataQuery';
 
 /**
  * query the source dataset according to user's input and fieldInfo to get aggregated dataset
@@ -21,21 +22,15 @@ export const queryDatasetWithSkylark = async (
 ) => {
   const patchedInput = userInput;
   const { sql, fieldInfo: responseFieldInfo, usage } = await getQuerySQL(patchedInput, fieldInfo, options);
-  const sqlParts = (sql + ' ').split(VMIND_DATA_SOURCE);
+  const datasetAfterQuery = queryDataset(sql, sourceDataset);
 
-  const sqlCount = sqlParts.length - 1;
-  const alasqlQuery = sqlParts.join('?');
-
-  console.log();
-  const alasqlDataset = alasql(alasqlQuery, new Array(sqlCount).fill(sourceDataset));
-
-  const fieldInfoNew = parseRespondField(responseFieldInfo, alasqlDataset);
-  if (alasqlDataset.length === 0) {
+  const fieldInfoNew = parseRespondField(responseFieldInfo, datasetAfterQuery);
+  if (datasetAfterQuery.length === 0) {
     console.warn('empty dataset after query!');
   }
   return {
-    dataset: alasqlDataset.length === 0 ? sourceDataset : alasqlDataset,
-    fieldInfo: alasqlDataset.length === 0 ? fieldInfo : fieldInfoNew,
+    dataset: datasetAfterQuery.length === 0 ? sourceDataset : datasetAfterQuery,
+    fieldInfo: datasetAfterQuery.length === 0 ? fieldInfo : fieldInfoNew,
     usage
   };
 };

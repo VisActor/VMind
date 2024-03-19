@@ -1,3 +1,5 @@
+import { VMIND_DATA_SOURCE } from '../..//common/dataProcess/dataQuery';
+
 export const DataProcessPromptEnglish = `You are an expert in data analysis.
 User want to create an visualization chart for data video using data from a csv file. Let's think step by step. Fill your thoughts in {THOUGHT}.
 - Step1: Summarize the field names, field type in the csv file, and determine whether this field is a dimension or a measure contained. Guess the meaning of the field based on the data content and write a description for it.
@@ -192,8 +194,6 @@ Response:
 }
 \`\`\`
 `;
-
-export const VMIND_DATA_SOURCE = 'VMind_data_source';
 
 export const getQueryDatasetPrompt = (
   showThoughts: boolean

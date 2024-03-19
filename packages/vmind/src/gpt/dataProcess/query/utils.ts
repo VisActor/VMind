@@ -6,26 +6,6 @@ import { detectFieldType } from '../../../common/dataProcess/utils';
 import { DataItem, SimpleFieldInfo } from '../../../typings';
 import { ASTParserContext, ASTParserPipe } from './type';
 
-function generateRandomString(len: number) {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  let result = '';
-  for (let i = 0; i < len; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-}
-
-const swapMap = (map: Map<string, string>) => {
-  //swap the map
-  const swappedMap = new Map();
-
-  // Swap key with value
-  map.forEach((value, key) => {
-    swappedMap.set(value, key);
-  });
-  return swappedMap;
-};
-
 /**
  * replace operator and reserved words inside the field name in the sql str
  * @param fieldInfo
@@ -89,51 +69,6 @@ export const preprocessSQL = (sql: string, fieldInfo: SimpleFieldInfo[]) => {
   const mergedMap = mergeMap(replaceMap, reservedReplaceMap);
 
   return { validStr, replaceMap: mergedMap };
-};
-
-/**
- * replace all the non-ascii characters in the sql str into valid strings.
- * @param str
- * @returns
- */
-export const replaceNonASCIICharacters = (str: string) => {
-  const nonAsciiCharMap = new Map();
-
-  const newStr = str.replace(/([^\x00-\x7F]+)/g, m => {
-    let replacement;
-    if (nonAsciiCharMap.has(m)) {
-      replacement = nonAsciiCharMap.get(m);
-    } else {
-      replacement = generateRandomString(10);
-      nonAsciiCharMap.set(m, replacement);
-    }
-    return replacement;
-  });
-
-  const swappedMap = swapMap(nonAsciiCharMap);
-
-  return { validStr: newStr, replaceMap: swappedMap };
-};
-
-/**
- * replace random strings into its original string according to replaceMap
- * @param str
- * @param replaceMap
- * @returns
- */
-export const getOriginalString = (str: string, replaceMap: Map<string, string>) => {
-  if (!isString(str)) {
-    return str;
-  }
-  if (replaceMap.has(str)) {
-    return replaceMap.get(str);
-  } else {
-    //Some string may be linked by ASCII characters as non-ASCII characters.Traversing the replaceMap and replaced it to the original character
-    const replaceKeys = [...replaceMap.keys()];
-    return replaceKeys.reduce((prev, cur) => {
-      return prev.replace(new RegExp(cur, 'g'), replaceMap.get(cur));
-    }, str);
-  }
 };
 
 export const addQuotes = (sqlString: string) => {
