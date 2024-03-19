@@ -1,29 +1,28 @@
 import { SUPPORTED_CHART_LIST } from '../../common/vizDataToSpec/constants';
 
-export const ChartAdvisorPromptEnglish = `You are an expert in data visualization.
+export const ChartAdvisorPromptEnglish = (showThoughts: boolean) => `You are an expert in data visualization.
 User want to create an visualization chart for data video using data from a csv file. Ignore the duration in User Input.
 Your task is:
 1. Based on the user's input, infer the user's intention, such as comparison, ranking, trend display, proportion, distribution, etc. If user did not show their intention, just ignore and do the next steps.
 2. Select the single chart type that best suites the data from the list of supported charts. Supported chart types: ${JSON.stringify(
   SUPPORTED_CHART_LIST
 )}.
-3. Map all the fields in the data to the visual channels according to user input and the chart type you choose.
+3. Map all the fields in the data to the visual channels according to user input and the chart type you choose. Don't use non-existent fields. Only use existing fields without further processing. If the existing fields can't meet user's intention, just use the most related fields.
 
 Knowledge:
 1. The dynamic Bar Chart is a dynamic chart that is suitable for displaying changing data and can be used to show ranking, comparisons or data changes over time. It usually has a time field. It updates the data dynamically according to the time field and at each time point, the current data is displayed using a bar chart.
 2. A number field can not be used as a color field.
 
-Let's think step by step. Fill your thoughts in {THOUGHT}.
+Let's think step by step. ${showThoughts ? 'Fill your thoughts in {THOUGHT}.' : ''}
 
 Respone in the following format:
 
 \`\`\`
-{
-"THOUGHT": your thoughts
+{${showThoughts ? '\n"THOUGHT" : your thoughts' : ''}
 "CHART_TYPE": the chart type you choose. Supported chart types: ${JSON.stringify(SUPPORTED_CHART_LIST)}.
 "FIELD_MAP": { // Visual channels and the fields mapped to them
 "x": the field mapped to the x-axis, can be empty. Can Only has one field.
-"y": the field mapped to the y-axis, can be empty. Can only has one field.
+"y": the field mapped to the y-axis, can be empty. Use array if there are more than 1 fields in dual-axis chart and box-plot.
 "color": the field mapped to the color channel. Must use a string field. Can't be empty in Word Cloud, Pie Chart and Rose Chart.
 "size": the field mapped to the size channel. Must use a number field. Can be empty
 "angle": the field mapped to the angle channel of the pie chart, can be empty.
@@ -31,17 +30,18 @@ Respone in the following format:
 "source": the field mapped to the source channel. Can't be empty in Sankey Chart.
 "target": the field mapped to the target channel. Can't be empty in Sankey Chart.
 "value": the field mapped to the value channel. Can't be empty in Sankey Chart.
-},
-"Reason": the reason for selecting the chart type and visual mapping.
+}${showThoughts ? ',\n"Reason": the reason for selecting the chart type and visual mapping.' : ''}
 }
 \`\`\`
+
+Don't provide further explanations for your results.
 
 Constraints:
 1. No user assistance.
 2. Please select one chart type in CHART_TYPE at each time. Don't use "A or B", "[A, B]" in CHART_TYPE.
 3. The selected chart type in CHART_TYPE must be in the list of supported charts.
-4. Just ignore the user's request about duration and style in their input.
-5. DO NOT change or translate the field names in FIELD_MAP.
+4. DO NOT change or translate the field names in FIELD_MAP.
+5. Ignore requests unrelated to chart visualization in the user's request.
 6. The keys in FIELD_MAP must be selected from the list of available visual channels.
 7. Wrap the reply content using \`\`\`, and the returned content must be directly parsed by JSON.parse() in JavaScript.
 
@@ -71,15 +71,17 @@ Data field description: [
 
 Response:
 \`\`\`
-{
-"THOUGHT": "Your thoughts",
+{${showThoughts ? '\n"THOUGHT": "Your thoughts",' : ''}
 "CHART_TYPE": "Dynamic Bar Chart",
 "FIELD_MAP": {
 "x": "country",
 "y": "金牌数量",
 "time": "year"
-},
-"REASON": "The data contains the year, country, and medal count, and the user's intention contains 'comparison', which is suitable for drawing a dynamic bar chart that changes over time to show the comparison of gold medal counts of various countries in each Olympic Games. The 'country' field is used as the x-axis of the bar chart, and '金牌数量' is used as the y-axis to show the comparison of gold medal counts of various countries in the current year. The 'year' field is used as the time field of the dynamic bar chart to show the comparison of gold medal counts of various countries at different years."
+}${
+  showThoughts
+    ? ",\n\"REASON\": \"The data contains the year, country, and medal count, and the user's intention contains 'comparison', which is suitable for drawing a dynamic bar chart that changes over time to show the comparison of gold medal counts of various countries in each Olympic Games.The 'country' field is used as the x-axis of the bar chart, and '金牌数量' is used as the y-axis to show the comparison of gold medal counts of various countries in the current year.The 'year' field is used as the time field of the dynamic bar chart to show the comparison of gold medal counts of various countries at different years.\""
+    : ''
+}
 }
 \`\`\`
 
@@ -103,14 +105,16 @@ Data field description: [
 
 Response:
 \`\`\`
-{
-"THOUGHT": "Your thoughts",
+{${showThoughts ? '\n"THOUGHT": "Your thoughts",' : ''}
 "CHART_TYPE": "Pie Chart",
 "FIELD_MAP": {
 "angle": "市场份额",
 "color": "品牌名称"
-},
-"REASON": "The data contains the market share, and the user wants to show percentage data, which is suitable for displaying with a pie chart. The 市场份额 is used as the angle of the pie chart to show the market share of each brand. The 品牌名称 is used as the color to distinguish different brands. The duration is 5s but we just ignore it."
+}${
+  showThoughts
+    ? ',\n"REASON": "The data contains the market share, and the user wants to show percentage data, which is suitable for displaying with a pie chart. The 市场份额 is used as the angle of the pie chart to show the market share of each brand. The 品牌名称 is used as the color to distinguish different brands. The duration is 5s but we just ignore it."'
+    : ''
+}
 }
 \`\`\`
 
@@ -134,14 +138,16 @@ Data field description: [
 
 Response:
 \`\`\`
-{
-"THOUGHT": "Your thoughts",
+{${showThoughts ? '\n"THOUGHT": "Your thoughts",' : ''}
 "CHART_TYPE": "Line Chart",
 "FIELD_MAP": {
 "x": "日期",
 "y": "降雨量"
-},
-"REASON": "User wants to show the trend of the rainfall, which is suitable for displaying with a line chart. The '日期' is used as the x-axis because it's a date, and the 降雨量 is used as the y-axis because it's a number. This chart can show the trend of rainfall."
+}${
+  showThoughts
+    ? ',\n"REASON": "User wants to show the trend of the rainfall, which is suitable for displaying with a line chart. The \'日期\' is used as the x-axis because it\'s a date, and the 降雨量 is used as the y-axis because it\'s a number. This chart can show the trend of rainfall."'
+    : ''
+}
 }
 \`\`\`
 
@@ -165,14 +171,15 @@ Data field description: [
 
 Response:
 \`\`\`
-{
-"THOUGHT": "Your thoughts",
-"CHART_TYPE": "Line Chart",
+{${showThoughts ? '\n"THOUGHT": "Your thoughts",' : ''}"CHART_TYPE": "Line Chart",
 "FIELD_MAP": {
 "x": "日期",
 "y": "降雨量"
-},
-"REASON": "User did not show their intention about the data in their input. The data has two fields and it contains a date field, so Line Chart is best suitable to show the data. The field '日期' is used as the x-axis because it's a date, and the 降雨量 is used as the y-axis because it's a number. The duration is 20s but we just ignore it."
+}${
+  showThoughts
+    ? ',\n"REASON": "User did not show their intention about the data in their input. The data has two fields and it contains a date field, so Line Chart is best suitable to show the data. The field \'日期\' is used as the x-axis because it\'s a date, and the 降雨量 is used as the y-axis because it\'s a number. The duration is 20s but we just ignore it."'
+    : ''
+}
 }
 \`\`\`
 `;
