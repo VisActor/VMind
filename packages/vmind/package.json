@@ -97,6 +97,7 @@
     "dayjs": "~1.11.10",
     "js-yaml": "~4.1.0",
     "node-sql-parser": "~4.17.0",
-    "@visactor/calculator": "workspace:*"
+    "@visactor/calculator": "workspace:*",
+    "alasql": "~4.3.2"
   }
 }
