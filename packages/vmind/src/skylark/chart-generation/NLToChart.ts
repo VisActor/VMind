@@ -82,7 +82,10 @@ export const chartAdvisorSkylark = async (
     chartRecommendConstraintsStr,
     options.showThoughts ?? true
   );
-  const chartRecommendRes = await requestSkyLark(chartRecommendPrompt, userMessage, options);
+
+  const requestFunc = options.customRequestFunc?.chartAdvisor ?? requestSkyLark;
+
+  const chartRecommendRes = await requestFunc(chartRecommendPrompt, userMessage, options);
   const chartRecommendResJSON = parseSkylarkResponse(chartRecommendRes);
   if (chartRecommendResJSON.error) {
     throw Error(chartRecommendResJSON.message);
