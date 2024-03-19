@@ -109,7 +109,7 @@ export const chartAdvisorSkylark = async (
     options.showThoughts ?? true
   );
 
-  const fieldMapRes = await requestSkyLark(fieldMapPrompt, userMessage, options);
+  const fieldMapRes = await requestFunc(fieldMapPrompt, userMessage, options);
   const fieldMapResJson = parseSkylarkResponse(fieldMapRes);
   if (fieldMapResJson.error) {
     throw Error('Network Error!');
