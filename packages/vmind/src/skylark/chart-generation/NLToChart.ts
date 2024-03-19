@@ -82,7 +82,10 @@ export const chartAdvisorSkylark = async (
     chartRecommendConstraintsStr,
     options.showThoughts ?? true
   );
-  const chartRecommendRes = await requestSkyLark(chartRecommendPrompt, userMessage, options);
+
+  const requestFunc = options.customRequestFunc?.chartAdvisor ?? requestSkyLark;
+
+  const chartRecommendRes = await requestFunc(chartRecommendPrompt, userMessage, options);
   const chartRecommendResJSON = parseSkylarkResponse(chartRecommendRes);
   if (chartRecommendResJSON.error) {
     throw Error(chartRecommendResJSON.message);
@@ -106,7 +109,7 @@ export const chartAdvisorSkylark = async (
     options.showThoughts ?? true
   );
 
-  const fieldMapRes = await requestSkyLark(fieldMapPrompt, userMessage, options);
+  const fieldMapRes = await requestFunc(fieldMapPrompt, userMessage, options);
   const fieldMapResJson = parseSkylarkResponse(fieldMapRes);
   if (fieldMapResJson.error) {
     throw Error('Network Error!');

@@ -39,7 +39,7 @@ import VMind from '../../../../src/index';
 import { Model } from '../../../../src/index';
 import { queryDataset } from '../../../../src/gpt/dataProcess';
 import { isArray } from 'lodash';
-//import { mockDataset } from './mockData'
+import { mockDataset, mockData2 } from './mockData';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -124,7 +124,8 @@ export function DataInput(props: IPropsType) {
     const { fieldInfo, dataset } = vmind.parseCSVData(csv);
     //const { fieldInfo: fieldInfoQuery, dataset: datasetQuery } = await vmind?.dataQuery(describe, fieldInfo, dataset);
     //const { fieldInfo, dataset, usage } = await vmind.parseCSVDataWithLLM(csv, describe);
-    //const dataset = mockDataset
+
+    //const dataset = mockData2
     //const fieldInfo = vmind?.getFieldInfo(dataset)
     const startTime = new Date().getTime();
     const chartGenerationRes = await vmind.generateChart(describe, fieldInfo, dataset);
