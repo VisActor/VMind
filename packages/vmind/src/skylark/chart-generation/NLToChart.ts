@@ -9,30 +9,48 @@ import { estimateVideoTime } from '../../common/vizDataToSpec/utils';
 import { ChartFieldInfo, chartRecommendConstraints, chartRecommendKnowledge } from './constants';
 import { omit } from 'lodash';
 import { calculateTokenUsage } from '../../common/utils';
+import { queryDatasetWithSkylark } from '../dataProcess/query/queryDataset';
 
 export const generateChartWithSkylark = async (
   userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
-  fieldInfo: SimpleFieldInfo[],
+  propsFieldInfo: SimpleFieldInfo[],
   propsDataset: DataItem[],
   options: ILLMOptions,
+  enableDataQuery = true,
   colorPalette?: string[],
   animationDuration?: number
 ) => {
-  const schema = getSchemaFromFieldInfo(fieldInfo);
-  const colors = colorPalette;
-  let tokenUsage = {
-    prompt_tokens: 0,
-    completion_tokens: 0,
-    total_tokens: 0
-  };
+  let queryDatasetUsage;
+  let advisorUsage;
   let chartType;
   let cell;
   let dataset: DataItem[] = propsDataset;
+  let fieldInfo: SimpleFieldInfo[] = propsFieldInfo;
   let chartSource: string = options.model;
+
+  try {
+    if (enableDataQuery) {
+      const {
+        dataset: queryDataset,
+        fieldInfo: fieldInfoNew,
+        usage
+      } = await queryDatasetWithSkylark(userPrompt, fieldInfo, propsDataset, options);
+      dataset = queryDataset;
+      fieldInfo = fieldInfoNew;
+      queryDatasetUsage = usage;
+    }
+  } catch (err) {
+    console.error('data query error!');
+    console.error(err);
+  }
+
+  const schema = getSchemaFromFieldInfo(fieldInfo);
+  const colors = colorPalette;
+
   try {
     // throw 'test chartAdvisorHandler';
     const resJson: any = await chartAdvisorSkylark(schema, fieldInfo, userPrompt, options);
-    tokenUsage = resJson.usage;
+    advisorUsage = resJson.usage;
     const chartTypeRes = resJson.chartType.toUpperCase();
     const cellRes = resJson['cell'];
     const patchResult = patchChartTypeAndCell(chartTypeRes, cellRes, dataset, fieldInfo);
@@ -61,7 +79,7 @@ export const generateChartWithSkylark = async (
     chartSource,
     chartType,
     spec,
-    usage: tokenUsage,
+    usage: calculateTokenUsage([queryDatasetUsage, advisorUsage]),
     time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
   };
 };

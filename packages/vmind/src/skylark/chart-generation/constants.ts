@@ -21,7 +21,7 @@ export const ChartFieldInfo: ChannelInfo = {
   },
   'PIE CHART': {
     visualChannels: {
-      angle: 'angle of sectors in the pie chart. Only number fields',
+      angle: "angle of sectors in the pie chart. Only number fields. Can't be empty.",
       color:
         "color of sectors in the pie chart. Used to distinguish different sectors. Only string fields. Can't be empty."
     },
