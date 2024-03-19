@@ -9,6 +9,7 @@ import { estimateVideoTime } from '../../common/vizDataToSpec/utils';
 import { getSchemaFromFieldInfo } from '../../common/schema';
 import { queryDatasetWithGPT } from '../dataProcess/query/queryDataset';
 import { calculateTokenUsage } from '../..//common/utils';
+import { pick } from 'lodash';
 
 export const generateChartWithGPT = async (
   userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
@@ -98,11 +99,15 @@ export const chartAdvisorGPT = async (
   options: ILLMOptions | undefined
 ) => {
   //call GPT
-  const filteredFields = schema.fields.filter(
-    field => true
-    //usefulFields.includes(field.fieldName)
-  );
-  const chartAdvisorMessage = `User Input: ${userInput}\nData field description: ${JSON.stringify(schema.fields)}`;
+  const filteredFields = schema.fields
+    .filter(
+      field => field.visible
+      //usefulFields.includes(field.fieldName)
+    )
+    .map(field => ({
+      ...pick(field, ['id', 'description', 'type', 'role'])
+    }));
+  const chartAdvisorMessage = `User Input: ${userInput}\nData field description: ${JSON.stringify(filteredFields)}`;
 
   const requestFunc = options.customRequestFunc?.chartAdvisor ?? requestGPT;
 
