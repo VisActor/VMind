@@ -14,6 +14,6 @@ export type ASTParserContext = {
 
 export type DataQueryResponse = {
   THOUGHT?: string;
-  SimQuery: string;
+  sql: string;
   fieldInfo: { fieldName: string; description?: string }[];
 };

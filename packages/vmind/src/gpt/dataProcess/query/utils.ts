@@ -202,13 +202,11 @@ export const checkIsColumnNode = (node: any, columns: any, fieldInfo: SimpleFiel
  */
 export const parseRespondField = (
   responseFieldInfo: { fieldName: string; description?: string }[],
-  dataset: DataItem[],
-  replaceMap: Map<string, string>
+  dataset: DataItem[]
 ) =>
   responseFieldInfo.map(field => ({
     ...field,
-    ...detectFieldType(dataset, field.fieldName),
-    fieldName: getOriginalString(field.fieldName, replaceMap)
+    ...detectFieldType(dataset, field.fieldName)
   }));
 
 /**
@@ -226,14 +224,11 @@ export const mergeMap = (map1: Map<string, string>, map2: Map<string, string>) =
 };
 
 export const patchQueryInput = (userInput: string) => {
-  return (
-    userInput +
-    " Don't use unsupported keywords and methods in the SELECT of SimQuery. Don't use non-existent columns and dimension values in the WHERE of SimQuery."
-  );
+  return userInput;
 };
 
 export const parseGPTQueryResponse = (response: string) => {
-  const SimQuery = response.match(/SimQuery:\n?```(.*?)```/s)[1];
+  const sql = response.match(/sql:\n?```(.*?)```/s)[1];
   const fieldInfoStr = response.match(/fieldInfo:\n?```(.*?)```/s)[1];
   let fieldInfo = [];
   try {
@@ -248,7 +243,7 @@ export const parseGPTQueryResponse = (response: string) => {
     fieldInfo = JSON5.parse(`[${fieldInfoStr}]`);
   }
   return {
-    SimQuery,
+    sql,
     fieldInfo
   };
 };

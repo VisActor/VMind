@@ -1,19 +1,9 @@
 import { DataItem, ILLMOptions, SimpleFieldInfo } from '../../../typings';
-import NodeSQLParser from 'node-sql-parser';
-import {
-  mergeMap,
-  parseGPTQueryResponse,
-  parseRespondField,
-  patchQueryInput,
-  preprocessSQL,
-  replaceOperator
-} from './utils';
-import { parseSqlAST } from './parseSqlAST';
-import { isArray } from 'lodash';
-import { DataQueryResponse, SQLAst } from './type';
-import { Query, query } from '@visactor/calculator';
+import { parseGPTQueryResponse, parseRespondField, patchQueryInput } from './utils';
+import { DataQueryResponse } from './type';
 import { parseGPTResponse as parseGPTResponseAsJSON, requestGPT } from '../../utils';
-import { getQueryDatasetPrompt } from '../prompts';
+import { VMIND_DATA_SOURCE, getQueryDatasetPrompt } from '../prompts';
+import alasql from 'alasql';
 
 /**
  * query the source dataset according to user's input and fieldInfo to get aggregated dataset
@@ -28,25 +18,22 @@ export const queryDatasetWithGPT = async (
   sourceDataset: DataItem[],
   options: ILLMOptions
 ) => {
-  const { validFieldInfo, replaceMap: operatorReplaceMap } = replaceOperator(fieldInfo);
   const patchedInput = patchQueryInput(userInput);
-  const { SimQuery, fieldInfo: responseFieldInfo, usage } = await getQuerySQL(patchedInput, validFieldInfo, options);
-  const { validStr, replaceMap: preprocessReplaceMap } = preprocessSQL(SimQuery, fieldInfo);
-  const replaceMap = mergeMap(preprocessReplaceMap, operatorReplaceMap);
-  const parser = new NodeSQLParser.Parser();
+  const { sql, fieldInfo: responseFieldInfo, usage } = await getQuerySQL(patchedInput, fieldInfo, options);
+  const sqlParts = (sql + ' ').split(VMIND_DATA_SOURCE);
 
-  const ast = parser.astify(validStr);
-  const queryObject = parseSqlAST((isArray(ast) ? ast[0] : ast) as SQLAst, sourceDataset, fieldInfo, replaceMap);
+  const sqlCount = sqlParts.length - 1;
+  const alasqlQuery = sqlParts.join('?');
+  const alasqlDataset = alasql(alasqlQuery, new Array(sqlCount).fill(sourceDataset));
 
-  const dataset = query(queryObject as Query);
-
-  const fieldInfoNew = parseRespondField(responseFieldInfo, dataset, replaceMap);
-  if (dataset.length === 0) {
+  console.log(alasqlDataset);
+  const fieldInfoNew = parseRespondField(responseFieldInfo, alasqlDataset);
+  if (alasqlDataset.length === 0) {
     console.warn('empty dataset after query!');
   }
   return {
-    dataset: dataset.length === 0 ? sourceDataset : dataset,
-    fieldInfo: dataset.length === 0 ? fieldInfo : fieldInfoNew,
+    dataset: alasqlDataset.length === 0 ? sourceDataset : alasqlDataset,
+    fieldInfo: alasqlDataset.length === 0 ? fieldInfo : fieldInfoNew,
     usage
   };
 };
@@ -63,8 +50,8 @@ const getQuerySQL = async (userInput: string, fieldInfo: SimpleFieldInfo[], opti
   const QueryDatasetPrompt = getQueryDatasetPrompt(options.showThoughts ?? true);
   const dataProcessRes = await requestFunc(QueryDatasetPrompt, queryDatasetMessage, options);
   const dataQueryResponse: DataQueryResponse = parseGPTResponseAsJSON(dataProcessRes);
-  const { SimQuery, fieldInfo: responseFiledInfo } = dataQueryResponse;
-  if (!SimQuery || !responseFiledInfo) {
+  const { sql, fieldInfo: responseFiledInfo } = dataQueryResponse;
+  if (!sql || !responseFiledInfo) {
     //try to parse the response with another format
     const choices = dataProcessRes.choices;
     const content = choices[0].message.content;
