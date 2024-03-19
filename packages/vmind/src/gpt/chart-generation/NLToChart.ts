@@ -111,7 +111,7 @@ export const chartAdvisorGPT = async (
 
   const requestFunc = options.customRequestFunc?.chartAdvisor ?? requestGPT;
 
-  const advisorRes = await requestFunc(ChartAdvisorPromptEnglish, chartAdvisorMessage, options);
+  const advisorRes = await requestFunc(ChartAdvisorPromptEnglish(options.showThoughts), chartAdvisorMessage, options);
 
   const advisorResJson: GPTChartAdvisorResult = parseGPTResponse(advisorRes) as unknown as GPTChartAdvisorResult;
 

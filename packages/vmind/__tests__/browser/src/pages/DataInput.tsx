@@ -80,7 +80,7 @@ const demoDataList: { [key: string]: any } = {
 };
 
 const globalVariables = (import.meta as any).env;
-const ModelConfigMap = {
+const ModelConfigMap: any = {
   [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.SKYLARK]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
@@ -125,7 +125,7 @@ export function DataInput(props: IPropsType) {
     //const { fieldInfo: fieldInfoQuery, dataset: datasetQuery } = await vmind?.dataQuery(describe, fieldInfo, dataset);
     //const { fieldInfo, dataset, usage } = await vmind.parseCSVDataWithLLM(csv, describe);
 
-    //const dataset = mockData2
+    //const dataset = mockDataset
     //const fieldInfo = vmind?.getFieldInfo(dataset)
     const startTime = new Date().getTime();
     const chartGenerationRes = await vmind.generateChart(describe, fieldInfo, dataset);
