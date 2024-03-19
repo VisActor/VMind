@@ -26,7 +26,6 @@ export const queryDatasetWithGPT = async (
   const alasqlQuery = sqlParts.join('?');
   const alasqlDataset = alasql(alasqlQuery, new Array(sqlCount).fill(sourceDataset));
 
-  console.log(alasqlDataset);
   const fieldInfoNew = parseRespondField(responseFieldInfo, alasqlDataset);
   if (alasqlDataset.length === 0) {
     console.warn('empty dataset after query!');

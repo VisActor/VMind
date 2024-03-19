@@ -200,9 +200,9 @@ export const getQueryDatasetPrompt = (
 ) => `You are an expert in data analysis. Here is a raw dataset named ${VMIND_DATA_SOURCE}. User will tell you his command and column information of ${VMIND_DATA_SOURCE}. Your task is to generate a sql and fieldInfo according to Instruction. Response one JSON object only.
 
 # Instruction
-- Supported sql keywords: ["SELECT", "FROM", "WHERE", "GROUP BY", "HAVING", "ORDER BY", "LIMIT"].
+- Supported sql keywords: ["SELECT", "FROM", "WHERE", "GROUP BY", "HAVING", "ORDER BY", "LIMIT", "DISTINCT"]. Supported aggregation methods: ["MAX()", "MIN()", "SUM()", "COUNT()", "AVG()"].
 - Generate a sql query like this: "SELECT \`columnA\`, SUM(\`columnB\`) as \`sum_b\` FROM ${VMIND_DATA_SOURCE} WHERE \`columnA\` = value1 GROUP BY \`columnA\` HAVING \`sum_b\`>0 ORDER BY \`sum_b\` LIMIT 10".
-- Don't use unsupported keywords such as PERCENTILE_CONT. Don't use unsupported aggregation methods on columns. Don't use unsupported operators. Unsupported keywords, methods and operators will cause system crash. If current keywords and methods can't meet your needs, just simple select the column without any process.
+- Don't use unsupported keywords such as WITHIN, FIELD. Don't use unsupported aggregation methods such as PERCENTILE_CONT, PERCENTILE. Don't use unsupported operators. We will execute your sql using alasql. Unsupported keywords, methods and operators will cause system crash. If current keywords and methods can't meet your needs, just simply select the column without any process.
 - Make your sql as simple as possible.
 
 You need to follow the steps below.
@@ -210,7 +210,7 @@ You need to follow the steps below.
 # Steps
 1. Extract the part related to the data from the user's instruction. Ignore other parts that is not related to the data.
 2. Select useful dimension and measure columns from ${VMIND_DATA_SOURCE}. You can only use columns in Column Information and do not assume non-existent columns. If the existing columns can't meet user's command, just select the most related columns in Column Information.
-3. Use the original dimension columns without any process. Aggregate the measure columns using aggregation methods. Don't use unsupported methods. If current keywords and methods can't meet your needs, just simple select the column without any process.
+3. Use the original dimension columns without any process. Aggregate the measure columns using aggregation methods. Don't use unsupported methods. If current keywords and methods can't meet your needs, just simply select the column without any process.
 4. Group the data using dimension columns.
 5. You can also use WHERE, HAVING, ORDER BY, LIMIT in your sql if necessary. Use the supported operators to finish the WHERE and HAVING. You can only use binary expression such as columnA = value1, sum_b > 0. You can only use dimension values appearing in the domain of dimension columns in your expression.
 
@@ -284,7 +284,7 @@ You only need to return the JSON in your response directly to the user.
 Finish your tasks in one-step.
 
 # Constraints:
-1. Write your sql statement in one line without any \\n.
+1. Write your sql statement in one line without any \\n. Your sql must be executable by alasql.
 2. Please don't change or translate the field names in your sql statement. Don't miss the GROUP BY in your sql.
 3. Wrap all the columns with \`\` in your sql.
 4. Response the JSON object directly without any other contents. Make sure it can be directly parsed by JSON.parse() in JavaScript.

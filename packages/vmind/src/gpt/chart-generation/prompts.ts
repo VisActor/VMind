@@ -53,22 +53,19 @@ Data field description: [
 "id": "country",
 "description": "Represents the name of the country, which is a string.",
 "type": "string",
-"role": "dimension",
-"location": "dimension"
+"role": "dimension"
 },
 {
 "id": "金牌数量",
 "description": "Represents the number of gold medals won by the country in the current year, which is an integer.",
 "type": "int",
-"role": "measure",
-"location": "measure"
+"role": "measure"
 },
 {
 "id": "year",
 "description": "Represents the current year, which is a date.",
 "type": "string",
-"role": "dimension",
-"location": "dimension"
+"role": "dimension"
 }
 ]
 
@@ -94,15 +91,13 @@ Data field description: [
 "id": "品牌名称",
 "description": "Represents the name of the mobile phone brand, which is a string.",
 "type": "string",
-"role": "dimension",
-"location": "dimension"
+"role": "dimension"
 },
 {
 "id": "市场份额",
 "description": "Represents the market share of the brand, which is a percentage.",
 "type": "float",
-"role": "measure",
-"location": "measure"
+"role": "measure"
 }
 ]
 
@@ -127,15 +122,13 @@ Data field description: [
 "id": "日期",
 "description": "Represents the current month, which is a date.",
 "type": "string",
-"role": "dimension",
-"location": "dimension"
+"role": "dimension"
 },
 {
 "id": "降雨量",
 "description": "Represents the rainfall in the current month, which is a number.",
 "type": "int",
-"role": "measure",
-"location": "measure"
+"role": "measure"
 }
 ]
 
@@ -160,15 +153,13 @@ Data field description: [
 "id": "日期",
 "description": "Represents the current month, which is a date.",
 "type": "date",
-"role": "dimension",
-"location": "dimension"
+"role": "dimension"
 },
 {
 "id": "降雨量",
 "description": "Represents the rainfall in the current month, which is a number.",
 "type": "int",
-"role": "measure",
-"location": "measure"
+"role": "measure"
 }
 ]
 
