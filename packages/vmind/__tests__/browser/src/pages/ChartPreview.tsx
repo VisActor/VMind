@@ -194,7 +194,7 @@ export function ChartPreview(props: IPropsType) {
           </div>
           {props.spec ? (
             <div>
-              <p>Total Time: {props.costTime / 1000} ms</p>
+              <p>Total Time: {props.costTime / 1000} s</p>
               <p>spec:</p>
               <TextArea value={JSON.stringify(props.spec, null, 4)} style={{ height: 300 }}></TextArea>
               {/*<pre style={{ whiteSpace: 'pre' }}>{JSON.stringify(props.spec, null, 4)}</pre>*/}

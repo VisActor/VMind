@@ -108,7 +108,7 @@ class VMind {
     }
     if (this.getModelType() === ModelType.SKYLARK) {
       console.error('Please user GPT model');
-      return { fieldInfo: [], dataset };
+      return { fieldInfo: [], dataset } as any;
     }
     console.error('unsupported model in data query!');
 
