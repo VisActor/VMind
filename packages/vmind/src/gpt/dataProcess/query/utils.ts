@@ -1,39 +1,15 @@
-import { isArray, isString } from 'lodash';
+import { isArray } from 'lodash';
 import JSON5 from 'json5';
 
 import { Query } from '@visactor/calculator';
-import { detectFieldType } from '../../../common/dataProcess/utils';
+import {
+  detectFieldType,
+  generateRandomString,
+  mergeMap,
+  replaceNonASCIICharacters
+} from '../../../common/dataProcess/utils';
 import { DataItem, SimpleFieldInfo } from '../../../typings';
 import { ASTParserContext, ASTParserPipe } from './type';
-
-/**
- * replace operator and reserved words inside the field name in the sql str
- * @param fieldInfo
- */
-export const replaceOperator = (fieldInfo: SimpleFieldInfo[]) => {
-  const operatorMap = {
-    '+': `_PLUS_`,
-    '-': `_DASH_`,
-    '*': `_ASTERISK_`,
-    '/': `_SLASH_`
-  };
-  const replaceMap = new Map<string, string>();
-  const validFieldInfo = fieldInfo.map((field: SimpleFieldInfo) => {
-    const { fieldName } = field;
-    let validFieldName = fieldName;
-    Object.keys(operatorMap).forEach(operator => {
-      validFieldName = validFieldName.split(operator).join(operatorMap[operator]);
-      if (validFieldName !== fieldName) {
-        replaceMap.set(validFieldName, fieldName);
-      }
-    });
-    return {
-      ...field,
-      fieldName: validFieldName
-    };
-  });
-  return { validFieldInfo, replaceMap };
-};
 
 /**
  * replace invalid characters in sql str and get the replace map
@@ -143,20 +119,6 @@ export const parseRespondField = (
     ...field,
     ...detectFieldType(dataset, field.fieldName)
   }));
-
-/**
- * merge two maps
- * @param map1
- * @param map2
- * @returns
- */
-export const mergeMap = (map1: Map<string, string>, map2: Map<string, string>) => {
-  // merge map2 into map1
-  map2.forEach((value, key) => {
-    map1.set(key, value);
-  });
-  return map1;
-};
 
 export const patchQueryInput = (userInput: string) => {
   return userInput;
