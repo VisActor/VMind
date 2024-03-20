@@ -171,7 +171,7 @@ export const replaceNonASCIICharacters = (str: string) => {
  * @param replaceMap
  * @returns
  */
-export const replaceString = (str: string, replaceMap: Map<string, string>) => {
+export const replaceString = (str: string | number, replaceMap: Map<string, string>) => {
   if (!isString(str)) {
     return str;
   }
@@ -186,12 +186,14 @@ export const replaceString = (str: string, replaceMap: Map<string, string>) => {
   }
 };
 
-export const replaceDataKeys = (dataset: DataItem[], replaceMap: Map<string, string>) => {
+//replace data keys and data values according to replaceMap
+export const replaceDataset = (dataset: DataItem[], replaceMap: Map<string, string>) => {
   return dataset.map((d: DataItem) => {
     const dataKeys = Object.keys(d);
     return dataKeys.reduce((prev, cur) => {
-      const replacedString = replaceString(cur, replaceMap);
-      prev[replacedString] = d[cur];
+      const replacedKey = replaceString(cur, replaceMap);
+      const replacedValue = replaceString(d[cur], replaceMap);
+      prev[replacedKey] = replacedValue;
       return prev;
     }, {});
   });

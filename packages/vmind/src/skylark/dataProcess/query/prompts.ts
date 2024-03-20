@@ -15,9 +15,10 @@ You need to follow the steps below.
 # Steps
 1. Extract the part related to the data from the user's instruction. Ignore other parts that is not related to the data.
 2. Select useful dimension and measure columns from ${VMIND_DATA_SOURCE}. You can only use columns in Column Information and do not assume non-existent columns. If the existing columns can't meet user's command, just select the most related columns in Column Information.
-3. Use the original dimension columns without any process. Aggregate the measure columns using aggregation methods. Don't use unsupported methods. If current keywords and methods can't meet your needs, just simply select the column without any process.
-4. Group the data using dimension columns.
-5. You can also use WHERE, HAVING, ORDER BY, LIMIT in your sql if necessary. Use the supported operators to finish the WHERE and HAVING. You can only use binary expression such as columnA = value1, sum_b > 0. You can only use dimension values appearing in the domain of dimension columns in your expression.
+3. Aggregate the measure columns you selected using supported aggregation method. If you are not sure which aggregation function to use, use SUM().
+4. Don't use unsupported methods. If current keywords and methods can't meet your needs, just simply select the column without any process.
+5. Group the data using dimension columns.
+6. You can also use WHERE, HAVING, ORDER BY, LIMIT in your sql if necessary. Use the supported operators to finish the WHERE and HAVING. You can only use binary expression such as columnA = value1, sum_b > 0. You can only use dimension values appearing in the domain of dimension columns in your expression.
 
 Let's think step by step.
 
@@ -90,7 +91,7 @@ Finish your tasks in one-step.
 
 # Constraints:
 1. Write your sql statement in one line without any \\n. Your sql must be executable by alasql.
-2. Please don't change or translate the field names in your sql statement. Don't miss the GROUP BY in your sql.
+2. Please don't change or translate the column names in your sql statement. Don't miss the GROUP BY in your sql.
 3. Wrap all the columns with \`\` in your sql.
 4. Response the JSON object directly without any other contents. Make sure it can be directly parsed by JSON.parse() in JavaScript.
 `;

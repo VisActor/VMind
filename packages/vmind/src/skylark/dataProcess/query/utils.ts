@@ -46,3 +46,5 @@ export const parseSkylarkResponseAsJSON = (skylarkRes: LLMResponse) => {
     };
   }
 };
+
+export const patchDataQueryInput = (userInput: string) => userInput + ' Aggregate all the measure columns in your sql.';

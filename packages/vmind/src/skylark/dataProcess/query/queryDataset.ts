@@ -1,11 +1,10 @@
 import { DataItem, ILLMOptions, SimpleFieldInfo } from '../../../typings';
 import { DataQueryResponse } from './type';
 import { getQueryDatasetPrompt } from './prompts';
-import alasql from 'alasql';
 import { requestSkyLark } from '../../chart-generation/utils';
 import { parseRespondField } from '../../../gpt/dataProcess/query/utils';
-import { parseSkylarkResponseAsJSON } from './utils';
-import { VMIND_DATA_SOURCE, queryDataset } from '../../../common/dataProcess/dataQuery';
+import { parseSkylarkResponseAsJSON, patchDataQueryInput } from './utils';
+import { queryDataset } from '../../../common/dataProcess/dataQuery';
 
 /**
  * query the source dataset according to user's input and fieldInfo to get aggregated dataset
@@ -20,7 +19,7 @@ export const queryDatasetWithSkylark = async (
   sourceDataset: DataItem[],
   options: ILLMOptions
 ) => {
-  const patchedInput = userInput;
+  const patchedInput = patchDataQueryInput(userInput);
   const { sql, fieldInfo: responseFieldInfo, usage } = await getQuerySQL(patchedInput, fieldInfo, options);
   const datasetAfterQuery = queryDataset(sql, sourceDataset);
 

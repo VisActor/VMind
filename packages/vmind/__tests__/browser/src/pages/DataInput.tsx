@@ -33,13 +33,14 @@ import {
   mockUserInput12,
   mockUserInput13,
   mockUserInput14,
-  mockUserInput16
+  mockUserInput16,
+  mockUserInput17
 } from '../constants/mockData';
 import VMind from '../../../../src/index';
 import { Model } from '../../../../src/index';
 import { queryDataset } from '../../../../src/gpt/dataProcess';
 import { isArray } from 'lodash';
-import { mockDataset, mockData2 } from './mockData';
+import { mockDataset, mockData2, mockData3, mockData4 } from './mockData';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -76,7 +77,8 @@ const demoDataList: { [key: string]: any } = {
   'College entrance examination': acceptRatioData,
   'Shopping Mall Sales Performance': mallSalesData,
   'Global GDP': mockUserInput6Eng,
-  'Sales of different drinkings': mockUserInput3Eng
+  'Sales of different drinkings': mockUserInput3Eng,
+  'Multi measure': mockUserInput17
 };
 
 const globalVariables = (import.meta as any).env;
@@ -121,14 +123,14 @@ export function DataInput(props: IPropsType) {
 
   const askGPT = useCallback(async () => {
     //setLoading(true);
-    const { fieldInfo, dataset } = vmind.parseCSVData(csv);
+    //const { fieldInfo, dataset } = vmind.parseCSVData(csv);
     //const { fieldInfo: fieldInfoQuery, dataset: datasetQuery } = await vmind?.dataQuery(describe, fieldInfo, dataset);
     //const { fieldInfo, dataset, usage } = await vmind.parseCSVDataWithLLM(csv, describe);
 
-    //const dataset = mockDataset
-    //const fieldInfo = vmind?.getFieldInfo(dataset)
+    const dataset = mockData4;
+    const fieldInfo = vmind?.getFieldInfo(dataset);
     const startTime = new Date().getTime();
-    const chartGenerationRes = await vmind.generateChart(describe, fieldInfo, dataset);
+    const chartGenerationRes = await vmind.generateChart(describe, fieldInfo, dataset, false);
     const endTime = new Date().getTime();
     if (isArray(chartGenerationRes)) {
       props.onSpecListGenerate(chartGenerationRes.map(res => res.spec));

@@ -93,7 +93,15 @@ class VMind {
       );
     }
     if (this.getModelType() === ModelType.SKYLARK) {
-      return generateChartWithSkylark(userPrompt, fieldInfo, dataset, this._options, colorPalette, animationDuration);
+      return generateChartWithSkylark(
+        userPrompt,
+        fieldInfo,
+        dataset,
+        this._options,
+        enableDataQuery,
+        colorPalette,
+        animationDuration
+      );
     }
 
     return generateChartWithAdvisor(fieldInfo, dataset, colorPalette, animationDuration);

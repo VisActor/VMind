@@ -1,5 +1,5 @@
 import { DataItem } from 'src/typings';
-import { replaceDataKeys, replaceNonASCIICharacters, swapMap } from './utils';
+import { replaceDataset, replaceNonASCIICharacters, swapMap } from './utils';
 import alasql from 'alasql';
 
 export const VMIND_DATA_SOURCE = 'VMind_data_source';
@@ -14,7 +14,7 @@ export const queryDataset = (sql: string, sourceDataset: DataItem[]) => {
   console.log(validStr);
   console.log(replaceMap);
   //replace field names according to replaceMap
-  const validDataset = replaceDataKeys(sourceDataset, replaceMap);
+  const validDataset = replaceDataset(sourceDataset, replaceMap);
   console.log(validDataset);
 
   const alasqlDataset = alasql(validStr, new Array(sqlCount).fill(validDataset));
@@ -22,7 +22,7 @@ export const queryDataset = (sql: string, sourceDataset: DataItem[]) => {
 
   //restore the dataset
   const reversedMap = swapMap(replaceMap);
-  const restoredDataset = replaceDataKeys(alasqlDataset, reversedMap);
+  const restoredDataset = replaceDataset(alasqlDataset, reversedMap);
   console.log(restoredDataset);
 
   return restoredDataset;
