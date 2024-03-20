@@ -2,6 +2,7 @@ import { sampleSize, isNumber, isInteger, isString } from 'lodash';
 import { DataItem, DataType, ROLE, SimpleFieldInfo } from '../../typings';
 import dayjs from 'dayjs';
 import { uniqArray } from '@visactor/vutils';
+
 export const readTopNLine = (csvFile: string, n: number) => {
   // get top n lines of a csv file
   let res = '';
@@ -121,7 +122,7 @@ export const getFieldInfo = (dataset: DataItem[], columns: string[]): SimpleFiel
   return columns.map(column => detectFieldType(sampledDataset, column));
 };
 
-function generateRandomString(len: number) {
+export function generateRandomString(len: number) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   let result = '';
   for (let i = 0; i < len; i++) {
@@ -181,7 +182,7 @@ export const replaceString = (str: string | number, replaceMap: Map<string, stri
     //Some string may be linked by ASCII characters as non-ASCII characters.Traversing the replaceMap and replaced it to the original character
     const replaceKeys = [...replaceMap.keys()];
     return replaceKeys.reduce((prev, cur) => {
-      return prev.replace(new RegExp(cur, 'g'), replaceMap.get(cur));
+      return replaceAll(prev, cur, replaceMap.get(cur));
     }, str);
   }
 };
@@ -197,4 +198,61 @@ export const replaceDataset = (dataset: DataItem[], replaceMap: Map<string, stri
       return prev;
     }, {});
   });
+};
+
+export const getValueByAttributeName = (obj: any, outterKey: string): string[] => {
+  //get all the attributes of an object by outterKey
+  const values = [];
+  for (const key in obj) {
+    if (key === outterKey && typeof obj[key] === 'string') {
+      values.push(obj[key]);
+    } else if (typeof obj[key] === 'object') {
+      const childValues = getValueByAttributeName(obj[key], outterKey);
+      values.push(...childValues);
+    }
+  }
+  return uniqArray(values);
+};
+
+export const replaceInvalidContent = (str: string) => {
+  const INVALID_CONTENT_LIST = [' '];
+  return INVALID_CONTENT_LIST.reduce((prev, cur) => {
+    return replaceAll(prev, cur, '');
+  }, str);
+};
+
+/**
+ * replace operator and reserved words inside the column name in the sql str
+ * @param fieldInfo
+ */
+export const replaceOperator = (str: string) => {
+  const operatorMap = new Map<string, string>([
+    ['+', '_PLUS_'],
+    ['-', '_DASH_'],
+    ['*', '_ASTERISK_'],
+    ['/', '_SLASH_']
+  ]);
+
+  const newStr = [...operatorMap.keys()].reduce((prev, cur) => {
+    return replaceAll(prev, cur, operatorMap.get(cur));
+  }, str);
+  return { validStr: newStr, operatorMap };
+};
+
+export const replaceAll = (originStr: string, replaceStr: string, newStr: string) => {
+  return originStr.split(replaceStr).join(newStr);
+};
+
+/**
+ * merge two maps
+ * @param map1
+ * @param map2
+ * @returns
+ */
+export const mergeMap = (map1: Map<string, string>, map2: Map<string, string>) => {
+  // merge map2 into map1
+  map2.forEach((value, key) => {
+    map1.set(key, value);
+  });
+  return map1;
 };
