@@ -347,7 +347,6 @@ export const replaceBlankSpace = (sql: string, fieldNames: string[]) => {
     const matchedFieldName = fieldNames.find(field => matchColumnName(column, field));
     return matchedFieldName ?? column;
   });
-  console.log(columnsInSql, validColumnNames);
 
   const finalSql = columnsInSql.reduce((prev, _cur, index) => {
     const originColumnName = columnsInSql[index];
@@ -359,4 +358,63 @@ export const replaceBlankSpace = (sql: string, fieldNames: string[]) => {
     }
   }, sql);
   return finalSql;
+};
+
+/**
+ * sometimes skylark2 pro will return a sql statement with some measure fields not being aggregated
+ * this will make an empty field in dataset
+ * so we need to aggregate these fields.
+ *
+ */
+export const sumAllMeasureFields = (
+  sql: string,
+  fieldInfo: SimpleFieldInfo[],
+  columnReplaceMap: Map<string, string>,
+  sqlReplaceMap: Map<string, string>
+) => {
+  const measureFieldsInSql = fieldInfo
+    .filter(field => field.role === ROLE.MEASURE)
+    .map(field => {
+      const { fieldName } = field;
+      const replacedName1 = replaceString(fieldName, columnReplaceMap);
+      const replacedName2 = replaceString(replacedName1, sqlReplaceMap);
+
+      return replacedName2;
+    });
+
+  const ast: any = alasql.parse(sql);
+  const nonAggregatedColumns: string[] = ast.statements[0].columns
+    .filter((column: any) => !column.aggregatorid)
+    .map((column: any) => column.columnid);
+  const groupByColumns: string[] = ast.statements[0].group.map((column: any) => column.columnid);
+
+  //aggregate columns that is not in group by statement
+  const needAggregateColumns = nonAggregatedColumns
+    //filter all the measure fields
+    .filter(column => measureFieldsInSql.includes(column))
+    //filter measure fields that is not in groupby
+    .filter(column => !groupByColumns.includes(column));
+
+  const patchedFields = needAggregateColumns.map(column => `SUM(\`${column}\`) as ${column}`);
+
+  const finalSql = needAggregateColumns.reduce((prev, cur, index) => {
+    const regexStr = `\`?${cur}\`?`;
+    const regex = new RegExp(regexStr, 'g');
+    return prev.replace(regex, patchedFields[index]);
+  }, sql);
+
+  return finalSql;
+};
+
+/**
+ * convert group by columns to string
+ */
+export const convertGroupByToString = (sql: string, dataset: DataItem[]) => {
+  const ast: any = alasql.parse(sql);
+  const groupByColumns: string[] = ast.statements[0].group.map((column: any) => column.columnid);
+  dataset.forEach(item => {
+    groupByColumns.forEach(column => {
+      item[column] = item[column].toString();
+    });
+  });
 };
