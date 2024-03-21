@@ -352,9 +352,9 @@ export const cartesianLine = (spec: any, context: Context) => {
 export const pieField = (spec: any, context: Context) => {
   //饼图根据cell分配字段
   const { cell } = context;
-  spec.valueField = cell.angle;
-  if (cell.color) {
-    spec.categoryField = cell.color;
+  spec.valueField = cell.angle || cell.value;
+  if (cell.color || (cell as any).category) {
+    spec.categoryField = cell.color || (cell as any).category;
   }
   return spec;
 };
@@ -831,7 +831,7 @@ export const axis = (spec: any, context: Context) => {
 export const legend = (spec: any, context: Context) => {
   //图例
   const { cell } = context;
-  if (!cell.color && !spec.seriesField && spec.type !== 'common') {
+  if (!(cell.color || cell.category) && !spec.seriesField && spec.type !== 'common') {
     return spec;
   }
   spec.legends = [

@@ -48,6 +48,7 @@ export type Cell = {
   source?: string;
   target?: string;
   value?: string;
+  category?: string;
 };
 export type ChartType = string;
 export type GPTChartAdvisorResult = {

@@ -1,3 +1,5 @@
+import { VMIND_DATA_SOURCE } from '../..//common/dataProcess/dataQuery';
+
 export const DataProcessPromptEnglish = `You are an expert in data analysis.
 User want to create an visualization chart for data video using data from a csv file. Let's think step by step. Fill your thoughts in {THOUGHT}.
 - Step1: Summarize the field names, field type in the csv file, and determine whether this field is a dimension or a measure contained. Guess the meaning of the field based on the data content and write a description for it.
@@ -195,38 +197,36 @@ Response:
 
 export const getQueryDatasetPrompt = (
   showThoughts: boolean
-) => `You are an expert in data analysis. Here is a raw dataset named dataSource. User will tell you his command and column information of dataSource. Your task is to generate SimQuery and fieldInfo according to SimQuery Instruction. Response one JSON object only.
+) => `You are an expert in data analysis. Here is a raw dataset named ${VMIND_DATA_SOURCE}. User will tell you his command and column information of ${VMIND_DATA_SOURCE}. Your task is to generate a sql and fieldInfo according to Instruction. Response one JSON object only.
 
-# SimQuery Instruction
-- SimQuery is a simplified SQL-like language. Supported keywords in SimQuery: ["SELECT", "FROM", "WHERE", "GROUP BY", "HAVING", "ORDER BY", "LIMIT"].
-- A SimQuery query looks like this: "SELECT columnA, SUM(columnB) as sum_b FROM dataSource WHERE columnA = value1 GROUP BY columnA HAVING sum_b>0 ORDER BY sum_b LIMIT 10".
-- Columns in SELECT can only be original columns or aggregated columns. Supported aggregation methods in SimQuery: ["MAX()", "MIN()", "SUM()", "COUNT()", "AVG()"].
-- The "WHERE" and "HAVING" in SimQuery can only use original columns or aggregated columns in dataSource. Supported Operators in SimQuery:[ ">", ">=", "<", "<=", "=", "!=", "in", "not in", "is null", "is not null", "between", "not between", "like", "not like"]. Don't use non-existent columns.
-- Don't use unsupported keywords such as CASE WHEN...ELSE...END or PERCENTILE_CONT. Don't use unsupported aggregation methods on columns. Don't use unsupported operators. Unsupported keywords, methods and operators will cause system crash. If current keywords and methods can't meet your needs, just simple select the column without any process.
-- Make your SimQuery as simple as possible.
+# Instruction
+- Supported sql keywords: ["SELECT", "FROM", "WHERE", "GROUP BY", "HAVING", "ORDER BY", "LIMIT", "DISTINCT"]. Supported aggregation methods: ["MAX()", "MIN()", "SUM()", "COUNT()", "AVG()"].
+- Generate a sql query like this: "SELECT \`columnA\`, SUM(\`columnB\`) as \`sum_b\` FROM ${VMIND_DATA_SOURCE} WHERE \`columnA\` = value1 GROUP BY \`columnA\` HAVING \`sum_b\`>0 ORDER BY \`sum_b\` LIMIT 10".
+- Don't use unsupported keywords such as WITHIN, FIELD. Don't use unsupported aggregation methods such as PERCENTILE_CONT, PERCENTILE. Don't use unsupported operators. We will execute your sql using alasql. Unsupported keywords, methods and operators will cause system crash. If current keywords and methods can't meet your needs, just simply select the column without any process.
+- Make your sql as simple as possible.
 
 You need to follow the steps below.
 
 # Steps
 1. Extract the part related to the data from the user's instruction. Ignore other parts that is not related to the data.
-2. Select useful dimension and measure columns from dataSource. You can only use columns in Column Information and do not assume non-existent columns. If the existing columns can't meet user's command, just select the most related columns in Column Information.
-3. Use the original dimension columns without any process. Aggregate the measure columns using aggregation methods supported in SimQuery. Don't use unsupported methods. If current keywords and methods can't meet your needs, just simple select the column without any process.
+2. Select useful dimension and measure columns from ${VMIND_DATA_SOURCE}. You can only use columns in Column Information and do not assume non-existent columns. If the existing columns can't meet user's command, just select the most related columns in Column Information.
+3. Use the original dimension columns without any process. Aggregate the measure columns using aggregation methods no matter what chart type the user has specified. Don't use unsupported methods. If current keywords and methods can't meet your needs, just simply select the column without any process.
 4. Group the data using dimension columns.
-5. You can also use WHERE, HAVING, ORDER BY, LIMIT in your SimQuery if necessary. Use the supported operators to finish the WHERE and HAVING of SimQuery. You can only use binary expression such as columnA = value1, sum_b > 0. You can only use dimension values appearing in the domain of dimension columns in your expression.
+5. You can also use WHERE, HAVING, ORDER BY, LIMIT in your sql if necessary. Use the supported operators to finish the WHERE and HAVING. You can only use binary expression such as columnA = value1, sum_b > 0. You can only use dimension values appearing in the domain of dimension columns in your expression.
 
 Let's think step by step.
 
-Response one JSON object without any additional words. Your JSON object must contain SimQuery and fieldInfo.
+Response one JSON object without any additional words. Your JSON object must contain sql and fieldInfo.
 
 Response in the following format:
 \`\`\`
 {
   ${showThoughts ? 'THOUGHTS: string //your thoughts' : ''}
-  SimQuery: string; //your SimQuery query. Note that it's a string in a JSON object so it must be in one line without any \\n.
+  sql: string; //your sql. Note that it's a string in a JSON object so it must be in one line without any \\n.
   fieldInfo: {
     fieldName: string; //name of the field.
     description?: string; //description of the field. If it is an aggregated field, please describe how it is generated in detail.
-  }[]; //array of the information about the fields in your SimQuery. Describing its aggregation method and other information of the fields.
+  }[]; //array of the information about the fields in your sql. Describing its aggregation method and other information of the fields.
 }
 \`\`\`
 
@@ -239,7 +239,7 @@ Response:
 \`\`\`
 {
   ${showThoughts ? '"THOUGHTS": string //your thoughts' : ''}
-  "SimQuery": "SELECT country, year, SUM(GDP) AS total_GDP FROM dataSource GROUP BY country, year ORDER BY year, total_GDP DESC",
+  "sql": "SELECT \`country\`, \`year\`, SUM(\`GDP\`) AS \`total_GDP\` FROM ${VMIND_DATA_SOURCE} GROUP BY \`country\`, \`year\` ORDER BY \`year\`, \`total_GDP\` DESC",
   "fieldInfo": [
     {
       "fieldName": "country",
@@ -265,7 +265,7 @@ Response:
 \`\`\`
 {
   ${showThoughts ? '"THOUGHTS": string //your thoughts' : ''}
-  "SimQuery": "SELECT 城市, SUM(\`2022年GDP（亿元）\`) as sum_2022_GDP FROM dataSource ORDER BY sum_2022_GDP DESC LIMIT 5",
+  "sql": "SELECT 城市, SUM(\`2022年GDP（亿元）\`) as \`sum_2022_GDP\` FROM ${VMIND_DATA_SOURCE} ORDER BY \`sum_2022_GDP\` DESC LIMIT 5",
   "fieldInfo": [
     {
       "fieldName": "城市",
@@ -280,34 +280,12 @@ Response:
 \`\`\`
 ----------------------------------
 
-User's Command: 展示男女早餐饭量不同
-Column Information: [{"fieldName":"时间","type":"string","role":"dimension"},{"fieldName":"男_DASH_早餐","type":"int","role":"measure"},{"fieldName":"女_DASH_早餐","type":"int","role":"measure"}]
-
-Response:
-\`\`\`
-{
-  ${showThoughts ? '"THOUGHTS": string //your thoughts' : ''}
-  "SimQuery": "SELECT \`时间\`, SUM(\`男_DASH_早餐\`) AS breakfast_amount_man, SUM(\`女_DASH_早餐\`) AS breakfast_amount_woman FROM dataSource GROUP BY \`时间\`",
-  "fieldInfo": [
-    {
-      "fieldName": "gender",
-      "description": "The gender of the person."
-    },
-    {
-      "fieldName": "breakfast_amount",
-      "description": "An aggregated field representing the average breakfast amount of each gender. It is generated by averaging the '男_DASH_早餐' or '女_DASH_早餐' field."
-    }
-  ]
-}
-\`\`\`
-
-----------------------------------
-
 You only need to return the JSON in your response directly to the user.
 Finish your tasks in one-step.
 
 # Constraints:
-1. Write your SimQuery statement in one line without any \\n.
-2. Please don't change or translate the field names in your SimQuery statement. Don't miss the GROUP BY in your query.
-3. Response the JSON object directly without any other contents. Make sure it can be directly parsed by JSON.parse() in JavaScript.
+1. Write your sql statement in one line without any \\n. Your sql must be executable by alasql.
+2. Please don't change or translate the field names in your sql statement. Don't miss the GROUP BY in your sql.
+3. Wrap all the columns with \`\` in your sql.
+4. Response the JSON object directly without any other contents. Make sure it can be directly parsed by JSON.parse() in JavaScript.
 `;

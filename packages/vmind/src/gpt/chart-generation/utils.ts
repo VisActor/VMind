@@ -25,8 +25,7 @@ export const patchUserInput = (userInput: string) => {
   if (!FULL_WIDTH_SYMBOLS.includes(lastCharacter) && !HALF_WIDTH_SYMBOLS.includes(lastCharacter)) {
     finalStr += '。';
   }
-  finalStr +=
-    '严格按照prompt中的格式回复，不要有任何多余内容。 Use the original fieldName and DO NOT change or translate any word of the data fields in the response.';
+  finalStr += 'Use the original fieldName and DO NOT change or translate any word of the data fields in the response.';
   return finalStr;
 };
 
@@ -47,6 +46,11 @@ export const patchChartTypeAndCell = (chartTypeOutter: string, cell: any, datase
     } else if (!cell.y) {
       cell.y = cell.axis;
     }
+  }
+
+  //patch the "label" fields to color
+  if (cell.label && (!cell.color || cell.color.length === 0)) {
+    cell.color = cell.label;
   }
 
   // y轴字段有多个时，处理方式:

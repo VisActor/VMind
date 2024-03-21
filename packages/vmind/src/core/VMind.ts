@@ -6,6 +6,7 @@ import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '.
 import { generateChartWithSkylark } from '../skylark/chart-generation';
 import { queryDatasetWithGPT } from '../gpt/dataProcess/query/queryDataset';
 import { generateChartWithAdvisor } from '../common/chartAdvisor';
+import { queryDatasetWithSkylark } from '../skylark/dataProcess/query/queryDataset';
 
 class VMind {
   private _FPS = 30;
@@ -92,7 +93,15 @@ class VMind {
       );
     }
     if (this.getModelType() === ModelType.SKYLARK) {
-      return generateChartWithSkylark(userPrompt, fieldInfo, dataset, this._options, colorPalette, animationDuration);
+      return generateChartWithSkylark(
+        userPrompt,
+        fieldInfo,
+        dataset,
+        this._options,
+        enableDataQuery,
+        colorPalette,
+        animationDuration
+      );
     }
 
     return generateChartWithAdvisor(fieldInfo, dataset, colorPalette, animationDuration);
@@ -107,12 +116,11 @@ class VMind {
       return queryDatasetWithGPT(userPrompt, fieldInfo, dataset, this._options);
     }
     if (this.getModelType() === ModelType.SKYLARK) {
-      console.error('Please user GPT model');
-      return { fieldInfo: [], dataset } as any;
+      return queryDatasetWithSkylark(userPrompt, fieldInfo, dataset, this._options);
     }
     console.error('unsupported model in data query!');
 
-    return { fieldInfo: [], dataset };
+    return { fieldInfo: [], dataset } as any;
   }
 
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {
