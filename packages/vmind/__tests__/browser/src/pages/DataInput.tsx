@@ -96,7 +96,7 @@ export function DataInput(props: IPropsType) {
   const [spec, setSpec] = useState<string>('');
   const [time, setTime] = useState<number>(1000);
   const [model, setModel] = useState<Model>(Model.GPT3_5);
-  const [cache, setCache] = useState<boolean>(false);
+  const [cache, setCache] = useState<boolean>(true);
   const [showThoughts, setShowThoughts] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);

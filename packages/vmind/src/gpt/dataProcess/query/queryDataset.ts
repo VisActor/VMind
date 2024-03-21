@@ -21,7 +21,7 @@ export const queryDatasetWithGPT = async (
   const patchedInput = patchQueryInput(userInput);
   const { sql, fieldInfo: responseFieldInfo, usage } = await getQuerySQL(patchedInput, fieldInfo, options);
 
-  const datasetAfterQuery = queryDataset(sql, sourceDataset);
+  const datasetAfterQuery = queryDataset(sql, sourceDataset, fieldInfo);
 
   const fieldInfoNew = parseRespondField(responseFieldInfo, datasetAfterQuery);
   if (datasetAfterQuery.length === 0) {

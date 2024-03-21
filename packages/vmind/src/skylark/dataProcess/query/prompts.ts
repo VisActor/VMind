@@ -8,7 +8,9 @@ export const getQueryDatasetPrompt = (
 - Supported sql keywords: ["SELECT", "FROM", "WHERE", "GROUP BY", "HAVING", "ORDER BY", "LIMIT", "DISTINCT"]. Supported aggregation methods: ["MAX()", "MIN()", "SUM()", "COUNT()", "AVG()"].
 - Generate a sql query like this: "SELECT \`columnA\`, SUM(\`columnB\`) as \`sum_b\` FROM ${VMIND_DATA_SOURCE} WHERE \`columnA\` = value1 GROUP BY \`columnA\` HAVING \`sum_b\`>0 ORDER BY \`sum_b\` LIMIT 10".
 - Don't use unsupported keywords such as WITHIN, FIELD. Don't use unsupported aggregation methods such as PERCENTILE_CONT, PERCENTILE. Don't use unsupported operators. We will execute your sql using alasql. Unsupported keywords, methods and operators will cause system crash. If current keywords and methods can't meet your needs, just simply select the column without any process.
-- Make your sql as simple as possible.
+- Please don't change or translate the column names in your sql statement. Don't miss the GROUP BY in your sql.
+- Wrap all the column names with \`\` in your sql.
+- Make your sql as simple as possible. Your sql must be executable by alasql.
 
 You need to follow the steps below.
 
@@ -90,8 +92,6 @@ You only need to return the JSON in your response directly to the user.
 Finish your tasks in one-step.
 
 # Constraints:
-1. Write your sql statement in one line without any \\n. Your sql must be executable by alasql.
-2. Please don't change or translate the column names in your sql statement. Don't miss the GROUP BY in your sql.
-3. Wrap all the columns with \`\` in your sql.
-4. Response the JSON object directly without any other contents. Make sure it can be directly parsed by JSON.parse() in JavaScript.
+1. Write your sql statement in one line without any \\n.
+2. Response the JSON object directly without any other contents. Make sure it can be directly parsed by JSON.parse() in JavaScript.
 `;

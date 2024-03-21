@@ -1,7 +1,8 @@
-import { sampleSize, isNumber, isInteger, isString } from 'lodash';
+import { sampleSize, isNumber, isInteger, isString, isArray } from 'lodash';
 import { DataItem, DataType, ROLE, SimpleFieldInfo } from '../../typings';
 import dayjs from 'dayjs';
 import { uniqArray } from '@visactor/vutils';
+import alasql from 'alasql';
 
 export const readTopNLine = (csvFile: string, n: number) => {
   // get top n lines of a csv file
@@ -188,13 +189,13 @@ export const replaceString = (str: string | number, replaceMap: Map<string, stri
 };
 
 //replace data keys and data values according to replaceMap
-export const replaceDataset = (dataset: DataItem[], replaceMap: Map<string, string>) => {
+export const replaceDataset = (dataset: DataItem[], replaceMap: Map<string, string>, keysOnly: boolean) => {
   return dataset.map((d: DataItem) => {
     const dataKeys = Object.keys(d);
     return dataKeys.reduce((prev, cur) => {
       const replacedKey = replaceString(cur, replaceMap);
       const replacedValue = replaceString(d[cur], replaceMap);
-      prev[replacedKey] = replacedValue;
+      prev[replacedKey] = keysOnly ? d[cur] : replacedValue;
       return prev;
     }, {});
   });
@@ -222,21 +223,75 @@ export const replaceInvalidContent = (str: string) => {
 };
 
 /**
- * replace operator and reserved words inside the column name in the sql str
- * @param fieldInfo
+ * replace the string according to replaceMap
+ * @param str
+ * @param replaceMap
  */
-export const replaceOperator = (str: string) => {
-  const operatorMap = new Map<string, string>([
-    ['+', '_PLUS_'],
-    ['-', '_DASH_'],
-    ['*', '_ASTERISK_'],
-    ['/', '_SLASH_']
-  ]);
+export const replaceByMap = (str: string, replaceMap: Map<string, string>) => {
+  const originalStringList = [...replaceMap.keys()];
 
-  const newStr = [...operatorMap.keys()].reduce((prev, cur) => {
-    return replaceAll(prev, cur, operatorMap.get(cur));
+  const finalSql = originalStringList.reduce((prev, cur) => {
+    const originColumnName = cur;
+    const validColumnName = replaceMap.get(cur);
+    return replaceAll(prev, originColumnName, validColumnName);
   }, str);
-  return { validStr: newStr, operatorMap };
+
+  return finalSql;
+};
+
+const RESERVE_REPLACE_MAP = new Map<string, string>([
+  ['+', `_${generateRandomString(3)}_PLUS_${generateRandomString(3)}_`],
+  ['-', `_${generateRandomString(3)}_DASH_${generateRandomString(3)}_`],
+  ['*', `_${generateRandomString(3)}_ASTERISK_${generateRandomString(3)}_`],
+  ['/', `_${generateRandomString(3)}_SLASH_${generateRandomString(3)}_`],
+  ['value', generateRandomString(10)],
+  ['key', generateRandomString(10)],
+  ['total', generateRandomString(10)]
+]);
+
+/**
+ * replace operator and reserved words inside the column name in the sql str
+ * operators such as +, -, *, / in column names in sql will cause ambiguity and parsing error
+ * so we need to replace them only in column names
+ * sometimes skylark2 pro will return a sql statement in which non-ascii characters are not wrapped with ``
+ * this will cause error in alasql
+ * so we need to replace them with random string in the whole sql
+ * @param sql
+ * @param columns
+ * @returns validStr: sql without invalid characters; columnReplaceMap: replace map of column names; sqlReplaceMap: replace map of the whole sql including dimension values.
+ *
+ */
+export const replaceInvalidWords = (sql: string, columns: string[]) => {
+  //replace column names according to RESERVED_REPLACE_MAP
+  const validColumnNames = columns.map(column => {
+    const nameWithoutOperator = [...RESERVE_REPLACE_MAP.keys()].reduce((prev, cur) => {
+      return replaceAll(prev, cur, RESERVE_REPLACE_MAP.get(cur.toLowerCase()));
+    }, column);
+
+    return nameWithoutOperator;
+  });
+
+  const columnReplaceMap = new Map<string, string>(
+    columns
+      .map((column, index) => {
+        const validStr = validColumnNames[index];
+        if (column !== validStr) {
+          return [column, validStr];
+        }
+        return undefined;
+      })
+      .filter(Boolean) as any
+  );
+
+  //only replace operators in column names, not all operators in the sql
+  const sqlWithoutOperator = replaceByMap(sql, columnReplaceMap);
+
+  //replace non-ascii characters in sql
+  const { validStr: sqlWithoutAscii, replaceMap: asciiReplaceMap } = replaceNonASCIICharacters(sqlWithoutOperator);
+
+  const operatorReplaceMap = new Map<string, string>(RESERVE_REPLACE_MAP);
+
+  return { validStr: sqlWithoutAscii, columnReplaceMap: operatorReplaceMap, sqlReplaceMap: asciiReplaceMap };
 };
 
 export const replaceAll = (originStr: string, replaceStr: string, newStr: string) => {
@@ -255,4 +310,25 @@ export const mergeMap = (map1: Map<string, string>, map2: Map<string, string>) =
     map1.set(key, value);
   });
   return map1;
+};
+
+/**
+ * sometimes skylark2 pro will return a sql statement with some blank spaces in column names
+ * this will make the alasql can't find the correct column in dataset
+ * so we need to remove these blank spaces
+ */
+export const replaceBlankSpace = (sql: string) => {
+  //extract all the columns in sql str
+  const ast = alasql.parse(sql) as any;
+  const columnsInSql = getValueByAttributeName(ast.statements[0], 'columnid');
+  console.log(ast);
+  console.log(columnsInSql);
+  //replace all the spaces and reserved words in column names in sql
+  const validColumnNames = columnsInSql.map(column => replaceInvalidContent(column));
+  const finalSql = columnsInSql.reduce((prev, _cur, index) => {
+    const originColumnName = columnsInSql[index];
+    const validColumnName = validColumnNames[index];
+    return replaceAll(prev, originColumnName, validColumnName);
+  }, sql);
+  return finalSql;
 };

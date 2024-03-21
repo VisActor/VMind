@@ -6,8 +6,9 @@ import {
   replaceDataset,
   replaceInvalidContent,
   replaceNonASCIICharacters,
-  replaceOperator,
-  swapMap
+  replaceInvalidWords,
+  swapMap,
+  replaceBlankSpace
 } from './utils';
 import alasql from 'alasql';
 
@@ -21,59 +22,48 @@ export const VMIND_DATA_SOURCE = 'VMind_data_source';
  * @param fieldInfo
  * @returns dataset after query
  */
-export const queryDataset = (sql: string, sourceDataset: DataItem[]) => {
-  /**
-   * operators such as +, -, *, / in column names in sql will cause ambiguity and parsing error
-   * so we need to replace them
-   */
-  const { validStr: sqlWithNoOperator, operatorMap: operatorReplaceMap } = replaceOperator(sql);
-  console.log(sqlWithNoOperator);
-  /**
-   * sometimes skylark2 pro will return a sql statement in which non-ascii characters are not wrapped with ``
-   * this will cause error in alasql
-   * so we need to replace them with random string
-   */
-  const { validStr: sqlWithNoASCII, replaceMap: ASCIIReplaceMap } = replaceNonASCIICharacters(sqlWithNoOperator);
-  console.log(sqlWithNoASCII);
+export const queryDataset = (sql: string, sourceDataset: DataItem[], fieldInfo: SimpleFieldInfo[]) => {
+  const fieldNames = fieldInfo.map(field => field.fieldName);
+  console.log(sql);
+  const { validStr, sqlReplaceMap, columnReplaceMap } = replaceInvalidWords(sql, fieldNames);
+  console.log(validStr);
 
-  const replaceMap = mergeMap(operatorReplaceMap, ASCIIReplaceMap);
-  console.log(replaceMap);
+  //const { validStr: sqlWithNoASCII, replaceMap: ASCIIReplaceMap } = replaceNonASCIICharacters(sqlWithNoOperator);
+  //console.log(sqlWithNoASCII);
+
+  //const replaceMap = mergeMap(ASCIIReplaceMap, operatorReplaceMap);
+  console.log(columnReplaceMap);
+  console.log(sqlReplaceMap);
+
   //replace field names according to replaceMap
-  const validDataset = replaceDataset(sourceDataset, replaceMap);
+  const validColumnDataset = replaceDataset(sourceDataset, columnReplaceMap, true);
+  console.log(validColumnDataset);
+
+  //replace field names and data values according to replaceMap
+  const validDataset = replaceDataset(validColumnDataset, sqlReplaceMap, false);
   console.log(validDataset);
 
-  /**
-   * sometimes skylark2 pro will return a sql statement with some blank spaces in column names
-   * this will make the alasql can't find the correct column in dataset
-   * so we need to remove these blank spaces
-   */
-  //extract all the columns in sql str
-  const ast = alasql.parse(sqlWithNoASCII) as any;
-  const columnsInSql = getValueByAttributeName(ast.statements[0], 'columnid');
-  console.log(ast);
-
-  console.log(columnsInSql);
-  //replace all the spaces and reserved words in column names in sql
-  const validColumnNames = columnsInSql.map(column => replaceInvalidContent(column));
-  const finalSql = columnsInSql.reduce((prev, _cur, index) => {
-    const originColumnName = columnsInSql[index];
-    const validColumnName = validColumnNames[index];
-    return replaceAll(prev, originColumnName, validColumnName);
-  }, sqlWithNoASCII);
-
+  //replace blank spaces in column name
+  //TODO: only replace when no fields can match the column name in sql
+  const finalSql = replaceBlankSpace(validStr);
   console.log(finalSql);
 
+  //replace VMIND_DATA_SOURCE with placeholder "?"
   const sqlParts = (finalSql + ' ').split(VMIND_DATA_SOURCE);
-
   const sqlCount = sqlParts.length - 1;
   const alasqlQuery = sqlParts.join('?');
+  //do the query
   const alasqlDataset = alasql(alasqlQuery, new Array(sqlCount).fill(validDataset));
   console.log(alasqlDataset);
 
   //restore the dataset
-  const reversedMap = swapMap(replaceMap);
-  const restoredDataset = replaceDataset(alasqlDataset, reversedMap);
-  console.log(restoredDataset);
+  const columnReversedMap = swapMap(columnReplaceMap);
+  const columnRestoredDataset = replaceDataset(alasqlDataset, columnReversedMap, true);
+  console.log(columnRestoredDataset);
+  const sqlReversedMap = swapMap(sqlReplaceMap);
+  const sqlRestoredDataset = replaceDataset(columnRestoredDataset, sqlReversedMap, false);
 
-  return restoredDataset;
+  console.log(sqlRestoredDataset);
+
+  return sqlRestoredDataset;
 };
