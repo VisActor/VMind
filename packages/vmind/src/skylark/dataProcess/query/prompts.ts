@@ -2,46 +2,45 @@ import { VMIND_DATA_SOURCE } from '../../../common/dataProcess/dataQuery';
 
 export const getQueryDatasetPrompt = (
   showThoughts: boolean
-) => `You are an expert in data analysis. Here is a raw dataset named ${VMIND_DATA_SOURCE}. User will tell you his command and column information of ${VMIND_DATA_SOURCE}. Your task is to generate a sql and fieldInfo according to Instruction. Response one JSON object only.
+) => `您是一位数据分析的专家。这是一个名为${VMIND_DATA_SOURCE}的原始数据集。用户会告诉您他的命令和${VMIND_DATA_SOURCE}的列信息。您的任务是根据指令生成一个sql和fieldInfo。只返回一个JSON对象。
 
-# Instruction
-- Supported sql keywords: ["SELECT", "FROM", "WHERE", "GROUP BY", "HAVING", "ORDER BY", "LIMIT", "DISTINCT"]. Supported aggregation methods: ["MAX()", "MIN()", "SUM()", "COUNT()", "AVG()"].
-- Generate a sql query like this: "SELECT \`columnA\`, SUM(\`columnB\`) as \`sum_b\` FROM ${VMIND_DATA_SOURCE} WHERE \`columnA\` = value1 GROUP BY \`columnA\` HAVING \`sum_b\`>0 ORDER BY \`sum_b\` LIMIT 10".
-- Don't use unsupported keywords such as WITHIN, FIELD. Don't use unsupported aggregation methods such as PERCENTILE_CONT, PERCENTILE. Don't use unsupported operators. We will execute your sql using alasql. Unsupported keywords, methods and operators will cause system crash. If current keywords and methods can't meet your needs, just simply select the column without any process.
-- Please don't change or translate the column names in your sql statement. Don't miss the GROUP BY in your sql.
-- Wrap all the column names with \`\` in your sql.
-- Make your sql as simple as possible. Your sql must be executable by alasql.
+# SQL语句编写要求
+- 您需要编写一个标准的sql语句。
+- 所有的度量列必须被聚合，即使用户没有要求你这样做。支持的聚合函数：["MAX()", "MIN()", "SUM()", "COUNT()", "AVG()"]
+- 支持的sql关键字：["SELECT", "FROM", "WHERE", "GROUP BY", "HAVING", "ORDER BY", "LIMIT", "DISTINCT"].
+- 不要使用不支持的关键词，如：WITHIN, FIELD。不要使用不支持的聚合函数，如：PERCENTILE_CONT, PERCENTILE。不要使用不支持的操作符。我们将使用alasql执行您的sql。不支持的关键词、函数和操作符会导致系统崩溃。
+- 使用\` \`包裹sql中的所有列名
+- 让你的sql尽可能简单。
 
-You need to follow the steps below.
+您需要按照以下步骤编写sql语句。
 
-# Steps
-1. Extract the part related to the data from the user's instruction. Ignore other parts that is not related to the data.
-2. Select useful dimension and measure columns from ${VMIND_DATA_SOURCE}. You can only use columns in Column Information and do not assume non-existent columns. If the existing columns can't meet user's command, just select the most related columns in Column Information.
-3. Aggregate the measure columns you selected using supported aggregation method. If you are not sure which aggregation function to use, use SUM().
-4. Don't use unsupported methods. If current keywords and methods can't meet your needs, just simply select the column without any process.
-5. Group the data using dimension columns.
-6. You can also use WHERE, HAVING, ORDER BY, LIMIT in your sql if necessary. Use the supported operators to finish the WHERE and HAVING. You can only use binary expression such as columnA = value1, sum_b > 0. You can only use dimension values appearing in the domain of dimension columns in your expression.
+# 步骤
+1. 从用户的指令中提取与数据相关的部分。忽略其他与数据无关的部分。
+2. 根据列的名称和类型，推断${VMIND_DATA_SOURCE}中与用户指令有关的列，并将其添加到SELECT中。尽可能多地选择相关列，不要遗漏一些关键的列，比如日期类型的维度等。你只能使用Column Information中提到的列，不要假设不存在的列。如果现有的列不能满足用户的命令，选择Column Information中最相关的列。
+3. 不论用户指定了哪种图表类型，将所选择的度量列使用聚合函数聚合，即使你推断它们不适合被聚合，即使用户没有要求你这样做。如果你不确定使用哪个聚合函数，使用SUM()。不要使用不支持的聚合函数。
+4. 使用你所选择的维度列对数据进行分组，将其添加到GROUP BY中。没有被聚合的度量列也必须被放到GROUP BY中。
+5. 在您的sql中，如有必要，您也可以使用WHERE, HAVING, ORDER BY, LIMIT。使用支持的操作符完成WHERE和HAVING。只能使用如columnA = value1，sum_b > 0的二元表达式。在您的表达式中，只能使用在维度列的domain中出现的维度值。
 
-Let's think step by step.
+让我们一步一步思考。不要忘了将所有度量列聚合。
 
-Response one JSON object without any additional words. Your JSON object must contain sql and fieldInfo.
+只返回一个不带任何额外内容的JSON对象。您的JSON对象必须包含sql和fieldInfo。
 
-Response in the following format:
+请按以下格式回复：
 \`\`\`
 {
-  ${showThoughts ? 'THOUGHTS: string //your thoughts' : ''}
-  sql: string; //your sql. Note that it's a string in a JSON object so it must be in one line without any \\n.
-  fieldInfo: {
-    fieldName: string; //name of the field.
-    description?: string; //description of the field. If it is an aggregated field, please describe how it is generated in detail.
-  }[]; //array of the information about the fields in your sql. Describing its aggregation method and other information of the fields.
+${showThoughts ? 'THOUGHTS: string //你的想法' : ''}
+sql: string; //你的sql。注意，这是一个JSON对象中的字符串，所以必须是一行，不含任何\\n。
+fieldInfo: {
+fieldName: string; //字段名。
+type: string; //字段类型，string，int，date或float。
+}[]; //您的sql中字段信息的数组。描述其名称和类型。
 }
 \`\`\`
 
 #Examples:
 
 User's Command: Show me the change of the GDP rankings of each country.
-Column Information: [{"fieldName":"country","type":"string","role":"dimension"},{"fieldName":"continent","type":"string","role":"dimension"},{"fieldName":"GDP","type":"float","role":"measure"},{"fieldName":"year","type":"int","role":"measure"}]
+Column Information: [{"fieldName":"country","type":"string","role":"dimension","domain":["USA", "China", "England"]},{"fieldName":"continent","type":"string","role":"dimension","domain":["North America","Asia","Europe"]},{"fieldName":"GDP","type":"float","role":"measure","domain":[2780,617030]},{"fieldName":"year","type":"int","role":"measure","domain":[1973,2018]}]
 
 Response:
 \`\`\`
@@ -51,47 +50,27 @@ Response:
   "fieldInfo": [
     {
       "fieldName": "country",
-      "description": "The name of the country."
+      "type": "string"
     },
     {
       "fieldName": "year",
-      "description": "The year of the GDP data."
+      "type": "date"
     },
     {
       "fieldName": "total_GDP",
-      "description": "An aggregated field representing the total GDP of each country in each year. It is generated by summing up the GDP values for each country in each year."
+      "type": "int"
     }
   ]
 }
 \`\`\`
-----------------------------------
 
-User's Command: 请使用[柱状图]展示[2022年GDP排名前五的中国城市及其2022年的GDP].
-Column Information: [{"fieldName":"城市","type":"string","role":"dimension"},{"fieldName":"2022年GDP（亿元）","type":"int","role":"measure"}]
+在上面这个例子中，用户想要展示不同国家GDP排名的变化，相关列有country和GDP。用户需要一个年份列才能展示“变化”，因此我们还需要选择year。GDP是一个指标列，因此我们要将它聚合。从用户输入中无法推断聚合方式，因此使用SUM()。您只需要将生成的JSON返回给用户。
 
-Response:
-\`\`\`
-{
-  ${showThoughts ? '"THOUGHTS": string //your thoughts' : ''}
-  "sql": "SELECT 城市, SUM(\`2022年GDP（亿元）\`) as \`sum_2022_GDP\` FROM ${VMIND_DATA_SOURCE} ORDER BY \`sum_2022_GDP\` DESC LIMIT 5",
-  "fieldInfo": [
-    {
-      "fieldName": "城市",
-      "description": "The name of the city."
-    },
-    {
-      "fieldName": "sum_2022_GDP",
-      "description": "The GDP value of the city in 2022."
-    }
-  ]
-}
-\`\`\`
-----------------------------------
+一步完成您的任务。
 
-You only need to return the JSON in your response directly to the user.
-Finish your tasks in one-step.
-
-# Constraints:
-1. Write your sql statement in one line without any \\n.
-2. Response the JSON object directly without any other contents. Make sure it can be directly parsed by JSON.parse() in JavaScript.
+# 约束：
+- 在一行内写出您的sql语句，不要有任何\\n。您的sql必须能够由alasql执行。
+- 请不要在您的sql语句中改变或翻译列名，请保持原有的列名不变，即使他们含有空格或-。
+- 在你的sql中不要遗漏GROUP BY。
+- 直接返回JSON对象，不要有任何其他内容。确保它能够被JavaScript中的JSON.parse()直接解析。
 `;

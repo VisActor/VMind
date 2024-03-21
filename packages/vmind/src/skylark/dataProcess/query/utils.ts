@@ -1,5 +1,6 @@
 import { LLMResponse } from 'src/typings';
 import JSON5 from 'json5';
+import { replaceAll } from '../../../common/dataProcess/utils';
 
 export const parseJson = (JsonStr: string, prefix?: string) => {
   const parseNoPrefixStr = (str: string) => {
@@ -36,7 +37,7 @@ export const parseSkylarkResponseAsJSON = (skylarkRes: LLMResponse) => {
       };
     }
     const choices = skylarkRes.choices;
-    const content = choices[0].message.content;
+    const content = replaceAll(choices[0].message.content, '\n', ' ');
     const resJson = parseJson(content, '```');
     return resJson;
   } catch (err: any) {
@@ -47,4 +48,5 @@ export const parseSkylarkResponseAsJSON = (skylarkRes: LLMResponse) => {
   }
 };
 
-export const patchDataQueryInput = (userInput: string) => userInput + ' Aggregate all the measure columns in your sql.';
+export const patchDataQueryInput = (userInput: string) =>
+  userInput + ' 使用` `包裹sql中的所有列名。使用支持的聚合函数将所有的度量列聚合。';
