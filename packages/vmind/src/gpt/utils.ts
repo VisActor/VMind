@@ -86,7 +86,3 @@ export const parseGPTResponse = (GPTRes: LLMResponse) => {
     };
   }
 };
-
-export const replaceAll = (originStr: string, replaceStr: string, newStr: string) => {
-  return originStr.split(replaceStr).join(newStr);
-};
