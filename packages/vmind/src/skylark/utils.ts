@@ -41,6 +41,10 @@ export const parseSkylarkResponse = (larkResponse: LLMResponse): Record<string, 
         const parts = str.split(':');
         return parts.length > 2 ? `${parts[0]}: "${parts.slice(1).join(':').trim()}"` : str;
       })
+      //replace ": -" with ": null"
+      .map((str: string) => {
+        return str.replace(/: -/g, ': null');
+      })
       .join('\n');
 
     const resJson = yaml.load(patchedStr) as Record<string, any>;
