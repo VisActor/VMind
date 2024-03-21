@@ -8,7 +8,8 @@ import {
   replaceNonASCIICharacters,
   replaceInvalidWords,
   swapMap,
-  replaceBlankSpace
+  replaceBlankSpace,
+  replaceString
 } from './utils';
 import alasql from 'alasql';
 
@@ -44,8 +45,10 @@ export const queryDataset = (sql: string, sourceDataset: DataItem[], fieldInfo: 
   console.log(validDataset);
 
   //replace blank spaces in column name
-  //TODO: only replace when no fields can match the column name in sql
-  const finalSql = replaceBlankSpace(validStr);
+  const replacedFieldNames = fieldNames
+    .map(field => replaceString(field, columnReplaceMap))
+    .map(field => replaceString(field, sqlReplaceMap));
+  const finalSql = replaceBlankSpace(validStr, replacedFieldNames as string[]);
   console.log(finalSql);
 
   //replace VMIND_DATA_SOURCE with placeholder "?"

@@ -313,22 +313,50 @@ export const mergeMap = (map1: Map<string, string>, map2: Map<string, string>) =
 };
 
 /**
+ * match the column name with field name without blank spaces
+ * @param columnName
+ * @param fieldName
+ * @returns
+ */
+const matchColumnName = (columnName: string, fieldName: string) => {
+  const fieldWithoutSpace = fieldName.replace(/\s/g, '');
+  const columnWithoutString = columnName.replace(/\s/g, '');
+
+  if (columnWithoutString === fieldWithoutSpace) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+/**
  * sometimes skylark2 pro will return a sql statement with some blank spaces in column names
  * this will make the alasql can't find the correct column in dataset
  * so we need to remove these blank spaces
+ * only replace when no fields can match the column name in sql
+ *
  */
-export const replaceBlankSpace = (sql: string) => {
+export const replaceBlankSpace = (sql: string, fieldNames: string[]) => {
   //extract all the columns in sql str
   const ast = alasql.parse(sql) as any;
   const columnsInSql = getValueByAttributeName(ast.statements[0], 'columnid');
-  console.log(ast);
-  console.log(columnsInSql);
+
   //replace all the spaces and reserved words in column names in sql
-  const validColumnNames = columnsInSql.map(column => replaceInvalidContent(column));
+  //only replace when two names can match without space
+  const validColumnNames = columnsInSql.map(column => {
+    const matchedFieldName = fieldNames.find(field => matchColumnName(column, field));
+    return matchedFieldName ?? column;
+  });
+  console.log(columnsInSql, validColumnNames);
+
   const finalSql = columnsInSql.reduce((prev, _cur, index) => {
     const originColumnName = columnsInSql[index];
     const validColumnName = validColumnNames[index];
-    return replaceAll(prev, originColumnName, validColumnName);
+    if (validColumnName !== originColumnName) {
+      return replaceAll(prev, originColumnName, validColumnName);
+    } else {
+      return prev;
+    }
   }, sql);
   return finalSql;
 };
