@@ -157,3 +157,15 @@ export type LLMResponse = {
   usage: any;
   [key: string]: any;
 };
+
+export type PatchContext = {
+  chartType: string;
+  cell: Cell;
+  dataset: DataItem[];
+  fieldInfo: SimpleFieldInfo[];
+};
+
+export type PatchPipeline = (
+  context: PatchContext,
+  _originalContext: PatchContext
+) => { chartType: string; cell: Cell; dataset: DataItem[]; fieldInfo: SimpleFieldInfo[] };

@@ -2,7 +2,7 @@ import { SUPPORTED_CHART_LIST } from '../../common/vizDataToSpec/constants';
 import { DataItem, GPTChartAdvisorResult, ILLMOptions, LOCATION, SimpleFieldInfo, VizSchema } from '../../typings';
 import { checkChartTypeAndCell, vizDataToSpec } from '../../common/vizDataToSpec';
 import { parseGPTResponse, requestGPT } from '../utils';
-import { patchChartTypeAndCell, patchUserInput } from './utils';
+import { patchUserInput } from './utils';
 import { ChartAdvisorPromptEnglish } from './prompts';
 import { chartAdvisorHandler } from '../../common/chartAdvisor';
 import { estimateVideoTime } from '../../common/vizDataToSpec/utils';
@@ -10,6 +10,7 @@ import { getSchemaFromFieldInfo } from '../../common/schema';
 import { queryDatasetWithGPT } from '../dataProcess/query/queryDataset';
 import { calculateTokenUsage } from '../..//common/utils';
 import { pick } from 'lodash';
+import { patchChartTypeAndCell } from './patch';
 
 export const generateChartWithGPT = async (
   userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
@@ -53,7 +54,7 @@ export const generateChartWithGPT = async (
     const chartTypeRes = resJson['CHART_TYPE'].toUpperCase();
     const cellRes = resJson['FIELD_MAP'];
     advisorUsage = resJson['usage'];
-    const patchResult = patchChartTypeAndCell(chartTypeRes, cellRes, dataset);
+    const patchResult = patchChartTypeAndCell(chartTypeRes, cellRes, dataset, fieldInfo);
     if (checkChartTypeAndCell(patchResult.chartTypeNew, patchResult.cellNew, fieldInfo)) {
       chartType = patchResult.chartTypeNew;
       cell = patchResult.cellNew;

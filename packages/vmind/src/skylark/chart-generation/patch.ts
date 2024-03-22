@@ -1,14 +1,7 @@
 import { isArray } from 'lodash';
-import { Cell, DataItem, DataType, SimpleFieldInfo } from '../../typings';
+import { Cell, DataItem, DataType, PatchContext, PatchPipeline, SimpleFieldInfo } from '../../typings';
 import { detectAxesType } from '../../common/vizDataToSpec/utils';
 import { execPipeline } from '../../common/utils';
-
-type PatchContext = {
-  chartType: string;
-  cell: Cell;
-  dataset: DataItem[];
-  fieldInfo: SimpleFieldInfo[];
-};
 
 const matchFieldWithoutPunctuation = (field: string, fieldList: string[]): string | undefined => {
   //try to match the field without punctuation
@@ -30,7 +23,7 @@ const matchFieldWithoutPunctuation = (field: string, fieldList: string[]): strin
   return matchedField;
 };
 
-const patchNullField = (context: PatchContext, _originalContext: PatchContext) => {
+const patchNullField: PatchPipeline = (context: PatchContext, _originalContext: PatchContext) => {
   const { fieldInfo, cell } = context;
   const cellNew = { ...cell };
 
@@ -54,7 +47,7 @@ const patchNullField = (context: PatchContext, _originalContext: PatchContext) =
   };
 };
 
-const patchRadarChart = (context: PatchContext, _originalContext: PatchContext) => {
+const patchRadarChart: PatchPipeline = (context: PatchContext, _originalContext: PatchContext) => {
   const { chartType, cell } = context;
 
   if (chartType === 'RADAR CHART') {
@@ -72,7 +65,7 @@ const patchRadarChart = (context: PatchContext, _originalContext: PatchContext) 
   return context;
 };
 
-const patchBoxPlot = (context: PatchContext, _originalContext: PatchContext) => {
+const patchBoxPlot: PatchPipeline = (context: PatchContext, _originalContext: PatchContext) => {
   const { chartType, cell } = context;
 
   if (chartType === 'BOX PLOT') {
@@ -89,7 +82,7 @@ const patchBoxPlot = (context: PatchContext, _originalContext: PatchContext) => 
   return context;
 };
 
-const patchBarChart = (context: PatchContext, _originalContext: PatchContext) => {
+const patchBarChart: PatchPipeline = (context: PatchContext, _originalContext: PatchContext) => {
   const { chartType, cell } = context;
   let chartTypeNew = chartType;
   let cellNew = { ...cell };
@@ -114,7 +107,7 @@ const patchBarChart = (context: PatchContext, _originalContext: PatchContext) =>
   };
 };
 
-const patchDynamicBarChart = (context: PatchContext, _originalContext: PatchContext) => {
+const patchDynamicBarChart: PatchPipeline = (context: PatchContext, _originalContext: PatchContext) => {
   const { chartType, cell, fieldInfo } = context;
   const cellNew = {
     ...cell
@@ -149,7 +142,7 @@ const patchDynamicBarChart = (context: PatchContext, _originalContext: PatchCont
   };
 };
 
-const patchArrayField = (context: PatchContext, _originalContext: PatchContext) => {
+const patchArrayField: PatchPipeline = (context: PatchContext, _originalContext: PatchContext) => {
   const { cell } = context;
   const cellNew = {
     ...cell
@@ -167,7 +160,7 @@ const patchArrayField = (context: PatchContext, _originalContext: PatchContext) 
   };
 };
 
-const patchPipelines = [
+const patchPipelines: PatchPipeline[] = [
   patchNullField,
   patchRadarChart,
   patchBoxPlot,
