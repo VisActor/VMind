@@ -1,7 +1,8 @@
-import { isArray } from 'lodash';
-import { Cell, DataItem, DataType, PatchContext, PatchPipeline, SimpleFieldInfo } from '../../typings';
-import { detectAxesType } from '../../common/vizDataToSpec/utils';
+import { isArray, isString } from 'lodash';
+import { Cell, DataItem, DataType, PatchContext, PatchPipeline, ROLE, SimpleFieldInfo } from '../../typings';
 import { execPipeline } from '../../common/utils';
+import { foldDatasetByYField } from '../../common/vizDataToSpec/utils';
+import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
 
 const matchFieldWithoutPunctuation = (field: string, fieldList: string[]): string | undefined => {
   //try to match the field without punctuation
@@ -47,6 +48,49 @@ const patchNullField: PatchPipeline = (context: PatchContext, _originalContext: 
   };
 };
 
+const patchField: PatchPipeline = (context: PatchContext, _originalContext: PatchContext) => {
+  const { fieldInfo, cell } = context;
+  const fieldNames = fieldInfo.map(field => field.fieldName);
+  const cellNew = { ...cell };
+  Object.keys(cellNew).forEach(key => {
+    const value = cellNew[key];
+    if (isString(value) && (value ?? '').includes(',')) {
+      const newValue = (value as string).split(',').map(f => f.trim());
+      if (newValue.every(f => fieldNames.includes(f))) {
+        cellNew[key] = newValue;
+      }
+    }
+  });
+  return {
+    ...context,
+    cell: cellNew
+  };
+};
+
+const patchColorField: PatchPipeline = (context: PatchContext, _originalContext: PatchContext) => {
+  const { chartType, fieldInfo, cell } = context;
+  const cellNew = { ...cell };
+  const { color } = cellNew;
+  let chartTypeNew = chartType;
+  if (color) {
+    const colorField = fieldInfo.find(f => f.fieldName === color);
+    if (colorField && colorField.role === ROLE.MEASURE) {
+      cellNew.color = undefined;
+      if (['BAR CHART', 'LINE CHART', 'DUAL AXIS CHART'].includes(chartTypeNew)) {
+        cellNew.y = [cellNew.y, color].flat();
+        if (chartTypeNew === 'DUAL AXIS CHART' && cellNew.y.length > 2) {
+          chartTypeNew = 'BAR CHART';
+        }
+      }
+    }
+  }
+
+  return {
+    ...context,
+    cell: cellNew
+  };
+};
+
 const patchRadarChart: PatchPipeline = (context: PatchContext, _originalContext: PatchContext) => {
   const { chartType, cell } = context;
 
@@ -83,27 +127,22 @@ const patchBoxPlot: PatchPipeline = (context: PatchContext, _originalContext: Pa
 };
 
 const patchBarChart: PatchPipeline = (context: PatchContext, _originalContext: PatchContext) => {
-  const { chartType, cell } = context;
-  let chartTypeNew = chartType;
-  let cellNew = { ...cell };
-  if (chartTypeNew === 'BAR CHART') {
-    if (isArray(cell.y) && cell.y.length === 2) {
-      chartTypeNew = 'DUAL AXIS CHART';
-    } else if ((cell.y ?? '').includes(',')) {
-      const yNew = (cell.y as string).split(',');
-      if (yNew.length === 2) {
-        chartTypeNew = 'DUAL AXIS CHART';
-        cellNew = {
-          ...cell,
-          y: yNew
-        };
-      }
+  const { chartType, cell, fieldInfo, dataset } = context;
+  const chartTypeNew = chartType;
+  const cellNew = { ...cell };
+  let datasetNew = dataset;
+  if (chartTypeNew === 'BAR CHART' || chartTypeNew === 'LINE CHART') {
+    if (isArray(cellNew.y) && cellNew.y.length > 1) {
+      datasetNew = foldDatasetByYField(datasetNew, cellNew.y, fieldInfo);
+      cellNew.y = FOLD_VALUE.toString();
+      cellNew.color = FOLD_NAME.toString();
     }
   }
   return {
     ...context,
     chartType: chartTypeNew,
-    cell: cellNew
+    cell: cellNew,
+    dataset: datasetNew
   };
 };
 
@@ -162,6 +201,8 @@ const patchArrayField: PatchPipeline = (context: PatchContext, _originalContext:
 
 const patchPipelines: PatchPipeline[] = [
   patchNullField,
+  patchField,
+  patchColorField,
   patchRadarChart,
   patchBoxPlot,
   patchBarChart,

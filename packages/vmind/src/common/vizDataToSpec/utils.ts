@@ -1,5 +1,6 @@
-import { Cell, DataType, ROLE, SimpleFieldInfo } from 'src/typings';
+import { Cell, DataItem, DataType, ROLE, SimpleFieldInfo } from 'src/typings';
 import { VIDEO_LENGTH_BY_CHART_TYPE, DEFAULT_VIDEO_LENGTH } from './constants';
+import { FOLD_NAME, FOLD_VALUE, fold } from '@visactor/chart-advisor';
 
 export const detectAxesType = (values: any[], field: string) => {
   const isNumber = values.every(d => !d[field] || !isNaN(Number(d[field])));
@@ -57,4 +58,10 @@ export const getFieldByRole = (fields: SimpleFieldInfo[], role: ROLE) => {
 
 export const getFieldByDataType = (fields: SimpleFieldInfo[], dataTypeList: DataType[]) => {
   return fields.find(f => dataTypeList.includes(f.type));
+};
+
+export const foldDatasetByYField = (dataset: DataItem[], yFieldList: string[], fieldInfo: SimpleFieldInfo[]) => {
+  const aliasMap = Object.fromEntries(fieldInfo.map(d => [d.fieldName, d.fieldName]));
+
+  return fold(dataset as any, yFieldList, FOLD_NAME, FOLD_VALUE, aliasMap, false);
 };

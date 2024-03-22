@@ -1,13 +1,15 @@
-import { isNil } from 'lodash';
+import { isArray, isNil } from 'lodash';
 import {
   CARTESIAN_CHART_LIST,
   detectAxesType,
+  foldDatasetByYField,
   getFieldByDataType,
   getFieldByRole,
   getRemainedFields
 } from '../../common/vizDataToSpec/utils';
 import { Cell, DataItem, DataType, PatchContext, PatchPipeline, ROLE, SimpleFieldInfo } from '../../typings';
 import { execPipeline } from '../../common/utils';
+import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
 
 export const patchUserInput = (userInput: string) => {
   const FULL_WIDTH_SYMBOLS = ['，', '。'];
@@ -38,7 +40,6 @@ export const patchUserInput = (userInput: string) => {
 };
 
 const patchAxisField: PatchPipeline = (context: PatchContext, _originalContext: PatchContext) => {
-  // Todo: When multiple Y fields, use FOLD
   const { cell } = context;
 
   const cellNew: any = { ...cell };
@@ -84,42 +85,44 @@ const patchLabelField: PatchPipeline = (context: PatchContext, _originalContext:
 };
 
 const patchYField: PatchPipeline = (context: PatchContext, _originalContext: PatchContext) => {
-  const { chartType, cell } = context;
+  const { chartType, cell, dataset, fieldInfo } = context;
   let cellNew = { ...cell };
   const { x, y } = cellNew;
   let chartTypeNew = chartType;
+  let datasetNew = dataset;
 
   // y轴字段有多个时，处理方式:
   // 1. 图表类型为: 箱型图, 图表类型不做矫正
   // 2. 图表类型为: 柱状图 或 折线图, 图表类型矫正为双轴图
   // 3. 其他情况, 图表类型矫正为散点图
-  if (y && typeof y !== 'string' && y.length > 1) {
-    if (chartTypeNew === 'BOX PLOT') {
+  if (y && isArray(y) && y.length > 1) {
+    if (chartTypeNew === 'BOX PLOT' || (chartTypeNew === 'DUAL AXIS CHART' && y.length === 2)) {
       return {
         ...context
       };
     }
+
     if (chartTypeNew === 'BAR CHART' || chartTypeNew === 'LINE CHART' || chartTypeNew === 'DUAL AXIS CHART') {
-      if (y.length === 2) {
-        chartTypeNew = 'DUAL AXIS CHART';
-      } else {
-        //TODO: use fold to visualize more than 2 y fields
-      }
+      //use fold to visualize more than 2 y fields
+      datasetNew = foldDatasetByYField(datasetNew, y, fieldInfo);
+      cellNew.y = FOLD_VALUE.toString();
+      cellNew.color = FOLD_NAME.toString();
     } else {
-      (chartTypeNew = 'SCATTER PLOT'),
-        (cellNew = {
-          ...cell,
-          x: y[0],
-          y: y[1],
-          color: typeof x === 'string' ? x : x[0]
-        });
+      chartTypeNew = 'SCATTER PLOT';
+      cellNew = {
+        ...cell,
+        x: y[0],
+        y: y[1],
+        color: typeof x === 'string' ? x : x[0]
+      };
     }
   }
 
   return {
     ...context,
     chartType: chartTypeNew,
-    cell: cellNew
+    cell: cellNew,
+    dataset: datasetNew
   };
 };
 
