@@ -11,3 +11,13 @@ export const calculateTokenUsage = (usageList: any[]) => {
   });
   return totalUsage;
 };
+
+export const execPipeline = <PipelineContext>(
+  src: any,
+  pipes: ((src: any, context: PipelineContext) => any)[],
+  context: PipelineContext
+) =>
+  pipes.reduce((pre: any, pipe: (src: any, context: PipelineContext) => any) => {
+    const result = pipe(pre, context);
+    return result;
+  }, src);

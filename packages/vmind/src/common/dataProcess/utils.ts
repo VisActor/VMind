@@ -383,17 +383,23 @@ export const sumAllMeasureFields = (
     });
 
   const ast: any = alasql.parse(sql);
-  const nonAggregatedColumns: string[] = ast.statements[0].columns
+  const selectedColumns = ast.statements[0].columns;
+  const nonAggregatedColumns: string[] = selectedColumns
     .filter((column: any) => !column.aggregatorid)
     .map((column: any) => column.columnid);
-  const groupByColumns: string[] = ast.statements[0].group.map((column: any) => column.columnid);
 
-  //aggregate columns that is not in group by statement
-  const needAggregateColumns = nonAggregatedColumns
-    //filter all the measure fields
-    .filter(column => measureFieldsInSql.includes(column))
-    //filter measure fields that is not in groupby
-    .filter(column => !groupByColumns.includes(column));
+  const groupByColumns: string[] = (ast.statements[0].group ?? []).map((column: any) => column.columnid);
+
+  //if there exist some aggregated columns in sql and there exist GROUP BY statement in sql, then aggregate all the measure columns
+  let needAggregateColumns: string[] = [];
+  if (groupByColumns.length > 0 && nonAggregatedColumns.length !== selectedColumns.length) {
+    //aggregate columns that is not in group by statement
+    needAggregateColumns = nonAggregatedColumns
+      //filter all the measure fields
+      .filter(column => measureFieldsInSql.includes(column))
+      //filter measure fields that is not in groupby
+      .filter(column => !groupByColumns.includes(column));
+  }
 
   const patchedFields = needAggregateColumns.map(column => `SUM(\`${column}\`) as ${column}`);
 
