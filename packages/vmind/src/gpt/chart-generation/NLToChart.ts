@@ -58,6 +58,7 @@ export const generateChartWithGPT = async (
     if (checkChartTypeAndCell(patchResult.chartTypeNew, patchResult.cellNew, fieldInfo)) {
       chartType = patchResult.chartTypeNew;
       cell = patchResult.cellNew;
+      dataset = patchResult.datasetNew;
     }
   } catch (err) {
     console.warn(err);

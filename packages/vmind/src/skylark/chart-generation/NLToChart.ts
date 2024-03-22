@@ -58,6 +58,7 @@ export const generateChartWithSkylark = async (
     if (checkChartTypeAndCell(patchResult.chartTypeNew, patchResult.cellNew, patchResult.fieldInfoNew)) {
       chartType = patchResult.chartTypeNew;
       cell = patchResult.cellNew;
+      dataset = patchResult.datasetNew;
     }
   } catch (err) {
     console.warn(err);
