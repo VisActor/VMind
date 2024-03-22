@@ -1,3 +1,4 @@
+import { Cell, DataType, ROLE, SimpleFieldInfo } from 'src/typings';
 import { VIDEO_LENGTH_BY_CHART_TYPE, DEFAULT_VIDEO_LENGTH } from './constants';
 
 export const detectAxesType = (values: any[], field: string) => {
@@ -42,4 +43,18 @@ export const estimateVideoTime = (chartType: string, spec: any, parsedTime?: num
     totalTime: parsedTime ?? VIDEO_LENGTH_BY_CHART_TYPE[map[chartType]] ?? DEFAULT_VIDEO_LENGTH,
     frameArr: []
   };
+};
+
+export const getRemainedFields = (cell: Cell, fieldInfo: SimpleFieldInfo[]) => {
+  const usedFields = Object.values(cell).flat();
+  const remainedFields = fieldInfo.filter(f => !usedFields.includes(f.fieldName));
+  return remainedFields;
+};
+
+export const getFieldByRole = (fields: SimpleFieldInfo[], role: ROLE) => {
+  return fields.find(f => f.role === role);
+};
+
+export const getFieldByDataType = (fields: SimpleFieldInfo[], dataTypeList: DataType[]) => {
+  return fields.find(f => dataTypeList.includes(f.type));
 };

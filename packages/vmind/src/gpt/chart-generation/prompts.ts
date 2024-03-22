@@ -22,7 +22,7 @@ Respone in the following format:
 "CHART_TYPE": the chart type you choose. Supported chart types: ${JSON.stringify(SUPPORTED_CHART_LIST)}.
 "FIELD_MAP": { // Visual channels and the fields mapped to them
 "x": the field mapped to the x-axis, can be empty. Can Only has one field.
-"y": the field mapped to the y-axis, can be empty. Use array if there are more than 1 fields in dual-axis chart and box-plot.
+"y": the field mapped to the y-axis, can be empty. Use array if there are more than 1 fields.
 "color": the field mapped to the color channel. Must use a string field. Can't be empty in Word Cloud, Pie Chart and Rose Chart.
 "size": the field mapped to the size channel. Must use a number field. Can be empty
 "angle": the field mapped to the angle channel of the pie chart, can be empty.
