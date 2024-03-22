@@ -45,9 +45,10 @@ import {
   boxPlotField,
   boxPlotStyle
 } from './pipes';
-import { Cell, ChartType, Context, FieldInfo, Pipe, SimpleFieldInfo } from '../../typings';
-import { CARTESIAN_CHART_LIST, detectAxesType } from './utils';
+import { Cell, ChartType, Context, SimpleFieldInfo } from '../../typings';
 import { isArray } from 'lodash';
+import { execPipeline } from '../utils';
+
 export const vizDataToSpec = (
   dataset: any[],
   chartType: ChartType,
@@ -56,7 +57,7 @@ export const vizDataToSpec = (
   totalTime?: number
 ) => {
   const pipelines = pipelineMap[chartType];
-  const spec = execPipeline({}, pipelines, {
+  const spec = execPipeline<Context>({}, pipelines, {
     chartType,
     dataset,
     cell,
@@ -160,9 +161,3 @@ export const pipelineMap: { [chartType: string]: any } = {
   'WATERFALL CHART': pipelineWaterfall,
   'BOX PLOT': pipelineBoxPlot
 };
-
-export const execPipeline = (src: any, pipes: Pipe[], context: Context) =>
-  pipes.reduce((pre: any, pipe: Pipe) => {
-    const result = pipe(pre, context);
-    return result;
-  }, src);

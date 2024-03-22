@@ -2,7 +2,7 @@ import { chartAdvisorHandler } from '../../common/chartAdvisor';
 import { getSchemaFromFieldInfo } from '../../common/schema';
 import { SUPPORTED_CHART_LIST, checkChartTypeAndCell, vizDataToSpec } from '../../common/vizDataToSpec';
 import { DataItem, ILLMOptions, SimpleFieldInfo, VizSchema } from '../../typings';
-import { getStrFromArray, getStrFromDict, patchChartTypeAndCell, requestSkyLark } from './utils';
+import { getStrFromArray, getStrFromDict, requestSkyLark } from './utils';
 import { getChartRecommendPrompt, getFieldMapPrompt } from './prompts';
 import { parseSkylarkResponse } from '../utils';
 import { estimateVideoTime } from '../../common/vizDataToSpec/utils';
@@ -10,6 +10,7 @@ import { ChartFieldInfo, chartRecommendConstraints, chartRecommendKnowledge } fr
 import { omit } from 'lodash';
 import { calculateTokenUsage } from '../../common/utils';
 import { queryDatasetWithSkylark } from '../dataProcess/query/queryDataset';
+import { patchChartTypeAndCell } from './patch';
 
 export const generateChartWithSkylark = async (
   userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
@@ -54,9 +55,10 @@ export const generateChartWithSkylark = async (
     const chartTypeRes = resJson.chartType.toUpperCase();
     const cellRes = resJson['cell'];
     const patchResult = patchChartTypeAndCell(chartTypeRes, cellRes, dataset, fieldInfo);
-    if (checkChartTypeAndCell(patchResult.chartTypeNew, patchResult.cellNew, fieldInfo)) {
+    if (checkChartTypeAndCell(patchResult.chartTypeNew, patchResult.cellNew, patchResult.fieldInfoNew)) {
       chartType = patchResult.chartTypeNew;
       cell = patchResult.cellNew;
+      dataset = patchResult.datasetNew;
     }
   } catch (err) {
     console.warn(err);

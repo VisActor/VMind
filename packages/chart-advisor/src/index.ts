@@ -12,6 +12,9 @@ import { scorer as defaultScorer } from './score';
 import * as dataUtils from './dataUtil';
 import { isNil, isNaN } from 'lodash';
 
+export { fold } from './fieldUtils';
+export { FOLD_NAME, FOLD_VALUE } from './constant';
+
 export function chartAdvisor(params: AdviserParams): AdviseResult {
   const {
     originDataset,
@@ -66,7 +69,6 @@ export function chartAdvisor(params: AdviserParams): AdviseResult {
     };
     dimensionSet.uniqueID = uniqueID;
     originDataset.forEach(row => {
-      //后端版本可直接获取到未平坦化的dataSource，不用做此判断
       dimensionSet.data.push(row[uniqueID]);
     });
     dimensionSet.dataType = dimension.type;
