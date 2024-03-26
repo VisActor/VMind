@@ -22,7 +22,8 @@ import {
   mockUserInput12,
   mockUserInput13,
   mockUserInput14,
-  mockUserInput16
+  mockUserInput16,
+  mockUserInput17
 } from '../browser/src/constants/mockData';
 const demoDataList: { [key: string]: any } = {
   pie: mockUserInput2,
@@ -44,7 +45,8 @@ const demoDataList: { [key: string]: any } = {
   'College entrance examination': acceptRatioData,
   'Shopping Mall Sales Performance': mallSalesData,
   'Global GDP': mockUserInput6Eng,
-  'Sales of different drinkings': mockUserInput3Eng
+  'Sales of different drinkings': mockUserInput3Eng,
+  'Multi measure': mockUserInput17
 };
 const CHART_GENERATION_AVERAGE_TIME = 10000;
 const QPM_LIMIT = 10; //qpm limit of your llm service
@@ -92,7 +94,7 @@ if (gptKey && gptURL) {
   const vmind = new VMind({
     url: gptURL,
     model: Model.GPT3_5,
-    cache: false,
+    cache: true,
     headers: {
       'api-key': gptKey
     }
