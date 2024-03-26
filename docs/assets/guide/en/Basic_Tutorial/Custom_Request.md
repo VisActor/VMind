@@ -1,6 +1,6 @@
 
 # Customizing Large Language Model (LLM) Invocation Method
-In previous chapters, we have mentioned that VMind calls the Large Language Model (LLM) during the processes of [data processing](./Data_Process.md), [data aggregation](./Data_Aggregation.md), and [chart generation](./Chart_Generation.md). By default, we call the LLM via HTTP requests. You can specify the URL of the LLM service and set the header for authentication when [initializing the VMind instance](./Create_VMind_Instance.md).
+In previous chapters, we have mentioned that VMind calls the Large Language Model (LLM) during the processes of [data processing](./Data_Process), [data aggregation](./Data_Aggregation), and [chart generation](./Chart_Generation). By default, we call the LLM via HTTP requests. You can specify the URL of the LLM service and set the header for authentication when [initializing the VMind instance](./Create_VMind_Instance).
 
 However, in some special cases, you may need to customize the way the LLM service is called. For example, you may want to request the service via RPC, or you may want to do some extra processing after the model returns the results, and then return the processed results to VMind. To meet these needs, we provide an option to set the `customRequestFunc` object when initializing the VMind object. You can use this option to customize the way the LLM service is called at different stages.
 

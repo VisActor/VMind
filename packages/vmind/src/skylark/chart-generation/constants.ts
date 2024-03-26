@@ -21,12 +21,12 @@ export const ChartFieldInfo: ChannelInfo = {
   },
   'PIE CHART': {
     visualChannels: {
-      angle: 'angle of sectors in the pie chart. Only number fields',
+      value: "angle of sectors in the pie chart. Only number fields. Can't be empty.",
       color:
         "color of sectors in the pie chart. Used to distinguish different sectors. Only string fields. Can't be empty."
     },
     responseDescription: {
-      angle: 'field assigned to angle channel',
+      value: 'field assigned to angle channel',
       color: 'field assigned to color channel'
     },
     knowledge: ['Only string fields can be used in color channel.']
@@ -34,7 +34,7 @@ export const ChartFieldInfo: ChannelInfo = {
   'LINE CHART': {
     visualChannels: {
       x: "x-axis of line chart. Can't be empty. Only string fields",
-      y: "y-axis of line chart. Can't be empty. Only number fields",
+      y: "y-axis of line chart. Can't be empty. Only number fields. Use array if there are more than one number fields need to show.",
       color:
         'color channel of line chart. Used to distinguish different lines. Only string fields. Can be empty if no suitable field.'
     },
@@ -43,7 +43,10 @@ export const ChartFieldInfo: ChannelInfo = {
       y: 'field assigned to y channel',
       color: 'field assigned to color channel. Can be empty if no suitable field.'
     },
-    knowledge: ['Only string fields can be used in color channel.']
+    knowledge: [
+      'Only string fields can be used in color channel.',
+      'Use an array in y-axis if you want to assign more than one fields in y-axis.'
+    ]
   },
   'SCATTER PLOT': {
     visualChannels: {
