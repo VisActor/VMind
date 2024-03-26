@@ -1,6 +1,21 @@
 # Change Log - @visactor/vmind
 
-This log was last generated on Tue, 26 Mar 2024 07:36:00 GMT and should not be manually modified.
+This log was last generated on Tue, 26 Mar 2024 09:43:52 GMT and should not be manually modified.
+
+## 1.2.7
+Tue, 26 Mar 2024 09:43:52 GMT
+
+_Version update only_
+
+## 1.2.6
+Tue, 26 Mar 2024 09:43:51 GMT
+
+### Updates
+
+- feat: chart-advisor docs
+
+
+- update docs
 
 ## 1.2.5
 Tue, 26 Mar 2024 07:36:00 GMT

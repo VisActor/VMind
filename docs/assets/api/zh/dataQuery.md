@@ -6,6 +6,7 @@ dataQuery函数是一个强大的数据聚合工具，它接收三个参数：�
 ## 支持模型：
 - GPT-3.5
 - GPT-4
+- [skylark2-pro](https://www.volcengine.com/product/yunque)
 
 ## 接口参数：
 
