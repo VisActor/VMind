@@ -1,5 +1,4 @@
 # Data Aggregation
-📢 Note: Currently, the data aggregation feature only supports GPT series models, and we are working hard to integrate more models.
 
 ## Overview of Data Aggregation
 When we use chart libraries like VChart to draw bar charts, line charts, etc., if the dataset used has not been aggregated, it may have a negative impact on the visualization effect.

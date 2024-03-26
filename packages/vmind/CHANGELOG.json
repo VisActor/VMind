@@ -2,6 +2,27 @@
   "name": "@visactor/vmind",
   "entries": [
     {
+      "version": "1.2.7",
+      "tag": "@visactor/vmind_v1.2.7",
+      "date": "Tue, 26 Mar 2024 09:43:52 GMT",
+      "comments": {}
+    },
+    {
+      "version": "1.2.6",
+      "tag": "@visactor/vmind_v1.2.6",
+      "date": "Tue, 26 Mar 2024 09:43:51 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: chart-advisor docs\n\n"
+          },
+          {
+            "comment": "update docs"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.2.5",
       "tag": "@visactor/vmind_v1.2.5",
       "date": "Tue, 26 Mar 2024 07:36:00 GMT",

@@ -1183,17 +1183,17 @@ export const scorer: Scorer = params => {
     calBar,
     calBarPercent,
     calBarParallel,
-    calCombination,
+    //calCombination,
     calScatterplot,
     calLineChart,
     // calLineChartCombine,
     calPieChart,
-    calMeasureCard,
+    //calMeasureCard,
     calRadar,
     calWordCloud,
     calFunnelChart,
-    calDualAxis,
-    calTable
+    calDualAxis
+    //calTable
   ];
 
   return scoreCalculators;

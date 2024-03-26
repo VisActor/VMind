@@ -7,6 +7,7 @@ The dataQuery function is a powerful data aggregation tool. It takes three param
 ## Supported Models:
 - GPT-3.5
 - GPT-4
+- [skylark2-pro](https://www.volcengine.com/product/yunque)
 
 ## Interface Parameters:
 
