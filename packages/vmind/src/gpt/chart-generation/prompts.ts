@@ -13,12 +13,12 @@ Knowledge:
 1. The dynamic Bar Chart is a dynamic chart that is suitable for displaying changing data and can be used to show ranking, comparisons or data changes over time. It usually has a time field. It updates the data dynamically according to the time field and at each time point, the current data is displayed using a bar chart.
 2. A number field can not be used as a color field.
 
-Let's think step by step. ${showThoughts ? 'Fill your thoughts in {THOUGHT}.' : ''}
+Let's think step by step. ${showThoughts ? 'Fill your thoughts in {thought}.' : ''}
 
 Respone in the following format:
 
 \`\`\`
-{${showThoughts ? '\n"THOUGHT" : your thoughts' : ''}
+{${showThoughts ? '\n"thought" : your thoughts' : ''}
 "CHART_TYPE": the chart type you choose. Supported chart types: ${JSON.stringify(SUPPORTED_CHART_LIST)}.
 "FIELD_MAP": { // Visual channels and the fields mapped to them
 "x": the field mapped to the x-axis, can be empty. Can Only has one field.
@@ -71,7 +71,7 @@ Data field description: [
 
 Response:
 \`\`\`
-{${showThoughts ? '\n"THOUGHT": "Your thoughts",' : ''}
+{${showThoughts ? '\n"thought": "Your thoughts",' : ''}
 "CHART_TYPE": "Dynamic Bar Chart",
 "FIELD_MAP": {
 "x": "country",
@@ -105,7 +105,7 @@ Data field description: [
 
 Response:
 \`\`\`
-{${showThoughts ? '\n"THOUGHT": "Your thoughts",' : ''}
+{${showThoughts ? '\n"thought": "Your thoughts",' : ''}
 "CHART_TYPE": "Pie Chart",
 "FIELD_MAP": {
 "angle": "市场份额",
@@ -138,7 +138,7 @@ Data field description: [
 
 Response:
 \`\`\`
-{${showThoughts ? '\n"THOUGHT": "Your thoughts",' : ''}
+{${showThoughts ? '\n"thought": "Your thoughts",' : ''}
 "CHART_TYPE": "Line Chart",
 "FIELD_MAP": {
 "x": "日期",
@@ -171,7 +171,7 @@ Data field description: [
 
 Response:
 \`\`\`
-{${showThoughts ? '\n"THOUGHT": "Your thoughts",' : ''}"CHART_TYPE": "Line Chart",
+{${showThoughts ? '\n"thought": "Your thoughts",' : ''}"CHART_TYPE": "Line Chart",
 "FIELD_MAP": {
 "x": "日期",
 "y": "降雨量"

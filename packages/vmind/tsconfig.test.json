@@ -2,10 +2,15 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@visactor/calculator": ["../calculator/src"],
       "@visactor/chart-advisor": ["../chart-advisor/src"],
-
     }
   },
-  "references": []
+  "references": [
+    {
+      "path": "../calculator",
+    },
+    {
+      "path": "../chart-advisor",
+    }
+  ]
 }
