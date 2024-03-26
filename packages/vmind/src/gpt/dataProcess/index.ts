@@ -1,6 +1,6 @@
-import { getDataset, parseCSVData } from '../../common/dataProcess';
-import { readTopNLine } from '../../common/dataProcess/utils';
-import { ILLMOptions } from '../../typings';
+import { convertNumberField, getDataset, parseCSVData } from '../../common/dataProcess';
+import { getFieldDomain, readTopNLine } from '../../common/dataProcess/utils';
+import { ILLMOptions, SimpleFieldInfo } from '../../typings';
 import { parseGPTResponse, requestGPT } from '../utils';
 import { DataProcessPromptEnglish } from './prompts';
 
@@ -19,16 +19,25 @@ export const parseCSVDataWithGPT = async (csvFile: string, userInput: string, op
 
   const dataProcessResJson = parseGPTResponse(dataProcessRes);
   const { dataset } = getDataset(csvFile);
-
   if (!dataProcessResJson.error) {
+    const fieldInfo = dataProcessResJson['FIELD_INFO'].map((field: SimpleFieldInfo) => {
+      //add domain for fields
+      const { fieldName, role } = field;
+      const domain = getFieldDomain(dataset, fieldName, role);
+      return {
+        ...field,
+        domain
+      };
+    });
     return {
-      fieldInfo: dataProcessResJson['FIELD_INFO'],
+      fieldInfo,
       videoDuration: dataProcessResJson['VIDEO_DURATION'],
       colorPalette: dataProcessResJson['COLOR_PALETTE'],
       usefulFields: dataProcessResJson['USEFUL_FIELDS'],
-      dataset,
+      dataset: convertNumberField(dataset, fieldInfo),
       error: dataProcessResJson['error'],
-      thought: dataProcessResJson['thought']
+      thought: dataProcessResJson['thought'],
+      usage: dataProcessRes['usage']
     };
   } else {
     //传统方法做兜底

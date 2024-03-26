@@ -44,7 +44,7 @@ const vmind = new VMind(options)
 const userPrompt = 'show me the changes in sales rankings of various car brand';
 const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
-You can learn how to create a VMind instance and the information of the parameters in options in [Creating a VMind Instance](./Create_VMind_Instance.md), and get more information about fieldInfo and dataset in the [Data Format and Data Processing](./Data_Process.md) section.
+You can learn how to create a VMind instance and the information of the parameters in options in [Creating a VMind Instance](./Create_VMind_Instance), and get more information about fieldInfo and dataset in the [Data Format and Data Processing](./Data_Process) section.
 
 You can reprocess the spec to change the color, style, animation, etc. of the chart, or you can directly render the VChart chart:
 
@@ -235,11 +235,11 @@ If `userPrompt` is `Show me the change of the GDP rankings of each country`, the
 ![](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_dynamic_bar.gif)
 
 
-To make VMind generate a chart that meets your expectations, you need to describe your display intention and purpose as clearly as possible in `userPrompt`. In addition, you need to ensure that the field names in the dataset have certain semantics, or add field descriptions in the field information, please refer to the [Data Format and Data Processing](./Data_Process.md) chapter for details.
+To make VMind generate a chart that meets your expectations, you need to describe your display intention and purpose as clearly as possible in `userPrompt`. In addition, you need to ensure that the field names in the dataset have certain semantics, or add field descriptions in the field information, please refer to the [Data Format and Data Processing](./Data_Process) chapter for details.
 
 
 ### enableDataQuery
-In the [Data Aggregation](./Data_Aggregation.md) chapter, we have introduced that in order to meet the chart display requirements such as `showing the top 10 departments with the most sales` or `showing the sales of various products in the northern region`, we need to aggregate the data first, and then generate the chart. By default, the `generateChart` function will call `dataQuery` once during execution, using the same `userPrompt`, `fieldInfo` and `dataset` to aggregate the data, and then complete the subsequent chart generation steps with the aggregated data.
+In the [Data Aggregation](./Data_Aggregation) chapter, we have introduced that in order to meet the chart display requirements such as `showing the top 10 departments with the most sales` or `showing the sales of various products in the northern region`, we need to aggregate the data first, and then generate the chart. By default, the `generateChart` function will call `dataQuery` once during execution, using the same `userPrompt`, `fieldInfo` and `dataset` to aggregate the data, and then complete the subsequent chart generation steps with the aggregated data.
 
 However, if you are sure that your data can meet the user's chart display requirements without further aggregation, filtering and sorting, you can turn off this process by setting `enableDataQuery` to `false`:
 ```ts
@@ -249,7 +249,7 @@ const vmind = new VMind(options)
 const userPrompt = 'show me the changes in sales rankings of various car brand';
 const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset, false); // Set enableDataQuery to false to turn off data aggregation
 ```
-This can reduce the process of calling the large model once, reduce token consumption, and improve chart generation speed. For more information about VMind data aggregation, please refer to the [Data Aggregation](./Data_Aggregation.md) chapter.
+This can reduce the process of calling the large model once, reduce token consumption, and improve chart generation speed. For more information about VMind data aggregation, please refer to the [Data Aggregation](./Data_Aggregation) chapter.
 
 ## Chart Types Supported by VMind
 VMind currently supports 13 common chart types in VChart:

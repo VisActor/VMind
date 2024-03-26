@@ -47,7 +47,7 @@ const vmind = new VMind({
 })
 ```
 
-在初始化VMind实例时，你可以指定大模型服务的url，模型种类，自定义模型请求方法等参数。详细教程请前往[创建VMind实例](./Basic_Tutorial/Create_VMind_Instance.md)章节
+在初始化VMind实例时，你可以指定大模型服务的url，模型种类，自定义模型请求方法等参数。详细教程请前往[创建VMind实例](./Basic_Tutorial/Create_VMind_Instance)章节
 
 ## 图表智能生成模块
 

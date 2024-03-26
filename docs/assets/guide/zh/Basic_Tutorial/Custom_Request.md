@@ -1,5 +1,5 @@
 # 自定义大语言模型(LLM)调用方式
-在前面的章节中，我们已经提到，VMind在进行[数据处理](./Data_Process.md)、[数据聚合](./Data_Aggregation.md)和[图表生成](./Chart_Generation.md)的过程中，都会调用大语言模型(LLM)。默认情况下，我们是通过HTTP请求的方式来调用LLM的，你可以在[初始化VMind实例](./Create_VMind_Instance.md)时，通过指定LLM服务的url和设置header来完成鉴权。
+在前面的章节中，我们已经提到，VMind在进行[数据处理](./Data_Process)、[数据聚合](./Data_Aggregation)和[图表生成](./Chart_Generation)的过程中，都会调用大语言模型(LLM)。默认情况下，我们是通过HTTP请求的方式来调用LLM的，你可以在[初始化VMind实例](./Create_VMind_Instance)时，通过指定LLM服务的url和设置header来完成鉴权。
 
 然而，在某些特殊情况下，你可能需要自定义LLM服务的调用方式。比如，你可能想通过RPC方式来请求服务，或者你可能想在模型返回结果后进行一些额外的处理，然后再将处理后的结果返回给VMind。为了满足这些需求，我们提供了一个在初始化VMind对象时设置`customRequestFunc`对象的选项，你可以通过这个选项来自定义LLM服务在不同阶段的调用方式。
 

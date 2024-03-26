@@ -96,7 +96,7 @@ VMind 1.2.2版本开始支持智能数据聚合功能。该功能会将用户传
 
 
 ## dataQuery
-VMind对象的dataQuery函数是一个强大的数据聚合工具。它接收三个参数：用户展示意图userPrompt，数据集字段信息fieldInfo和原始数据集dataset。你可以在[数据格式与数据处理](./Data_Process.md)中找到关于fieldInfo和dataset的详细信息。VMind会根据用户的展示意图，编写SQL语句并对dataset执行查询，查询结果会被储存在函数返回值的dataset属性中；同时，查询结果中的字段可能会发生变化，更新后的字段信息也会被储存在返回结果的fieldInfo属性中。
+VMind对象的dataQuery函数是一个强大的数据聚合工具。它接收三个参数：用户展示意图userPrompt，数据集字段信息fieldInfo和原始数据集dataset。你可以在[数据格式与数据处理](./Data_Process)中找到关于fieldInfo和dataset的详细信息。VMind会根据用户的展示意图，编写SQL语句并对dataset执行查询，查询结果会被储存在函数返回值的dataset属性中；同时，查询结果中的字段可能会发生变化，更新后的字段信息也会被储存在返回结果的fieldInfo属性中。
 
 下面，让我们通过一个示例来看看如何使用dataQuery函数：
 ```ts
@@ -228,7 +228,7 @@ const { fieldInfo, dataset } = vmind.dataQuery(userPrompt, sourceFieldInfo, sour
 ]
 ```
 
-有了这些信息，我们就可以直接使用fieldInfo和dataset生成图表了。具体的操作步骤，你可以在[图表智能生成](./Chart_Generation.md)章节中找到。
+有了这些信息，我们就可以直接使用fieldInfo和dataset生成图表了。具体的操作步骤，你可以在[图表智能生成](./Chart_Generation)章节中找到。
 
 📢 **注意：dataQuery方法会将userPrompt和fieldInfo传递给大模型用于生成SQL，dataset中的明细数据并不会被传递。**
 
@@ -360,7 +360,7 @@ const sourceFieldInfo = [
 假设我们想要展示北方区域销售额排名前三的商品，我们可以这样做：
 
 ```ts
-const userPrompt = `帮我展示north区域排名前三的商品销售额`
+const userPrompt = `帮我展示北方排名前三的商品销售额`
 const vmind = new VMind(options)
 
 // 调用dataQuery方法，传入userPrompt，sourceFieldInfo和sourceDataset，执行数据聚合

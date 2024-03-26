@@ -48,7 +48,7 @@ export const data = (spec: any, context: Context) => {
   // spec.data = [dataset]
   spec.data = {
     id: 'data',
-    values: dataset
+    values: dataset.flat(4)
   };
 
   return spec;
@@ -59,7 +59,7 @@ export const funnelData = (spec: any, context: Context) => {
   // spec.data = [dataset]
   spec.data = {
     id: 'data',
-    values: dataset.sort((a: any, b: any) => b[cell.y] - a[cell.y])
+    values: dataset.sort((a: any, b: any) => b[cell.y as string] - a[cell.y as string])
   };
 
   return spec;
@@ -352,9 +352,9 @@ export const cartesianLine = (spec: any, context: Context) => {
 export const pieField = (spec: any, context: Context) => {
   //饼图根据cell分配字段
   const { cell } = context;
-  spec.valueField = cell.angle;
-  if (cell.color) {
-    spec.categoryField = cell.color;
+  spec.valueField = cell.angle || cell.value;
+  if (cell.color || (cell as any).category) {
+    spec.categoryField = cell.color || (cell as any).category;
   }
   return spec;
 };
@@ -550,8 +550,7 @@ export const radarAxis = (spec: any, context: Context) => {
     {
       orient: 'radius', // radius axis
       zIndex: 100,
-      min: 0,
-      max: 8,
+
       domainLine: {
         visible: false
       },
@@ -832,7 +831,7 @@ export const axis = (spec: any, context: Context) => {
 export const legend = (spec: any, context: Context) => {
   //图例
   const { cell } = context;
-  if (!cell.color && !spec.seriesField && spec.type !== 'common') {
+  if (!(cell.color || cell.category) && !spec.seriesField && spec.type !== 'common') {
     return spec;
   }
   spec.legends = [

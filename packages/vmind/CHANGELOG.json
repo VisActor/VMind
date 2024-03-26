@@ -2,9 +2,15 @@
   "name": "@visactor/vmind",
   "entries": [
     {
+      "version": "1.2.5",
+      "tag": "@visactor/vmind_v1.2.5",
+      "date": "Tue, 26 Mar 2024 07:36:00 GMT",
+      "comments": {}
+    },
+    {
       "version": "1.2.4",
       "tag": "@visactor/vmind_v1.2.4",
-      "date": "Wed, 21 Feb 2024 12:04:49 GMT",
+      "date": "Tue, 26 Mar 2024 07:35:59 GMT",
       "comments": {}
     },
     {

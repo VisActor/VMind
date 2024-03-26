@@ -6,7 +6,7 @@ export interface ILLMOptions {
   /** llm request header, which has higher priority */
   headers?: HeadersInit; // this will be used directly as the header of the LLM request.
   method?: 'POST' | 'GET'; //post or get
-  model?: Model;
+  model?: Model | string;
   max_tokens?: number;
   temperature?: number;
   showThoughts?: boolean;
@@ -39,7 +39,7 @@ export type GPTDataProcessResult = {
 export type Cell = {
   //字段映射，可用的视觉通道：["x","y","color","size","angle","time"]
   x?: string;
-  y?: string;
+  y?: string | string[];
   color?: string;
   size?: string;
   angle?: string;
@@ -48,6 +48,7 @@ export type Cell = {
   source?: string;
   target?: string;
   value?: string;
+  category?: string;
 };
 export type ChartType = string;
 export type GPTChartAdvisorResult = {
@@ -77,7 +78,6 @@ export type Context = {
   colors?: string[];
   totalTime?: number;
 };
-export type Pipe = (src: any, context: Context) => any;
 
 export type TimeType = {
   totalTime: number;
@@ -131,11 +131,18 @@ export enum Model {
   GPT3_5 = 'gpt-3.5-turbo',
   GPT4 = 'gpt-4',
   SKYLARK = 'skylark-pro',
-  SKYLARK2 = 'skylark2-pro-4k'
+  SKYLARK2 = 'skylark2-pro-4k',
+  CHART_ADVISOR = 'chart-advisor'
+}
+
+export enum ModelType {
+  GPT = 'gpt',
+  SKYLARK = 'skylark',
+  CHART_ADVISOR = 'chart-advisor'
 }
 
 export type ChartGenerationProps = {
-  model: Model; //models to finish data generation task
+  model: Model | string; //models to finish data generation task
   userPrompt: string; //user's intent of visualization, usually aspect in data that they want to visualize
   dataFields: FieldInfo[];
 };
@@ -150,3 +157,15 @@ export type LLMResponse = {
   usage: any;
   [key: string]: any;
 };
+
+export type PatchContext = {
+  chartType: string;
+  cell: Cell;
+  dataset: DataItem[];
+  fieldInfo: SimpleFieldInfo[];
+};
+
+export type PatchPipeline = (
+  context: PatchContext,
+  _originalContext: PatchContext
+) => { chartType: string; cell: Cell; dataset: DataItem[]; fieldInfo: SimpleFieldInfo[] };
