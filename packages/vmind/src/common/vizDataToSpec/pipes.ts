@@ -59,7 +59,7 @@ export const funnelData = (spec: any, context: Context) => {
   // spec.data = [dataset]
   spec.data = {
     id: 'data',
-    values: dataset.sort((a: any, b: any) => b[cell.y] - a[cell.y])
+    values: dataset.sort((a: any, b: any) => b[cell.y as string] - a[cell.y as string])
   };
 
   return spec;

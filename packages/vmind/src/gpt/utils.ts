@@ -2,6 +2,7 @@ import { GPTDataProcessResult, ILLMOptions, LLMResponse } from '../typings';
 import axios from 'axios';
 import JSON5 from 'json5';
 import { omit } from 'lodash';
+import { matchJSONStr } from '../common/utils';
 
 export const requestGPT = async (
   prompt: string,
@@ -77,7 +78,9 @@ export const parseGPTResponse = (GPTRes: LLMResponse) => {
     }
     const choices = GPTRes.choices;
     const content = choices[0].message.content;
-    const resJson: GPTDataProcessResult = parseGPTJson(content, '```');
+    const jsonStr = matchJSONStr(content);
+
+    const resJson: GPTDataProcessResult = parseGPTJson(jsonStr, '```');
     return resJson;
   } catch (err: any) {
     return {

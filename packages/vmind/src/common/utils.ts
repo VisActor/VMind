@@ -21,3 +21,10 @@ export const execPipeline = <PipelineContext>(
     const result = pipe(pre, context);
     return result;
   }, src);
+
+export const matchJSONStr = (str: string) => {
+  const first = str.indexOf('{');
+  const last = str.lastIndexOf('}');
+  const result = str.substring(first, last + 1);
+  return result && result.length > 0 ? result : str;
+};

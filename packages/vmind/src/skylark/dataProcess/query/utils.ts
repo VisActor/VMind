@@ -1,6 +1,7 @@
 import { LLMResponse } from 'src/typings';
 import JSON5 from 'json5';
 import { replaceAll } from '../../../common/dataProcess/utils';
+import { matchJSONStr } from '../../../common/utils';
 
 export const parseJson = (JsonStr: string, prefix?: string) => {
   const parseNoPrefixStr = (str: string) => {
@@ -38,7 +39,8 @@ export const parseSkylarkResponseAsJSON = (skylarkRes: LLMResponse) => {
     }
     const choices = skylarkRes.choices;
     const content = replaceAll(choices[0].message.content, '\n', ' ');
-    const resJson = parseJson(content, '```');
+    const jsonStr = matchJSONStr(content);
+    const resJson = parseJson(jsonStr, '```');
     return resJson;
   } catch (err: any) {
     return {
