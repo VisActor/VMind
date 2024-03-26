@@ -1,10 +1,48 @@
-# @visactor/vmind
+
+<div align="center">
+   <a href="https://github.com/VisActor#gh-light-mode-only" target="_blank">
+    <img alt="VisActor Logo" width="200" src="https://github.com/VisActor/.github/blob/main/profile/logo_500_200_light.svg"/>
+  </a>
+  <a href="https://github.com/VisActor#gh-dark-mode-only" target="_blank">
+    <img alt="VisActor Logo" width="200" src="https://github.com/VisActor/.github/blob/main/profile/logo_500_200_dark.svg"/>
+  </a>
+</div>
+
+<div align="center">
+  <h1>VMind</h1>
+</div>
+
+<div align="center">
+
+Not just automatic, but also fantastic.Open-source solution for intelligent visualization.
+
+<p align="center">
+  <a href="https://www.visactor.io/vmind">Introduction</a> •
+  <a href="https://www.visactor.io/vmind/example">Demo</a> •
+  <a href="https://www.visactor.io/vmind/guide/Intro_to_VMind">Tutorial</a> •
+  <a href="https://www.visactor.io/vmind/api/VMind_Instance">API</a>•
+  <a href="https://www.visactor.io/vmind/openapi">OpenApi</a>
+</p>
+
+![](https://github.com/visactor/vmind/actions/workflows/bug-server.yml/badge.svg)
+![](https://github.com/visactor/vmind/actions/workflows/unit-test.yml/badge.svg)
+[![npm Version](https://img.shields.io/npm/v/@visactor/vmind.svg)](https://www.npmjs.com/package/@visactor/vmind)
+[![npm Download](https://img.shields.io/npm/dm/@visactor/vmind.svg)](https://www.npmjs.com/package/@visactor/vmind)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/VisActor/VMind/blob/main/CONTRIBUTING.md#your-first-pull-request)
+
+![](https://img.shields.io/badge/language-TypeScript-red.svg) [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/visactor/vmind/blob/main/LICENSE)
+
+</div>
+
+
 
 <div align="center">
 
 English | [简体中文](readme-zh.md)
 
 </div>
+
+## 简介
 
 `@visactor/vmind` is an intelligent chart component based on LLM provided by [VisActor](https://www.visactor.io/), including dialog-based chart generation and editing capabilities. It provides a natural language interaction interface, allowing you to easily create chart narrative works with `@visactor/VMind` with just one sentence, and edit them through continuous dialogue, greatly improving your efficiency in creating data visualization works.
 
