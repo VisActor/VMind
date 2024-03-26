@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vmind",
+      "comment": "update docs",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vmind"
+}
