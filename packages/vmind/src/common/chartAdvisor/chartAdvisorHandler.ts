@@ -1,7 +1,28 @@
 import { chartAdvisor, DataTypeName, ChartType } from '@visactor/chart-advisor';
-import { Cell, VizSchema } from '../../typings';
+import { Cell, DataItem, SimpleFieldInfo, VizSchema } from '../../typings';
+import { getSchemaFromFieldInfo } from '../schema';
 
-export const chartAdvisorHandler = (schema: Partial<VizSchema>, dataset: any[]) => {
+export const getAdvisedChartsWithDataset = (fieldInfo: SimpleFieldInfo[], dataset: DataItem[]) => {
+  const schema = getSchemaFromFieldInfo(fieldInfo);
+  const { scores } = getAdvisedChartList(schema, dataset);
+  return scores
+    .filter((d: any) => availableChartTypeList.includes(d.chartType) && d.score - 0 >= 0.00000001)
+    .map((result: any) => ({
+      chartType: chartTypeMap(result.chartType).toUpperCase(),
+      cell: getCell(result.cell),
+      dataset: result.dataset,
+      score: result.score
+    }));
+};
+
+/**
+ * call @visactor/chart-advisor to get the list of advised charts
+ * sorted by scores of each chart type
+ * @param schema
+ * @param dataset
+ * @returns
+ */
+const getAdvisedChartList = (schema: Partial<VizSchema>, dataset: any[]) => {
   const dimensionList: any = schema.fields
     .filter(d => d.role === 'dimension')
     .map(d => ({
@@ -16,7 +37,17 @@ export const chartAdvisorHandler = (schema: Partial<VizSchema>, dataset: any[]) 
     }));
   const aliasMap = Object.fromEntries(schema.fields.map(d => [d.id, d.alias]));
   const advisorResult = chartAdvisor({ originDataset: dataset, dimensionList, measureList, aliasMap });
-  const result = advisorResult.scores.find(d => availableChartTypeList.includes(d.chartType));
+  return advisorResult;
+};
+/**
+ * get one recommended chart type using @visactor/chart-advisor
+ * @param schema
+ * @param dataset
+ * @returns
+ */
+export const chartAdvisorHandler = (schema: Partial<VizSchema>, dataset: any[]) => {
+  const advisorResult = getAdvisedChartList(schema, dataset);
+  const result = advisorResult.scores.find((d: any) => availableChartTypeList.includes(d.chartType));
   return {
     chartType: chartTypeMap(result.chartType).toUpperCase(),
     cell: getCell(result.cell),
@@ -52,7 +83,8 @@ const availableChartTypeList = [
   ChartType.DUAL_AXIS,
   ChartType.WORD_CLOUD,
   ChartType.FUNNEL,
-  ChartType.SANKEY
+  ChartType.SANKEY,
+  ChartType.RADAR
 ];
 
 const chartTypeMap = (advisorChartType: ChartType) => {
@@ -83,6 +115,8 @@ const chartTypeMap = (advisorChartType: ChartType) => {
     return 'Funnel Chart';
   } else if (ChartType.SANKEY === advisorChartType) {
     return 'Sankey Chart';
+  } else if (ChartType.RADAR === advisorChartType) {
+    return 'Radar Chart';
   }
   throw 'no matched chart type';
 };
@@ -93,9 +127,9 @@ const getCell = (cell: any): Cell => {
   keys.forEach((key: string) => {
     const channel = cell[key];
     if (Array.isArray(channel) && channel.length === 1) {
-      result[key] = channel[0];
+      result[key] = String(channel[0]);
     } else {
-      result[key] = channel;
+      result[key] = Array.isArray(channel) ? channel.map(c => String(c)) : channel;
     }
   });
   return result;

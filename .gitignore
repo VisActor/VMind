@@ -34,6 +34,7 @@ dist
 esm
 es
 cjs
+lib
 build
 build-es5
 *.zip
@@ -103,3 +104,6 @@ docs/public/documents
 .env.local
 packages/calculator/tsconfig.cjs.tsbuildinfo
 packages/calculator/tsconfig.esm.tsbuildinfo
+packages/chart-advisor/tsconfig.esm.tsbuildinfo
+packages/chart-advisor/tsconfig.cjs.tsbuildinfo
+packages/vmind/__tests__/browser/src/pages/mockData.ts

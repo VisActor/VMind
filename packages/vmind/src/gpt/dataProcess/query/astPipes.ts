@@ -5,16 +5,15 @@ import {
   FilterNode,
   FilterNodeType,
   FilterOperator,
-  HavingCondition,
   OrderType,
   Query,
-  WhereCondition,
-  WhereFilterNode
+  WhereCondition
 } from '@visactor/calculator';
-import { ASTParserContext, ASTParserPipe, SQLAst } from './type';
-import { checkIsColumnNode, getOriginalString, toFirstUpperCase } from './utils';
+import { ASTParserContext, ASTParserPipe } from './type';
+import { checkIsColumnNode, toFirstUpperCase } from './utils';
 import { SimpleFieldInfo } from '../../../typings';
 import { isArray } from 'lodash';
+import { replaceString } from '../../../common/dataProcess/utils';
 
 export const from: ASTParserPipe = (query: Partial<Query>, context: ASTParserContext) => {
   const { dataSource, fieldInfo } = context;
@@ -40,7 +39,7 @@ const parseAggrFunc = (
     console.error('unsupported aggr func!');
   } else if (expr && checkIsColumnNode(expr, columns, fieldInfo)) {
     const columnName = expr.column ?? expr.value;
-    result.column = getOriginalString(columnName, replaceMap);
+    result.column = replaceString(columnName, replaceMap);
   }
   result.aggregate = {
     distinct: Boolean(distinct),
@@ -88,15 +87,15 @@ const parseSQLExpr = (
       const columnNode = [left, right].find(n => checkIsColumnNode(n, columns, fieldInfo));
       if (columnNode) {
         const columnName = (columnNode as ColumnRef).column ?? (columnNode as any).value;
-        result.column = getOriginalString(columnName, replaceMap);
+        result.column = replaceString(columnName, replaceMap);
       }
       const valueNode = [left, right].find(n => !checkIsColumnNode(n, columns, fieldInfo) && n.type !== 'aggr_func');
       if (valueNode) {
         const valueName = (valueNode as Value).value;
         if (!isArray(valueName)) {
-          result.value = getOriginalString(valueName, replaceMap);
+          result.value = replaceString(valueName, replaceMap);
         } else {
-          result.value = valueName.map(v => getOriginalString(v.value, replaceMap));
+          result.value = valueName.map(v => replaceString(v.value, replaceMap));
         }
       }
       const aggrNode: any = [left, right].find(n => n.type === 'aggr_func');
@@ -140,8 +139,8 @@ export const groupBy: ASTParserPipe = (query: Partial<Query>, context: ASTParser
   }
   return {
     ...query,
-    groupBy: (groupby ?? []).map((group: any) => getOriginalString(group.column ?? group.value, replaceMap))
-  };
+    groupBy: (groupby ?? []).map((group: any) => replaceString(group.column ?? group.value, replaceMap))
+  } as any;
 };
 
 export const select: ASTParserPipe = (query: Partial<Query>, context: ASTParserContext) => {
@@ -161,14 +160,14 @@ export const select: ASTParserPipe = (query: Partial<Query>, context: ASTParserC
           const result: any = {};
           const { as, expr } = column;
           if (checkIsColumnNode(expr, columnAlias, fieldInfo)) {
-            result.column = getOriginalString(expr.column ?? expr.value, replaceMap);
+            result.column = replaceString(expr.column ?? expr.value, replaceMap);
           } else if (expr.type === 'aggr_func') {
             const aggrFuncConf: any = parseAggrFunc(expr, columnAlias, fieldInfo, replaceMap);
             result.column = aggrFuncConf.column;
             result.aggregate = aggrFuncConf.aggregate;
           }
           if (as) {
-            result.alias = getOriginalString(as, replaceMap);
+            result.alias = replaceString(as, replaceMap);
           }
           return result;
         })
@@ -204,7 +203,7 @@ export const orderBy: any = (query: Partial<Query>, context: ASTParserContext) =
       const { type, expr } = orderInfo;
       if (checkIsColumnNode(expr, query.select.columns, fieldInfo)) {
         const columnName = expr.column ?? expr.value;
-        result.column = getOriginalString(columnName, replaceMap);
+        result.column = replaceString(columnName, replaceMap);
       } else {
         const orderConfig = parseAggrFunc(expr, query.select.columns, fieldInfo, replaceMap);
         result.column = orderConfig.column;

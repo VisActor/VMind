@@ -1,0 +1,17 @@
+# Add 'vmind' label to any change within the 'vmind' package
+vmind:
+  - packages/vmind/**
+
+
+# Add 'calculator' label to any change within the 'calculator' package
+calculator:
+  - packages/calculator/**
+
+
+# Add 'chart-advisor' label to any change within the 'calculator' package
+chart-advisor:
+  - packages/chart-advisor/**
+
+
+
+

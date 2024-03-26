@@ -2,12 +2,15 @@ import { SUPPORTED_CHART_LIST } from '../../common/vizDataToSpec/constants';
 import { DataItem, GPTChartAdvisorResult, ILLMOptions, LOCATION, SimpleFieldInfo, VizSchema } from '../../typings';
 import { checkChartTypeAndCell, vizDataToSpec } from '../../common/vizDataToSpec';
 import { parseGPTResponse, requestGPT } from '../utils';
-import { patchChartTypeAndCell, patchUserInput } from './utils';
+import { patchUserInput } from './utils';
 import { ChartAdvisorPromptEnglish } from './prompts';
 import { chartAdvisorHandler } from '../../common/chartAdvisor';
 import { estimateVideoTime } from '../../common/vizDataToSpec/utils';
 import { getSchemaFromFieldInfo } from '../../common/schema';
 import { queryDatasetWithGPT } from '../dataProcess/query/queryDataset';
+import { calculateTokenUsage } from '../..//common/utils';
+import { pick } from 'lodash';
+import { patchChartTypeAndCell } from './patch';
 
 export const generateChartWithGPT = async (
   userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
@@ -19,6 +22,8 @@ export const generateChartWithGPT = async (
   animationDuration?: number
 ) => {
   const colors = colorPalette;
+  let queryDatasetUsage;
+  let advisorUsage;
   let chartType;
   let cell;
   let dataset: DataItem[] = propsDataset;
@@ -27,18 +32,18 @@ export const generateChartWithGPT = async (
 
   try {
     if (enableDataQuery) {
-      const { dataset: queryDataset, fieldInfo: fieldInfoNew } = await queryDatasetWithGPT(
-        userPrompt,
-        fieldInfo,
-        propsDataset,
-        options
-      );
+      const {
+        dataset: queryDataset,
+        fieldInfo: fieldInfoNew,
+        usage
+      } = await queryDatasetWithGPT(userPrompt, fieldInfo, propsDataset, options);
       dataset = queryDataset;
       fieldInfo = fieldInfoNew;
+      queryDatasetUsage = usage;
     }
   } catch (err) {
-    console.warn('data query error!');
-    console.warn(err);
+    console.error('data query error!');
+    console.error(err);
   }
 
   const schema = getSchemaFromFieldInfo(fieldInfo);
@@ -48,10 +53,12 @@ export const generateChartWithGPT = async (
 
     const chartTypeRes = resJson['CHART_TYPE'].toUpperCase();
     const cellRes = resJson['FIELD_MAP'];
-    const patchResult = patchChartTypeAndCell(chartTypeRes, cellRes, dataset);
+    advisorUsage = resJson['usage'];
+    const patchResult = patchChartTypeAndCell(chartTypeRes, cellRes, dataset, fieldInfo);
     if (checkChartTypeAndCell(patchResult.chartTypeNew, patchResult.cellNew, fieldInfo)) {
       chartType = patchResult.chartTypeNew;
       cell = patchResult.cellNew;
+      dataset = patchResult.datasetNew;
     }
   } catch (err) {
     console.warn(err);
@@ -75,7 +82,9 @@ export const generateChartWithGPT = async (
   return {
     chartSource,
     spec,
-    time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
+    chartType,
+    time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined),
+    usage: calculateTokenUsage([queryDatasetUsage, advisorUsage])
   };
 };
 
@@ -92,23 +101,28 @@ export const chartAdvisorGPT = async (
   options: ILLMOptions | undefined
 ) => {
   //call GPT
-  const filteredFields = schema.fields.filter(
-    field => true
-    //usefulFields.includes(field.fieldName)
-  );
-  const chartAdvisorMessage = `User Input: ${userInput}\nData field description: ${JSON.stringify(schema.fields)}`;
+  const filteredFields = schema.fields
+    .filter(
+      field => field.visible
+      //usefulFields.includes(field.fieldName)
+    )
+    .map(field => ({
+      ...pick(field, ['id', 'description', 'type', 'role'])
+    }));
+  const chartAdvisorMessage = `User Input: ${userInput}\nData field description: ${JSON.stringify(filteredFields)}`;
 
   const requestFunc = options.customRequestFunc?.chartAdvisor ?? requestGPT;
 
-  const advisorRes = await requestFunc(ChartAdvisorPromptEnglish, chartAdvisorMessage, options);
+  const advisorRes = await requestFunc(ChartAdvisorPromptEnglish(options.showThoughts), chartAdvisorMessage, options);
 
   const advisorResJson: GPTChartAdvisorResult = parseGPTResponse(advisorRes) as unknown as GPTChartAdvisorResult;
 
   if (advisorResJson.error) {
-    throw Error('Network Error!');
+    throw Error((advisorResJson as any).message);
   }
   if (!SUPPORTED_CHART_LIST.includes(advisorResJson['CHART_TYPE'])) {
     throw Error('Unsupported Chart Type. Please Change User Input');
   }
-  return advisorResJson;
+
+  return { ...advisorResJson, usage: advisorRes.usage };
 };
