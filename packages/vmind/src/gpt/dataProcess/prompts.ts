@@ -202,26 +202,27 @@ export const getQueryDatasetPrompt = (
 # Instruction
 - Supported sql keywords: ["SELECT", "FROM", "WHERE", "GROUP BY", "HAVING", "ORDER BY", "LIMIT", "DISTINCT"]. Supported aggregation methods: ["MAX()", "MIN()", "SUM()", "COUNT()", "AVG()"].
 - Generate a sql query like this: "SELECT \`columnA\`, SUM(\`columnB\`) as \`sum_b\` FROM ${VMIND_DATA_SOURCE} WHERE \`columnA\` = value1 GROUP BY \`columnA\` HAVING \`sum_b\`>0 ORDER BY \`sum_b\` LIMIT 10".
-- Don't use unsupported keywords such as WITHIN, FIELD. Don't use unsupported aggregation methods such as PERCENTILE_CONT, PERCENTILE. Don't use unsupported operators. We will execute your sql using alasql. Unsupported keywords, methods and operators will cause system crash. If current keywords and methods can't meet your needs, just simply select the column without any process.
+- Don't use unsupported keywords such as WITHIN, FIELD, RANK() OVER, OVER. Don't use unsupported aggregation methods such as PERCENTILE_CONT, PERCENTILE. Don't use unsupported operators. We will execute your sql using alasql. Unsupported keywords, methods and operators will cause system crash. If current keywords and methods can't meet your needs, just simply select the column without any process.
+- Don't use aliases in HAVING.
 - Make your sql as simple as possible.
 
 You need to follow the steps below.
 
 # Steps
 1. Extract the part related to the data from the user's instruction. Ignore other parts that is not related to the data.
-2. Select useful dimension and measure columns from ${VMIND_DATA_SOURCE}. You can only use columns in Column Information and do not assume non-existent columns. If the existing columns can't meet user's command, just select the most related columns in Column Information.
+2. Select useful dimension and measure columns from ${VMIND_DATA_SOURCE}. Don't miss some important columns such as dimensions related to date or time. You can only use columns in Column Information and do not assume non-existent columns. If the existing columns can't meet user's command, just select the most related columns in Column Information.
 3. Use the original dimension columns without any process. Aggregate the measure columns using aggregation methods no matter what chart type the user has specified. Don't use unsupported methods. If current keywords and methods can't meet your needs, just simply select the column without any process.
 4. Group the data using dimension columns.
 5. You can also use WHERE, HAVING, ORDER BY, LIMIT in your sql if necessary. Use the supported operators to finish the WHERE and HAVING. You can only use binary expression such as columnA = value1, sum_b > 0. You can only use dimension values appearing in the domain of dimension columns in your expression.
 
 Let's think step by step.
 
-Response one JSON object without any additional words. Your JSON object must contain sql and fieldInfo.
+User will parse the content of your response with JSON.parse() directly without further process. Response one JSON object without any additional words. Your JSON object must contain sql and fieldInfo.
 
 Response in the following format:
 \`\`\`
 {
-  ${showThoughts ? 'THOUGHTS: string //your thoughts' : ''}
+  ${showThoughts ? 'thoughts: string //your thoughts' : ''}
   sql: string; //your sql. Note that it's a string in a JSON object so it must be in one line without any \\n.
   fieldInfo: {
     fieldName: string; //name of the field.
@@ -238,7 +239,7 @@ Column Information: [{"fieldName":"country","type":"string","role":"dimension"},
 Response:
 \`\`\`
 {
-  ${showThoughts ? '"THOUGHTS": string //your thoughts' : ''}
+  ${showThoughts ? '"thoughts": string //your thoughts' : ''}
   "sql": "SELECT \`country\`, \`year\`, SUM(\`GDP\`) AS \`total_GDP\` FROM ${VMIND_DATA_SOURCE} GROUP BY \`country\`, \`year\` ORDER BY \`year\`, \`total_GDP\` DESC",
   "fieldInfo": [
     {
@@ -264,7 +265,7 @@ Column Information: [{"fieldName":"城市","type":"string","role":"dimension"},{
 Response:
 \`\`\`
 {
-  ${showThoughts ? '"THOUGHTS": string //your thoughts' : ''}
+  ${showThoughts ? '"thoughts": string //your thoughts' : ''}
   "sql": "SELECT 城市, SUM(\`2022年GDP（亿元）\`) as \`sum_2022_GDP\` FROM ${VMIND_DATA_SOURCE} ORDER BY \`sum_2022_GDP\` DESC LIMIT 5",
   "fieldInfo": [
     {

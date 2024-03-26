@@ -1,17 +1,11 @@
 import { DataItem, SimpleFieldInfo } from 'src/typings';
 import {
-  getValueByAttributeName,
-  mergeMap,
-  replaceAll,
   replaceDataset,
-  replaceInvalidContent,
-  replaceNonASCIICharacters,
   replaceInvalidWords,
   swapMap,
   replaceBlankSpace,
   replaceString,
-  sumAllMeasureFields,
-  convertGroupByToString
+  sumAllMeasureFields
 } from './utils';
 import alasql from 'alasql';
 
