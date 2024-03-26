@@ -2,37 +2,63 @@ import { chartAdvisorHandler } from '../../common/chartAdvisor';
 import { getSchemaFromFieldInfo } from '../../common/schema';
 import { SUPPORTED_CHART_LIST, checkChartTypeAndCell, vizDataToSpec } from '../../common/vizDataToSpec';
 import { DataItem, ILLMOptions, SimpleFieldInfo, VizSchema } from '../../typings';
-import { getStrFromArray, getStrFromDict, patchChartTypeAndCell, requestSkyLark } from './utils';
+import { getStrFromArray, getStrFromDict, requestSkyLark } from './utils';
 import { getChartRecommendPrompt, getFieldMapPrompt } from './prompts';
 import { parseSkylarkResponse } from '../utils';
 import { estimateVideoTime } from '../../common/vizDataToSpec/utils';
 import { ChartFieldInfo, chartRecommendConstraints, chartRecommendKnowledge } from './constants';
 import { omit } from 'lodash';
+import { calculateTokenUsage } from '../../common/utils';
+import { queryDatasetWithSkylark } from '../dataProcess/query/queryDataset';
+import { patchChartTypeAndCell } from './patch';
 
 export const generateChartWithSkylark = async (
   userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
-  fieldInfo: SimpleFieldInfo[],
+  propsFieldInfo: SimpleFieldInfo[],
   propsDataset: DataItem[],
   options: ILLMOptions,
+  enableDataQuery = true,
   colorPalette?: string[],
   animationDuration?: number
 ) => {
-  const schema = getSchemaFromFieldInfo(fieldInfo);
-  const colors = colorPalette;
+  let queryDatasetUsage;
+  let advisorUsage;
   let chartType;
   let cell;
   let dataset: DataItem[] = propsDataset;
+  let fieldInfo: SimpleFieldInfo[] = propsFieldInfo;
   let chartSource: string = options.model;
+
+  try {
+    if (enableDataQuery) {
+      const {
+        dataset: queryDataset,
+        fieldInfo: fieldInfoNew,
+        usage
+      } = await queryDatasetWithSkylark(userPrompt, fieldInfo, propsDataset, options);
+      dataset = queryDataset;
+      fieldInfo = fieldInfoNew;
+      queryDatasetUsage = usage;
+    }
+  } catch (err) {
+    console.error('data query error!');
+    console.error(err);
+  }
+
+  const schema = getSchemaFromFieldInfo(fieldInfo);
+  const colors = colorPalette;
+
   try {
     // throw 'test chartAdvisorHandler';
     const resJson: any = await chartAdvisorSkylark(schema, fieldInfo, userPrompt, options);
-
+    advisorUsage = resJson.usage;
     const chartTypeRes = resJson.chartType.toUpperCase();
     const cellRes = resJson['cell'];
     const patchResult = patchChartTypeAndCell(chartTypeRes, cellRes, dataset, fieldInfo);
-    if (checkChartTypeAndCell(patchResult.chartTypeNew, patchResult.cellNew, fieldInfo)) {
+    if (checkChartTypeAndCell(patchResult.chartTypeNew, patchResult.cellNew, patchResult.fieldInfoNew)) {
       chartType = patchResult.chartTypeNew;
       cell = patchResult.cellNew;
+      dataset = patchResult.datasetNew;
     }
   } catch (err) {
     console.warn(err);
@@ -53,7 +79,9 @@ export const generateChartWithSkylark = async (
   spec.background = '#00000033';
   return {
     chartSource,
+    chartType,
     spec,
+    usage: calculateTokenUsage([queryDatasetUsage, advisorUsage]),
     time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
   };
 };
@@ -74,10 +102,13 @@ export const chartAdvisorSkylark = async (
     chartRecommendConstraintsStr,
     options.showThoughts ?? true
   );
-  const chartRecommendRes = await requestSkyLark(chartRecommendPrompt, userMessage, options);
+
+  const requestFunc = options.customRequestFunc?.chartAdvisor ?? requestSkyLark;
+
+  const chartRecommendRes = await requestFunc(chartRecommendPrompt, userMessage, options);
   const chartRecommendResJSON = parseSkylarkResponse(chartRecommendRes);
   if (chartRecommendResJSON.error) {
-    throw Error('Network Error!');
+    throw Error(chartRecommendResJSON.message);
   }
   if (!SUPPORTED_CHART_LIST.includes(chartRecommendResJSON['charttype'])) {
     throw Error('Unsupported Chart Type. Please Change User Input');
@@ -98,7 +129,7 @@ export const chartAdvisorSkylark = async (
     options.showThoughts ?? true
   );
 
-  const fieldMapRes = await requestSkyLark(fieldMapPrompt, userMessage, options);
+  const fieldMapRes = await requestFunc(fieldMapPrompt, userMessage, options);
   const fieldMapResJson = parseSkylarkResponse(fieldMapRes);
   if (fieldMapResJson.error) {
     throw Error('Network Error!');
@@ -106,10 +137,7 @@ export const chartAdvisorSkylark = async (
 
   return {
     chartType,
-    cell: omit(fieldMapResJson, ['thoughts', 'usage'])
+    cell: omit(fieldMapResJson, ['thoughts', 'usage']),
+    usage: calculateTokenUsage([chartRecommendRes.usage, fieldMapRes.usage])
   };
 };
-
-export const getFieldMapSkylark = async (chartType: string, userInput: string) => {};
-
-const getChartChannel = (chartType: string) => {};

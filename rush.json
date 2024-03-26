@@ -81,6 +81,15 @@
       "tags": [
         "package"
       ]
+    },
+    {
+      "packageName": "@visactor/chart-advisor",
+      "projectFolder": "packages/chart-advisor",
+      "shouldPublish": true,
+      "versionPolicyName": "vmindMin",
+      "tags": [
+        "package"
+      ]
     }
   ]
 }

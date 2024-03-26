@@ -33,11 +33,13 @@ import {
   mockUserInput12,
   mockUserInput13,
   mockUserInput14,
-  mockUserInput16
+  mockUserInput16,
+  mockUserInput17
 } from '../constants/mockData';
 import VMind from '../../../../src/index';
 import { Model } from '../../../../src/index';
-import { queryDataset } from '../../../../src/gpt/dataProcess';
+import { isArray } from 'lodash';
+import { mockDataset, mockData2, mockData3, mockData4 } from './mockData';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -52,6 +54,7 @@ type IPropsType = {
     },
     costTime: number
   ) => void;
+  onSpecListGenerate: any;
 };
 const demoDataList: { [key: string]: any } = {
   pie: mockUserInput2,
@@ -73,11 +76,12 @@ const demoDataList: { [key: string]: any } = {
   'College entrance examination': acceptRatioData,
   'Shopping Mall Sales Performance': mallSalesData,
   'Global GDP': mockUserInput6Eng,
-  'Sales of different drinkings': mockUserInput3Eng
+  'Sales of different drinkings': mockUserInput3Eng,
+  'Multi measure': mockUserInput17
 };
 
 const globalVariables = (import.meta as any).env;
-const ModelConfigMap = {
+const ModelConfigMap: any = {
   [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.SKYLARK]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
@@ -92,11 +96,11 @@ export function DataInput(props: IPropsType) {
   const [spec, setSpec] = useState<string>('');
   const [time, setTime] = useState<number>(1000);
   const [model, setModel] = useState<Model>(Model.GPT3_5);
-  const [cache, setCache] = useState<boolean>(false);
+  const [cache, setCache] = useState<boolean>(true);
   const [showThoughts, setShowThoughts] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);
-  const [url, setUrl] = React.useState(ModelConfigMap[model].url ?? OPENAI_API_URL);
-  const [apiKey, setApiKey] = React.useState(ModelConfigMap[model].key);
+  const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
+  const [apiKey, setApiKey] = React.useState(ModelConfigMap[model]?.key);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -120,12 +124,21 @@ export function DataInput(props: IPropsType) {
     //setLoading(true);
     const { fieldInfo, dataset } = vmind.parseCSVData(csv);
     //const { fieldInfo: fieldInfoQuery, dataset: datasetQuery } = await vmind?.dataQuery(describe, fieldInfo, dataset);
-    //const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csv, describe);
+    //const { fieldInfo, dataset, usage } = await vmind.parseCSVDataWithLLM(csv, describe);
+
+    //const dataset = mockData4;
+    //const fieldInfo = vmind?.getFieldInfo(dataset);
     const startTime = new Date().getTime();
-    const { spec, time } = await vmind.generateChart(describe, fieldInfo, dataset);
+    const chartGenerationRes = await vmind.generateChart(describe, fieldInfo, dataset, true);
     const endTime = new Date().getTime();
-    const costTime = endTime - startTime;
-    props.onSpecGenerate(spec, time as any, costTime);
+    if (isArray(chartGenerationRes)) {
+      props.onSpecListGenerate(chartGenerationRes.map(res => res.spec));
+    } else {
+      const { spec, time } = chartGenerationRes;
+      const costTime = endTime - startTime;
+      props.onSpecGenerate(spec, time as any, costTime);
+    }
+
     setLoading(false);
   }, [vmind, csv, describe, props]);
 
@@ -257,6 +270,7 @@ export function DataInput(props: IPropsType) {
           <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
 
           <Radio value={Model.SKYLARK}>skylark pro</Radio>
+          <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
         </RadioGroup>
       </div>
       <div style={{ width: '90%', marginBottom: 10 }}>

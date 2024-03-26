@@ -1,59 +1,15 @@
-import { isArray, isString } from 'lodash';
+import { isArray } from 'lodash';
 import JSON5 from 'json5';
 
 import { Query } from '@visactor/calculator';
-import { detectFieldType } from '../../../common/dataProcess/utils';
+import {
+  detectFieldType,
+  generateRandomString,
+  mergeMap,
+  replaceNonASCIICharacters
+} from '../../../common/dataProcess/utils';
 import { DataItem, SimpleFieldInfo } from '../../../typings';
 import { ASTParserContext, ASTParserPipe } from './type';
-
-function generateRandomString(len: number) {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  let result = '';
-  for (let i = 0; i < len; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-}
-
-const swapMap = (map: Map<string, string>) => {
-  //swap the map
-  const swappedMap = new Map();
-
-  // Swap key with value
-  map.forEach((value, key) => {
-    swappedMap.set(value, key);
-  });
-  return swappedMap;
-};
-
-/**
- * replace operator and reserved words inside the field name in the sql str
- * @param fieldInfo
- */
-export const replaceOperator = (fieldInfo: SimpleFieldInfo[]) => {
-  const operatorMap = {
-    '+': `_PLUS_`,
-    '-': `_DASH_`,
-    '*': `_ASTERISK_`,
-    '/': `_SLASH_`
-  };
-  const replaceMap = new Map<string, string>();
-  const validFieldInfo = fieldInfo.map((field: SimpleFieldInfo) => {
-    const { fieldName } = field;
-    let validFieldName = fieldName;
-    Object.keys(operatorMap).forEach(operator => {
-      validFieldName = validFieldName.split(operator).join(operatorMap[operator]);
-      if (validFieldName !== fieldName) {
-        replaceMap.set(validFieldName, fieldName);
-      }
-    });
-    return {
-      ...field,
-      fieldName: validFieldName
-    };
-  });
-  return { validFieldInfo, replaceMap };
-};
 
 /**
  * replace invalid characters in sql str and get the replace map
@@ -89,51 +45,6 @@ export const preprocessSQL = (sql: string, fieldInfo: SimpleFieldInfo[]) => {
   const mergedMap = mergeMap(replaceMap, reservedReplaceMap);
 
   return { validStr, replaceMap: mergedMap };
-};
-
-/**
- * replace all the non-ascii characters in the sql str into valid strings.
- * @param str
- * @returns
- */
-export const replaceNonASCIICharacters = (str: string) => {
-  const nonAsciiCharMap = new Map();
-
-  const newStr = str.replace(/([^\x00-\x7F]+)/g, m => {
-    let replacement;
-    if (nonAsciiCharMap.has(m)) {
-      replacement = nonAsciiCharMap.get(m);
-    } else {
-      replacement = generateRandomString(10);
-      nonAsciiCharMap.set(m, replacement);
-    }
-    return replacement;
-  });
-
-  const swappedMap = swapMap(nonAsciiCharMap);
-
-  return { validStr: newStr, replaceMap: swappedMap };
-};
-
-/**
- * replace random strings into its original string according to replaceMap
- * @param str
- * @param replaceMap
- * @returns
- */
-export const getOriginalString = (str: string, replaceMap: Map<string, string>) => {
-  if (!isString(str)) {
-    return str;
-  }
-  if (replaceMap.has(str)) {
-    return replaceMap.get(str);
-  } else {
-    //Some string may be linked by ASCII characters as non-ASCII characters.Traversing the replaceMap and replaced it to the original character
-    const replaceKeys = [...replaceMap.keys()];
-    return replaceKeys.reduce((prev, cur) => {
-      return prev.replace(new RegExp(cur, 'g'), replaceMap.get(cur));
-    }, str);
-  }
 };
 
 export const addQuotes = (sqlString: string) => {
@@ -202,38 +113,19 @@ export const checkIsColumnNode = (node: any, columns: any, fieldInfo: SimpleFiel
  */
 export const parseRespondField = (
   responseFieldInfo: { fieldName: string; description?: string }[],
-  dataset: DataItem[],
-  replaceMap: Map<string, string>
+  dataset: DataItem[]
 ) =>
   responseFieldInfo.map(field => ({
     ...field,
-    ...detectFieldType(dataset, field.fieldName),
-    fieldName: getOriginalString(field.fieldName, replaceMap)
+    ...detectFieldType(dataset, field.fieldName)
   }));
 
-/**
- * merge two maps
- * @param map1
- * @param map2
- * @returns
- */
-export const mergeMap = (map1: Map<string, string>, map2: Map<string, string>) => {
-  // merge map2 into map1
-  map2.forEach((value, key) => {
-    map1.set(key, value);
-  });
-  return map1;
-};
-
 export const patchQueryInput = (userInput: string) => {
-  return (
-    userInput +
-    " Don't use unsupported keywords and methods in the SELECT of SimQuery. Don't use non-existent columns and dimension values in the WHERE of SimQuery."
-  );
+  return userInput;
 };
 
 export const parseGPTQueryResponse = (response: string) => {
-  const SimQuery = response.match(/SimQuery:\n?```(.*?)```/s)[1];
+  const sql = response.match(/sql:\n?```(.*?)```/s)[1];
   const fieldInfoStr = response.match(/fieldInfo:\n?```(.*?)```/s)[1];
   let fieldInfo = [];
   try {
@@ -248,7 +140,7 @@ export const parseGPTQueryResponse = (response: string) => {
     fieldInfo = JSON5.parse(`[${fieldInfoStr}]`);
   }
   return {
-    SimQuery,
+    sql,
     fieldInfo
   };
 };

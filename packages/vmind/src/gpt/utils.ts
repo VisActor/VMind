@@ -2,6 +2,7 @@ import { GPTDataProcessResult, ILLMOptions, LLMResponse } from '../typings';
 import axios from 'axios';
 import JSON5 from 'json5';
 import { omit } from 'lodash';
+import { matchJSONStr } from '../common/utils';
 
 export const requestGPT = async (
   prompt: string,
@@ -30,10 +31,11 @@ export const requestGPT = async (
           }
         ],
         max_tokens: options?.max_tokens ?? 2000,
-        temperature: options?.temperature ?? 0
+        temperature: options?.temperature ?? 0,
+        stream: false
         //response_format: { type: 'json_object' } //Only models after gpt-3.5-turbo-1106 support this parameter.
       }
-    }).then(response => response.data);
+    }).then((response: any) => response.data);
 
     return res;
   } catch (err: any) {
@@ -67,18 +69,23 @@ export const parseGPTJson = (JsonStr: string, prefix?: string) => {
 };
 
 export const parseGPTResponse = (GPTRes: LLMResponse) => {
-  if (GPTRes.error) {
+  try {
+    if (GPTRes.error) {
+      return {
+        error: true,
+        ...GPTRes.error
+      };
+    }
+    const choices = GPTRes.choices;
+    const content = choices[0].message.content;
+    const jsonStr = matchJSONStr(content);
+
+    const resJson: GPTDataProcessResult = parseGPTJson(jsonStr, '```');
+    return resJson;
+  } catch (err: any) {
     return {
       error: true,
-      ...GPTRes.error
+      message: err.message
     };
   }
-  const choices = GPTRes.choices;
-  const content = choices[0].message.content;
-  const resJson: GPTDataProcessResult = parseGPTJson(content, '```');
-  return resJson;
-};
-
-export const replaceAll = (originStr: string, replaceStr: string, newStr: string) => {
-  return originStr.split(replaceStr).join(newStr);
 };

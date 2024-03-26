@@ -7,6 +7,8 @@ const Content = Layout.Content;
 
 export function Home() {
   const [spec, setSpec] = useState<any>('');
+  const [specList, setSpecList] = useState<any>([]);
+
   const [time, setTime] = useState<{
     totalTime: number;
     frameArr: any[];
@@ -26,10 +28,15 @@ export function Home() {
             setTime(time);
             setCostTime(costTime);
           }}
+          onSpecListGenerate={(specList: any[], time: any, costTime: number) => {
+            setSpecList(specList);
+            setTime(time);
+            setCostTime(costTime);
+          }}
         />
       </Sider>
       <Content>
-        <ChartPreview spec={spec} time={time} costTime={costTime} />
+        <ChartPreview spec={spec} specList={specList} time={time} costTime={costTime} />
       </Content>
     </Layout>
   );

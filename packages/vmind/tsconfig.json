@@ -19,7 +19,10 @@
   "include": ["src"],
   "references": [
     {
-      "path": "../calculator"
+      "path": "../calculator",
+    },
+    {
+      "path": "../chart-advisor",
     }
   ]
 }

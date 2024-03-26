@@ -36,14 +36,23 @@ export const parseSkylarkResponse = (larkResponse: LLMResponse): Record<string, 
         }
         return str;
       })
+      //check if there are other : after the first : in YAML; If so, wrap the str with ""
+      .map((str: string) => {
+        const parts = str.split(':');
+        return parts.length > 2 ? `${parts[0]}: "${parts.slice(1).join(':').trim()}"` : str;
+      })
+      //replace ": -" with ": null"
+      .map((str: string) => {
+        return str.replace(/: -/g, ': null');
+      })
       .join('\n');
 
     const resJson = yaml.load(patchedStr) as Record<string, any>;
     resJson.usage = usage;
     //replace all the keys to lower case.
     return Object.keys(resJson).reduce((prev, cur) => ({ ...prev, [cur.toLocaleLowerCase()]: resJson[cur] }), {});
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    return { error: true };
+    return { error: true, message: err.message };
   }
 };
