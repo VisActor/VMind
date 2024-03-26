@@ -6,6 +6,31 @@
 
 </div>
 
+
+<div align="center">
+
+不仅自动，还很智能.开源智能可视化解决方案.
+
+<p align="center">
+  <a href="https://www.visactor.io/vmind">Introduction</a> •
+  <a href="https://www.visactor.io/vmind/example">Demo</a> •
+  <a href="https://www.visactor.io/vmind/guide/Intro_to_VMind">Tutorial</a> •
+  <a href="https://www.visactor.io/vmind/api/VMind_Instance">API</a>•
+  <a href="https://www.visactor.io/vmind/openapi">OpenApi</a>
+</p>
+
+![](https://github.com/visactor/vmind/actions/workflows/bug-server.yml/badge.svg)
+![](https://github.com/visactor/vmind/actions/workflows/unit-test.yml/badge.svg)
+[![npm Version](https://img.shields.io/npm/v/@visactor/vmind.svg)](https://www.npmjs.com/package/@visactor/vmind)
+[![npm Download](https://img.shields.io/npm/dm/@visactor/vmind.svg)](https://www.npmjs.com/package/@visactor/vmind)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/VisActor/VMind/blob/main/CONTRIBUTING.md#your-first-pull-request)
+
+![](https://img.shields.io/badge/language-TypeScript-red.svg) [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/visactor/vmind/blob/main/LICENSE)
+
+</div>
+
+## 简介
+
 `@visactor/vmind` 是由 [VisActor](https://www.visactor.io/) 为您提供的基于大模型的图表智能组件，包括对话式的图表智能生成与编辑能力。它提供了一个自然语言交互接口，仅需一句话，您就能够轻松使用`@visactor/vmind` 创建图表叙事作品，并通过连续的对话进行编辑，极大地提高您创作数据可视化作品的效率。
 
 `@visactor/vmind` 的主要特点包括：
