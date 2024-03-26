@@ -81,6 +81,13 @@
           }
         },
         {
+          "path": "Chart_Advisor",
+          "title": {
+            "zh": "基于规则的图表生成",
+            "en": "Rule-based Chart Generation"
+          }
+        },
+        {
           "path": "Custom_Request",
           "title": {
             "zh": "自定义LLM调用",
