@@ -5,16 +5,15 @@ import {
   FilterNode,
   FilterNodeType,
   FilterOperator,
-  HavingCondition,
   OrderType,
   Query,
-  WhereCondition,
-  WhereFilterNode
+  WhereCondition
 } from '@visactor/calculator';
-import { ASTParserContext, ASTParserPipe, SQLAst } from './type';
-import { checkIsColumnNode, replaceString, toFirstUpperCase } from './utils';
+import { ASTParserContext, ASTParserPipe } from './type';
+import { checkIsColumnNode, toFirstUpperCase } from './utils';
 import { SimpleFieldInfo } from '../../../typings';
 import { isArray } from 'lodash';
+import { replaceString } from '../../../common/dataProcess/utils';
 
 export const from: ASTParserPipe = (query: Partial<Query>, context: ASTParserContext) => {
   const { dataSource, fieldInfo } = context;
@@ -141,7 +140,7 @@ export const groupBy: ASTParserPipe = (query: Partial<Query>, context: ASTParser
   return {
     ...query,
     groupBy: (groupby ?? []).map((group: any) => replaceString(group.column ?? group.value, replaceMap))
-  };
+  } as any;
 };
 
 export const select: ASTParserPipe = (query: Partial<Query>, context: ASTParserContext) => {
