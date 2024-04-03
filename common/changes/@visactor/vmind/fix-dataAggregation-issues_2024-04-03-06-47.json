@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vmind",
+      "comment": "replace alasql keywords in sql",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vmind"
+}
