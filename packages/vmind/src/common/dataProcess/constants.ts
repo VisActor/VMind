@@ -195,5 +195,3 @@ export const RESERVE_REPLACE_MAP = new Map<string, string>([
   ...operatorList,
   ...(alasqlKeywordList.map(keyword => [keyword, generateRandomString(10)]) as any)
 ]);
-
-console.log(RESERVE_REPLACE_MAP);
