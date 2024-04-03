@@ -34,7 +34,8 @@ import {
   mockUserInput13,
   mockUserInput14,
   mockUserInput16,
-  mockUserInput17
+  mockUserInput17,
+  mockUserInput18
 } from '../constants/mockData';
 import VMind from '../../../../src/index';
 import { Model } from '../../../../src/index';
@@ -77,7 +78,8 @@ const demoDataList: { [key: string]: any } = {
   'Shopping Mall Sales Performance': mallSalesData,
   'Global GDP': mockUserInput6Eng,
   'Sales of different drinkings': mockUserInput3Eng,
-  'Multi measure': mockUserInput17
+  'Multi measure': mockUserInput17,
+  DataQuery: mockUserInput18
 };
 
 const globalVariables = (import.meta as any).env;
@@ -104,7 +106,7 @@ export function DataInput(props: IPropsType) {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const vmind = useMemo(() => {
+  const vmind: any = useMemo(() => {
     if (!url || !apiKey) {
       Message.error('Please set your LLM URL and API Key!!!');
       return null;
