@@ -37,7 +37,7 @@ class VMind {
    * @param userPrompt
    * @returns
    */
-  parseCSVDataWithLLM(csvString: string, userPrompt: string) {
+  async parseCSVDataWithLLM(csvString: string, userPrompt: string) {
     if (this.getModelType() === ModelType.GPT) {
       return parseCSVDataWithGPT(csvString, userPrompt, this._options);
     }
