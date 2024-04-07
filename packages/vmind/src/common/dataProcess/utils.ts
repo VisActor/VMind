@@ -1,8 +1,9 @@
-import { sampleSize, isNumber, isInteger, isString, isArray } from 'lodash';
+import { sampleSize, isNumber, isInteger, isString, isArray, capitalize, startCase } from 'lodash';
 import { DataItem, DataType, ROLE, SimpleFieldInfo } from '../../typings';
 import dayjs from 'dayjs';
 import { uniqArray } from '@visactor/vutils';
 import alasql from 'alasql';
+import { RESERVE_REPLACE_MAP, operators } from './constants';
 
 export const readTopNLine = (csvFile: string, n: number) => {
   // get top n lines of a csv file
@@ -239,16 +240,6 @@ export const replaceByMap = (str: string, replaceMap: Map<string, string>) => {
   return finalSql;
 };
 
-const RESERVE_REPLACE_MAP = new Map<string, string>([
-  ['+', `_${generateRandomString(3)}_PLUS_${generateRandomString(3)}_`],
-  ['-', `_${generateRandomString(3)}_DASH_${generateRandomString(3)}_`],
-  ['*', `_${generateRandomString(3)}_ASTERISK_${generateRandomString(3)}_`],
-  ['/', `_${generateRandomString(3)}_SLASH_${generateRandomString(3)}_`],
-  ['value', generateRandomString(10)],
-  ['key', generateRandomString(10)],
-  ['total', generateRandomString(10)]
-]);
-
 /**
  * replace operator and reserved words inside the column name in the sql str
  * operators such as +, -, *, / in column names in sql will cause ambiguity and parsing error
@@ -262,10 +253,24 @@ const RESERVE_REPLACE_MAP = new Map<string, string>([
  *
  */
 export const replaceInvalidWords = (sql: string, columns: string[]) => {
+  const operatorReplaceMap = new Map<string, string>();
+
   //replace column names according to RESERVED_REPLACE_MAP
   const validColumnNames = columns.map(column => {
     const nameWithoutOperator = [...RESERVE_REPLACE_MAP.keys()].reduce((prev, cur) => {
-      return replaceAll(prev, cur, RESERVE_REPLACE_MAP.get(cur.toLowerCase()));
+      //try to match the keywords in column names with different style
+      const replaceStr = [cur.toUpperCase(), cur.toLowerCase(), capitalize(cur)].find(str => {
+        //operators need to be replaced if it is includes by the column name
+        //while other reserved words need to be replaced if it is exactly the same as column words
+        return operators.includes(cur) ? prev.includes(str) : prev === str;
+      });
+      if (replaceStr) {
+        if (!operatorReplaceMap.has(replaceStr)) {
+          operatorReplaceMap.set(replaceStr, RESERVE_REPLACE_MAP.get(cur));
+        }
+        return replaceAll(prev, replaceStr, RESERVE_REPLACE_MAP.get(cur));
+      }
+      return prev;
     }, column);
 
     return nameWithoutOperator;
@@ -288,8 +293,6 @@ export const replaceInvalidWords = (sql: string, columns: string[]) => {
 
   //replace non-ascii characters in sql
   const { validStr: sqlWithoutAscii, replaceMap: asciiReplaceMap } = replaceNonASCIICharacters(sqlWithoutOperator);
-
-  const operatorReplaceMap = new Map<string, string>(RESERVE_REPLACE_MAP);
 
   return { validStr: sqlWithoutAscii, columnReplaceMap: operatorReplaceMap, sqlReplaceMap: asciiReplaceMap };
 };
