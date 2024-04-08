@@ -1,7 +1,7 @@
 import { DataItem, ILLMOptions, SimpleFieldInfo } from '../../../typings';
 import { parseGPTQueryResponse, parseRespondField, patchQueryInput } from './utils';
 import { DataQueryResponse } from './type';
-import { parseGPTResponse as parseGPTResponseAsJSON, requestGPT } from '../../utils';
+import { parseGPTResponse as parseGPTResponseAsJSON, requestGPT } from '../../../taskNode/utils';
 import { getQueryDatasetPrompt } from '../prompts';
 import { queryDataset } from '../../../common/dataProcess/dataQuery';
 

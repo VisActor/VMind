@@ -42,6 +42,7 @@ export const requestGPT = async (
     return err.response.data;
   }
 };
+
 export const parseGPTJson = (JsonStr: string, prefix?: string) => {
   const parseNoPrefixStr = (str: string) => {
     //尝试不带前缀的解析
