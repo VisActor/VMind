@@ -1,22 +1,17 @@
 import { IPatcher } from './types';
 import { Transformer } from '../transformer';
 
-export class Patcher<T, C> implements IPatcher<T, C> {
-  input: T;
-  output: T;
-  context: C;
-  pipelines: Transformer<T, C, T>[];
-  constructor(input: T, context: C, transformers: Transformer<T, C, T>[]) {
-    this.input = input;
-    this.context = context;
+export class Patcher<T, Context> implements IPatcher<T, Context> {
+  pipelines: Transformer<Partial<T>, Context, T>[];
+  constructor(transformers: Transformer<Partial<T>, Context, T>[]) {
     this.pipelines = transformers;
   }
 
-  patch() {
-    const result = this.pipelines.reduce((pre: Partial<T>, transformer: Transformer<T, C, T>) => {
-      const result = transformer.transform();
+  patch(input: Partial<T>, context: Context) {
+    const result: T = this.pipelines.reduce((pre: Partial<T>, transformer: Transformer<Partial<T>, Context, T>) => {
+      const result = transformer.transform(pre, context);
       return result;
-    }, this.input);
+    }, input) as T;
     return result;
   }
 }

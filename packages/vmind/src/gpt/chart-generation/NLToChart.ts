@@ -1,7 +1,7 @@
 import { SUPPORTED_CHART_LIST } from '../../common/vizDataToSpec/constants';
 import { DataItem, GPTChartAdvisorResult, ILLMOptions, LOCATION, SimpleFieldInfo, VizSchema } from '../../typings';
 import { checkChartTypeAndCell, vizDataToSpec } from '../../common/vizDataToSpec';
-import { parseGPTResponse, requestGPT } from '../utils';
+import { parseGPTResponse, requestGPT } from '../../taskNode/utils';
 import { patchUserInput } from './utils';
 import { ChartAdvisorPromptEnglish } from './prompts';
 import { chartAdvisorHandler } from '../../common/chartAdvisor';
