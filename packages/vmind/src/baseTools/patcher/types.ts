@@ -1,5 +1,6 @@
 import { Transformer } from '../transformer';
-export interface IPatcher<T, C> {
-  pipelines: Transformer<Partial<T>, C, T>[];
-  patch: (input: Partial<T>, context: C) => T;
+
+export interface IPatcher<DSL, Context> {
+  pipelines: Transformer<Partial<DSL>, Context, DSL>[];
+  patch: (input: Partial<DSL>, context: Context) => DSL;
 }
