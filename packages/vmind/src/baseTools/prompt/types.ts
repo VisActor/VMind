@@ -1,5 +1,4 @@
-export interface IPrompt<T> {
+export interface IPrompt<Context> {
   readonly template: string;
-  readonly context: T;
-  getPrompt: () => string;
+  getPrompt: (context: Context) => string;
 }

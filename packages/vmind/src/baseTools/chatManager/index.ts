@@ -1,5 +1,8 @@
 import { Chat, ChatRole } from './types';
 
+/**
+ * ChatManager for multiple-rounds dialogue management
+ */
 export class ChatManager {
   chatList: Chat[];
 

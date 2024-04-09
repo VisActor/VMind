@@ -1,3 +1,3 @@
-export interface ITransformer<I, Context, DSL> {
-  transform: (input: I, context: Context) => DSL;
+export interface ITransformer<Input, Context, DSL> {
+  transform: (input: Input, context: Context) => DSL;
 }

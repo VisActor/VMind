@@ -1,14 +1,17 @@
 import { IPrompt } from './types';
-
-export class Prompt<T> implements IPrompt<T> {
+/**
+ * Prompt represents a LLM Prompt
+ * Pass in Template when initialization
+ * getPrompt method generates specific Prompt according to Template and Context
+ * The subclass needs to rewrite the getprompt method to generate a specific Prompt
+ */
+export class Prompt<Context> implements IPrompt<Context> {
   template: string;
-  context: T;
 
-  constructor(template: string, context: T) {
+  constructor(template: string) {
     this.template = template;
-    this.context = context;
   }
-  getPrompt() {
+  getPrompt(context: Context) {
     return this.template;
   }
 }
