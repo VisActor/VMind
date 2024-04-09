@@ -3,32 +3,39 @@ import { BaseTaskNode } from './baseTaskNode';
 import { Parser } from 'src/base/tools/parser';
 import { Patcher } from 'src/base/tools/patcher';
 import { ChatManager } from 'src/base/tools/chatManager';
-import { ILLMOptions, RequestFunc } from './types';
+import { ILLMOptions, RequestFunc } from 'src/typings';
 
-/**
- * LLMBasedTaskNode is a task node that needs to use LLM to complete tasks
- * Subclasses must assign values to prompt, parser, patcher, and requester
- */
-export class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions }, DSL> extends BaseTaskNode<Context, DSL> {
+export interface ILLMTaskNode<Context, DSL> {
   prompt: Prompt<Context>;
+  chatManager: ChatManager;
   parser: Parser<DSL>;
   patcher: Patcher<DSL, Context>;
-  requester: RequestFunc;
+
+  requestLLM: (context: Context) => Promise<any>;
+  //parseLLMResponse: (response: any) => Partial<DSL>
+  //patchLLMResponse: (input: Partial<DSL>, context: Context) => DSL
+  //executeTask: (context: Context) => Promise<DSL>
+}
+/**
+ * LLMBasedTaskNode is a task node that needs to use LLM to complete tasks
+ * Subclasses must assign values to prompt, parser and patcher
+ */
+export class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions }, DSL>
+  extends BaseTaskNode<Context, DSL>
+  implements ILLMTaskNode<Context, DSL>
+{
+  prompt: Prompt<Context>;
   chatManager: ChatManager;
+  parser: Parser<DSL>;
+  patcher: Patcher<DSL, Context>;
 
   constructor() {
     super();
     this.chatManager = new ChatManager();
   }
 
-  async requestLLM(context: Context) {
-    const { llmOptions } = context;
-    const llmResponse = await this.requester(
-      this.prompt.getPrompt(context),
-      this.chatManager.getLatestUserMessage().content,
-      llmOptions
-    );
-    return llmResponse;
+  async requestLLM(context: Context): Promise<any> {
+    return null;
   }
 
   parseLLMResponse(llmResponse: any): Partial<DSL> {

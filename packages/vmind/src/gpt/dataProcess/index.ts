@@ -1,5 +1,5 @@
 import { convertNumberField, getDataset, parseCSVData } from '../../common/dataProcess';
-import { getFieldDomain, readTopNLine } from '../../common/dataProcess/utils';
+import { getFieldDomain, readTopNLine } from '../../applications/dataAggregation/taskNodes/executeQuery/utils';
 import { ILLMOptions, SimpleFieldInfo } from '../../typings';
 import { parseGPTResponse, requestGPT } from '../../base/taskNode/utils';
 import { DataProcessPromptEnglish } from './prompts';

@@ -1,6 +1,6 @@
 import { LLMResponse } from 'src/typings';
 import JSON5 from 'json5';
-import { replaceAll } from '../../../common/dataProcess/utils';
+import { replaceAll } from '../../../applications/dataAggregation/taskNodes/executeQuery/utils';
 import { matchJSONStr } from '../../../common/utils';
 
 export const parseJson = (JsonStr: string, prefix?: string) => {

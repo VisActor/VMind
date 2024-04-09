@@ -2,7 +2,10 @@ import { BaseTaskNode } from '../taskNode/baseTaskNode';
 import { ChatManager } from '../tools/chatManager';
 
 export interface IApplication<Context, Spec> {
-  tasks: BaseTaskNode<Context, any>[];
+  tasks: {
+    name: string;
+    task: BaseTaskNode<Context, any>;
+  }[];
   context: Context;
   chatManager: ChatManager;
 

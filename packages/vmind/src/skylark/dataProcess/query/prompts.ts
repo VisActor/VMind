@@ -1,4 +1,4 @@
-import { VMIND_DATA_SOURCE } from '../../../common/dataProcess/dataQuery';
+import { VMIND_DATA_SOURCE } from '../../../applications/dataAggregation/taskNodes/executeQuery/dataQuery';
 
 export const getQueryDatasetPrompt = (
   showThoughts: boolean

@@ -4,7 +4,7 @@ import { getQueryDatasetPrompt } from './prompts';
 import { requestSkyLark } from '../../chart-generation/utils';
 import { parseRespondField } from '../../../gpt/dataProcess/query/utils';
 import { parseSkylarkResponseAsJSON, patchDataQueryInput } from './utils';
-import { queryDataset } from '../../../common/dataProcess/dataQuery';
+import { queryDataset } from '../../../applications/dataAggregation/taskNodes/executeQuery/dataQuery';
 
 /**
  * query the source dataset according to user's input and fieldInfo to get aggregated dataset
