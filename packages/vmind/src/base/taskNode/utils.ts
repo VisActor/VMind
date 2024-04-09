@@ -1,8 +1,8 @@
-import { GPTDataProcessResult, ILLMOptions, LLMResponse } from '../typings';
 import axios from 'axios';
 import JSON5 from 'json5';
 import { omit } from 'lodash';
-import { matchJSONStr } from '../common/utils';
+import { matchJSONStr } from '../../common/utils';
+import { ILLMOptions, LLMResponse } from './types';
 
 export const requestGPT = async (
   prompt: string,

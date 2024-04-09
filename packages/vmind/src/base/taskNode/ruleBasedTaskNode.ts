@@ -1,4 +1,4 @@
-import { Transformer } from 'src/baseTools/transformer';
+import { Transformer } from 'src/base/tools/transformer';
 import { BaseTaskNode } from './base';
 
 export class RuleBasedTaskNode<Input, Context, DSL> extends BaseTaskNode<Context, DSL> {

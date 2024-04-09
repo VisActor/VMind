@@ -1,8 +1,8 @@
-import { Prompt } from 'src/baseTools/prompt';
+import { Prompt } from 'src/base/tools/prompt';
 import { BaseTaskNode } from './base';
-import { Parser } from 'src/baseTools/parser';
-import { Patcher } from 'src/baseTools/patcher';
-import { ChatManager } from 'src/baseTools/chatManager';
+import { Parser } from 'src/base/tools/parser';
+import { Patcher } from 'src/base/tools/patcher';
+import { ChatManager } from 'src/base/tools/chatManager';
 import { ILLMOptions, RequestFunc } from './types';
 
 export class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions }, DSL> extends BaseTaskNode<Context, DSL> {
@@ -12,15 +12,15 @@ export class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions }, DSL> 
   requester: RequestFunc;
   chatManager: ChatManager;
 
-  constructor(context: Context) {
-    super(context);
+  constructor() {
+    super();
     this.chatManager = new ChatManager();
   }
 
-  async requestLLM() {
-    const { llmOptions } = this.context;
+  async requestLLM(context: Context) {
+    const { llmOptions } = context;
     const llmResponse = await this.requester(
-      this.prompt.getPrompt(),
+      this.prompt.getPrompt(context),
       this.chatManager.getLatestUserMessage().content,
       llmOptions
     );
@@ -33,16 +33,16 @@ export class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions }, DSL> 
     return this.parser.parse(llmResponse);
   }
 
-  patchLLMResponse(input: Partial<DSL>): DSL {
+  patchLLMResponse(input: Partial<DSL>, context: Context): DSL {
     //void function
     //A patcher must be initialized in the subclass.
-    return this.patcher.patch(input, this.context);
+    return this.patcher.patch(input, context);
   }
 
-  async executeTask() {
-    const llmResponse = await this.requestLLM();
+  async executeTask(context: Context) {
+    const llmResponse = await this.requestLLM(context);
     const parsedResponse = this.parseLLMResponse(llmResponse);
-    const patchedResponse = this.patchLLMResponse(parsedResponse);
+    const patchedResponse = this.patchLLMResponse(parsedResponse, context);
     return patchedResponse;
   }
 }

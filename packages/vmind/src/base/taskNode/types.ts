@@ -1,8 +1,16 @@
 export interface ITaskNode<Context, DSL> {
-  context: Context;
-  output: DSL;
-  executeTask: (() => Promise<Awaited<DSL>>) | (() => DSL);
+  executeTask: (context: Context) => Promise<DSL> | DSL;
 }
+
+export type LLMResponse = {
+  choices: {
+    index: number;
+    message: any;
+  }[];
+  usage: any;
+  [key: string]: any;
+};
+
 export type RequestFunc = (
   prompt: string,
   userMessage: string,

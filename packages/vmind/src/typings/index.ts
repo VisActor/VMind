@@ -120,15 +120,6 @@ export type ChartGenerationProps = {
 
 export type DataItem = Record<string, number | string>;
 
-export type LLMResponse = {
-  choices: {
-    index: number;
-    message: any;
-  }[];
-  usage: any;
-  [key: string]: any;
-};
-
 export type PatchContext = {
   chartType: string;
   cell: Cell;
