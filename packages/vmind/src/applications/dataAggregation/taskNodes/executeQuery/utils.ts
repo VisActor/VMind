@@ -427,3 +427,18 @@ export const convertGroupByToString = (sql: string, dataset: DataItem[]) => {
     });
   });
 };
+
+/**
+ * parse the respond field in data query to get field type and role
+ * @param fieldInfo
+ * @param responseFieldInfo
+ * @param dataset
+ */
+export const parseRespondField = (
+  responseFieldInfo: { fieldName: string; description?: string }[],
+  dataset: DataItem[]
+) =>
+  responseFieldInfo.map(field => ({
+    ...field,
+    ...detectFieldType(dataset, field.fieldName)
+  }));

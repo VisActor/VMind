@@ -1,3 +1,3 @@
-export interface ITaskNode<Context, DSL> {
-  executeTask: (context: Context) => Promise<DSL> | DSL;
+export interface ITaskNode<Input, Context, DSL> {
+  executeTask: (input: Input, context: Context) => Promise<DSL> | DSL;
 }

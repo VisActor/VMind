@@ -1,7 +1,10 @@
 import { DataItem, ILLMOptions, SimpleFieldInfo } from '../../../typings';
 import { parseGPTQueryResponse, parseRespondField, patchQueryInput } from './utils';
 import { DataQueryResponse } from './type';
-import { parseGPTResponse as parseGPTResponseAsJSON, requestGPT } from '../../../base/taskNode/utils';
+import {
+  parseGPTResponse as parseGPTResponseAsJSON,
+  requestGPT
+} from '../../../applications/dataAggregation/taskNodes/getQuerySQL/GPT/utils';
 import { getQueryDatasetPrompt } from '../prompts';
 import { queryDataset } from '../../../applications/dataAggregation/taskNodes/executeQuery/dataQuery';
 
