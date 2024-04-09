@@ -1,10 +1,14 @@
 import { Prompt } from 'src/base/tools/prompt';
-import { BaseTaskNode } from './base';
+import { BaseTaskNode } from './baseTaskNode';
 import { Parser } from 'src/base/tools/parser';
 import { Patcher } from 'src/base/tools/patcher';
 import { ChatManager } from 'src/base/tools/chatManager';
 import { ILLMOptions, RequestFunc } from './types';
 
+/**
+ * LLMBasedTaskNode is a task node that needs to use LLM to complete tasks
+ * Subclasses must assign values to prompt, parser, patcher, and requester
+ */
 export class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions }, DSL> extends BaseTaskNode<Context, DSL> {
   prompt: Prompt<Context>;
   parser: Parser<DSL>;
@@ -28,14 +32,10 @@ export class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions }, DSL> 
   }
 
   parseLLMResponse(llmResponse: any): Partial<DSL> {
-    //void function
-    //A parser must be initialized in the subclass.
     return this.parser.parse(llmResponse);
   }
 
   patchLLMResponse(input: Partial<DSL>, context: Context): DSL {
-    //void function
-    //A patcher must be initialized in the subclass.
     return this.patcher.patch(input, context);
   }
 
