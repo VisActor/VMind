@@ -14,14 +14,11 @@ export class Patcher<DSL, Context> implements IPatcher<DSL, Context> {
     this.pipelines = transformers;
   }
 
-  patch(input: Partial<DSL>, context: Context) {
-    const result: DSL = this.pipelines.reduce(
-      (pre: Partial<DSL>, transformer: Transformer<Partial<DSL>, Context, DSL>) => {
-        const result = transformer.transform(pre, context);
-        return result;
-      },
-      input
-    ) as DSL;
+  patch(input: any, context: Context) {
+    const result = this.pipelines.reduce((pre, pipeline) => {
+      const res = pipeline(pre, context);
+      return res;
+    }, input);
     return result;
   }
 }

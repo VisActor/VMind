@@ -1,8 +1,10 @@
 import axios from 'axios';
 import JSON5 from 'json5';
-import { omit } from 'lodash';
-import { matchJSONStr } from '../../common/utils';
+import { isArray, omit } from 'lodash';
+import { matchJSONStr } from 'src/common/utils';
 import { ILLMOptions, LLMResponse } from 'src/typings';
+import { GetQuerySQLResult } from '../types';
+import { Parser } from 'src/base/tools/parser';
 
 export const requestGPT = async (
   prompt: string,
@@ -42,7 +44,6 @@ export const requestGPT = async (
     return err.response.data;
   }
 };
-
 export const parseGPTJson = (JsonStr: string, prefix?: string) => {
   const parseNoPrefixStr = (str: string) => {
     //尝试不带前缀的解析
@@ -69,7 +70,7 @@ export const parseGPTJson = (JsonStr: string, prefix?: string) => {
   return res2;
 };
 
-export const parseGPTResponse = (GPTRes: LLMResponse) => {
+const parseGPTResponse = (GPTRes: LLMResponse) => {
   try {
     if (GPTRes.error) {
       return {
@@ -81,7 +82,7 @@ export const parseGPTResponse = (GPTRes: LLMResponse) => {
     const content = choices[0].message.content;
     const jsonStr = matchJSONStr(content);
 
-    const resJson: GPTDataProcessResult = parseGPTJson(jsonStr, '```');
+    const resJson = parseGPTJson(jsonStr, '```');
     return resJson;
   } catch (err: any) {
     return {
@@ -89,4 +90,42 @@ export const parseGPTResponse = (GPTRes: LLMResponse) => {
       message: err.message
     };
   }
+};
+
+type DataQueryResponse = GetQuerySQLResult & { THOUGHT: string };
+
+const parseGPTQueryResponse = (response: string) => {
+  const sql = response.match(/sql:\n?```(.*?)```/s)[1];
+  const fieldInfoStr = response.match(/fieldInfo:\n?```(.*?)```/s)[1];
+  let fieldInfo = [];
+  try {
+    const tempFieldInfo = JSON5.parse(fieldInfoStr);
+    if (isArray(tempFieldInfo)) {
+      fieldInfo = tempFieldInfo;
+    } else {
+      fieldInfo = tempFieldInfo.fieldInfo;
+    }
+  } catch (e) {
+    //fieldInfoStr is not a json string; try to wrap it with []
+    fieldInfo = JSON5.parse(`[${fieldInfoStr}]`);
+  }
+  return {
+    sql,
+    llmFieldInfo: fieldInfo
+  };
+};
+
+export const parseDataQueryResponse: Parser<LLMResponse, GetQuerySQLResult> = (gptResponse: LLMResponse) => {
+  const dataQueryResponse: DataQueryResponse = parseGPTResponse(gptResponse);
+  const { sql, llmFieldInfo: responseFiledInfo } = dataQueryResponse;
+  if (!sql || !responseFiledInfo) {
+    //try to parse the response with another format
+    const choices = gptResponse.choices;
+    const content = choices[0].message.content;
+    return {
+      ...parseGPTQueryResponse(content),
+      usage: gptResponse.usage
+    };
+  }
+  return { ...dataQueryResponse, usage: gptResponse.usage };
 };

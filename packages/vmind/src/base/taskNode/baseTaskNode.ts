@@ -6,8 +6,8 @@ import { ITaskNode } from './types';
  * TaskNode can be seen as a collection of a series of tools, responsible for completing a specific task.
  * Each Node can also be called as a separate function
  */
-export class BaseTaskNode<Context, DSL> implements ITaskNode<Context, DSL> {
-  executeTask(context: Context): Promise<DSL> | DSL {
-    return null as DSL;
+export class BaseTaskNode<Input, Context, Result> implements ITaskNode<Input, Context, Result> {
+  executeTask(input: Input, context: Context): Promise<Result> | Result {
+    return null as Result;
   }
 }

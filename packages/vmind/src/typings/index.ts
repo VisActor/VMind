@@ -49,14 +49,6 @@ export type SimpleFieldInfo = {
   role: ROLE;
   domain?: (string | number)[];
 };
-export type GPTDataProcessResult = {
-  fieldInfo: SimpleFieldInfo[];
-  videoDuration?: number;
-  colorPalette?: string[];
-  thought: string;
-  usefulFields: string[];
-  error?: boolean; //解析JSON出错
-};
 
 export type Cell = {
   //字段映射，可用的视觉通道：["x","y","color","size","angle","time"]

@@ -8,25 +8,22 @@ import { ILLMOptions, RequestFunc } from 'src/typings';
 export interface ILLMTaskNode<Context, DSL> {
   prompt: Prompt<Context>;
   chatManager: ChatManager;
-  parser: Parser<DSL>;
+  parser: Parser<any, DSL>;
   patcher: Patcher<DSL, Context>;
 
   requestLLM: (context: Context) => Promise<any>;
-  //parseLLMResponse: (response: any) => Partial<DSL>
-  //patchLLMResponse: (input: Partial<DSL>, context: Context) => DSL
-  //executeTask: (context: Context) => Promise<DSL>
 }
 /**
  * LLMBasedTaskNode is a task node that needs to use LLM to complete tasks
- * Subclasses must assign values to prompt, parser and patcher
+ * Subclasses must assign values to prompt, parser and patcher, and rewrite requestLLM function
  */
-export class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions }, DSL>
-  extends BaseTaskNode<Context, DSL>
+export class LLMBasedTaskNode<Input, Context extends { llmOptions: ILLMOptions }, DSL>
+  extends BaseTaskNode<Input, Context, DSL>
   implements ILLMTaskNode<Context, DSL>
 {
   prompt: Prompt<Context>;
   chatManager: ChatManager;
-  parser: Parser<DSL>;
+  parser: Parser<any, DSL>;
   patcher: Patcher<DSL, Context>;
 
   constructor() {
@@ -39,14 +36,14 @@ export class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions }, DSL>
   }
 
   parseLLMResponse(llmResponse: any): Partial<DSL> {
-    return this.parser.parse(llmResponse);
+    return this.parser(llmResponse);
   }
 
   patchLLMResponse(input: Partial<DSL>, context: Context): DSL {
     return this.patcher.patch(input, context);
   }
 
-  async executeTask(context: Context) {
+  async executeTask(_input: Input, context: Context) {
     const llmResponse = await this.requestLLM(context);
     const parsedResponse = this.parseLLMResponse(llmResponse);
     const patchedResponse = this.patchLLMResponse(parsedResponse, context);
