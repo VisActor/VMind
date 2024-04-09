@@ -8,8 +8,7 @@ import {
   sumAllMeasureFields
 } from './utils';
 import alasql from 'alasql';
-
-export const VMIND_DATA_SOURCE = 'VMind_data_source';
+import { VMIND_DATA_SOURCE } from '../../prompts/GPT/template';
 
 /**
  * SQL query for SourceDatset

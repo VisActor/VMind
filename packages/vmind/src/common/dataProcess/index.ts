@@ -1,6 +1,6 @@
 import { DataSet, DataView, csvParser, fold } from '@visactor/vdataset';
 import { DataItem, DataType, SimpleFieldInfo } from '../../typings';
-import { getFieldInfo } from './utils';
+import { getFieldInfo } from '../../applications/dataAggregation/taskNodes/executeQuery/utils';
 import { isNil } from 'lodash';
 
 export const parseCSVWithVChart = (csvString: string) => {

@@ -1,9 +1,9 @@
 import { sampleSize, isNumber, isInteger, isString, isArray, capitalize, startCase } from 'lodash';
-import { DataItem, DataType, ROLE, SimpleFieldInfo } from '../../typings';
+import { DataItem, DataType, ROLE, SimpleFieldInfo } from '../../../../typings';
 import dayjs from 'dayjs';
 import { uniqArray } from '@visactor/vutils';
 import alasql from 'alasql';
-import { RESERVE_REPLACE_MAP, operators } from './constants';
+import { RESERVE_REPLACE_MAP, operators } from '../../../../common/dataProcess/constants';
 
 export const readTopNLine = (csvFile: string, n: number) => {
   // get top n lines of a csv file

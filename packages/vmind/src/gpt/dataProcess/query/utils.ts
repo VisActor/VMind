@@ -7,7 +7,7 @@ import {
   generateRandomString,
   mergeMap,
   replaceNonASCIICharacters
-} from '../../../common/dataProcess/utils';
+} from '../../../applications/dataAggregation/taskNodes/executeQuery/utils';
 import { DataItem, SimpleFieldInfo } from '../../../typings';
 import { ASTParserContext, ASTParserPipe } from './type';
 

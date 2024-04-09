@@ -13,7 +13,7 @@ import { ASTParserContext, ASTParserPipe } from './type';
 import { checkIsColumnNode, toFirstUpperCase } from './utils';
 import { SimpleFieldInfo } from '../../../typings';
 import { isArray } from 'lodash';
-import { replaceString } from '../../../common/dataProcess/utils';
+import { replaceString } from '../../../applications/dataAggregation/taskNodes/executeQuery/utils';
 
 export const from: ASTParserPipe = (query: Partial<Query>, context: ASTParserContext) => {
   const { dataSource, fieldInfo } = context;

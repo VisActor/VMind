@@ -3,7 +3,7 @@ import { parseGPTQueryResponse, parseRespondField, patchQueryInput } from './uti
 import { DataQueryResponse } from './type';
 import { parseGPTResponse as parseGPTResponseAsJSON, requestGPT } from '../../../base/taskNode/utils';
 import { getQueryDatasetPrompt } from '../prompts';
-import { queryDataset } from '../../../common/dataProcess/dataQuery';
+import { queryDataset } from '../../../applications/dataAggregation/taskNodes/executeQuery/dataQuery';
 
 /**
  * query the source dataset according to user's input and fieldInfo to get aggregated dataset

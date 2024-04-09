@@ -2,7 +2,7 @@ import axios from 'axios';
 import JSON5 from 'json5';
 import { omit } from 'lodash';
 import { matchJSONStr } from '../../common/utils';
-import { ILLMOptions, LLMResponse } from './types';
+import { ILLMOptions, LLMResponse } from 'src/typings';
 
 export const requestGPT = async (
   prompt: string,

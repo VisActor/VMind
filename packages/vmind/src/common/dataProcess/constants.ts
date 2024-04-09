@@ -1,4 +1,4 @@
-import { generateRandomString } from './utils';
+import { generateRandomString } from '../../applications/dataAggregation/taskNodes/executeQuery/utils';
 
 export const alasqlKeywordList = [
   'ABSOLUTE',
