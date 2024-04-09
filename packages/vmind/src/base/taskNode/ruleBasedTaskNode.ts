@@ -1,22 +1,25 @@
 import { Transformer } from 'src/base/tools/transformer';
-import { BaseTaskNode } from './base';
+import { BaseTaskNode } from './baseTaskNode';
 
-export class RuleBasedTaskNode<Input, Context, DSL> extends BaseTaskNode<Context, DSL> {
-  input: Input;
+/**
+ * rule-based taskNode, which consists of a series of Pipelines
+ * It completes the transformation from Input to a specific data structure (DSL)
+ */
+export class RuleBasedTaskNode<Input, Context extends { input: Input }, DSL> extends BaseTaskNode<Context, DSL> {
   pipelines: Transformer<Input, Context, DSL>[];
-  constructor(input: Input, context: Context, pipelines: Transformer<Input, Context, DSL>[]) {
-    super(context);
-    this.input = input;
+  constructor(pipelines: Transformer<Input, Context, DSL>[]) {
+    super();
     this.pipelines = pipelines;
   }
 
-  executeTask() {
+  executeTask(context: Context) {
+    const { input } = context;
     const result: DSL = this.pipelines.reduce(
       (pre: Partial<DSL> | Input, transformer: Transformer<Partial<DSL> | Input, Context, DSL>) => {
-        const result = transformer.transform(pre, this.context);
+        const result = transformer.transform(pre, context);
         return result;
       },
-      this.input
+      input
     ) as DSL;
     return result;
   }

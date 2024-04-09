@@ -7,13 +7,13 @@ import { Transformer } from '../transformer';
  * Pass in the transformer during initialization
  */
 export class Parser<DSL> implements IParser<DSL> {
-  transformer: Transformer<string, unknown, DSL>;
+  transformer: Transformer<string, null, DSL>;
 
-  constructor(transformer: Transformer<string, unknown, DSL>) {
+  constructor(transformer: Transformer<string, null, DSL>) {
     this.transformer = transformer;
   }
 
   parse(input: string) {
-    return this.transformer.transform(input, {});
+    return this.transformer.transform(input, null);
   }
 }
