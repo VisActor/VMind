@@ -7,15 +7,39 @@ import { generateChartWithSkylark } from '../skylark/chart-generation';
 import { queryDatasetWithGPT } from '../gpt/dataProcess/query/queryDataset';
 import { generateChartWithAdvisor } from '../common/chartAdvisor';
 import { queryDatasetWithSkylark } from '../skylark/dataProcess/query/queryDataset';
+import applicationMetaList, { ApplicationType } from './applications';
+import { BaseApplication } from 'src/base/application';
+import { VMindApplicationMap } from './types';
 
 class VMind {
   private _FPS = 30;
   private _options: ILLMOptions | undefined;
   private _model: Model | string;
+  private _applicationMap: VMindApplicationMap;
 
   constructor(options?: ILLMOptions) {
     this._options = { ...(options ?? {}) };
     this._model = options.model ?? Model.GPT3_5;
+    this.registerApplications();
+  }
+
+  private registerApplications() {
+    const applicationList = {};
+    Object.keys(applicationMetaList).forEach(applicationName => {
+      applicationList[applicationName] = {};
+      const applicationMetaByModel = applicationMetaList[applicationName];
+      Object.keys(applicationMetaByModel).forEach(modelType => {
+        const applicationMeta = applicationMetaByModel[modelType];
+        applicationList[applicationName][modelType] = new BaseApplication(applicationMeta);
+      });
+    });
+    this._applicationMap = applicationList;
+  }
+
+  public addApplication() {}
+
+  private getApplication(name: ApplicationType, modelType: ModelType) {
+    return this._applicationMap[name][modelType];
   }
 
   /**
@@ -113,10 +137,17 @@ class VMind {
     dataset: DataItem[]
   ) {
     if (this.getModelType() === ModelType.GPT) {
-      return queryDatasetWithGPT(userPrompt, fieldInfo, dataset, this._options);
+      const context = {
+        userInput: userPrompt,
+        fieldInfo,
+        dataset,
+        llmOptions: this._options
+      };
+      const application = this.getApplication(ApplicationType.DataAggregation, ModelType.GPT);
+      return application.runTasks(context);
     }
     if (this.getModelType() === ModelType.SKYLARK) {
-      return queryDatasetWithSkylark(userPrompt, fieldInfo, dataset, this._options);
+      //return queryDatasetWithSkylark(userPrompt, fieldInfo, dataset, this._options);
     }
     console.error('unsupported model in data query!');
 
