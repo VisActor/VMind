@@ -1,12 +1,12 @@
 import { Prompt } from 'src/base/tools/prompt';
 import { getQueryDatasetPrompt } from './template';
-import { DataAggregationContext } from '../../../../types';
+import { GetQuerySQLContext } from 'src/applications/dataAggregation/types';
 
-export class GPTDataAggregationPrompt extends Prompt<DataAggregationContext> {
+export class GPTDataAggregationPrompt extends Prompt<GetQuerySQLContext> {
   constructor() {
     super('');
   }
-  getPrompt(context: DataAggregationContext) {
+  getPrompt(context: GetQuerySQLContext) {
     const { llmOptions } = context;
     const QueryDatasetPrompt = getQueryDatasetPrompt(llmOptions.showThoughts ?? true);
     return QueryDatasetPrompt;

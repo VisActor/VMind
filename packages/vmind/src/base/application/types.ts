@@ -1,14 +1,14 @@
+import { ApplicationMeta } from '../metaTypes';
 import { BaseTaskNode } from '../taskNode/baseTaskNode';
 import { ChatManager } from '../tools/chatManager';
 
 export interface IApplication<Context, Spec> {
-  tasks: {
-    name: string;
-    task: BaseTaskNode<Context, any>;
-  }[];
+  tasks: { task: BaseTaskNode<Context, any>; name: string }[];
   context: Context;
   chatManager: ChatManager;
 
-  runTasks: () => Promise<Spec>;
+  registerTaskNodes: (tasks: ApplicationMeta) => void;
+
+  runTasks: (context: Context) => Promise<Spec>;
   updateContext: (context: Context) => void;
 }

@@ -1,25 +1,17 @@
-import { ILLMTaskNode, LLMBasedTaskNode } from 'src/base/taskNode/llmBasedTaskNode';
-import { parseDataQueryResponse, requestGPT } from './utils';
+import { dataQueryRequestLLM, parseDataQueryResponse } from './utils';
 import { GPTDataAggregationPrompt } from './prompt';
 import { GetQuerySQLContext, GetQuerySQLOutput } from 'src/applications/dataAggregation/types';
+import { LLMBasedTaskNodeMeta } from 'src/base/metaTypes';
+import { TaskNodeType } from 'src/base/taskNode/types';
+import { ModelType } from 'src/typings';
 
-export class GetSQLNode
-  extends LLMBasedTaskNode<GetQuerySQLContext, GetQuerySQLOutput>
-  implements ILLMTaskNode<GetQuerySQLContext, GetQuerySQLOutput>
-{
-  constructor() {
-    super();
-    this.prompt = new GPTDataAggregationPrompt();
-    this.parser = parseDataQueryResponse;
-  }
+const GetSQLTaskNodeGPTMeta: LLMBasedTaskNodeMeta<GetQuerySQLContext, GetQuerySQLOutput> = {
+  type: TaskNodeType.LLM_BASED,
+  modelType: ModelType.GPT,
+  parser: parseDataQueryResponse,
+  patcher: [(input: Partial<GetQuerySQLOutput>, context: GetQuerySQLContext) => input as GetQuerySQLOutput],
+  requester: dataQueryRequestLLM,
+  prompt: new GPTDataAggregationPrompt()
+};
 
-  async requestLLM(context: GetQuerySQLContext): Promise<any> {
-    const { userInput, fieldInfo, llmOptions } = context;
-    const queryDatasetMessage = `User's Command: ${userInput}\nColumn Information: ${JSON.stringify(fieldInfo)}`;
-
-    const requestFunc = llmOptions.customRequestFunc?.dataQuery ?? requestGPT;
-    const QueryDatasetPrompt = this.prompt.getPrompt(context);
-    const dataProcessRes = await requestFunc(QueryDatasetPrompt, queryDatasetMessage, llmOptions);
-    return dataProcessRes;
-  }
-}
+export default GetSQLTaskNodeGPTMeta;

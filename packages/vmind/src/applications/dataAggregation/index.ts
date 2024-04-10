@@ -1,5 +1,15 @@
-import { BaseApplication } from 'src/base/application';
-import { SQL } from './types';
-import { DataItem } from 'src/typings';
+import { ApplicationMeta } from 'src/base/metaTypes';
+import ExecuteQueryTaskNodeMeta from './taskNodes/executeQuery';
+import GetSQLTaskNodeGPTMeta from './taskNodes/getQuerySQL/GPT';
+import { ModelType } from 'src/typings';
 
-export class DataAggregationApplication extends BaseApplication<{}, DataItem> {}
+const dataAggregationGPTMeta: ApplicationMeta = [
+  { taskNode: GetSQLTaskNodeGPTMeta, name: 'getQuerySQL' },
+  { taskNode: ExecuteQueryTaskNodeMeta, name: 'executeQuery' }
+];
+
+const dataAggregationMetaByModel = {
+  [ModelType.GPT]: dataAggregationGPTMeta
+};
+
+export default dataAggregationMetaByModel;

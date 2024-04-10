@@ -1,4 +1,4 @@
-import { ITaskNode } from './types';
+import { ITaskNode, TaskNodeType } from './types';
 
 /**
  * A task node in VMind application, used to complete a specific task, such as requesting a large model for chart type, DSL parsing and conversion, etc.
@@ -8,7 +8,7 @@ import { ITaskNode } from './types';
  */
 export class BaseTaskNode<Context, Result> implements ITaskNode<Context, Result> {
   context: Context;
-
+  type: TaskNodeType;
   executeTask(context: Context): Promise<Result> | Result {
     this.updateContext(context);
     return null as Result;
