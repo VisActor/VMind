@@ -1,4 +1,4 @@
-import { DataItem, ILLMOptions, SimpleFieldInfo, VMindDataset } from 'src/typings';
+import { SimpleFieldInfo } from 'src/typings';
 import { DataAggregationContext, DataAggregationOutput } from '../types';
 
 export type SQL = string;

@@ -28,4 +28,7 @@ export type TaskNode<Context> = {
   taskNode: TaskNodeMeta<Context, any>;
 };
 
-export type ApplicationMeta = TaskNode<any>[];
+export type ApplicationMeta<Input, Output> = {
+  name: string;
+  taskNodes: TaskNode<any>[];
+};

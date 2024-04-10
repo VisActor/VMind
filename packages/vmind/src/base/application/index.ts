@@ -13,16 +13,18 @@ import { RuleBasedTaskNode } from '../taskNode/ruleBasedTaskNode';
  * Application can be seen as a collection of a series of TaskNodes. Applications can reference each other (equivalent to reusing TaskNodes to complete tasks)
  */
 export class BaseApplication<Context, DSL> implements IApplication<Context, DSL> {
+  name: string;
   tasks: { task: BaseTaskNode<Context, any>; name: string }[];
   context: Context;
   chatManager: ChatManager;
-  constructor(taskNodeList: ApplicationMeta) {
+  constructor(meta: ApplicationMeta<any, any>) {
     this.chatManager = new ChatManager();
-    this.registerTaskNodes(taskNodeList);
+    this.name = meta.name;
+    this.registerTaskNodes(meta);
   }
 
-  registerTaskNodes(taskNodeList: ApplicationMeta) {
-    const taskNodeInstanceList = taskNodeList.map((taskInfo: TaskNode<Context>) => {
+  registerTaskNodes(meta: ApplicationMeta<any, any>) {
+    const taskNodeInstanceList = meta.taskNodes.map((taskInfo: TaskNode<Context>) => {
       const { taskNode, name } = taskInfo;
       const { type } = taskNode;
       if (type === TaskNodeType.LLM_BASED) {
@@ -42,11 +44,18 @@ export class BaseApplication<Context, DSL> implements IApplication<Context, DSL>
     this.tasks = taskNodeInstanceList;
   }
 
+  /**
+   * run the task nodes of this application
+   * The output results of the preceding nodes are treated as the context of all subsequent nodes.
+   * @param context initial context of this application
+   * @returns DSL
+   */
   async runTasks(context: Context) {
     this.updateContext(context);
     const result: DSL = this.tasks.reduce(
       async (pre: any, curTask: { name: string; task: BaseTaskNode<Context, any> }) => {
         const result = await curTask.task.executeTask(this.context);
+        //Put the running result of the current node into the context.
         this.updateContext({
           ...this.context,
           ...result
