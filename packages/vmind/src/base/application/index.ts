@@ -40,6 +40,7 @@ export class BaseApplication<Context, DSL> implements IApplication<Context, DSL>
           task: new RuleBasedTaskNode(pipelines)
         };
       }
+      return {} as { task: BaseTaskNode<Context, any>; name: string };
     });
     this.tasks = taskNodeInstanceList;
   }
