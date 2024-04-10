@@ -28,15 +28,13 @@ export class BaseApplication<Context, DSL> implements IApplication<Context, DSL>
 
   async runTasks() {
     const result: DSL = this.tasks.reduce(
-      async (
-        pre: any,
-        curTask: {
-          name: string;
-          task: BaseTaskNode<Context, any>;
-        }
-      ) => {
-        const result = await curTask.task.executeTask(pre);
-        return result;
+      async (pre: any, curTask: { name: string; task: BaseTaskNode<Context, any> }) => {
+        const result = await curTask.task.executeTask(this.context);
+        this.updateContext({
+          ...this.context,
+          ...result
+        });
+        return this.context;
       },
       this.context
     );
