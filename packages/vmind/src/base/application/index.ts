@@ -55,6 +55,7 @@ export class BaseApplication<Context, DSL> implements IApplication<Context, DSL>
     const result: DSL = this.tasks.reduce(
       async (pre: any, curTask: { name: string; task: BaseTaskNode<Context, any> }) => {
         const result = await curTask.task.executeTask(this.context);
+        console.log(result);
         //Put the running result of the current node into the context.
         this.updateContext({
           ...this.context,
