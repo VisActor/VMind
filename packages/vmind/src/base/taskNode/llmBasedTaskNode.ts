@@ -53,7 +53,7 @@ export default class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions 
 
   async requestLLM(context: Context): Promise<any> {
     const prompt = this.prompt.getPrompt(context);
-    return this.requester(prompt, context);
+    return await this.requester(prompt, context);
   }
 
   parseLLMResponse(llmResponse: any): Partial<DSL> {

@@ -1,5 +1,4 @@
 import dataAggregationMetaByModel from 'src/applications/dataAggregation';
-import { ModelType } from 'src/typings';
 
 export enum ApplicationType {
   DataAggregation = 'dataAggregation'

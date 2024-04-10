@@ -3,7 +3,6 @@ import ExecuteQueryTaskNodeMeta from './taskNodes/executeQuery';
 import GetSQLTaskNodeGPTMeta from './taskNodes/getQuerySQL/GPT';
 import { ModelType } from 'src/typings';
 import { DataAggregationContext, DataAggregationOutput } from '../types';
-import { ApplicationType } from 'src/core/applications';
 
 /**
  * data aggregation application in vmind
@@ -13,7 +12,7 @@ import { ApplicationType } from 'src/core/applications';
  * finally it runs the sql using alasql and return the final dataset and fieldInfo (DataAggregationOutput)
  */
 const dataAggregationGPTMeta: ApplicationMeta<DataAggregationContext, DataAggregationOutput> = {
-  name: ApplicationType.DataAggregation,
+  name: 'dataAggregation',
   taskNodes: [
     { taskNode: GetSQLTaskNodeGPTMeta, name: 'getQuerySQL' },
     { taskNode: ExecuteQueryTaskNodeMeta, name: 'executeQuery' }
