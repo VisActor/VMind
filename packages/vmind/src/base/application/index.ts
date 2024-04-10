@@ -52,23 +52,33 @@ export class BaseApplication<Context, DSL> implements IApplication<Context, DSL>
    */
   async runTasks(context: Context) {
     this.updateContext(context);
-    const result: DSL = this.tasks.reduce(
-      async (pre: any, curTask: { name: string; task: BaseTaskNode<Context, any> }) => {
-        const result = await curTask.task.executeTask(this.context);
-        console.log(result);
-        //Put the running result of the current node into the context.
-        this.updateContext({
-          ...this.context,
-          ...result
-        });
-        return this.context;
-      },
-      this.context
-    );
+
+    const handler = async (pre: any, curTask: { name: string; task: BaseTaskNode<Context, any> }) => {
+      console.log(curTask.name);
+      const result = await curTask.task.executeTask(this.context);
+      console.log(result);
+      //Put the running result of the current node into the context.
+      this.updateContext({
+        ...this.context,
+        ...result
+      });
+      return this.context;
+    };
+
+    const result: DSL = await asyncReduce(this.tasks, handler, this.context);
     return result;
   }
 
   updateContext(context: Context) {
     this.context = context;
   }
+}
+async function asyncReduce(array: any[], handler: Function, initialValue: any) {
+  let result = initialValue;
+
+  for (const item of array) {
+    result = await handler(result, item);
+  }
+
+  return result;
 }

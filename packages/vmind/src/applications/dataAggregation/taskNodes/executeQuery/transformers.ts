@@ -85,7 +85,9 @@ export const executeDataQuery: Transformer<PatchSQLResult, ExecuteQueryContext, 
   };
 };
 
-type RestoreResult = VMindDataset;
+type RestoreResult = QueryResult & {
+  datasetAfterQuery: VMindDataset;
+};
 /**
  * restore the dataset after query according to replace maps
  * @param input
@@ -103,15 +105,18 @@ export const restoreDatasetAfterQuery: Transformer<QueryResult, ExecuteQueryCont
   const sqlReversedMap = swapMap(sqlReplaceMap);
   const sqlRestoredDataset = replaceDataset(columnRestoredDataset, sqlReversedMap, false);
 
-  return sqlRestoredDataset;
+  return {
+    ...input,
+    datasetAfterQuery: sqlRestoredDataset
+  };
 };
 
-export const getFinalQueryResult: Transformer<RestoreResult, ExecuteQueryContext, ExecuteQueryOutput> = (
+export const getFinalQueryResult: Transformer<QueryResult & RestoreResult, ExecuteQueryContext, ExecuteQueryOutput> = (
   input: RestoreResult,
   context: ExecuteQueryContext
 ) => {
-  const { llmFieldInfo: responseFieldInfo, sourceDataset, fieldInfo, usage } = context;
-  const datasetAfterQuery = input;
+  const { sourceDataset, fieldInfo, usage, llmFieldInfo: responseFieldInfo } = context;
+  const { datasetAfterQuery } = input;
   const fieldInfoNew = parseRespondField(responseFieldInfo, datasetAfterQuery);
   if (datasetAfterQuery.length === 0) {
     console.warn('empty dataset after query!');

@@ -1,10 +1,10 @@
 import { _chatToVideoWasm } from '../chart-to-video';
 import { ILLMOptions, TimeType, Model, SimpleFieldInfo, DataItem, OuterPackages, ModelType } from '../typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
-import { generateChartWithAdvisor } from '../common/chartAdvisor';
 import applicationMetaList, { ApplicationType } from './applications';
 import { VMindApplicationMap } from './types';
 import { BaseApplication } from 'src/base/application';
+import { DataAggregationContext } from 'src/applications/types';
 
 class VMind {
   private _FPS = 30;
@@ -72,10 +72,10 @@ class VMind {
     dataset: DataItem[]
   ) {
     if (this.getModelType() === ModelType.GPT) {
-      const context = {
+      const context: DataAggregationContext = {
         userInput: userPrompt,
         fieldInfo,
-        dataset,
+        sourceDataset: dataset,
         llmOptions: this._options
       };
       const application = this.getApplication(ApplicationType.DataAggregation, ModelType.GPT);
