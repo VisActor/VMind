@@ -1,10 +1,12 @@
 import { RuleBasedTaskNode } from 'src/base/taskNode/ruleBasedTaskNode';
 import { executeDataQuery, getFinalQueryResult, patchSQLBeforeQuery, restoreDatasetAfterQuery } from './transformers';
 import { ExecuteQueryContext, ExecuteQueryOutput } from '../../types';
+import { RuleBasedTaskNodeMeta } from 'src/base/metaTypes';
+import { TaskNodeType } from 'src/base/taskNode/types';
 
-export const ExecuteQueryTaskNode = new RuleBasedTaskNode<ExecuteQueryContext, ExecuteQueryOutput>([
-  patchSQLBeforeQuery,
-  executeDataQuery,
-  restoreDatasetAfterQuery,
-  getFinalQueryResult
-]);
+const ExecuteQueryTaskNodeMeta: RuleBasedTaskNodeMeta<ExecuteQueryContext, ExecuteQueryOutput> = {
+  type: TaskNodeType.RULE_BASED,
+  pipelines: [patchSQLBeforeQuery, executeDataQuery, restoreDatasetAfterQuery, getFinalQueryResult]
+};
+
+export default ExecuteQueryTaskNodeMeta;

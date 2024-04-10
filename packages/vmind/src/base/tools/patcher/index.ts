@@ -1,4 +1,3 @@
-import { IPatcher } from './types';
 import { Transformer } from '../transformer';
 
 /**
@@ -8,17 +7,5 @@ import { Transformer } from '../transformer';
  * patch method is responsible for executing pipelines, patch the input based on Context, and return the final DSL
  * pass the specific pipelines during initialization
  */
-export class Patcher<DSL, Context> implements IPatcher<DSL, Context> {
-  pipelines: Transformer<Partial<DSL>, Context, DSL>[];
-  constructor(transformers: Transformer<Partial<DSL>, Context, DSL>[]) {
-    this.pipelines = transformers;
-  }
 
-  patch(input: any, context: Context) {
-    const result = this.pipelines.reduce((pre, pipeline) => {
-      const res = pipeline(pre, context);
-      return res;
-    }, input);
-    return result;
-  }
-}
+export type Patcher<Context, DSL> = Transformer<Partial<DSL>, Context, DSL>[];

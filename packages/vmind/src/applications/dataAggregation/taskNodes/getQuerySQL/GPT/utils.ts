@@ -5,6 +5,8 @@ import { matchJSONStr } from 'src/common/utils';
 import { ILLMOptions, LLMResponse } from 'src/typings';
 import { GetQuerySQLResult } from '../types';
 import { Parser } from 'src/base/tools/parser';
+import { GetQuerySQLContext } from 'src/applications/dataAggregation/types';
+import { Requester } from 'src/base/tools/requester';
 
 export const requestGPT = async (
   prompt: string,
@@ -128,4 +130,17 @@ export const parseDataQueryResponse: Parser<LLMResponse, GetQuerySQLResult> = (g
     };
   }
   return { ...dataQueryResponse, usage: gptResponse.usage };
+};
+
+export const dataQueryRequestLLM: Requester<GetQuerySQLContext> = async (
+  prompt: string,
+  context: GetQuerySQLContext
+) => {
+  const { userInput, fieldInfo, llmOptions } = context;
+  const queryDatasetMessage = `User's Command: ${userInput}\nColumn Information: ${JSON.stringify(fieldInfo)}`;
+
+  const requestFunc = llmOptions.customRequestFunc?.dataQuery ?? requestGPT;
+  const QueryDatasetPrompt = prompt;
+  const dataProcessRes = await requestFunc(QueryDatasetPrompt, queryDatasetMessage, llmOptions);
+  return dataProcessRes;
 };
