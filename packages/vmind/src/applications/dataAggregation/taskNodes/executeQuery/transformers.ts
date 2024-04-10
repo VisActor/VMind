@@ -1,6 +1,6 @@
 import { Transformer } from 'src/base/tools/transformer';
 import { SimpleFieldInfo, VMindDataset } from 'src/typings';
-import { DataAggregationResult, SQL } from '../../types';
+import { ExecuteQueryContext, ExecuteQueryOutput, SQL } from '../../types';
 import {
   parseRespondField,
   replaceBlankSpace,
@@ -12,7 +12,6 @@ import {
 } from './utils';
 import alasql from 'alasql';
 import { VMIND_DATA_SOURCE } from '../getQuerySQL/GPT/prompt/template';
-import { ExecuteQueryContext, ExecuteQueryInput } from './types';
 
 /**
  * patch the errors in sql according to the feature of alasql:
@@ -28,14 +27,14 @@ type PatchSQLResult = {
   columnReplaceMap: Map<string, string>;
   sqlReplaceMap: Map<string, string>;
 };
-export const patchSQLBeforeQuery: Transformer<ExecuteQueryInput, ExecuteQueryContext, PatchSQLResult> = (
+export const patchSQLBeforeQuery: Transformer<ExecuteQueryContext, ExecuteQueryContext, PatchSQLResult> = (
   input,
   context: ExecuteQueryContext
 ) => {
   const { sql } = input;
   const { sourceDataset } = context;
   const { fieldInfo } = context;
-  const fieldNames = fieldInfo.map(field => field.fieldName);
+  const fieldNames = fieldInfo.map((field: SimpleFieldInfo) => field.fieldName);
   const { validStr, sqlReplaceMap, columnReplaceMap } = replaceInvalidWords(sql, fieldNames);
 
   //replace field names according to replaceMap
@@ -46,8 +45,8 @@ export const patchSQLBeforeQuery: Transformer<ExecuteQueryInput, ExecuteQueryCon
 
   //replace blank spaces in column name
   const replacedFieldNames = fieldNames
-    .map(field => replaceString(field, columnReplaceMap))
-    .map(field => replaceString(field, sqlReplaceMap));
+    .map((field: string | number) => replaceString(field, columnReplaceMap))
+    .map((field: string | number) => replaceString(field, sqlReplaceMap));
   const validSql = replaceBlankSpace(validStr, replacedFieldNames as string[]);
 
   //sum all the non-aggregation measure columns
@@ -107,7 +106,7 @@ export const restoreDatasetAfterQuery: Transformer<QueryResult, ExecuteQueryCont
   return sqlRestoredDataset;
 };
 
-export const getFinalQueryResult: Transformer<RestoreResult, ExecuteQueryContext, DataAggregationResult> = (
+export const getFinalQueryResult: Transformer<RestoreResult, ExecuteQueryContext, ExecuteQueryOutput> = (
   input: RestoreResult,
   context: ExecuteQueryContext
 ) => {

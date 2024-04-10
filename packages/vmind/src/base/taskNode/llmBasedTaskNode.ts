@@ -17,8 +17,8 @@ export interface ILLMTaskNode<Context, DSL> {
  * LLMBasedTaskNode is a task node that needs to use LLM to complete tasks
  * Subclasses must assign values to prompt, parser and patcher, and rewrite requestLLM function
  */
-export class LLMBasedTaskNode<Input, Context extends { llmOptions: ILLMOptions }, DSL>
-  extends BaseTaskNode<Input, Context, DSL>
+export class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions }, DSL>
+  extends BaseTaskNode<Context, DSL>
   implements ILLMTaskNode<Context, DSL>
 {
   prompt: Prompt<Context>;
@@ -29,9 +29,11 @@ export class LLMBasedTaskNode<Input, Context extends { llmOptions: ILLMOptions }
   constructor() {
     super();
     this.chatManager = new ChatManager();
+    this.patcher = new Patcher<DSL, Context>([(input: Partial<DSL>, context: Context) => input as DSL]);
   }
 
   async requestLLM(context: Context): Promise<any> {
+    this.updateContext(context);
     return null;
   }
 
@@ -43,7 +45,8 @@ export class LLMBasedTaskNode<Input, Context extends { llmOptions: ILLMOptions }
     return this.patcher.patch(input, context);
   }
 
-  async executeTask(_input: Input, context: Context) {
+  async executeTask(context: Context) {
+    this.updateContext(context);
     const llmResponse = await this.requestLLM(context);
     const parsedResponse = this.parseLLMResponse(llmResponse);
     const patchedResponse = this.patchLLMResponse(parsedResponse, context);
