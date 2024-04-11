@@ -1,5 +1,5 @@
 import { ILLMOptions, LLMResponse } from 'src/typings';
-import { matchJSONStr, replaceAll } from 'src/common/utils';
+import { matchJSONStr, replaceAll } from 'src/common/utils/utils';
 import { GetQuerySQLContext } from 'src/applications/dataAggregation/types';
 import { Requester } from 'src/base/tools/requester';
 import axios from 'axios';

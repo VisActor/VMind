@@ -47,7 +47,7 @@ import {
 } from './pipes';
 import { Cell, ChartType, Context, SimpleFieldInfo } from '../../typings';
 import { isArray } from 'lodash';
-import { execPipeline } from '../utils';
+import { execPipeline } from '../utils/utils';
 
 export const vizDataToSpec = (
   dataset: any[],

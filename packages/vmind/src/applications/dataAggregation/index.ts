@@ -1,9 +1,9 @@
 import { ApplicationMeta } from 'src/base/metaTypes';
 import ExecuteQueryTaskNodeMeta from './taskNodes/executeQuery';
-import GetSQLTaskNodeGPTMeta from './taskNodes/getQuerySQL/GPT';
+import GetSQLTaskNodeGPTMeta from './taskNodes/generateQuerySQL/GPT';
 import { ModelType } from 'src/typings';
 import { DataAggregationContext, DataAggregationOutput } from '../types';
-import GetSQLTaskNodeSkylarkMeta from './taskNodes/getQuerySQL/skylark';
+import GetSQLTaskNodeSkylarkMeta from './taskNodes/generateQuerySQL/skylark';
 
 /**
  * data aggregation application in vmind

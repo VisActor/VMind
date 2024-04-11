@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { uniqArray } from '@visactor/vutils';
 import alasql from 'alasql';
 import { RESERVE_REPLACE_MAP, operators } from '../../../../common/dataProcess/constants';
-import { replaceAll } from 'src/common/utils';
+import { replaceAll } from 'src/common/utils/utils';
 
 export const readTopNLine = (csvFile: string, n: number) => {
   // get top n lines of a csv file
