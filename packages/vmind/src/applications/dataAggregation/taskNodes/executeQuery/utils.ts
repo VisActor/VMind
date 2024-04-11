@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { uniqArray } from '@visactor/vutils';
 import alasql from 'alasql';
 import { RESERVE_REPLACE_MAP, operators } from '../../../../common/dataProcess/constants';
+import { replaceAll } from 'src/common/utils';
 
 export const readTopNLine = (csvFile: string, n: number) => {
   // get top n lines of a csv file
@@ -295,10 +296,6 @@ export const replaceInvalidWords = (sql: string, columns: string[]) => {
   const { validStr: sqlWithoutAscii, replaceMap: asciiReplaceMap } = replaceNonASCIICharacters(sqlWithoutOperator);
 
   return { validStr: sqlWithoutAscii, columnReplaceMap: operatorReplaceMap, sqlReplaceMap: asciiReplaceMap };
-};
-
-export const replaceAll = (originStr: string, replaceStr: string, newStr: string) => {
-  return originStr.split(replaceStr).join(newStr);
 };
 
 /**

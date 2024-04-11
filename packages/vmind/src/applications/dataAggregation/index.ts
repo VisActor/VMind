@@ -3,6 +3,7 @@ import ExecuteQueryTaskNodeMeta from './taskNodes/executeQuery';
 import GetSQLTaskNodeGPTMeta from './taskNodes/getQuerySQL/GPT';
 import { ModelType } from 'src/typings';
 import { DataAggregationContext, DataAggregationOutput } from '../types';
+import GetSQLTaskNodeSkylarkMeta from './taskNodes/getQuerySQL/skylark';
 
 /**
  * data aggregation application in vmind
@@ -19,8 +20,17 @@ const dataAggregationGPTMeta: ApplicationMeta<DataAggregationContext, DataAggreg
   ]
 };
 
+const dataAggregationSkylarkMeta: ApplicationMeta<DataAggregationContext, DataAggregationOutput> = {
+  name: 'dataAggregation',
+  taskNodes: [
+    { taskNode: GetSQLTaskNodeSkylarkMeta, name: 'getQuerySQL' },
+    { taskNode: ExecuteQueryTaskNodeMeta, name: 'executeQuery' }
+  ]
+};
+
 const dataAggregationMetaByModel = {
-  [ModelType.GPT]: dataAggregationGPTMeta
+  [ModelType.GPT]: dataAggregationGPTMeta,
+  [ModelType.SKYLARK]: dataAggregationSkylarkMeta
 };
 
 export default dataAggregationMetaByModel;

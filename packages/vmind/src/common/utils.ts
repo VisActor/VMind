@@ -12,6 +12,10 @@ export const calculateTokenUsage = (usageList: any[]) => {
   return totalUsage;
 };
 
+export const replaceAll = (originStr: string, replaceStr: string, newStr: string) => {
+  return originStr.split(replaceStr).join(newStr);
+};
+
 export const execPipeline = <PipelineContext>(
   src: any,
   pipes: ((src: any, context: PipelineContext) => any)[],

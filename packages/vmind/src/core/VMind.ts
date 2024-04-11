@@ -37,6 +37,11 @@ class VMind {
     return this._applicationMap[name][modelType];
   }
 
+  private async runApplication(applicationName: ApplicationType, modelType: ModelType, context: any) {
+    const application = this.getApplication(applicationName, modelType);
+    return application.runTasks(context);
+  }
+
   /**
    * parse csv string and get the name, type of each field using rule-based method.
    * @param csvString csv data user want to visualize
@@ -71,22 +76,14 @@ class VMind {
     fieldInfo: SimpleFieldInfo[],
     dataset: DataItem[]
   ) {
-    if (this.getModelType() === ModelType.GPT) {
-      const context: DataAggregationContext = {
-        userInput: userPrompt,
-        fieldInfo,
-        sourceDataset: dataset,
-        llmOptions: this._options
-      };
-      const application = this.getApplication(ApplicationType.DataAggregation, ModelType.GPT);
-      return application.runTasks(context);
-    }
-    if (this.getModelType() === ModelType.SKYLARK) {
-      //return queryDatasetWithSkylark(userPrompt, fieldInfo, dataset, this._options);
-    }
-    console.error('unsupported model in data query!');
-
-    return { fieldInfo: [], dataset } as any;
+    const modelType = this.getModelType();
+    const context: DataAggregationContext = {
+      userInput: userPrompt,
+      fieldInfo,
+      sourceDataset: dataset,
+      llmOptions: this._options
+    };
+    return await this.runApplication(ApplicationType.DataAggregation, modelType, context);
   }
 
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {
