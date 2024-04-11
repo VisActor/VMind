@@ -20,7 +20,10 @@ import {
   patchYField
 } from './patcher';
 
-const GetSQLTaskNodeGPTMeta: LLMBasedTaskNodeMeta<GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput> = {
+const ChartGenerationTaskNodeGPTMeta: LLMBasedTaskNodeMeta<
+  GenerateChartAndFieldMapContext,
+  GenerateChartAndFieldMapOutput
+> = {
   type: TaskNodeType.LLM_BASED,
   modelType: ModelType.GPT,
   parser: parseChartGenerationResponse,
@@ -42,4 +45,4 @@ const GetSQLTaskNodeGPTMeta: LLMBasedTaskNodeMeta<GenerateChartAndFieldMapContex
   prompt: new GPTChartGenerationPrompt()
 };
 
-export default GetSQLTaskNodeGPTMeta;
+export default ChartGenerationTaskNodeGPTMeta;

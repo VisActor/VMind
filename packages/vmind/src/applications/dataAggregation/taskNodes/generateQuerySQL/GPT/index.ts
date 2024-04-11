@@ -9,7 +9,7 @@ const GetSQLTaskNodeGPTMeta: LLMBasedTaskNodeMeta<GetQuerySQLContext, GetQuerySQ
   type: TaskNodeType.LLM_BASED,
   modelType: ModelType.GPT,
   parser: parseDataQueryResponse,
-  patcher: [(input: Partial<GetQuerySQLOutput>, context: GetQuerySQLContext) => input as GetQuerySQLOutput],
+  patcher: [(input: GetQuerySQLContext) => input as unknown as GetQuerySQLOutput],
   requester: dataQueryRequestLLM,
   prompt: new GPTDataAggregationPrompt()
 };
