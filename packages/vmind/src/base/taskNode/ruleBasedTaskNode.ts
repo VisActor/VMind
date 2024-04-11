@@ -5,7 +5,6 @@ import { TaskNodeType } from './types';
 /**
  * rule-based taskNode, which consists of a series of Pipelines
  * It completes the transformation from Input to a specific data structure (DSL)
- * subclasses must call registerPipelines in their constructor
  */
 export class RuleBasedTaskNode<Context, Result> extends BaseTaskNode<Context, Result> {
   pipelines: Transformer<any, Context, any>[];
