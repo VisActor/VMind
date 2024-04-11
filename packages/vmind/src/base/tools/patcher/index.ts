@@ -8,4 +8,4 @@ import { Transformer } from '../transformer';
  * pass the specific pipelines during initialization
  */
 
-export type Patcher<Context, DSL> = Transformer<Partial<DSL>, Context, DSL>[];
+export type Patcher<Context, DSL> = Transformer<DSL, Context, DSL>[];

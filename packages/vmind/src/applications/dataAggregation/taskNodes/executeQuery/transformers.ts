@@ -11,7 +11,7 @@ import {
   swapMap
 } from './utils';
 import alasql from 'alasql';
-import { VMIND_DATA_SOURCE } from '../getQuerySQL/GPT/prompt/template';
+import { VMIND_DATA_SOURCE } from '../generateQuerySQL/GPT/prompt/template';
 
 /**
  * patch the errors in sql according to the feature of alasql:
