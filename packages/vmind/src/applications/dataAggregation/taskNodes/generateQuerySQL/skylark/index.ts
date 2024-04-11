@@ -9,7 +9,7 @@ const GetSQLTaskNodeSkylarkMeta: LLMBasedTaskNodeMeta<GetQuerySQLContext, GetQue
   type: TaskNodeType.LLM_BASED,
   modelType: ModelType.SKYLARK,
   parser: parseSkylarkResponseAsJSON,
-  patcher: [(input: Partial<GetQuerySQLOutput>, context: GetQuerySQLContext) => input as GetQuerySQLOutput],
+  patcher: [(input: GetQuerySQLContext) => input as unknown as GetQuerySQLOutput],
   requester: dataQueryRequestLLM,
   prompt: new SkylarkDataAggregationPrompt()
 };

@@ -28,7 +28,7 @@ export type GenerateChartTypeOutput = {
   chartType: ChartType;
 };
 
-export type GenerateFieldMapContext = GenerateChartTypeOutput & GenerateChartTypeOutput;
+export type GenerateFieldMapContext = GenerateChartTypeContext & GenerateChartTypeOutput;
 
 export type GenerateFieldMapOutput = {
   cell: Cell;
