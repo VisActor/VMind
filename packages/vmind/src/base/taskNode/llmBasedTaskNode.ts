@@ -26,7 +26,6 @@ export type LLMTaskNodeOptions<Context, DSL> = {
 };
 /**
  * LLMBasedTaskNode is a task node that needs to use LLM to complete tasks
- * Subclasses must assign values to prompt, parser and patcher, and rewrite requestLLM function
  */
 export default class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions }, DSL>
   extends BaseTaskNode<Context, DSL>

@@ -23,6 +23,11 @@ export class BaseApplication<Context, DSL> implements IApplication<Context, DSL>
     this.registerTaskNodes(meta);
   }
 
+  /**
+   * register the task nodes of this application
+   *
+   * @param meta meta information of this application
+   */
   registerTaskNodes(meta: ApplicationMeta<any, any>) {
     const taskNodeInstanceList = meta.taskNodes.map((taskInfo: TaskNode<Context>) => {
       const { taskNode, name } = taskInfo;
