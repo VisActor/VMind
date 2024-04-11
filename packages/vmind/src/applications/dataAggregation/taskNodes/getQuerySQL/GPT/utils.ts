@@ -136,12 +136,18 @@ export const parseDataQueryResponse: Parser<LLMResponse, GetQuerySQLOutput> = (g
   return { sql, llmFieldInfo: responseFiledInfo, usage: gptResponse.usage };
 };
 
+const patchQueryInput = (userInput: string) => {
+  return userInput;
+};
+
 export const dataQueryRequestLLM: Requester<GetQuerySQLContext> = async (
   prompt: string,
   context: GetQuerySQLContext
 ) => {
   const { userInput, fieldInfo, llmOptions } = context;
-  const queryDatasetMessage = `User's Command: ${userInput}\nColumn Information: ${JSON.stringify(fieldInfo)}`;
+  const patchedInput = patchQueryInput(userInput);
+
+  const queryDatasetMessage = `User's Command: ${patchedInput}\nColumn Information: ${JSON.stringify(fieldInfo)}`;
 
   const requestFunc = llmOptions.customRequestFunc?.dataQuery ?? requestGPT;
   const QueryDatasetPrompt = prompt;
