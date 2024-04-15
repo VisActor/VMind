@@ -30,7 +30,7 @@ export class RuleBasedTaskNode<Context, Result> extends BaseTaskNode<Context, Re
     try {
       const result: Result = this.pipelines.reduce((pre: any, transformer: Transformer<Context, Result>) => {
         const res = transformer(pre);
-        return res;
+        return { ...pre, ...res };
       }, context);
       return result;
     } catch (e: any) {

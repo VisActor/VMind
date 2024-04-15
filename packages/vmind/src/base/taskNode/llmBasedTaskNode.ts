@@ -82,7 +82,7 @@ export default class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions 
     try {
       const result = this.patcher.reduce((pre, pipeline) => {
         const res = pipeline(pre);
-        return res as Context & DSL;
+        return { ...pre, ...res } as Context & DSL;
       }, input);
       return result;
     } catch (e: any) {
