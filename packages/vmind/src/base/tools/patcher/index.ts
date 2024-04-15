@@ -8,4 +8,4 @@ import { Transformer } from '../transformer';
  * pass the specific pipelines during initialization
  */
 
-export type Patcher<Context, Output> = Transformer<Context & Output, Context, Output>[];
+export type Patcher<Context, Output> = Transformer<Context & Output, Output>[];

@@ -24,10 +24,7 @@ const getSchemaFromFieldInfo = (fieldInfo: SimpleFieldInfo[]): Partial<VizSchema
   return schema;
 };
 
-export const getVizSchema: Transformer<GetVizSchemaContext, GetVizSchemaContext, { vizSchema: VizSchema }> = (
-  input,
-  context
-) => {
+export const getVizSchema: Transformer<GetVizSchemaContext, { vizSchema: VizSchema }> = context => {
   const { fieldInfo } = context;
   const vizSchema = getSchemaFromFieldInfo(fieldInfo) as VizSchema;
 

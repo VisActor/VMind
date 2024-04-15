@@ -1,6 +1,6 @@
 /**
  * Transformer is to finish the data conversion work
- * * Convert the INPUT type to DSL type based on the Context
+ * * Generate a Result based on the Context
  * The subclass needs to rewrite the transform method to complete the specific data conversion
  */
-export type Transformer<Input, Context, Result> = (input: Input, context: Context) => Result;
+export type Transformer<Context, Result> = (context: Context) => Result;
