@@ -1,10 +1,20 @@
 import { _chatToVideoWasm } from '../chart-to-video';
-import { ILLMOptions, TimeType, Model, SimpleFieldInfo, DataItem, OuterPackages, ModelType } from '../typings';
+import {
+  ILLMOptions,
+  TimeType,
+  Model,
+  SimpleFieldInfo,
+  DataItem,
+  OuterPackages,
+  ModelType,
+  VMindDataset
+} from '../typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
-import applicationMetaList, { ApplicationType } from './applications';
 import { VMindApplicationMap } from './types';
 import { BaseApplication } from 'src/base/application';
-import { DataAggregationContext } from 'src/applications/types';
+import { ChartGenerationContext, DataAggregationContext } from 'src/applications/types';
+import applicationMetaList, { ApplicationType } from 'src/applications';
+import { calculateTokenUsage } from 'src/common/utils/utils';
 
 class VMind {
   private _FPS = 30;
@@ -84,6 +94,56 @@ class VMind {
       llmOptions: this._options
     };
     return await this.runApplication(ApplicationType.DataAggregation, modelType, context);
+  }
+  async generateChart(
+    userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
+    fieldInfo: SimpleFieldInfo[],
+    dataset: VMindDataset,
+    enableDataQuery = true,
+    colorPalette?: string[],
+    animationDuration?: number
+  ) {
+    const modelType = this.getModelType();
+    let finalDataset = dataset;
+    let finalFieldInfo = fieldInfo;
+    let queryDatasetUsage;
+    try {
+      if (enableDataQuery) {
+        //run data aggregation first
+        const dataAggregationContext: DataAggregationContext = {
+          userInput: userPrompt,
+          fieldInfo,
+          sourceDataset: dataset,
+          llmOptions: this._options
+        };
+        const {
+          dataset: queryDataset,
+          fieldInfo: fieldInfoNew,
+          usage,
+          error
+        } = await this.runApplication(ApplicationType.DataAggregation, modelType, dataAggregationContext);
+        if (!error) {
+          finalDataset = queryDataset;
+          finalFieldInfo = fieldInfoNew;
+          queryDatasetUsage = usage;
+        }
+      }
+    } catch (err) {
+      console.error('data query error!');
+      console.error(err);
+    }
+    const context: ChartGenerationContext = {
+      userInput: userPrompt,
+      fieldInfo: finalFieldInfo,
+      dataset: finalDataset,
+      llmOptions: this._options,
+      colors: colorPalette,
+      totalTime: animationDuration
+    };
+
+    const chartGenerationResult = await this.runApplication(ApplicationType.ChartGeneration, modelType, context);
+    const usage = calculateTokenUsage([queryDatasetUsage, chartGenerationResult.usage]);
+    return { ...chartGenerationResult, usage };
   }
 
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {
