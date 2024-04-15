@@ -1,6 +1,6 @@
 import { Prompt } from 'src/base/tools/prompt';
-import { GenerateChartAndFieldMapContext } from 'src/applications/chartGeneration/types';
 import { ChartAdvisorPromptEnglish } from './template';
+import { GenerateChartAndFieldMapContext } from '../../types';
 
 export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapContext> {
   constructor() {

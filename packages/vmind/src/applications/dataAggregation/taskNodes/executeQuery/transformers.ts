@@ -26,7 +26,7 @@ type PatchSQLResult = {
   validDataset: VMindDataset;
   columnReplaceMap: Map<string, string>;
   sqlReplaceMap: Map<string, string>;
-} & ExecuteQueryContext;
+};
 export const patchSQLBeforeQuery: Transformer<ExecuteQueryContext, PatchSQLResult> = (context: ExecuteQueryContext) => {
   const { sql, sourceDataset } = context;
   const { fieldInfo } = context;
@@ -49,7 +49,7 @@ export const patchSQLBeforeQuery: Transformer<ExecuteQueryContext, PatchSQLResul
   const finalSql = sumAllMeasureFields(validSql, fieldInfo, columnReplaceMap, sqlReplaceMap);
 
   return {
-    ...context,
+    //...context,
     finalSql,
     validDataset,
     columnReplaceMap,
@@ -57,7 +57,7 @@ export const patchSQLBeforeQuery: Transformer<ExecuteQueryContext, PatchSQLResul
   };
 };
 
-type QueryResult = PatchSQLResult & { alasqlDataset: VMindDataset };
+type QueryResult = { alasqlDataset: VMindDataset };
 /**
  * execute sql after patching using alasql
  * @param input
@@ -74,12 +74,12 @@ export const executeDataQuery: Transformer<PatchSQLResult, QueryResult> = (conte
   const alasqlDataset = alasql(alasqlQuery, new Array(sqlCount).fill(validDataset));
 
   return {
-    ...context,
+    //...context,
     alasqlDataset
   };
 };
 
-type RestoreResult = QueryResult & {
+type RestoreResult = {
   datasetAfterQuery: VMindDataset;
 };
 /**
@@ -88,7 +88,9 @@ type RestoreResult = QueryResult & {
  * @param context
  * @returns restored dataset
  */
-export const restoreDatasetAfterQuery: Transformer<QueryResult, RestoreResult> = (context: QueryResult) => {
+export const restoreDatasetAfterQuery: Transformer<QueryResult & PatchSQLResult, RestoreResult> = (
+  context: QueryResult & PatchSQLResult
+) => {
   const { columnReplaceMap, sqlReplaceMap, alasqlDataset } = context;
   //restore the dataset
   const columnReversedMap = swapMap(columnReplaceMap);
@@ -97,12 +99,14 @@ export const restoreDatasetAfterQuery: Transformer<QueryResult, RestoreResult> =
   const sqlRestoredDataset = replaceDataset(columnRestoredDataset, sqlReversedMap, false);
 
   return {
-    ...context,
+    //...context,
     datasetAfterQuery: sqlRestoredDataset
   };
 };
 
-export const getFinalQueryResult: Transformer<RestoreResult, ExecuteQueryOutput> = (context: RestoreResult) => {
+export const getFinalQueryResult: Transformer<RestoreResult & ExecuteQueryContext, ExecuteQueryOutput> = (
+  context: RestoreResult & ExecuteQueryContext
+) => {
   const { sourceDataset, fieldInfo, usage, llmFieldInfo: responseFieldInfo, datasetAfterQuery } = context;
   const fieldInfoNew = parseRespondField(responseFieldInfo, datasetAfterQuery);
   if (datasetAfterQuery.length === 0) {
