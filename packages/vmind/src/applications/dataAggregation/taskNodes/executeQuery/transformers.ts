@@ -110,7 +110,7 @@ export const getFinalQueryResult: Transformer<RestoreResult, ExecuteQueryOutput>
   }
 
   return {
-    ...context,
+    //...context,
     dataset: datasetAfterQuery.length === 0 ? sourceDataset : datasetAfterQuery,
     fieldInfo: datasetAfterQuery.length === 0 ? fieldInfo : fieldInfoNew,
     usage
