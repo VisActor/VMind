@@ -16,13 +16,9 @@ import { DataType, ROLE } from 'src/typings';
 
 export const patchAxisField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  GenerateChartAndFieldMapContext,
   GenerateChartAndFieldMapOutput
-> = (
-  input: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  context: GenerateChartAndFieldMapContext
-) => {
-  const { cell } = input;
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { cell } = context;
 
   const cellNew: any = { ...cell };
 
@@ -36,37 +32,29 @@ export const patchAxisField: Transformer<
   }
 
   return {
-    ...input,
+    ...context,
     cell: cellNew
   };
 };
 
 export const patchColorField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  GenerateChartAndFieldMapContext,
   GenerateChartAndFieldMapOutput
-> = (
-  input: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  context: GenerateChartAndFieldMapContext
-) => {
-  const { cell } = input;
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { cell } = context;
   const cellNew = { ...cell, color: cell.color ?? cell.category };
 
   return {
-    ...input,
+    ...context,
     cell: cellNew
   };
 };
 
 export const patchLabelField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  GenerateChartAndFieldMapContext,
   GenerateChartAndFieldMapOutput
-> = (
-  input: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  context: GenerateChartAndFieldMapContext
-) => {
-  const { cell } = input;
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { cell } = context;
 
   const cellNew: any = { ...cell };
   //patch the "label" fields to color
@@ -75,20 +63,16 @@ export const patchLabelField: Transformer<
   }
 
   return {
-    ...input,
+    ...context,
     cell: cellNew
   };
 };
 
 export const patchYField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  GenerateChartAndFieldMapContext,
   GenerateChartAndFieldMapOutput
-> = (
-  input: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  context: GenerateChartAndFieldMapContext
-) => {
-  const { chartType, cell, dataset, fieldInfo } = input;
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell, dataset, fieldInfo } = context;
   let cellNew = { ...cell };
   const { x, y } = cellNew;
   let chartTypeNew = chartType;
@@ -102,7 +86,7 @@ export const patchYField: Transformer<
   if (y && isArray(y) && y.length > 1) {
     if (chartTypeNew === 'BOX PLOT' || (chartTypeNew === 'DUAL AXIS CHART' && y.length === 2)) {
       return {
-        ...input
+        ...context
       };
     }
 
@@ -123,7 +107,7 @@ export const patchYField: Transformer<
   }
 
   return {
-    ...input,
+    ...context,
     chartType: chartTypeNew,
     cell: cellNew,
     dataset: datasetNew
@@ -132,13 +116,9 @@ export const patchYField: Transformer<
 
 export const patchBoxPlot: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  GenerateChartAndFieldMapContext,
   GenerateChartAndFieldMapOutput
-> = (
-  input: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  context: GenerateChartAndFieldMapContext
-) => {
-  const { chartType, cell } = input;
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell } = context;
   const cellNew = {
     ...cell
   };
@@ -195,18 +175,14 @@ export const patchBoxPlot: Transformer<
     }
   }
 
-  return { ...input, cell: cellNew };
+  return { ...context, cell: cellNew };
 };
 
 export const patchDualAxis: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  GenerateChartAndFieldMapContext,
   GenerateChartAndFieldMapOutput
-> = (
-  input: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  context: GenerateChartAndFieldMapContext
-) => {
-  const { chartType, cell } = input;
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell } = context;
   const cellNew: any = { ...cell };
   //Dual-axis drawing yLeft and yRight
 
@@ -214,18 +190,14 @@ export const patchDualAxis: Transformer<
     cellNew.y = [cellNew.yLeft, cellNew.yRight];
   }
 
-  return { ...input, cell: cellNew };
+  return { ...context, cell: cellNew };
 };
 
 export const patchPieChart: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  GenerateChartAndFieldMapContext,
   GenerateChartAndFieldMapOutput
-> = (
-  input: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  context: GenerateChartAndFieldMapContext
-) => {
-  const { chartType, cell, fieldInfo } = input;
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
 
   if (chartType === 'ROSE CHART') {
@@ -257,19 +229,15 @@ export const patchPieChart: Transformer<
       }
     }
   }
-  return { ...input, cell: cellNew };
+  return { ...context, cell: cellNew };
 };
 
 export const patchWordCloud: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  GenerateChartAndFieldMapContext,
   GenerateChartAndFieldMapOutput
-> = (
-  input: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  context: GenerateChartAndFieldMapContext
-) => {
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
   //Word cloud must have color fields and size fields
-  const { chartType, cell, fieldInfo } = input;
+  const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
 
   if (chartType === 'WORD CLOUD') {
@@ -304,18 +272,14 @@ export const patchWordCloud: Transformer<
       }
     }
   }
-  return { ...input, cell: cellNew };
+  return { ...context, cell: cellNew };
 };
 
 export const patchDynamicBarChart: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  GenerateChartAndFieldMapContext,
   GenerateChartAndFieldMapOutput
-> = (
-  input: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  context: GenerateChartAndFieldMapContext
-) => {
-  const { chartType, cell, fieldInfo } = input;
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
 
   if (chartType === 'DYNAMIC BAR CHART') {
@@ -332,18 +296,14 @@ export const patchDynamicBarChart: Transformer<
     }
   }
 
-  return { ...input, cell: cellNew };
+  return { ...context, cell: cellNew };
 };
 
 export const patchCartesianXField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  GenerateChartAndFieldMapContext,
   GenerateChartAndFieldMapOutput
-> = (
-  input: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  context: GenerateChartAndFieldMapContext
-) => {
-  const { chartType, cell, fieldInfo } = input;
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
 
   //Cartesian chart must have X field
@@ -359,5 +319,5 @@ export const patchCartesianXField: Transformer<
       }
     }
   }
-  return { ...input, cell: cellNew };
+  return { ...context, cell: cellNew };
 };

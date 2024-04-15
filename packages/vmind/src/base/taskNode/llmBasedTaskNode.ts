@@ -61,14 +61,14 @@ export default class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions 
 
   patchLLMResponse(input: Context & DSL): DSL {
     const result = this.patcher.reduce((pre, pipeline) => {
-      const res = pipeline(pre, this.context);
+      const res = pipeline(pre);
       return res as Context & DSL;
     }, input);
     return result;
   }
 
   async executeTask(context: Context) {
-    this.updateContext(context);
+    this.updateContext({ ...this.context, ...context });
     const llmResponse = await this.requestLLM(context);
     const parsedResponse = this.parseLLMResponse(llmResponse) as DSL;
     const patchedResponse = this.patchLLMResponse({ ...context, ...parsedResponse });

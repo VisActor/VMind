@@ -26,13 +26,9 @@ type PatchSQLResult = {
   validDataset: VMindDataset;
   columnReplaceMap: Map<string, string>;
   sqlReplaceMap: Map<string, string>;
-};
-export const patchSQLBeforeQuery: Transformer<ExecuteQueryContext, ExecuteQueryContext, PatchSQLResult> = (
-  input,
-  context: ExecuteQueryContext
-) => {
-  const { sql } = input;
-  const { sourceDataset } = context;
+} & ExecuteQueryContext;
+export const patchSQLBeforeQuery: Transformer<ExecuteQueryContext, PatchSQLResult> = (context: ExecuteQueryContext) => {
+  const { sql, sourceDataset } = context;
   const { fieldInfo } = context;
   const fieldNames = fieldInfo.map((field: SimpleFieldInfo) => field.fieldName);
   const { validStr, sqlReplaceMap, columnReplaceMap } = replaceInvalidWords(sql, fieldNames);
@@ -53,6 +49,7 @@ export const patchSQLBeforeQuery: Transformer<ExecuteQueryContext, ExecuteQueryC
   const finalSql = sumAllMeasureFields(validSql, fieldInfo, columnReplaceMap, sqlReplaceMap);
 
   return {
+    ...context,
     finalSql,
     validDataset,
     columnReplaceMap,
@@ -67,11 +64,8 @@ type QueryResult = PatchSQLResult & { alasqlDataset: VMindDataset };
  * @param context
  * @returns dataset after executing sql query
  */
-export const executeDataQuery: Transformer<PatchSQLResult, ExecuteQueryContext, QueryResult> = (
-  input: PatchSQLResult,
-  context: ExecuteQueryContext
-) => {
-  const { finalSql, validDataset } = input;
+export const executeDataQuery: Transformer<PatchSQLResult, QueryResult> = (context: PatchSQLResult) => {
+  const { finalSql, validDataset } = context;
   //replace VMIND_DATA_SOURCE with placeholder "?"
   const sqlParts = (finalSql + ' ').split(VMIND_DATA_SOURCE);
   const sqlCount = sqlParts.length - 1;
@@ -80,7 +74,7 @@ export const executeDataQuery: Transformer<PatchSQLResult, ExecuteQueryContext, 
   const alasqlDataset = alasql(alasqlQuery, new Array(sqlCount).fill(validDataset));
 
   return {
-    ...input,
+    ...context,
     alasqlDataset
   };
 };
@@ -94,11 +88,8 @@ type RestoreResult = QueryResult & {
  * @param context
  * @returns restored dataset
  */
-export const restoreDatasetAfterQuery: Transformer<QueryResult, ExecuteQueryContext, RestoreResult> = (
-  input: QueryResult,
-  context: ExecuteQueryContext
-) => {
-  const { columnReplaceMap, sqlReplaceMap, alasqlDataset } = input;
+export const restoreDatasetAfterQuery: Transformer<QueryResult, RestoreResult> = (context: QueryResult) => {
+  const { columnReplaceMap, sqlReplaceMap, alasqlDataset } = context;
   //restore the dataset
   const columnReversedMap = swapMap(columnReplaceMap);
   const columnRestoredDataset = replaceDataset(alasqlDataset, columnReversedMap, true);
@@ -106,23 +97,20 @@ export const restoreDatasetAfterQuery: Transformer<QueryResult, ExecuteQueryCont
   const sqlRestoredDataset = replaceDataset(columnRestoredDataset, sqlReversedMap, false);
 
   return {
-    ...input,
+    ...context,
     datasetAfterQuery: sqlRestoredDataset
   };
 };
 
-export const getFinalQueryResult: Transformer<QueryResult & RestoreResult, ExecuteQueryContext, ExecuteQueryOutput> = (
-  input: RestoreResult,
-  context: ExecuteQueryContext
-) => {
-  const { sourceDataset, fieldInfo, usage, llmFieldInfo: responseFieldInfo } = context;
-  const { datasetAfterQuery } = input;
+export const getFinalQueryResult: Transformer<RestoreResult, ExecuteQueryOutput> = (context: RestoreResult) => {
+  const { sourceDataset, fieldInfo, usage, llmFieldInfo: responseFieldInfo, datasetAfterQuery } = context;
   const fieldInfoNew = parseRespondField(responseFieldInfo, datasetAfterQuery);
   if (datasetAfterQuery.length === 0) {
     console.warn('empty dataset after query!');
   }
 
   return {
+    ...context,
     dataset: datasetAfterQuery.length === 0 ? sourceDataset : datasetAfterQuery,
     fieldInfo: datasetAfterQuery.length === 0 ? fieldInfo : fieldInfoNew,
     usage

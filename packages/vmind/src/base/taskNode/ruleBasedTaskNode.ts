@@ -7,21 +7,26 @@ import { TaskNodeType } from './types';
  * It completes the transformation from Input to a specific data structure (DSL)
  */
 export class RuleBasedTaskNode<Context, Result> extends BaseTaskNode<Context, Result> {
-  pipelines: Transformer<any, Context, any>[];
-  constructor(pipelines: Transformer<any, Context, any>[]) {
+  pipelines: Transformer<Context, Result>[];
+  constructor(pipelines: Transformer<Context, Result>[]) {
     super();
     this.type = TaskNodeType.RULE_BASED;
     this.registerPipelines(pipelines);
   }
 
-  registerPipelines(pipelines: Transformer<any, Context, any>[]) {
+  registerPipelines(pipelines: Transformer<Context, Result>[]) {
     this.pipelines = pipelines;
   }
 
+  /**
+   * run the tasks using current context
+   * @param context initial context
+   * @returns
+   */
   executeTask(context: Context): Result {
-    this.updateContext(context);
-    const result: Result = this.pipelines.reduce((pre: any, transformer: Transformer<any, Context, any>) => {
-      const res = transformer(pre, context);
+    this.updateContext({ ...this.context, ...context });
+    const result: Result = this.pipelines.reduce((pre: any, transformer: Transformer<Context, Result>) => {
+      const res = transformer(pre);
       return res;
     }, context);
     return result;

@@ -11,7 +11,7 @@ export class BaseTaskNode<Context, Result> implements ITaskNode<Context, Result>
   context: Context;
   type: TaskNodeType;
   executeTask(context: Context): Promise<Result> | Result {
-    this.updateContext(context);
+    this.updateContext({ ...this.context, ...context });
     return null as Result;
   }
   updateContext(context: Context) {
