@@ -77,7 +77,7 @@ export const chartAdvisorTransformer: Transformer<ChartAdvisorContext, ChartAdvi
   const datasetAdvisor = advisorResult.dataset as VMindDataset;
   const chartSource = 'chartAdvisor';
 
-  return { chartType, cell, dataset: datasetAdvisor, chartSource };
+  return { chartType: chartType.toUpperCase(), cell, dataset: datasetAdvisor, chartSource };
 };
 
 export const chartGenerationErrorWrapper: Transformer<ChartAdvisorContext & ChartAdvisorOutput, ChartAdvisorOutput> = (

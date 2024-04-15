@@ -125,21 +125,21 @@ export function DataInput(props: IPropsType) {
   const askGPT = useCallback(async () => {
     //setLoading(true);
     const { fieldInfo, dataset } = vmind.parseCSVData(csv);
-    const { fieldInfo: fieldInfoQuery, dataset: datasetQuery } = await vmind?.dataQuery(describe, fieldInfo, dataset);
+    //const { fieldInfo: fieldInfoQuery, dataset: datasetQuery } = await vmind?.dataQuery(describe, fieldInfo, dataset);
     //const { fieldInfo, dataset, usage } = await vmind.parseCSVDataWithLLM(csv, describe);
 
     //const dataset = mockData4;
     //const fieldInfo = vmind?.getFieldInfo(dataset);
-    //const startTime = new Date().getTime();
-    ////const chartGenerationRes = await vmind.generateChart(describe, fieldInfo, dataset, true);
-    //const endTime = new Date().getTime();
-    //if (isArray(chartGenerationRes)) {
-    //  props.onSpecListGenerate(chartGenerationRes.map(res => res.spec));
-    //} else {
-    //  const { spec, time } = chartGenerationRes;
-    //  const costTime = endTime - startTime;
-    //  props.onSpecGenerate(spec, time as any, costTime);
-    //}
+    const startTime = new Date().getTime();
+    const chartGenerationRes = await vmind.generateChart(describe, fieldInfo, dataset, true);
+    const endTime = new Date().getTime();
+    if (isArray(chartGenerationRes)) {
+      props.onSpecListGenerate(chartGenerationRes.map(res => res.spec));
+    } else {
+      const { spec, time } = chartGenerationRes;
+      const costTime = endTime - startTime;
+      props.onSpecGenerate(spec, time as any, costTime);
+    }
 
     setLoading(false);
   }, [vmind, csv, describe, props]);

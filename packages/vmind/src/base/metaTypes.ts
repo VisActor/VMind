@@ -13,7 +13,7 @@ export type LLMBasedTaskNodeMeta<Context, Output> = {
   type: TaskNodeType.LLM_BASED;
   modelType: ModelType;
   parser: Parser<any, Output>;
-  patcher: Patcher<Context, Output>;
+  patcher: Patcher<any, Partial<Output>>;
   prompt: Prompt<Context>;
   requester: Requester<Context>;
 };
@@ -23,7 +23,7 @@ export type LLMBasedTaskNodeMeta<Context, Output> = {
  */
 export type RuleBasedTaskNodeMeta<Context, Result> = {
   type: TaskNodeType.RULE_BASED;
-  pipelines: Transformer<any, any>[];
+  pipelines: Transformer<any, any>[] | ((context: Context) => Transformer<any, any>[]);
 };
 
 export type TaskNodeMeta<Context, Output> =

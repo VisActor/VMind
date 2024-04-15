@@ -3,13 +3,14 @@ import { BaseTaskNode } from './baseTaskNode';
 import { TaskNodeType } from './types';
 import { TaskError } from 'src/typings';
 import { getObjectProperties } from 'src/common/utils/utils';
+import { isFunction } from 'lodash';
 
 /**
  * rule-based taskNode, which consists of a series of Pipelines
  * It completes the transformation from Input to a specific data structure (DSL)
  */
 export class RuleBasedTaskNode<Context, Result> extends BaseTaskNode<Context, Result> {
-  pipelines: Transformer<Context, Result>[];
+  pipelines: Transformer<Context, Result>[] | ((context: Context) => Transformer<Context, Result>[]);
   constructor(name: string, pipelines: Transformer<Context, Result>[]) {
     super(name);
     this.type = TaskNodeType.RULE_BASED;
@@ -27,14 +28,23 @@ export class RuleBasedTaskNode<Context, Result> extends BaseTaskNode<Context, Re
    */
   executeTask(context: Context): Result | TaskError {
     this.updateContext({ ...this.context, ...context });
+    let pipelines = this.pipelines;
+    if (isFunction(this.pipelines)) {
+      pipelines = this.pipelines(context);
+    }
+
     try {
-      const result: Result = this.pipelines.reduce((pre: any, transformer: Transformer<Context, Result>) => {
-        const res = transformer(pre);
-        return { ...pre, ...res };
-      }, context);
+      const result: Result = (pipelines as Transformer<Context, Result>[]).reduce(
+        (pre: any, transformer: Transformer<Context, Result>) => {
+          const res = transformer(pre);
+          return { ...pre, ...res };
+        },
+        context
+      );
       return result;
     } catch (e: any) {
       console.error(`${this.name} error!`);
+      //throw e
       return {
         ...getObjectProperties(e),
         error: true

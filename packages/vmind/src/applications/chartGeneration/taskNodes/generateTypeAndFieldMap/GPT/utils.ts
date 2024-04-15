@@ -33,7 +33,7 @@ export const parseChartGenerationResponse: Parser<GenerateChartAndFieldMapContex
   }
   const { CHART_TYPE, FIELD_MAP } = advisorResJson;
 
-  return { chartType: CHART_TYPE, cell: FIELD_MAP, usage: advisorRes.usage };
+  return { chartType: CHART_TYPE.toUpperCase(), cell: FIELD_MAP, usage: advisorRes.usage };
 };
 
 const patchUserInput = (userInput: string) => {

@@ -1,6 +1,6 @@
 import { LOCATION, SimpleFieldInfo, VizSchema } from 'src/typings';
-import { GetVizSchemaContext } from '../../types';
 import { Transformer } from 'src/base/tools/transformer';
+import { GetVizSchemaContext, GetVizSchemaOutput } from './types';
 
 /**
  * Generate a vizSchema from fieldInfo
@@ -24,7 +24,7 @@ const getSchemaFromFieldInfo = (fieldInfo: SimpleFieldInfo[]): Partial<VizSchema
   return schema;
 };
 
-export const getVizSchema: Transformer<GetVizSchemaContext, { vizSchema: VizSchema }> = context => {
+export const getVizSchema: Transformer<GetVizSchemaContext, GetVizSchemaOutput> = context => {
   const { fieldInfo } = context;
   const vizSchema = getSchemaFromFieldInfo(fieldInfo) as VizSchema;
 
