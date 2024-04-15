@@ -23,7 +23,7 @@ export type LLMBasedTaskNodeMeta<Context, Output> = {
  */
 export type RuleBasedTaskNodeMeta<Context, Result> = {
   type: TaskNodeType.RULE_BASED;
-  pipelines: Transformer<Context, Result>[];
+  pipelines: Transformer<any, any>[];
 };
 
 export type TaskNodeMeta<Context, Output> =

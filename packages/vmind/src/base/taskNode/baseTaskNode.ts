@@ -1,3 +1,4 @@
+import { TaskError } from 'src/typings';
 import { ITaskNode, TaskNodeType } from './types';
 
 /**
@@ -8,9 +9,13 @@ import { ITaskNode, TaskNodeType } from './types';
  * It can be described using TaskNodeMeta (see packages/vmind/src/base/metaTypes.ts)
  */
 export class BaseTaskNode<Context, Result> implements ITaskNode<Context, Result> {
+  name: string;
   context: Context;
   type: TaskNodeType;
-  executeTask(context: Context): Promise<Result> | Result {
+  constructor(name: string) {
+    this.name = name;
+  }
+  executeTask(context: Context): Promise<Result | TaskError> | TaskError | Result {
     this.updateContext({ ...this.context, ...context });
     return null as Result;
   }

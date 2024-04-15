@@ -5,14 +5,19 @@ import {
   GenerateChartAndFieldMapOutput
 } from 'src/applications/chartGeneration/types';
 import { Transformer } from 'src/base/tools/transformer';
-import {
-  CARTESIAN_CHART_LIST,
-  foldDatasetByYField,
-  getFieldByDataType,
-  getFieldByRole,
-  getRemainedFields
-} from 'src/common/utils/utils';
+import { foldDatasetByYField, getFieldByDataType, getFieldByRole, getRemainedFields } from 'src/common/utils/utils';
 import { DataType, ROLE } from 'src/typings';
+
+const CARTESIAN_CHART_LIST = [
+  'Dynamic Bar Chart',
+  'Bar Chart',
+  'Line Chart',
+  'Scatter Plot',
+  'Funnel Chart',
+  'Dual Axis Chart',
+  'Waterfall Chart',
+  'Box Plot'
+];
 
 export const patchAxisField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,

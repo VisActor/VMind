@@ -1,5 +1,6 @@
 import type { FFmpeg } from '@ffmpeg/ffmpeg';
 import type { ManualTicker, DefaultTimeline } from '@visactor/vrender-core';
+import { Cell } from 'src/applications/chartGeneration/types';
 //models that VMind support
 //more models is under developing
 export enum Model {
@@ -152,3 +153,5 @@ export type PatchPipeline = (
   context: PatchContext,
   _originalContext: PatchContext
 ) => { chartType: string; cell: Cell; dataset: DataItem[]; fieldInfo: SimpleFieldInfo[] };
+
+export type TaskError = { error: boolean };

@@ -1,7 +1,10 @@
+import { TaskError } from 'src/typings';
+
 export interface ITaskNode<Context, DSL> {
+  name: string;
   type: TaskNodeType;
   context: Context;
-  executeTask: (context: Context) => Promise<DSL> | DSL;
+  executeTask: (context: Context) => Promise<DSL | TaskError> | TaskError | DSL;
   updateContext: (context: Context) => void;
 }
 export enum TaskNodeType {

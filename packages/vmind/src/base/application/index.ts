@@ -36,13 +36,13 @@ export class BaseApplication<Context, DSL> implements IApplication<Context, DSL>
         const { modelType, parser, patcher, prompt, requester } = taskNode as LLMBasedTaskNodeMeta<Context, DSL>;
         return {
           name,
-          task: new LLMBasedTaskNode<any, DSL>({ modelType, parser, patcher, prompt, requester })
+          task: new LLMBasedTaskNode<any, DSL>(name, { modelType, parser, patcher, prompt, requester })
         };
       } else if (type === TaskNodeType.RULE_BASED) {
         const { pipelines } = taskNode as RuleBasedTaskNodeMeta<Context, DSL>;
         return {
           name,
-          task: new RuleBasedTaskNode(pipelines)
+          task: new RuleBasedTaskNode(name, pipelines)
         };
       }
       return {} as { task: BaseTaskNode<Context, any>; name: string };

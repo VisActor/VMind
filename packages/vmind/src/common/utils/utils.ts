@@ -12,17 +12,6 @@ export const detectAxesType = (values: any[], field: string) => {
   }
 };
 
-export const CARTESIAN_CHART_LIST = [
-  'Dynamic Bar Chart',
-  'Bar Chart',
-  'Line Chart',
-  'Scatter Plot',
-  'Funnel Chart',
-  'Dual Axis Chart',
-  'Waterfall Chart',
-  'Box Plot'
-];
-
 export const calculateTokenUsage = (usageList: any[]) => {
   const totalUsage = {
     completion_tokens: 0,
@@ -101,3 +90,13 @@ export const foldDatasetByYField = (dataset: DataItem[], yFieldList: string[], f
 
   return fold(dataset as any, yFieldList, FOLD_NAME, FOLD_VALUE, aliasMap, false);
 };
+
+export function getObjectProperties(e: Error): {} {
+  const properties: any = {};
+
+  for (const prop of Object.getOwnPropertyNames(e)) {
+    properties[prop] = (e as any)[prop];
+  }
+
+  return properties;
+}
