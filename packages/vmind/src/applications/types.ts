@@ -21,11 +21,15 @@ export type ChartGenerationContext = {
   userInput: string;
   fieldInfo: SimpleFieldInfo[];
   dataset: VMindDataset;
-} & { totalTime?: number; colors?: string[] };
+} & {
+  totalTime?: number;
+  colors?: string[];
+};
 
 export type ChartGenerationOutput = {
   chartType: ChartType;
   cell: Cell;
   spec: any;
   usage: any; //token usage of the LLM
+  time?: number;
 };

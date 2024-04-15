@@ -12,9 +12,14 @@ import {
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
 import { VMindApplicationMap } from './types';
 import { BaseApplication } from 'src/base/application';
-import { ChartGenerationContext, DataAggregationContext } from 'src/applications/types';
+import {
+  ChartGenerationContext,
+  ChartGenerationOutput,
+  DataAggregationContext,
+  DataAggregationOutput
+} from 'src/applications/types';
 import applicationMetaList, { ApplicationType } from 'src/applications';
-import { calculateTokenUsage } from 'src/common/utils/utils';
+import { calculateTokenUsage, estimateVideoTime } from 'src/common/utils/utils';
 
 class VMind {
   private _FPS = 30;
@@ -85,7 +90,7 @@ class VMind {
     userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
     fieldInfo: SimpleFieldInfo[],
     dataset: DataItem[]
-  ) {
+  ): Promise<DataAggregationOutput> {
     const modelType = this.getModelType();
     const context: DataAggregationContext = {
       userInput: userPrompt,
@@ -102,7 +107,7 @@ class VMind {
     enableDataQuery = true,
     colorPalette?: string[],
     animationDuration?: number
-  ) {
+  ): Promise<ChartGenerationOutput> {
     const modelType = this.getModelType();
     let finalDataset = dataset;
     let finalFieldInfo = fieldInfo;
@@ -142,8 +147,15 @@ class VMind {
     };
 
     const chartGenerationResult = await this.runApplication(ApplicationType.ChartGeneration, modelType, context);
+    const { chartType, spec } = chartGenerationResult;
     const usage = calculateTokenUsage([queryDatasetUsage, chartGenerationResult.usage]);
-    return { ...chartGenerationResult, usage };
+    spec.background = '#00000033';
+    return {
+      ...chartGenerationResult,
+      spec,
+      usage,
+      time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
+    };
   }
 
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {
