@@ -12,7 +12,7 @@ import { Transformer } from './tools/transformer';
 export type LLMBasedTaskNodeMeta<Context, Output> = {
   type: TaskNodeType.LLM_BASED;
   modelType: ModelType;
-  parser: Parser<any, Output>;
+  parser: Parser<any, Partial<Output>>;
   patcher: Patcher<any, Partial<Output>>;
   prompt: Prompt<Context>;
   requester: Requester<Context>;

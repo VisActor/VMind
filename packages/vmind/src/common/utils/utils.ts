@@ -100,3 +100,12 @@ export function getObjectProperties(e: Error): {} {
 
   return properties;
 }
+
+const KNOWLEDGE_START_INDEX = 1;
+export const getStrFromArray = (array: string[]) =>
+  array.map((item, index) => `${index + KNOWLEDGE_START_INDEX}. ${item}`).join('\n');
+
+export const getStrFromDict = (dict: Record<string, string>) =>
+  Object.keys(dict)
+    .map(key => `${key}: ${dict[key]}`)
+    .join('\n');

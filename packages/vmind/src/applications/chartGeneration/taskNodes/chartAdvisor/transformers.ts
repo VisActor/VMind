@@ -1,5 +1,5 @@
 import { TaskError, VMindDataset, VizSchema } from 'src/typings';
-import { chartTypeMap, getCell, typeMap } from './utils';
+import { chartTypeMap, checkChartTypeAndCell, getCell, typeMap } from './utils';
 import { ChartType, chartAdvisor } from '@visactor/chart-advisor';
 import { Transformer } from 'src/base/tools/transformer';
 import { ChartAdvisorContext, ChartAdvisorOutput } from './types';
@@ -77,14 +77,16 @@ export const chartAdvisorTransformer: Transformer<ChartAdvisorContext, ChartAdvi
   const datasetAdvisor = advisorResult.dataset as VMindDataset;
   const chartSource = 'chartAdvisor';
 
-  return { chartType: chartType.toUpperCase(), cell, dataset: datasetAdvisor, chartSource };
+  return { chartType: chartType.toUpperCase(), cell, dataset: datasetAdvisor, chartSource, usage: undefined };
 };
 
 export const chartGenerationErrorWrapper: Transformer<ChartAdvisorContext & ChartAdvisorOutput, ChartAdvisorOutput> = (
   context: ChartAdvisorContext & ChartAdvisorOutput
 ) => {
-  const { error } = context as unknown as TaskError;
-  if (error) {
+  const { error, chartType, fieldInfo, cell } = context as any;
+  const checkResult = checkChartTypeAndCell(chartType, cell, fieldInfo);
+  if (error || !checkResult) {
+    console.warn('LLM generation error, use rule generation.');
     return chartAdvisorTransformer(context);
   }
   return context as ChartAdvisorOutput;

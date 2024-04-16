@@ -95,11 +95,25 @@ const pipelineMap: { [chartType: string]: any } = {
   'BOX PLOT': pipelineBoxPlot
 };
 
+export const beforePipe: Transformer<GetChartSpecContext & GetChartSpecOutput, GetChartSpecOutput> = (
+  _context: GetChartSpecContext & GetChartSpecOutput
+) => {
+  return { spec: {} };
+};
+
+export const afterPipe: Transformer<GetChartSpecContext & GetChartSpecOutput, GetChartSpecOutput> = (
+  context: GetChartSpecContext & GetChartSpecOutput
+) => {
+  const { spec } = context;
+  spec.background = '#00000033';
+  return { spec };
+};
+
 export const getChartPipelines: (
   context: GetChartSpecContext
 ) => Transformer<GetChartSpecContext, GetChartSpecOutput>[] = (context: GetChartSpecContext) => {
   const { chartType } = context;
-  return [initSpec].concat(pipelineMap[chartType.toUpperCase()]) as Transformer<
+  return [beforePipe].concat(pipelineMap[chartType.toUpperCase()]).concat([afterPipe]) as Transformer<
     GetChartSpecContext,
     GetChartSpecOutput
   >[];

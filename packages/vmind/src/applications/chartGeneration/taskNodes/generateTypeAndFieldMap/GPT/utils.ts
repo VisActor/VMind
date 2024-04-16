@@ -1,14 +1,11 @@
 import { pick } from 'lodash';
 import { SUPPORTED_CHART_LIST } from 'src/applications/chartGeneration/constants';
-import {
-  Cell,
-  GenerateChartAndFieldMapContext,
-  GenerateChartAndFieldMapOutput
-} from 'src/applications/chartGeneration/types';
+import { Cell } from 'src/applications/chartGeneration/types';
 import { Parser } from 'src/base/tools/parser';
 import { Requester } from 'src/base/tools/requester';
 import { parseGPTResponse, requestGPT } from 'src/common/utils/gpt';
 import { ChartType } from 'src/typings';
+import { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../types';
 
 type GPTChartAdvisorResult = {
   CHART_TYPE: ChartType;
@@ -20,9 +17,10 @@ type GPTChartAdvisorResult = {
   error?: boolean;
 };
 
-export const parseChartGenerationResponse: Parser<GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput> = (
-  advisorRes: any
-) => {
+export const parseChartGenerationResponse: Parser<
+  GenerateChartAndFieldMapContext,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (advisorRes: any) => {
   const advisorResJson: GPTChartAdvisorResult = parseGPTResponse(advisorRes) as unknown as GPTChartAdvisorResult;
 
   if (advisorResJson.error) {

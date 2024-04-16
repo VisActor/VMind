@@ -4,4 +4,5 @@ import { GetVizSchemaContext, GetVizSchemaOutput } from '../getVizSchema/types';
 
 export type GenerateChartAndFieldMapContext = GetVizSchemaContext & GetVizSchemaOutput;
 
-export type GenerateChartAndFieldMapOutput = GenerateFieldMapOutput & GenerateChartTypeOutput;
+export type GenerateChartAndFieldMapOutput = Omit<GenerateFieldMapOutput, 'fieldMapTokenUsage'> &
+  Omit<GenerateChartTypeOutput, 'chartTypeTokenUsage'> & { usage: any };

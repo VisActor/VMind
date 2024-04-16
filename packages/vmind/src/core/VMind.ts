@@ -149,7 +149,6 @@ class VMind {
     const chartGenerationResult = await this.runApplication(ApplicationType.ChartGeneration, modelType, context);
     const { chartType, spec } = chartGenerationResult;
     const usage = calculateTokenUsage([queryDatasetUsage, chartGenerationResult.usage]);
-    spec.background = '#00000033';
     return {
       ...chartGenerationResult,
       spec,
