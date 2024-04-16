@@ -1,21 +1,60 @@
 import { _chatToVideoWasm } from '../chart-to-video';
-import { generateChartWithGPT } from '../gpt/chart-generation/NLToChart';
-import { ILLMOptions, TimeType, Model, SimpleFieldInfo, DataItem, OuterPackages, ModelType } from '../typings';
-import { parseCSVDataWithGPT } from '../gpt/dataProcess';
+import {
+  ILLMOptions,
+  TimeType,
+  Model,
+  SimpleFieldInfo,
+  DataItem,
+  OuterPackages,
+  ModelType,
+  VMindDataset
+} from '../common/typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
-import { generateChartWithSkylark } from '../skylark/chart-generation';
-import { queryDatasetWithGPT } from '../gpt/dataProcess/query/queryDataset';
-import { generateChartWithAdvisor } from '../common/chartAdvisor';
-import { queryDatasetWithSkylark } from '../skylark/dataProcess/query/queryDataset';
+import { VMindApplicationMap } from './types';
+import { BaseApplication } from 'src/base/application';
+import {
+  ChartGenerationContext,
+  ChartGenerationOutput,
+  DataAggregationContext,
+  DataAggregationOutput
+} from 'src/applications/types';
+import applicationMetaList, { ApplicationType } from 'src/applications';
+import { calculateTokenUsage, estimateVideoTime } from 'src/common/utils/utils';
 
 class VMind {
   private _FPS = 30;
   private _options: ILLMOptions | undefined;
   private _model: Model | string;
+  private _applicationMap: VMindApplicationMap;
 
   constructor(options?: ILLMOptions) {
     this._options = { ...(options ?? {}) };
     this._model = options.model ?? Model.GPT3_5;
+    this.registerApplications();
+  }
+
+  private registerApplications() {
+    const applicationList = {};
+    Object.keys(applicationMetaList).forEach(applicationName => {
+      applicationList[applicationName] = {};
+      const applicationMetaByModel = applicationMetaList[applicationName];
+      Object.keys(applicationMetaByModel).forEach(modelType => {
+        const applicationMeta = applicationMetaByModel[modelType];
+        applicationList[applicationName][modelType] = new BaseApplication(applicationMeta);
+      });
+    });
+    this._applicationMap = applicationList;
+  }
+
+  public addApplication() {}
+
+  private getApplication(name: ApplicationType, modelType: ModelType) {
+    return this._applicationMap[name][modelType];
+  }
+
+  private async runApplication(applicationName: ApplicationType, modelType: ModelType, context: any) {
+    const application = this.getApplication(applicationName, modelType);
+    return application.runTasks(context);
   }
 
   /**
@@ -27,23 +66,6 @@ class VMind {
     //Parse CSV Data without LLM
     //return dataset and fieldInfo
     return parseCSVDataWithRule(csvString);
-  }
-
-  /**
-   * call LLM to parse csv data. return fieldInfo and raw dataset.
-   * fieldInfo includes name, type, role, description of each field.
-   * NOTE: This will transfer your data to LLM.
-   * @param csvString csv data user want to visualize
-   * @param userPrompt
-   * @returns
-   */
-  async parseCSVDataWithLLM(csvString: string, userPrompt: string) {
-    if (this.getModelType() === ModelType.GPT) {
-      return parseCSVDataWithGPT(csvString, userPrompt, this._options);
-    }
-    console.error('Unsupported Model!');
-
-    return undefined;
   }
 
   /**
@@ -64,6 +86,21 @@ class VMind {
     return ModelType.CHART_ADVISOR;
   }
 
+  async dataQuery(
+    userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
+    fieldInfo: SimpleFieldInfo[],
+    dataset: DataItem[]
+  ): Promise<DataAggregationOutput> {
+    const modelType = this.getModelType();
+    const context: DataAggregationContext = {
+      userInput: userPrompt,
+      fieldInfo,
+      sourceDataset: dataset,
+      llmOptions: this._options
+    };
+    return await this.runApplication(ApplicationType.DataAggregation, modelType, context);
+  }
+
   /**
    *
    * @param userPrompt user's visualization intention (what aspect they want to show in the data)
@@ -76,51 +113,66 @@ class VMind {
   async generateChart(
     userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
     fieldInfo: SimpleFieldInfo[],
-    dataset: DataItem[],
+    dataset: VMindDataset,
     enableDataQuery = true,
     colorPalette?: string[],
     animationDuration?: number
-  ) {
-    if (this.getModelType() === ModelType.GPT) {
-      return generateChartWithGPT(
-        userPrompt,
-        fieldInfo,
-        dataset,
-        this._options,
-        enableDataQuery,
-        colorPalette,
-        animationDuration
-      );
+  ): Promise<ChartGenerationOutput> {
+    const modelType = this.getModelType();
+    let finalDataset = dataset;
+    let finalFieldInfo = fieldInfo;
+    let queryDatasetUsage;
+    try {
+      if (enableDataQuery && modelType !== ModelType.CHART_ADVISOR) {
+        //run data aggregation first
+        const dataAggregationContext: DataAggregationContext = {
+          userInput: userPrompt,
+          fieldInfo,
+          sourceDataset: dataset,
+          llmOptions: this._options
+        };
+        const {
+          dataset: queryDataset,
+          fieldInfo: fieldInfoNew,
+          usage,
+          error
+        } = await this.runApplication(ApplicationType.DataAggregation, modelType, dataAggregationContext);
+        if (!error) {
+          finalDataset = queryDataset;
+          finalFieldInfo = fieldInfoNew;
+          queryDatasetUsage = usage;
+        }
+      }
+    } catch (err) {
+      console.error('data query error!');
+      console.error(err);
     }
-    if (this.getModelType() === ModelType.SKYLARK) {
-      return generateChartWithSkylark(
-        userPrompt,
-        fieldInfo,
-        dataset,
-        this._options,
-        enableDataQuery,
-        colorPalette,
-        animationDuration
-      );
+    const context: ChartGenerationContext = {
+      userInput: userPrompt,
+      fieldInfo: finalFieldInfo,
+      dataset: finalDataset,
+      llmOptions: this._options,
+      colors: colorPalette,
+      totalTime: animationDuration
+    };
+
+    const chartGenerationResult = await this.runApplication(ApplicationType.ChartGeneration, modelType, context);
+
+    if (modelType === ModelType.CHART_ADVISOR) {
+      return chartGenerationResult.advisedList;
     }
 
-    return generateChartWithAdvisor(fieldInfo, dataset, colorPalette, animationDuration);
-  }
-
-  async dataQuery(
-    userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
-    fieldInfo: SimpleFieldInfo[],
-    dataset: DataItem[]
-  ) {
-    if (this.getModelType() === ModelType.GPT) {
-      return queryDatasetWithGPT(userPrompt, fieldInfo, dataset, this._options);
-    }
-    if (this.getModelType() === ModelType.SKYLARK) {
-      return queryDatasetWithSkylark(userPrompt, fieldInfo, dataset, this._options);
-    }
-    console.error('unsupported model in data query!');
-
-    return { fieldInfo: [], dataset } as any;
+    const { chartType, spec, cell, chartSource } = chartGenerationResult;
+    const usage = calculateTokenUsage([queryDatasetUsage, chartGenerationResult.usage]);
+    return {
+      //...chartGenerationResult,
+      spec,
+      usage,
+      cell,
+      chartSource,
+      chartType,
+      time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
+    };
   }
 
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {

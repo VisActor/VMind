@@ -95,8 +95,8 @@ export function DataInput(props: IPropsType) {
   const defaultDataKey = Object.keys(demoDataList)[3];
   const [describe, setDescribe] = useState<string>(demoDataList[defaultDataKey].input);
   const [csv, setCsv] = useState<string>(demoDataList[defaultDataKey].csv);
-  const [spec, setSpec] = useState<string>('');
-  const [time, setTime] = useState<number>(1000);
+  //const [spec, setSpec] = useState<string>('');
+  //const [time, setTime] = useState<number>(1000);
   const [model, setModel] = useState<Model>(Model.GPT3_5);
   const [cache, setCache] = useState<boolean>(true);
   const [showThoughts, setShowThoughts] = useState<boolean>(false);
@@ -133,11 +133,13 @@ export function DataInput(props: IPropsType) {
     const startTime = new Date().getTime();
     const chartGenerationRes = await vmind.generateChart(describe, fieldInfo, dataset, true);
     const endTime = new Date().getTime();
+    console.log(chartGenerationRes);
     if (isArray(chartGenerationRes)) {
       props.onSpecListGenerate(chartGenerationRes.map(res => res.spec));
     } else {
       const { spec, time } = chartGenerationRes;
       const costTime = endTime - startTime;
+      console.log(spec);
       props.onSpecGenerate(spec, time as any, costTime);
     }
 
@@ -289,12 +291,7 @@ export function DataInput(props: IPropsType) {
         <Button
           loading={loading}
           onClick={() => {
-            if (spec) {
-              const jsonSpec = new Function(`return ${spec}`)();
-              props.onSpecGenerate(jsonSpec, { totalTime: time } as any);
-            } else {
-              askGPT();
-            }
+            askGPT();
           }}
           disabled={!url || !apiKey}
           shape="round"
