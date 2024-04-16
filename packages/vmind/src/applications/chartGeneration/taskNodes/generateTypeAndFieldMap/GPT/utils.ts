@@ -1,4 +1,3 @@
-import { pick } from 'lodash';
 import { SUPPORTED_CHART_LIST } from 'src/applications/chartGeneration/constants';
 import { Cell } from 'src/applications/chartGeneration/types';
 import { Parser } from 'src/base/tools/parser';
