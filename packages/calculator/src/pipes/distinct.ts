@@ -5,7 +5,6 @@ import type {
 } from '../types'
 import { getSelectColumnName } from './select'
 
-
 export type DistinctPipe = (param: { select: Select }) => (
   (tableData: TableData) => TableData
 )

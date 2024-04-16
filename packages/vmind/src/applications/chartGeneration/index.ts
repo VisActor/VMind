@@ -7,7 +7,6 @@ import getVChartSpecTaskNodeMeta from './taskNodes/getChartSpec/VChart';
 import { ModelType } from 'src/common/typings';
 import GenerateChartTypeTaskNodeMeta from './taskNodes/generateChartType/skylark';
 import GenerateFieldMapTaskNodeMeta from './taskNodes/generateFieldMap/skylark';
-import ChartAdvisorTaskNodeMeta from './taskNodes/chartAdvisor';
 import GetAdvisedListTaskNodeMeta from './taskNodes/chartAdvisor';
 import getVChartSpecFromListTaskNodeMeta from './taskNodes/getChartSpec/VChart/getSpecFromList';
 
