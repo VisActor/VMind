@@ -1,7 +1,10 @@
 import { DataItem, DataType, ROLE, SimpleFieldInfo } from 'src/common/typings';
 import { FOLD_NAME, FOLD_VALUE, fold } from '@visactor/chart-advisor';
-import { DEFAULT_VIDEO_LENGTH, VIDEO_LENGTH_BY_CHART_TYPE } from '../vizDataToSpec/constants';
 import { Cell } from 'src/applications/chartGeneration/types';
+import {
+  DEFAULT_VIDEO_LENGTH,
+  VIDEO_LENGTH_BY_CHART_TYPE
+} from 'src/applications/chartGeneration/taskNodes/getChartSpec/VChart/constants';
 
 export const detectAxesType = (values: any[], field: string) => {
   const isNumber = values.every(d => !d[field] || !isNaN(Number(d[field])));

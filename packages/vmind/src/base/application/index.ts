@@ -57,7 +57,7 @@ export class BaseApplication<Context, DSL> implements IApplication<Context, DSL>
    * @returns DSL
    */
   async runTasks(context: Context) {
-    this.updateContext({ ...this.context, ...context });
+    this.updateContext({ ...context });
 
     const handler = async (pre: any, curTask: { name: string; task: BaseTaskNode<Context, any> }) => {
       console.log(curTask.name);

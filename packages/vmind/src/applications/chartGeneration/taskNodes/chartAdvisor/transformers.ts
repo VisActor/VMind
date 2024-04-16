@@ -83,9 +83,7 @@ export const getAdvisedListTransformer: Transformer<ChartAdvisorContext, getAdvi
   };
 };
 
-export const getTop1AdvisedChart: Transformer<getAdvisedListOutput, ChartAdvisorOutput> = (
-  context: getAdvisedListOutput
-) => {
+const getTop1AdvisedChart: Transformer<getAdvisedListOutput, ChartAdvisorOutput> = (context: getAdvisedListOutput) => {
   const { advisedList, chartSource, usage } = context;
   // call rule-based method to get recommended chart type and fieldMap(cell)
   const result = advisedList.scores.find((d: any) => availableChartTypeList.includes(d.chartType));
