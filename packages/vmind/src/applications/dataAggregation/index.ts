@@ -1,7 +1,7 @@
 import { ApplicationMeta } from 'src/base/metaTypes';
 import ExecuteQueryTaskNodeMeta from './taskNodes/executeQuery';
 import GetSQLTaskNodeGPTMeta from './taskNodes/generateQuerySQL/GPT';
-import { ModelType } from 'src/typings';
+import { ModelType } from 'src/common/typings';
 import { DataAggregationContext, DataAggregationOutput } from '../types';
 import GetSQLTaskNodeSkylarkMeta from './taskNodes/generateQuerySQL/skylark';
 

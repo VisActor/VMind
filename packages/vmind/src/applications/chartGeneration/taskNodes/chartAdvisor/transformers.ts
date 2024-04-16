@@ -1,4 +1,4 @@
-import { TaskError, VMindDataset, VizSchema } from 'src/typings';
+import { TaskError, VMindDataset, VizSchema } from 'src/common/typings';
 import { chartTypeMap, checkChartTypeAndCell, getCell, typeMap } from './utils';
 import { ChartType, chartAdvisor } from '@visactor/chart-advisor';
 import { Transformer } from 'src/base/tools/transformer';
@@ -50,34 +50,57 @@ const getAdvisedChartList = (schema: Partial<VizSchema>, dataset: any[]) => {
   return advisorResult;
 };
 
-/**
- * get one recommended chart type using @visactor/chart-advisor
- * @param schema
- * @param dataset
- * @returns
- */
-const chartAdvisorHandler = (schema: Partial<VizSchema>, dataset: any[]) => {
-  const advisorResult = getAdvisedChartList(schema, dataset);
-  const result = advisorResult.scores.find((d: any) => availableChartTypeList.includes(d.chartType));
-  return {
-    chartType: chartTypeMap(result.chartType).toUpperCase(),
-    cell: getCell(result.cell),
-    dataset: result.dataset
-  };
+type getAdvisedListOutput = {
+  chartSource: string;
+  advisedList: any;
+  usage: any;
 };
 
-export const chartAdvisorTransformer: Transformer<ChartAdvisorContext, ChartAdvisorOutput> = (
+export const getAdvisedListTransformer: Transformer<ChartAdvisorContext, getAdvisedListOutput> = (
   context: ChartAdvisorContext
 ) => {
   const { vizSchema, dataset } = context;
   // call rule-based method to get recommended chart type and fieldMap(cell)
-  const advisorResult = chartAdvisorHandler(vizSchema, dataset);
-  const chartType = advisorResult.chartType;
-  const cell = advisorResult.cell;
-  const datasetAdvisor = advisorResult.dataset as VMindDataset;
+  const { scores } = getAdvisedChartList(vizSchema, dataset);
+  const advisedList = scores
+    .filter((d: any) => availableChartTypeList.includes(d.chartType) && d.score - 0 >= 0.00000001)
+    .map((result: any) => ({
+      chartType: chartTypeMap(result.chartType).toUpperCase(),
+      cell: getCell(result.cell),
+      dataset: result.dataset,
+      score: result.score
+    }));
   const chartSource = 'chartAdvisor';
 
-  return { chartType: chartType.toUpperCase(), cell, dataset: datasetAdvisor, chartSource, usage: undefined };
+  return {
+    advisedList,
+    chartSource,
+    usage: {
+      prompt_tokens: 0,
+      completion_tokens: 0,
+      total_tokens: 0
+    }
+  };
+};
+
+export const getTop1AdvisedChart: Transformer<getAdvisedListOutput, ChartAdvisorOutput> = (
+  context: getAdvisedListOutput
+) => {
+  const { advisedList, chartSource, usage } = context;
+  // call rule-based method to get recommended chart type and fieldMap(cell)
+  const result = advisedList.scores.find((d: any) => availableChartTypeList.includes(d.chartType));
+  return {
+    chartType: chartTypeMap(result.chartType).toUpperCase(),
+    cell: getCell(result.cell),
+    dataset: result.dataset,
+    chartSource,
+    usage
+  };
+};
+
+const chartAdvisorHandler = (context: ChartAdvisorContext & ChartAdvisorOutput) => {
+  const advisorResult = getAdvisedListTransformer(context);
+  return getTop1AdvisedChart(advisorResult);
 };
 
 export const chartGenerationErrorWrapper: Transformer<ChartAdvisorContext & ChartAdvisorOutput, ChartAdvisorOutput> = (
@@ -87,7 +110,7 @@ export const chartGenerationErrorWrapper: Transformer<ChartAdvisorContext & Char
   const checkResult = checkChartTypeAndCell(chartType, cell, fieldInfo);
   if (error || !checkResult) {
     console.warn('LLM generation error, use rule generation.');
-    return chartAdvisorTransformer(context);
+    return chartAdvisorHandler(context);
   }
   return context as ChartAdvisorOutput;
 };

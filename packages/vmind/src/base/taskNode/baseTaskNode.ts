@@ -1,4 +1,4 @@
-import { TaskError } from 'src/typings';
+import { TaskError } from 'src/common/typings';
 import { ITaskNode, TaskNodeType } from './types';
 
 /**

@@ -4,7 +4,7 @@ import GetVizSchemaTaskNodeMeta from './taskNodes/getVizSchema';
 import ChartGenerationTaskNodeGPTMeta from './taskNodes/generateTypeAndFieldMap/GPT';
 import ChartAdvisorErrorWrapper from './taskNodes/chartAdvisor/errorWrapper';
 import getVChartSpecTaskNodeMeta from './taskNodes/getChartSpec/VChart';
-import { ModelType } from 'src/typings';
+import { ModelType } from 'src/common/typings';
 import GenerateChartTypeTaskNodeMeta from './taskNodes/generateChartType/skylark';
 import GenerateFieldMapTaskNodeMeta from './taskNodes/generateFieldMap/skylark';
 import ChartAdvisorTaskNodeMeta from './taskNodes/chartAdvisor';

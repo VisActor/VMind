@@ -1,6 +1,6 @@
 import { ChartType, DataTypeName } from '@visactor/chart-advisor';
 import { Cell } from '../../types';
-import { SimpleFieldInfo } from 'src/typings';
+import { SimpleFieldInfo } from 'src/common/typings';
 import { isArray } from 'lodash';
 
 export const typeMap = (type: string): DataTypeName => {

@@ -1,7 +1,7 @@
 import JSON5 from 'json5';
 import { isArray, omit } from 'lodash';
 import { matchJSONStr } from 'src/common/utils/utils';
-import { ILLMOptions, LLMResponse, SimpleFieldInfo } from 'src/typings';
+import { ILLMOptions, LLMResponse, SimpleFieldInfo } from 'src/common/typings';
 import { Parser } from 'src/base/tools/parser';
 import { GetQuerySQLContext, GetQuerySQLOutput, SQL } from 'src/applications/dataAggregation/types';
 import { Requester } from 'src/base/tools/requester';

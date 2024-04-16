@@ -1,7 +1,7 @@
 import { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../types';
 import { LLMBasedTaskNodeMeta } from 'src/base/metaTypes';
 import { TaskNodeType } from 'src/base/taskNode/types';
-import { ModelType } from 'src/typings';
+import { ModelType } from 'src/common/typings';
 import { chartGenerationRequestLLM, parseChartGenerationResponse } from './utils';
 import { GPTChartGenerationPrompt } from './prompt';
 import {
