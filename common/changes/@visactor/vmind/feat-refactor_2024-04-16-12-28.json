@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vmind",
+      "comment": "refactor the base framework of VMind",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vmind"
+}
