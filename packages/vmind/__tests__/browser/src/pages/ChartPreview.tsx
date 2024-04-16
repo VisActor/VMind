@@ -106,6 +106,7 @@ export function ChartPreview(props: IPropsType) {
     //defaultTicker.mode = 'raf';
     const { spec, time } = props;
     if (!time || !spec) {
+      vchartRef.current = null;
       return;
     }
     if (isNil(vchartRef.current)) {
