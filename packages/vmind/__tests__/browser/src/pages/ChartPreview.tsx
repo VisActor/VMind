@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import './index.scss';
 import { Button, Input, Card, Space, Modal, Spin } from '@arco-design/web-react';
 import VChart from '@visactor/vchart';
@@ -6,6 +6,7 @@ import { ManualTicker, defaultTimeline } from '@visactor/vrender-core';
 import VMind from '../../../../src';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { createCanvas } from 'canvas';
+import { isNil } from 'lodash';
 
 const TextArea = Input.TextArea;
 
@@ -13,11 +14,11 @@ type IPropsType = {
   spec: any;
   specList?: any;
   time:
-  | {
-    totalTime: number;
-    frameArr: any[];
-  }
-  | undefined;
+    | {
+        totalTime: number;
+        frameArr: any[];
+      }
+    | undefined;
   costTime: number;
 };
 
@@ -39,6 +40,7 @@ export function ChartPreview(props: IPropsType) {
   const [generating, setGenerating] = useState<boolean>(false);
   const [outType, setOutType] = useState<'gif' | 'video' | ''>('');
   const [src, setSrc] = useState('');
+  const vchartRef = useRef<any>(null);
 
   const vmind = new VMind({});
   // const [describe, setDescribe] = useState<string>(mockUserInput6.input);
@@ -106,13 +108,18 @@ export function ChartPreview(props: IPropsType) {
     if (!time || !spec) {
       return;
     }
-    const cs = new VChart(spec, {
-      dom: 'chart',
-      mode: 'desktop-browser',
-      dpr: 2,
-      disableDirtyBounds: true
-    });
-    cs.renderAsync();
+    if (isNil(vchartRef.current)) {
+      const cs = new VChart(spec, {
+        dom: 'chart',
+        mode: 'desktop-browser',
+        dpr: 2,
+        disableDirtyBounds: true
+      });
+      vchartRef.current = cs;
+      vchartRef.current.renderAsync();
+    } else {
+      vchartRef.current.updateSpec(props.spec);
+    }
   }, [props]);
 
   useEffect(() => {
