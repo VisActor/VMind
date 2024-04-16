@@ -1,4 +1,4 @@
 import VMind from './core/VMind';
 
-export { Model } from './typings';
+export { Model } from './common/typings';
 export default VMind;

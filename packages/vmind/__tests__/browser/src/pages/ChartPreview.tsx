@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import './index.scss';
 import { Button, Input, Card, Space, Modal, Spin } from '@arco-design/web-react';
 import VChart from '@visactor/vchart';
@@ -6,6 +6,7 @@ import { ManualTicker, defaultTimeline } from '@visactor/vrender-core';
 import VMind from '../../../../src';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { createCanvas } from 'canvas';
+import { isNil } from 'lodash';
 
 const TextArea = Input.TextArea;
 
@@ -36,10 +37,10 @@ function downloadVideo(link: string, filename = 'out') {
 }
 
 export function ChartPreview(props: IPropsType) {
-  const [chartSpace, setChartSpace] = useState<VChart | null>(null);
   const [generating, setGenerating] = useState<boolean>(false);
   const [outType, setOutType] = useState<'gif' | 'video' | ''>('');
   const [src, setSrc] = useState('');
+  const vchartRef = useRef<any>(null);
 
   const vmind = new VMind({});
   // const [describe, setDescribe] = useState<string>(mockUserInput6.input);
@@ -105,22 +106,22 @@ export function ChartPreview(props: IPropsType) {
     //defaultTicker.mode = 'raf';
     const { spec, time } = props;
     if (!time || !spec) {
+      vchartRef.current = null;
       return;
     }
-    let cs = chartSpace;
-    if (!cs) {
-      cs = new VChart(spec, {
+    if (isNil(vchartRef.current)) {
+      const cs = new VChart(spec, {
         dom: 'chart',
         mode: 'desktop-browser',
         dpr: 2,
         disableDirtyBounds: true
       });
-      setChartSpace(cs);
+      vchartRef.current = cs;
+      vchartRef.current.renderAsync();
     } else {
-      cs.updateSpec(props.spec);
+      vchartRef.current.updateSpec(props.spec);
     }
-    cs.renderAsync();
-  }, [chartSpace, props, props.spec, props.time]);
+  }, [props]);
 
   useEffect(() => {
     //defaultTicker.mode = 'raf';
@@ -185,7 +186,7 @@ export function ChartPreview(props: IPropsType) {
             </Space>
           </div>
           <div className="right-chart-content">
-            <div id="chart"></div>
+            {props.spec ? <div id="chart"></div> : null}
             <div id="chartListContainer">
               {(props.specList ?? []).map((spec, index: number) => (
                 <div key={`chart-${index}`} id={`chart-${index}`}></div>
