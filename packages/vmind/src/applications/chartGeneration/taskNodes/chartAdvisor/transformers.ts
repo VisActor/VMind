@@ -71,7 +71,7 @@ export const getAdvisedListTransformer: Transformer<ChartAdvisorContext, getAdvi
   const advisedList = scores
     .filter((d: any) => availableChartTypeList.includes(d.chartType) && d.score - 0 >= 0.00000001)
     .map((result: any) => ({
-      chartType: result.chartType,
+      chartType: chartTypeMap(result.chartType as unknown as ChartType).toUpperCase(),
       cell: getCell(result.cell),
       dataset: result.dataset,
       score: result.score
@@ -92,9 +92,9 @@ export const getAdvisedListTransformer: Transformer<ChartAdvisorContext, getAdvi
 const getTop1AdvisedChart: Transformer<getAdvisedListOutput, ChartAdvisorOutput> = (context: getAdvisedListOutput) => {
   const { advisedList, chartSource, usage } = context;
   // call rule-based method to get recommended chart type and fieldMap(cell)
-  const result = advisedList.find((d: any) => availableChartTypeList.includes(d.chartType));
+  const result = advisedList[0];
   return {
-    chartType: chartTypeMap(result.chartType as unknown as ChartType).toUpperCase(),
+    chartType: result.chartType,
     cell: getCell(result.cell),
     dataset: result.dataset,
     chartSource,
