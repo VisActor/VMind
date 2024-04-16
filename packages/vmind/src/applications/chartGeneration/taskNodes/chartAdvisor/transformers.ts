@@ -3,6 +3,7 @@ import { chartTypeMap, checkChartTypeAndCell, getCell, typeMap } from './utils';
 import { ChartType, chartAdvisor } from '@visactor/chart-advisor';
 import { Transformer } from 'src/base/tools/transformer';
 import { ChartAdvisorContext, ChartAdvisorOutput } from './types';
+import { Cell } from '../../types';
 
 const availableChartTypeList = [
   ChartType.COLUMN,
@@ -52,7 +53,12 @@ const getAdvisedChartList = (schema: Partial<VizSchema>, dataset: any[]) => {
 
 type getAdvisedListOutput = {
   chartSource: string;
-  advisedList: any;
+  advisedList: {
+    chartType: string;
+    cell: Cell;
+    dataset: VMindDataset;
+    score: number;
+  }[];
   usage: any;
 };
 
@@ -65,7 +71,7 @@ export const getAdvisedListTransformer: Transformer<ChartAdvisorContext, getAdvi
   const advisedList = scores
     .filter((d: any) => availableChartTypeList.includes(d.chartType) && d.score - 0 >= 0.00000001)
     .map((result: any) => ({
-      chartType: chartTypeMap(result.chartType).toUpperCase(),
+      chartType: result.chartType,
       cell: getCell(result.cell),
       dataset: result.dataset,
       score: result.score
@@ -86,9 +92,9 @@ export const getAdvisedListTransformer: Transformer<ChartAdvisorContext, getAdvi
 const getTop1AdvisedChart: Transformer<getAdvisedListOutput, ChartAdvisorOutput> = (context: getAdvisedListOutput) => {
   const { advisedList, chartSource, usage } = context;
   // call rule-based method to get recommended chart type and fieldMap(cell)
-  const result = advisedList.scores.find((d: any) => availableChartTypeList.includes(d.chartType));
+  const result = advisedList.find((d: any) => availableChartTypeList.includes(d.chartType));
   return {
-    chartType: chartTypeMap(result.chartType).toUpperCase(),
+    chartType: chartTypeMap(result.chartType as unknown as ChartType).toUpperCase(),
     cell: getCell(result.cell),
     dataset: result.dataset,
     chartSource,

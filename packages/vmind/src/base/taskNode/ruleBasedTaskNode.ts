@@ -44,6 +44,7 @@ export class RuleBasedTaskNode<Context, Result> extends BaseTaskNode<Context, Re
       return result;
     } catch (e: any) {
       console.error(`${this.name} error!`);
+      console.error(e);
       //throw e
       return {
         ...getObjectProperties(e),
