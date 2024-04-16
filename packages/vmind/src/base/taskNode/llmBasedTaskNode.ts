@@ -25,8 +25,12 @@ export type LLMTaskNodeOptions<Context, DSL> = {
   requester: Requester<Context>;
   modelType: ModelType;
 };
+
 /**
  * LLMBasedTaskNode is a task node that needs to use LLM to complete tasks
+ * It first requests LLM using requester function to get a response
+ * It then uses a parser to parse the response content from LLM into a specific format
+ * Finally, it patches the response from LLM according to the rules to get the final result (DSL). The patcher consists of a series of pipelines, and these pipelines are executed in sequence to complete the patch
  */
 export default class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions }, DSL>
   extends BaseTaskNode<Context, DSL>

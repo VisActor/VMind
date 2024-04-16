@@ -8,16 +8,22 @@ import { isFunction } from 'lodash';
 /**
  * rule-based taskNode, which consists of a series of Pipelines
  * It completes the transformation from Input to a specific data structure (DSL)
+ * It execute pipelines in order to finish the transformation.
  */
 export class RuleBasedTaskNode<Context, Result> extends BaseTaskNode<Context, Result> {
   pipelines: Transformer<Context, Result>[] | ((context: Context) => Transformer<Context, Result>[]);
-  constructor(name: string, pipelines: Transformer<Context, Result>[] | ((context: Context) => Transformer<Context, Result>[])) {
+  constructor(
+    name: string,
+    pipelines: Transformer<Context, Result>[] | ((context: Context) => Transformer<Context, Result>[])
+  ) {
     super(name);
     this.type = TaskNodeType.RULE_BASED;
     this.registerPipelines(pipelines);
   }
 
-  registerPipelines(pipelines: Transformer<Context, Result>[] | ((context: Context) => Transformer<Context, Result>[])) {
+  registerPipelines(
+    pipelines: Transformer<Context, Result>[] | ((context: Context) => Transformer<Context, Result>[])
+  ) {
     this.pipelines = pipelines;
   }
 
