@@ -7,6 +7,7 @@ import getVChartSpecTaskNodeMeta from './taskNodes/getChartSpec/VChart';
 import { ModelType } from 'src/typings';
 import GenerateChartTypeTaskNodeMeta from './taskNodes/generateChartType/skylark';
 import GenerateFieldMapTaskNodeMeta from './taskNodes/generateFieldMap/skylark';
+import ChartAdvisorTaskNodeMeta from './taskNodes/chartAdvisor';
 
 const chartGenerationGPTMeta: ApplicationMeta<ChartGenerationContext, ChartGenerationOutput> = {
   name: 'chartGeneration',
@@ -26,6 +27,14 @@ const chartGenerationSkylarkMeta: ApplicationMeta<ChartGenerationContext, ChartG
     { taskNode: GenerateFieldMapTaskNodeMeta, name: 'generateFieldMap' },
     { taskNode: ChartAdvisorErrorWrapper, name: 'chartAdvisorHandler' },
     { taskNode: getVChartSpecTaskNodeMeta, name: 'getVChartSpec' }
+  ]
+};
+
+const chartGenerationAdvisorMeta: ApplicationMeta<ChartGenerationContext, ChartGenerationOutput> = {
+  name: 'chartGeneration',
+  taskNodes: [
+    { taskNode: GetVizSchemaTaskNodeMeta, name: 'getVizSchema' },
+    { taskNode: ChartAdvisorTaskNodeMeta, name: 'chartAdvisor' }
   ]
 };
 

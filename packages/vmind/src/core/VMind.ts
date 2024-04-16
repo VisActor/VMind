@@ -100,6 +100,16 @@ class VMind {
     };
     return await this.runApplication(ApplicationType.DataAggregation, modelType, context);
   }
+
+  /**
+   *
+   * @param userPrompt user's visualization intention (what aspect they want to show in the data)
+   * @param fieldInfo information about fields in the dataset. field name, type, etc. You can get fieldInfo using parseCSVData or parseCSVDataWithLLM
+   * @param dataset raw dataset used in the chart
+   * @param colorPalette color palette of the chart
+   * @param animationDuration duration of chart animation.
+   * @returns spec and time duration of the chart.
+   */
   async generateChart(
     userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
     fieldInfo: SimpleFieldInfo[],
