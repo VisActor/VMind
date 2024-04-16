@@ -12,15 +12,15 @@ export interface ILLMTaskNode<Context, DSL> {
   modelType: ModelType;
   prompt: Prompt<Context>;
   chatManager: ChatManager;
-  parser: Parser<any, DSL>;
-  patcher: Patcher<Context, DSL>;
+  parser: Parser<any, Partial<DSL>>;
+  patcher: Patcher<Context, Partial<DSL>>;
 
   requester: Requester<Context>;
 }
 
 export type LLMTaskNodeOptions<Context, DSL> = {
-  parser: Parser<any, DSL>;
-  patcher: Patcher<Context, DSL>;
+  parser: Parser<any, Partial<DSL>>;
+  patcher: Patcher<Context, Partial<DSL>>;
   prompt: Prompt<Context>;
   requester: Requester<Context>;
   modelType: ModelType;
@@ -34,8 +34,8 @@ export default class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions 
 {
   prompt: Prompt<Context>;
   chatManager: ChatManager;
-  parser: Parser<any, DSL>;
-  patcher: Patcher<Context, DSL>;
+  parser: Parser<any, Partial<DSL>>;
+  patcher: Patcher<Context, Partial<DSL>>;
   requester: Requester<Context>;
   modelType: ModelType;
 
@@ -80,6 +80,9 @@ export default class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions 
 
   patchLLMResponse(input: Context & DSL): DSL | TaskError {
     try {
+      if (this.patcher.length === 0) {
+        return input;
+      }
       const result = this.patcher.reduce((pre, pipeline) => {
         const res = pipeline(pre);
         return { ...pre, ...res } as Context & DSL;

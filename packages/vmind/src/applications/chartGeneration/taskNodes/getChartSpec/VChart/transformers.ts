@@ -31,10 +31,6 @@ const chartTypeMap: { [chartName: string]: string } = {
   'BOX PLOT': 'boxPlot'
 };
 
-export const initSpec: Transformer<Context, GetChartSpecOutput> = (_context: Context) => {
-  return { spec: {} };
-};
-
 export const chartType: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   const { chartType, spec } = context;
   spec.type = chartTypeMap[chartType];

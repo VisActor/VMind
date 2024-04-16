@@ -1,10 +1,9 @@
-import { ILLMOptions, LLMResponse } from 'src/typings';
+import { LLMResponse } from 'src/typings';
 import { matchJSONStr, replaceAll } from 'src/common/utils/utils';
 import { GetQuerySQLContext } from 'src/applications/dataAggregation/types';
 import { Requester } from 'src/base/tools/requester';
-import axios from 'axios';
-import { omit } from 'lodash';
 import JSON5 from 'json5';
+import { requestSkyLark } from 'src/common/utils/skylark';
 
 const patchDataQueryInput = (userInput: string) =>
   userInput + ' 使用` `包裹sql中的所有列名。使用支持的聚合函数将所有的度量列聚合。';
@@ -54,45 +53,6 @@ export const parseSkylarkResponseAsJSON = (skylarkRes: LLMResponse) => {
       error: true,
       message: err.message
     };
-  }
-};
-
-/**
- *
- * @param prompt
- * @param message
- * @param options
- */
-export const requestSkyLark = async (prompt: string, message: string, options: ILLMOptions): Promise<LLMResponse> => {
-  const url: string = options?.url;
-  const headers: any = { ...(options.headers ?? {}), 'Content-Type': 'application/json' };
-
-  try {
-    const res = await axios(url, {
-      method: options?.method ?? 'POST',
-      headers, //must has Authorization: `Bearer ${openAIKey}` if use openai api
-      data: {
-        ...omit(options, ['headers', 'url', 'method', 'showThoughts', 'customRequestFunc']),
-        model: options?.model ?? 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: prompt
-          },
-          {
-            role: 'user',
-            content: message
-          }
-        ],
-        max_tokens: options?.max_tokens ?? 500,
-        temperature: options?.temperature ?? 0,
-        stream: false
-      }
-    }).then(response => response.data);
-
-    return res;
-  } catch (err: any) {
-    return err.response.data;
   }
 };
 

@@ -5,4 +5,5 @@ export type GenerateFieldMapContext = GenerateChartTypeContext & GenerateChartTy
 
 export type GenerateFieldMapOutput = {
   cell: Cell;
+  fieldMapTokenUsage: any;
 };

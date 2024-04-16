@@ -133,6 +133,7 @@ export function DataInput(props: IPropsType) {
     const startTime = new Date().getTime();
     const chartGenerationRes = await vmind.generateChart(describe, fieldInfo, dataset, true);
     const endTime = new Date().getTime();
+    console.log(chartGenerationRes);
     if (isArray(chartGenerationRes)) {
       props.onSpecListGenerate(chartGenerationRes.map(res => res.spec));
     } else {
