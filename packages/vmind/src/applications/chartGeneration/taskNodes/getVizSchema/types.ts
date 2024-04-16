@@ -1,5 +1,5 @@
 import { ChartGenerationContext } from 'src/applications/types';
-import { VizSchema } from 'src/typings';
+import { VizSchema } from 'src/common/typings';
 
 export type GetVizSchemaContext = ChartGenerationContext;
 

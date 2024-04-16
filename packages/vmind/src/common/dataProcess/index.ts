@@ -1,5 +1,5 @@
 import { DataSet, DataView, csvParser, fold } from '@visactor/vdataset';
-import { DataItem, DataType, SimpleFieldInfo } from '../../typings';
+import { DataItem, DataType, SimpleFieldInfo } from '../typings';
 import { getFieldInfo } from '../../applications/dataAggregation/taskNodes/executeQuery/utils';
 import { isNil } from 'lodash';
 

@@ -1,5 +1,5 @@
 import { Transformer } from 'src/base/tools/transformer';
-import { SimpleFieldInfo, VMindDataset } from 'src/typings';
+import { SimpleFieldInfo, VMindDataset } from 'src/common/typings';
 import { ExecuteQueryContext, ExecuteQueryOutput, SQL } from '../../types';
 import {
   parseRespondField,

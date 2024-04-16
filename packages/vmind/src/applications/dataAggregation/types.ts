@@ -1,4 +1,4 @@
-import { SimpleFieldInfo } from 'src/typings';
+import { SimpleFieldInfo } from 'src/common/typings';
 import { DataAggregationContext, DataAggregationOutput } from '../types';
 
 export type SQL = string;

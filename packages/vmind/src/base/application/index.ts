@@ -1,4 +1,4 @@
-import { ILLMOptions } from 'src/typings';
+import { ILLMOptions } from 'src/common/typings';
 import { ApplicationMeta, LLMBasedTaskNodeMeta, RuleBasedTaskNodeMeta, TaskNode } from '../metaTypes';
 import { BaseTaskNode } from '../taskNode/baseTaskNode';
 import LLMBasedTaskNode from '../taskNode/llmBasedTaskNode';

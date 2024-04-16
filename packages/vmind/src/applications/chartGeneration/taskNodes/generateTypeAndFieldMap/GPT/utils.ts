@@ -4,7 +4,7 @@ import { Cell } from 'src/applications/chartGeneration/types';
 import { Parser } from 'src/base/tools/parser';
 import { Requester } from 'src/base/tools/requester';
 import { parseGPTResponse, requestGPT } from 'src/common/utils/gpt';
-import { ChartType } from 'src/typings';
+import { ChartType } from 'src/common/typings';
 import { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../types';
 
 type GPTChartAdvisorResult = {

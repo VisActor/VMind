@@ -3,7 +3,7 @@ import { BaseTaskNode } from './baseTaskNode';
 import { Parser } from 'src/base/tools/parser';
 import { Patcher } from 'src/base/tools/patcher';
 import { ChatManager } from 'src/base/tools/chatManager';
-import { ILLMOptions, ModelType, TaskError } from 'src/typings';
+import { ILLMOptions, ModelType, TaskError } from 'src/common/typings';
 import { TaskNodeType } from './types';
 import { Requester } from '../tools/requester';
 import { getObjectProperties } from 'src/common/utils/utils';

@@ -1,7 +1,7 @@
 import { Transformer } from 'src/base/tools/transformer';
 import { BaseTaskNode } from './baseTaskNode';
 import { TaskNodeType } from './types';
-import { TaskError } from 'src/typings';
+import { TaskError } from 'src/common/typings';
 import { getObjectProperties } from 'src/common/utils/utils';
 import { isFunction } from 'lodash';
 

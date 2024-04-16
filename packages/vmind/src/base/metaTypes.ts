@@ -1,4 +1,4 @@
-import { ModelType } from 'src/typings';
+import { ModelType } from 'src/common/typings';
 import { TaskNodeType } from './taskNode/types';
 import { Parser } from './tools/parser';
 import { Patcher } from './tools/patcher';

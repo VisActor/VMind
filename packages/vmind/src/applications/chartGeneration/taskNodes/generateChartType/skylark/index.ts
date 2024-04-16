@@ -1,6 +1,6 @@
 import { LLMBasedTaskNodeMeta } from 'src/base/metaTypes';
 import { TaskNodeType } from 'src/base/taskNode/types';
-import { ModelType } from 'src/typings';
+import { ModelType } from 'src/common/typings';
 
 import { GenerateChartTypeContext, GenerateChartTypeOutput } from '../types';
 import { generateChartTypeRequester, parseChartTypeResponse } from './utils';

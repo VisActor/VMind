@@ -2,7 +2,7 @@ import axios from 'axios';
 import yaml from 'js-yaml';
 
 import { omit } from 'lodash';
-import { ILLMOptions, LLMResponse } from 'src/typings';
+import { ILLMOptions, LLMResponse } from 'src/common/typings';
 
 /**
  *

@@ -1,4 +1,4 @@
-import { LOCATION, SimpleFieldInfo, VizSchema } from 'src/typings';
+import { LOCATION, SimpleFieldInfo, VizSchema } from 'src/common/typings';
 import { Transformer } from 'src/base/tools/transformer';
 import { GetVizSchemaContext, GetVizSchemaOutput } from './types';
 

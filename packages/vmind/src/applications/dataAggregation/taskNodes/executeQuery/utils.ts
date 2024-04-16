@@ -1,5 +1,5 @@
 import { sampleSize, isNumber, isInteger, isString, isArray, capitalize, startCase } from 'lodash';
-import { DataItem, DataType, ROLE, SimpleFieldInfo } from '../../../../typings';
+import { DataItem, DataType, ROLE, SimpleFieldInfo } from '../../../../common/typings';
 import dayjs from 'dayjs';
 import { uniqArray } from '@visactor/vutils';
 import alasql from 'alasql';

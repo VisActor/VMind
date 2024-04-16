@@ -2,7 +2,7 @@ import { Transformer } from 'src/base/tools/transformer';
 import { GenerateFieldMapContext, GenerateFieldMapOutput } from '../../types';
 import { isArray, isString } from 'lodash';
 import { matchFieldWithoutPunctuation } from './utils';
-import { DataType, ROLE } from 'src/typings';
+import { DataType, ROLE } from 'src/common/typings';
 import { calculateTokenUsage, foldDatasetByYField } from 'src/common/utils/utils';
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
 import { addChartSource } from '../../../utils';

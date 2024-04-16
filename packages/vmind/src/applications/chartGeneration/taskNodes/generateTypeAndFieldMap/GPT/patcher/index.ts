@@ -3,7 +3,7 @@ import { isArray, isNil } from 'lodash';
 
 import { Transformer } from 'src/base/tools/transformer';
 import { foldDatasetByYField, getFieldByDataType, getFieldByRole, getRemainedFields } from 'src/common/utils/utils';
-import { DataType, ROLE } from 'src/typings';
+import { DataType, ROLE } from 'src/common/typings';
 import { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
 
 const CARTESIAN_CHART_LIST = [

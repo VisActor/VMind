@@ -1,4 +1,4 @@
-import { LLMResponse } from 'src/typings';
+import { LLMResponse } from 'src/common/typings';
 import { matchJSONStr, replaceAll } from 'src/common/utils/utils';
 import { GetQuerySQLContext } from 'src/applications/dataAggregation/types';
 import { Requester } from 'src/base/tools/requester';

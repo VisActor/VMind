@@ -8,7 +8,7 @@ import {
   OuterPackages,
   ModelType,
   VMindDataset
-} from '../typings';
+} from '../common/typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
 import { VMindApplicationMap } from './types';
 import { BaseApplication } from 'src/base/application';

@@ -1,4 +1,4 @@
-import { DataItem, DataType, ROLE, SimpleFieldInfo } from 'src/typings';
+import { DataItem, DataType, ROLE, SimpleFieldInfo } from 'src/common/typings';
 import { FOLD_NAME, FOLD_VALUE, fold } from '@visactor/chart-advisor';
 import { DEFAULT_VIDEO_LENGTH, VIDEO_LENGTH_BY_CHART_TYPE } from '../vizDataToSpec/constants';
 import { Cell } from 'src/applications/chartGeneration/types';
