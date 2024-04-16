@@ -1,11 +1,11 @@
 import { TaskNodeMeta } from 'src/base/metaTypes';
 import { TaskNodeType } from 'src/base/taskNode/types';
 import { ChartAdvisorContext, ChartAdvisorOutput } from './types';
-import { chartAdvisorTransformer } from './transformers';
+import { getAdvisedListTransformer } from './transformers';
 
-const ChartAdvisorTaskNodeMeta: TaskNodeMeta<ChartAdvisorContext, ChartAdvisorOutput> = {
+const GetAdvisedListTaskNodeMeta: TaskNodeMeta<ChartAdvisorContext, ChartAdvisorOutput> = {
   type: TaskNodeType.RULE_BASED,
-  pipelines: [chartAdvisorTransformer]
+  pipelines: [getAdvisedListTransformer]
 };
 
-export default ChartAdvisorTaskNodeMeta;
+export default GetAdvisedListTaskNodeMeta;

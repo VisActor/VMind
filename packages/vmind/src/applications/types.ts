@@ -30,6 +30,7 @@ export type ChartGenerationOutput = {
   chartType: ChartType;
   cell: Cell;
   spec: any;
+  chartSource: string;
   usage: any; //token usage of the LLM
-  time?: number;
+  time?: { totalTime: number; frameArr: any[] };
 };

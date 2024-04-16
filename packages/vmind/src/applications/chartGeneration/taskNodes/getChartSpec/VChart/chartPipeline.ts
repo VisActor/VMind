@@ -45,8 +45,7 @@ import {
   waterfallAxes,
   waterfallStackLabel,
   boxPlotField,
-  boxPlotStyle,
-  initSpec
+  boxPlotStyle
 } from './transformers';
 
 const pipelineBar = [chartType, data, colorBar, cartesianBar, axis, legend, displayConfBar, animationCartesianBar];

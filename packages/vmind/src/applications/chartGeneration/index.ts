@@ -8,6 +8,8 @@ import { ModelType } from 'src/common/typings';
 import GenerateChartTypeTaskNodeMeta from './taskNodes/generateChartType/skylark';
 import GenerateFieldMapTaskNodeMeta from './taskNodes/generateFieldMap/skylark';
 import ChartAdvisorTaskNodeMeta from './taskNodes/chartAdvisor';
+import GetAdvisedListTaskNodeMeta from './taskNodes/chartAdvisor';
+import getVChartSpecFromListTaskNodeMeta from './taskNodes/getChartSpec/VChart/getSpecFromList';
 
 const chartGenerationGPTMeta: ApplicationMeta<ChartGenerationContext, ChartGenerationOutput> = {
   name: 'chartGeneration',
@@ -34,13 +36,15 @@ const chartGenerationAdvisorMeta: ApplicationMeta<ChartGenerationContext, ChartG
   name: 'chartGeneration',
   taskNodes: [
     { taskNode: GetVizSchemaTaskNodeMeta, name: 'getVizSchema' },
-    { taskNode: ChartAdvisorTaskNodeMeta, name: 'chartAdvisor' }
+    { taskNode: GetAdvisedListTaskNodeMeta, name: 'getAdvisedList' },
+    { taskNode: getVChartSpecFromListTaskNodeMeta, name: 'getSpecList' }
   ]
 };
 
 const chartGenerationMetaByModel = {
   [ModelType.GPT]: chartGenerationGPTMeta,
-  [ModelType.SKYLARK]: chartGenerationSkylarkMeta
+  [ModelType.SKYLARK]: chartGenerationSkylarkMeta,
+  [ModelType.CHART_ADVISOR]: chartGenerationAdvisorMeta
 };
 
 export default chartGenerationMetaByModel;

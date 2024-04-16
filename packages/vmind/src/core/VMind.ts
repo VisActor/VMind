@@ -123,7 +123,7 @@ class VMind {
     let finalFieldInfo = fieldInfo;
     let queryDatasetUsage;
     try {
-      if (enableDataQuery) {
+      if (enableDataQuery && modelType !== ModelType.CHART_ADVISOR) {
         //run data aggregation first
         const dataAggregationContext: DataAggregationContext = {
           userInput: userPrompt,
@@ -157,12 +157,20 @@ class VMind {
     };
 
     const chartGenerationResult = await this.runApplication(ApplicationType.ChartGeneration, modelType, context);
-    const { chartType, spec } = chartGenerationResult;
+
+    if (modelType === ModelType.CHART_ADVISOR) {
+      return chartGenerationResult.advisedList;
+    }
+
+    const { chartType, spec, cell, chartSource } = chartGenerationResult;
     const usage = calculateTokenUsage([queryDatasetUsage, chartGenerationResult.usage]);
     return {
-      ...chartGenerationResult,
+      //...chartGenerationResult,
       spec,
       usage,
+      cell,
+      chartSource,
+      chartType,
       time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
     };
   }

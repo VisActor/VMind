@@ -108,17 +108,12 @@ export function ChartPreview(props: IPropsType) {
       return;
     }
     let cs = chartSpace;
-    if (!cs) {
-      cs = new VChart(spec, {
-        dom: 'chart',
-        mode: 'desktop-browser',
-        dpr: 2,
-        disableDirtyBounds: true
-      });
-      setChartSpace(cs);
-    } else {
-      cs.updateSpec(props.spec);
-    }
+    cs = new VChart(spec, {
+      dom: 'chart',
+      mode: 'desktop-browser',
+      dpr: 2,
+      disableDirtyBounds: true
+    });
     cs.renderAsync();
   }, [chartSpace, props, props.spec, props.time]);
 
@@ -185,7 +180,7 @@ export function ChartPreview(props: IPropsType) {
             </Space>
           </div>
           <div className="right-chart-content">
-            <div id="chart"></div>
+            {props.spec ? <div id="chart"></div> : null}
             <div id="chartListContainer">
               {(props.specList ?? []).map((spec, index: number) => (
                 <div key={`chart-${index}`} id={`chart-${index}`}></div>
