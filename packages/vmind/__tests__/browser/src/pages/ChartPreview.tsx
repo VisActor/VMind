@@ -13,11 +13,11 @@ type IPropsType = {
   spec: any;
   specList?: any;
   time:
-    | {
-        totalTime: number;
-        frameArr: any[];
-      }
-    | undefined;
+  | {
+    totalTime: number;
+    frameArr: any[];
+  }
+  | undefined;
   costTime: number;
 };
 
@@ -36,7 +36,6 @@ function downloadVideo(link: string, filename = 'out') {
 }
 
 export function ChartPreview(props: IPropsType) {
-  const [chartSpace, setChartSpace] = useState<VChart | null>(null);
   const [generating, setGenerating] = useState<boolean>(false);
   const [outType, setOutType] = useState<'gif' | 'video' | ''>('');
   const [src, setSrc] = useState('');
@@ -107,15 +106,14 @@ export function ChartPreview(props: IPropsType) {
     if (!time || !spec) {
       return;
     }
-    let cs = chartSpace;
-    cs = new VChart(spec, {
+    const cs = new VChart(spec, {
       dom: 'chart',
       mode: 'desktop-browser',
       dpr: 2,
       disableDirtyBounds: true
     });
     cs.renderAsync();
-  }, [chartSpace, props, props.spec, props.time]);
+  }, [props]);
 
   useEffect(() => {
     //defaultTicker.mode = 'raf';
