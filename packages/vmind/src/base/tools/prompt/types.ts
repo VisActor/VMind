@@ -1,4 +1,5 @@
 export interface IPrompt<Context> {
   readonly template: string;
-  getPrompt: (context: Context) => string;
+  getSystemPrompt: (context: Context) => string;
+  getUserPrompt: (context: Context) => string;
 }

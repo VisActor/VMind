@@ -8,7 +8,7 @@ export class FieldMapGenerationPrompt extends Prompt<GenerateFieldMapContext> {
   constructor() {
     super('');
   }
-  getPrompt(context: GenerateFieldMapContext) {
+  getSystemPrompt(context: GenerateFieldMapContext) {
     const { chartType, llmOptions } = context;
 
     //call skylark to get field map result.
@@ -24,5 +24,10 @@ export class FieldMapGenerationPrompt extends Prompt<GenerateFieldMapContext> {
       llmOptions.showThoughts ?? true
     );
     return fieldMapPrompt;
+  }
+  getUserPrompt(context: GenerateFieldMapContext): string {
+    const { userInput, fieldInfo } = context;
+    const userMessage = `User's Command: ${userInput}\nData field description: ${JSON.stringify(fieldInfo)}`;
+    return userMessage;
   }
 }

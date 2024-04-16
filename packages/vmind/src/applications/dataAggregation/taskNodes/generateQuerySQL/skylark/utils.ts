@@ -5,9 +5,6 @@ import { Requester } from 'src/base/tools/requester';
 import JSON5 from 'json5';
 import { requestSkyLark } from 'src/common/utils/skylark';
 
-const patchDataQueryInput = (userInput: string) =>
-  userInput + ' 使用` `包裹sql中的所有列名。使用支持的聚合函数将所有的度量列聚合。';
-
 export const parseJson = (JsonStr: string, prefix?: string) => {
   const parseNoPrefixStr = (str: string) => {
     //尝试不带前缀的解析
@@ -58,13 +55,10 @@ export const parseSkylarkResponseAsJSON = (skylarkRes: LLMResponse) => {
 
 export const dataQueryRequestLLM: Requester<GetQuerySQLContext> = async (
   prompt: string,
+  queryDatasetMessage: string,
   context: GetQuerySQLContext
 ) => {
-  const { userInput, fieldInfo, llmOptions } = context;
-  const patchedInput = patchDataQueryInput(userInput);
-
-  const queryDatasetMessage = `User's Command: ${patchedInput}\nColumn Information: ${JSON.stringify(fieldInfo)}`;
-
+  const { llmOptions } = context;
   const requestFunc = llmOptions.customRequestFunc?.dataQuery ?? requestSkyLark;
   const QueryDatasetPrompt = prompt;
   const dataProcessRes = await requestFunc(QueryDatasetPrompt, queryDatasetMessage, llmOptions);

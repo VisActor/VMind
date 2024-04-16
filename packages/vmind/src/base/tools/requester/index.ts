@@ -1,1 +1,1 @@
-export type Requester<Context> = (prompt: string, context: Context) => Promise<any>;
+export type Requester<Context> = (prompt: string, userMessage: string, context: Context) => Promise<any>;
