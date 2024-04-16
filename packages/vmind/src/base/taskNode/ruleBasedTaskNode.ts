@@ -11,13 +11,13 @@ import { isFunction } from 'lodash';
  */
 export class RuleBasedTaskNode<Context, Result> extends BaseTaskNode<Context, Result> {
   pipelines: Transformer<Context, Result>[] | ((context: Context) => Transformer<Context, Result>[]);
-  constructor(name: string, pipelines: Transformer<Context, Result>[]) {
+  constructor(name: string, pipelines: Transformer<Context, Result>[] | ((context: Context) => Transformer<Context, Result>[])) {
     super(name);
     this.type = TaskNodeType.RULE_BASED;
     this.registerPipelines(pipelines);
   }
 
-  registerPipelines(pipelines: Transformer<Context, Result>[]) {
+  registerPipelines(pipelines: Transformer<Context, Result>[] | ((context: Context) => Transformer<Context, Result>[])) {
     this.pipelines = pipelines;
   }
 

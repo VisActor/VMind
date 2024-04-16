@@ -3,7 +3,7 @@ import type { AggrFunc, ColumnRef, Expr, Param, Value } from 'node-sql-parser';
 
 import type { ASTParserContext, ASTParserPipe, SimpleFieldInfo } from './type';
 import { checkIsColumnNode, replaceString, toFirstUpperCase } from './utils';
-import type { Aggregation, ColumnConfig, FilterNode, FilterNodeType, FilterOperator, OrderType, Query, WhereCondition } from 'src/types';
+import { Aggregation, ColumnConfig, FilterNode, FilterNodeType, FilterOperator, OrderType, Query, WhereCondition } from 'src/types';
 
 export const from: ASTParserPipe = (query: Partial<Query>, context: ASTParserContext) => {
   const { dataSource, fieldInfo } = context;
