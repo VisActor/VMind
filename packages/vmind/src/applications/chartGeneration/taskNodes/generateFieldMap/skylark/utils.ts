@@ -7,10 +7,10 @@ import { omit } from 'lodash';
 
 export const generateFieldMapRequester: Requester<GenerateFieldMapContext> = async (
   prompt: string,
+  userMessage: string,
   context: GenerateFieldMapContext
 ) => {
-  const { userInput, fieldInfo, llmOptions } = context;
-  const userMessage = `User's Command: ${userInput}\nData field description: ${JSON.stringify(fieldInfo)}`;
+  const { llmOptions } = context;
   const requestFunc = llmOptions.customRequestFunc?.chartAdvisor ?? requestSkyLark;
   const chartRecommendPrompt = prompt;
   const chartRecommendRes = await requestFunc(chartRecommendPrompt, userMessage, llmOptions);

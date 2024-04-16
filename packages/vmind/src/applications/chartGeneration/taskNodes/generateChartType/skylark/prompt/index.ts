@@ -8,7 +8,7 @@ export class ChartTypeGenerationPrompt extends Prompt<GenerateChartTypeContext> 
   constructor() {
     super('');
   }
-  getPrompt(context: GenerateChartTypeContext) {
+  getSystemPrompt(context: GenerateChartTypeContext): string {
     const { llmOptions } = context;
     //@TODO: change the examples according to supported chart list.
     //call skylark to get recommended chart
@@ -20,5 +20,11 @@ export class ChartTypeGenerationPrompt extends Prompt<GenerateChartTypeContext> 
       llmOptions.showThoughts ?? true
     );
     return chartRecommendPrompt;
+  }
+
+  getUserPrompt(context: GenerateChartTypeContext): string {
+    const { userInput, fieldInfo } = context;
+    const userMessage = `User's Command: ${userInput}\nData field description: ${JSON.stringify(fieldInfo)}`;
+    return userMessage;
   }
 }

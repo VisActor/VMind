@@ -53,8 +53,9 @@ export default class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions 
 
   async requestLLM(context: Context): Promise<TaskError | DSL> {
     try {
-      const prompt = this.prompt.getPrompt(context);
-      return await this.requester(prompt, context);
+      const systemPrompt = this.prompt.getSystemPrompt(context);
+      const userPrompt = this.prompt.getUserPrompt(context);
+      return await this.requester(systemPrompt, userPrompt, context);
     } catch (e: any) {
       console.error(`${this.name} error!`);
       console.error(e);

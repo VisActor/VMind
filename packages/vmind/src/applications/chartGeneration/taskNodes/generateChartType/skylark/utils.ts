@@ -6,10 +6,10 @@ import { SUPPORTED_CHART_LIST } from 'src/applications/chartGeneration/constants
 
 export const generateChartTypeRequester: Requester<GenerateChartTypeContext> = async (
   prompt: string,
+  userMessage: string,
   context: GenerateChartTypeContext
 ) => {
-  const { userInput, fieldInfo, llmOptions } = context;
-  const userMessage = `User's Command: ${userInput}\nData field description: ${JSON.stringify(fieldInfo)}`;
+  const { llmOptions } = context;
   const requestFunc = llmOptions.customRequestFunc?.chartAdvisor ?? requestSkyLark;
   const chartRecommendPrompt = prompt;
   const chartRecommendRes = await requestFunc(chartRecommendPrompt, userMessage, llmOptions);
