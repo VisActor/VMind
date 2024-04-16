@@ -176,7 +176,7 @@ const patchArrayField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>
   };
 };
 
-const calculateUsage: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
+const calculateUsage: Transformer<PatchContext, any> = (context: PatchContext) => {
   const { fieldMapTokenUsage, chartTypeTokenUsage } = context;
   const usage = calculateTokenUsage([fieldMapTokenUsage, chartTypeTokenUsage]);
 

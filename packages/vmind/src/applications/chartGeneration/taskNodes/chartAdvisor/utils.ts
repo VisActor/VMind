@@ -95,19 +95,18 @@ export const checkChartTypeAndCell = (chartType: string, cell: any, fieldInfo: S
       }
     }
   });
+  let checkChannelResult = true;
   switch (chartType) {
     case 'BAR CHART':
     case 'LINE CHART':
-      checkChannel(cell, 'x');
-      checkChannel(cell, 'y');
+      checkChannelResult = checkChannel(cell, 'x') && checkChannel(cell, 'y');
       break;
     case 'DUAL AXIS CHART':
-      checkChannel(cell, 'x');
-      checkChannel(cell, 'y', 2);
+      checkChannelResult = checkChannel(cell, 'x') && checkChannel(cell, 'y', 2);
       break;
     default:
       //console.warn('Unchecked Chart Type', chartType);
       break;
   }
-  return true;
+  return checkChannelResult;
 };
