@@ -1,12 +1,13 @@
 import type { RuleBasedTaskNodeMeta } from 'src/base/metaTypes';
 import { TaskNodeType } from 'src/base/taskNode/types';
 import type { GetChartSpecContext, GetChartSpecOutput } from '../types';
-import { getChartPipelines } from './chartPipeline';
 import { estimateVideoTime } from 'src/common/utils/utils';
 import { animationDuration } from './constants';
 import { uniqBy } from 'lodash';
 import type { ChartGenerationOutput } from 'src/applications/types';
 import type { Transformer } from 'src/base/tools/transformer';
+import getVChartSpecTaskNodeMeta from '.';
+import FormatOutputTaskNodeMeta from '../../formatOutput';
 
 const runPipelines = (pipelines: any, context: any) => {
   const result = pipelines.reduce((pre: any, transformer: any) => {
@@ -33,20 +34,22 @@ const getSpecFromList: Transformer<any, { advisedList: ChartGenerationOutput[] }
       chartSource,
       usage
     };
-    const pipelines = getChartPipelines(contextNew);
-    const { spec } = runPipelines(pipelines, contextNew);
+    const pipelines = (getVChartSpecTaskNodeMeta.pipelines as any)(contextNew).concat(
+      FormatOutputTaskNodeMeta.pipelines
+    );
+    const { spec, chartType: chartTypeNew, cell: cellNew, time } = runPipelines(pipelines, contextNew);
     return {
       chartSource: 'chartAdvisor',
       spec,
-      cell,
-      chartType,
+      cell: cellNew,
+      chartType: chartTypeNew,
       score,
+      time,
       usage: {
         prompt_tokens: 0,
         completion_tokens: 0,
         total_tokens: 0
-      },
-      time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
+      }
     };
   });
   return { advisedList: resultList };
