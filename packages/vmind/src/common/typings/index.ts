@@ -51,7 +51,22 @@ export type SimpleFieldInfo = {
   domain?: (string | number)[];
 };
 
-export type ChartType = string;
+export enum ChartType {
+  BarChart = 'Bar Chart',
+  LineChart = 'Line Chart',
+  PieChart = 'Pie Chart',
+  ScatterPlot = 'Scatter Plot',
+  WordCloud = 'Word Cloud',
+  RoseChart = 'Rose Chart',
+  RadarChart = 'Radar Chart',
+  SankeyChart = 'Sankey Chart',
+  FunnelChart = 'Funnel Chart',
+  DualAxisChart = 'Dual Axis Chart',
+  WaterFallChart = 'Waterfall Chart',
+  BoxPlot = 'Box Plot',
+  DynamicBarChart = 'Dynamic Bar Chart'
+}
+
 export type GPTChartAdvisorResult = {
   CHART_TYPE: ChartType;
   DOUBLE_CHECK: string;
