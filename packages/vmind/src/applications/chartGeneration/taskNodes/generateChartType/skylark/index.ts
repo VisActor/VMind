@@ -1,16 +1,17 @@
-import { LLMBasedTaskNodeMeta } from 'src/base/metaTypes';
+import type { LLMBasedTaskNodeMeta } from 'src/base/metaTypes';
 import { TaskNodeType } from 'src/base/taskNode/types';
 import { ModelType } from 'src/common/typings';
 
-import { GenerateChartTypeContext, GenerateChartTypeOutput } from '../types';
+import type { GenerateChartTypeContext, GenerateChartTypeOutput } from '../types';
 import { generateChartTypeRequester, parseChartTypeResponse } from './utils';
 import { ChartTypeGenerationPrompt } from './prompt';
+import { patchChartType } from './patcher';
 
 const GenerateChartTypeTaskNodeMeta: LLMBasedTaskNodeMeta<GenerateChartTypeContext, GenerateChartTypeOutput> = {
   type: TaskNodeType.LLM_BASED,
   modelType: ModelType.SKYLARK,
   parser: parseChartTypeResponse,
-  patcher: [],
+  patcher: [patchChartType],
   requester: generateChartTypeRequester,
   prompt: new ChartTypeGenerationPrompt()
 };

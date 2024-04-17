@@ -112,7 +112,7 @@ class VMind {
     options?: {
       colorPalette?: string[];
       animationDuration?: number;
-      enableDataQuery: boolean;
+      enableDataQuery?: boolean;
     }
   ): Promise<ChartGenerationOutput> {
     const modelType = this.getModelType();
@@ -122,7 +122,7 @@ class VMind {
     let queryDatasetUsage;
     const { enableDataQuery, colorPalette, animationDuration } = options;
     try {
-      if (!isNil(dataset) && (isNil(enableDataQuery) || enableDataQuery) && modelType !== ModelType.CHART_ADVISOR) {
+      if (!isNil(dataset) && enableDataQuery && modelType !== ModelType.CHART_ADVISOR) {
         //run data aggregation first
         const dataAggregationContext: DataAggregationContext = {
           userInput: userPrompt,

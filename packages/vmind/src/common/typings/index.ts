@@ -1,6 +1,6 @@
 import type { FFmpeg } from '@ffmpeg/ffmpeg';
 import type { ManualTicker, DefaultTimeline } from '@visactor/vrender-core';
-import { Cell } from 'src/applications/chartGeneration/types';
+import type { Cell } from 'src/applications/chartGeneration/types';
 //models that VMind support
 //more models is under developing
 export enum Model {
@@ -70,14 +70,6 @@ export type NLToChartResult = {
   THOUGHT: string;
   COLOR_PALETTE?: string[];
   error?: boolean;
-};
-
-export type Context = {
-  chartType: ChartType;
-  cell: Cell;
-  dataset: any[];
-  colors?: string[];
-  totalTime?: number;
 };
 
 export type TimeType = {

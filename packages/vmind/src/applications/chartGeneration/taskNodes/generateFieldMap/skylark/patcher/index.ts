@@ -1,11 +1,12 @@
-import { Transformer } from 'src/base/tools/transformer';
-import { GenerateFieldMapContext, GenerateFieldMapOutput } from '../../types';
+import type { Transformer } from 'src/base/tools/transformer';
+import type { GenerateFieldMapContext, GenerateFieldMapOutput } from '../../types';
 import { isArray, isString } from 'lodash';
 import { matchFieldWithoutPunctuation } from './utils';
 import { DataType, ROLE } from 'src/common/typings';
 import { calculateTokenUsage, foldDatasetByYField } from 'src/common/utils/utils';
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
 import { addChartSource } from '../../../utils';
+import { isValidDataset } from 'src/common/dataProcess';
 
 type PatchContext = GenerateFieldMapContext & GenerateFieldMapOutput;
 
@@ -112,7 +113,7 @@ const patchBarChart: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> 
   const cellNew = { ...cell };
   let datasetNew = dataset;
   if (chartTypeNew === 'BAR CHART' || chartTypeNew === 'LINE CHART') {
-    if (isArray(cellNew.y) && cellNew.y.length > 1) {
+    if (isValidDataset(datasetNew) && isArray(cellNew.y) && cellNew.y.length > 1) {
       datasetNew = foldDatasetByYField(datasetNew, cellNew.y, fieldInfo);
       cellNew.y = FOLD_VALUE.toString();
       cellNew.color = FOLD_NAME.toString();
@@ -125,11 +126,30 @@ const patchBarChart: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> 
   };
 };
 
+const patchDualAxisChart: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
+  const { chartType, cell } = context;
+  const cellNew: any = { ...cell };
+  //Dual-axis drawing yLeft and yRight
+
+  if (chartType === 'DUAL AXIS CHART') {
+    cellNew.y = [
+      ...(isArray(cellNew.y) ? cellNew.y : []),
+      cellNew.leftAxis,
+      cellNew.rightAxis,
+      cellNew.leftaxis,
+      cellNew.rightaxis
+    ].filter(Boolean);
+  }
+
+  return { cell: cellNew };
+};
+
 const patchDynamicBarChart: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
   const { chartType, cell, fieldInfo } = context;
   const cellNew = {
     ...cell
   };
+  let chartTypeNew = chartType;
 
   if (chartType === 'DYNAMIC BAR CHART') {
     if (!cellNew.time || cellNew.time === '' || cellNew.time.length === 0) {
@@ -138,7 +158,7 @@ const patchDynamicBarChart: Transformer<PatchContext, Partial<GenerateFieldMapOu
       usedFields.push(...flattenedXField);
       const remainedFields = fieldInfo.filter(f => !usedFields.includes(f.fieldName));
 
-      //动态条形图没有time字段，选择一个离散字段作为time
+      //Dynamic bar chart does not have a time field, choose a discrete field as time.
       const timeField = remainedFields.find(f => {
         return f.type === DataType.DATE;
       });
@@ -150,12 +170,16 @@ const patchDynamicBarChart: Transformer<PatchContext, Partial<GenerateFieldMapOu
         });
         if (stringField) {
           cellNew.time = stringField.fieldName;
+        } else {
+          //no available field, set chart type to bar chart
+          chartTypeNew = 'BAR CHART';
         }
       }
     }
   }
   return {
-    cell: cellNew
+    cell: cellNew,
+    chartType: chartTypeNew
   };
 };
 
@@ -194,6 +218,7 @@ export const patchPipelines: Transformer<PatchContext, Partial<GenerateFieldMapO
   patchRadarChart,
   patchBoxPlot,
   patchBarChart,
+  patchDualAxisChart,
   patchDynamicBarChart,
   patchArrayField
 ];

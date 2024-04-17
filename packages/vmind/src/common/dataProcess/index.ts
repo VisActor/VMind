@@ -1,7 +1,8 @@
 import { DataSet, DataView, csvParser, fold } from '@visactor/vdataset';
-import { DataItem, DataType, SimpleFieldInfo } from '../typings';
+import type { DataItem, SimpleFieldInfo, VMindDataset } from '../typings';
+import { DataType } from '../typings';
 import { getFieldInfo } from '../../applications/dataAggregation/taskNodes/executeQuery/utils';
-import { isNil } from 'lodash';
+import { isArray, isNil } from 'lodash';
 
 export const parseCSVWithVChart = (csvString: string) => {
   //Parse csv string to VChart Dataview so it can be directly used in VChart spec
@@ -62,4 +63,8 @@ export const getFieldInfoFromDataset = (dataset: DataItem[]): SimpleFieldInfo[] 
     });
   });
   return getFieldInfo(dataset, Array.from(columns) as string[]);
+};
+
+export const isValidDataset = (dataset?: VMindDataset | undefined | null) => {
+  return !isNil(dataset) && isArray(dataset) && dataset.length > 0;
 };
