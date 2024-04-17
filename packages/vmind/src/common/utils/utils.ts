@@ -1,6 +1,6 @@
-import { DataItem, DataType, ROLE, SimpleFieldInfo } from 'src/common/typings';
+import type { DataItem, DataType, ROLE, SimpleFieldInfo } from 'src/common/typings';
 import { FOLD_NAME, FOLD_VALUE, fold } from '@visactor/chart-advisor';
-import { Cell } from 'src/applications/chartGeneration/types';
+import type { Cell } from 'src/applications/chartGeneration/types';
 import {
   DEFAULT_VIDEO_LENGTH,
   VIDEO_LENGTH_BY_CHART_TYPE
@@ -10,9 +10,8 @@ export const detectAxesType = (values: any[], field: string) => {
   const isNumber = values.every(d => !d[field] || !isNaN(Number(d[field])));
   if (isNumber) {
     return 'linear';
-  } else {
-    return 'band';
   }
+  return 'band';
 };
 
 export const calculateTokenUsage = (usageList: any[]) => {
@@ -22,9 +21,9 @@ export const calculateTokenUsage = (usageList: any[]) => {
     total_tokens: 0
   };
   usageList.filter(Boolean).forEach(usage => {
-    totalUsage['completion_tokens'] += usage['completion_tokens'] ?? 0;
-    totalUsage['prompt_tokens'] += usage['prompt_tokens'] ?? 0;
-    totalUsage['total_tokens'] += usage['total_tokens'] ?? 0;
+    totalUsage.completion_tokens += usage.completion_tokens ?? 0;
+    totalUsage.prompt_tokens += usage.prompt_tokens ?? 0;
+    totalUsage.total_tokens += usage.total_tokens ?? 0;
   });
   return totalUsage;
 };

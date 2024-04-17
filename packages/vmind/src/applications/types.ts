@@ -1,5 +1,5 @@
-import { ChartType, ILLMOptions, SimpleFieldInfo, VMindDataset } from 'src/common/typings';
-import { Cell } from './chartGeneration/types';
+import type { ChartType, ILLMOptions, SimpleFieldInfo, VMindDataset } from 'src/common/typings';
+import type { Cell } from './chartGeneration/types';
 
 //context of the DataAggregation Application
 export type DataAggregationContext = {
@@ -20,7 +20,7 @@ export type ChartGenerationContext = {
   llmOptions: ILLMOptions;
   userInput: string;
   fieldInfo: SimpleFieldInfo[];
-  dataset: VMindDataset;
+  dataset?: VMindDataset;
 } & {
   totalTime?: number;
   colors?: string[];

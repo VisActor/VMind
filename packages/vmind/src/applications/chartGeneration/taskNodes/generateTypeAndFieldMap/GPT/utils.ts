@@ -1,10 +1,10 @@
 import { SUPPORTED_CHART_LIST } from 'src/applications/chartGeneration/constants';
-import { Cell } from 'src/applications/chartGeneration/types';
-import { Parser } from 'src/base/tools/parser';
-import { Requester } from 'src/base/tools/requester';
+import type { Cell } from 'src/applications/chartGeneration/types';
+import type { Parser } from 'src/base/tools/parser';
+import type { Requester } from 'src/base/tools/requester';
 import { parseGPTResponse, requestGPT } from 'src/common/utils/gpt';
-import { ChartType } from 'src/common/typings';
-import { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../types';
+import type { ChartType } from 'src/common/typings';
+import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../types';
 
 type GPTChartAdvisorResult = {
   CHART_TYPE: ChartType;
@@ -25,7 +25,7 @@ export const parseChartGenerationResponse: Parser<
   if (advisorResJson.error) {
     throw Error((advisorResJson as any).message);
   }
-  if (!SUPPORTED_CHART_LIST.includes(advisorResJson['CHART_TYPE'])) {
+  if (!SUPPORTED_CHART_LIST.includes(advisorResJson.CHART_TYPE)) {
     throw Error('Unsupported Chart Type. Please Change User Input');
   }
   const { CHART_TYPE, FIELD_MAP } = advisorResJson;
