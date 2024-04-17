@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useState, useCallback, useMemo } from 'react';
 import './index.scss';
 import {
@@ -106,10 +107,10 @@ export function DataInput(props: IPropsType) {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const vmind: any = useMemo(() => {
+  const vmind: VMind = useMemo(() => {
     if (!url || !apiKey) {
       Message.error('Please set your LLM URL and API Key!!!');
-      return null;
+      return null as unknown as VMind;
     }
     return new VMind({
       url,
@@ -124,23 +125,31 @@ export function DataInput(props: IPropsType) {
 
   const askGPT = useCallback(async () => {
     //setLoading(true);
-    const { fieldInfo, dataset } = vmind.parseCSVData(csv);
     //const { fieldInfo: fieldInfoQuery, dataset: datasetQuery } = await vmind?.dataQuery(describe, fieldInfo, dataset);
-    //const { fieldInfo, dataset, usage } = await vmind.parseCSVDataWithLLM(csv, describe);
-
     //const dataset = mockData4;
     //const fieldInfo = vmind?.getFieldInfo(dataset);
+    const { fieldInfo, dataset } = vmind.parseCSVData(csv);
+
+    const finalFieldInfo = fieldInfo.map(info => ({ fieldName: info.fieldName, role: info.role, type: info.type }));
+    //const finalFieldInfo = fieldInfo
+
+    //const finalDataset = dataset
+    const finalDataset = undefined;
+
     const startTime = new Date().getTime();
-    const chartGenerationRes = await vmind.generateChart(describe, fieldInfo, dataset, true);
+    const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {});
     const endTime = new Date().getTime();
     console.log(chartGenerationRes);
     if (isArray(chartGenerationRes)) {
       props.onSpecListGenerate(chartGenerationRes.map(res => res.spec));
     } else {
-      const { spec, time } = chartGenerationRes;
+      const { spec, time, cell } = chartGenerationRes;
+
+      const finalSpec = vmind.fillSpecWithData(spec, dataset, cell, finalFieldInfo, time.totalTime);
+      //const finalSpec = spec
+
       const costTime = endTime - startTime;
-      console.log(spec);
-      props.onSpecGenerate(spec, time as any, costTime);
+      props.onSpecGenerate(finalSpec, time as any, costTime);
     }
 
     setLoading(false);

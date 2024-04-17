@@ -1,5 +1,5 @@
-import { Transformer } from 'src/base/tools/transformer';
-import { GetChartSpecContext, GetChartSpecOutput } from '../types';
+import type { Transformer } from 'src/base/tools/transformer';
+import type { GetChartSpecContext, GetChartSpecOutput } from '../types';
 import {
   COLOR_THEMES,
   DEFAULT_PIE_VIDEO_LENGTH,
@@ -10,8 +10,10 @@ import {
   animationDuration,
   oneByOneGroupSize
 } from './constants';
-import { detectAxesType } from 'src/common/utils/utils';
+import { getFieldByDataType } from 'src/common/utils/utils';
 import { array } from '@visactor/vutils';
+import { isValidDataset } from 'src/common/dataProcess';
+import { DataType } from 'src/common/typings';
 
 type Context = GetChartSpecContext & GetChartSpecOutput;
 
@@ -42,7 +44,7 @@ export const data: Transformer<Context, GetChartSpecOutput> = (context: Context)
   // spec.data = [dataset]
   spec.data = {
     id: 'data',
-    values: dataset.flat(4)
+    values: isValidDataset(dataset) ? dataset.flat(4) : []
   };
 
   return { spec };
@@ -53,7 +55,7 @@ export const funnelData: Transformer<Context, GetChartSpecOutput> = (context: Co
   // spec.data = [dataset]
   spec.data = {
     id: 'data',
-    values: dataset.sort((a: any, b: any) => b[cell.y as string] - a[cell.y as string])
+    values: isValidDataset(dataset) ? dataset.sort((a: any, b: any) => b[cell.y as string] - a[cell.y as string]) : []
   };
 
   return { spec };
@@ -63,7 +65,7 @@ export const wordCloudData: Transformer<Context, GetChartSpecOutput> = (context:
   const { dataset, spec } = context;
   spec.data = {
     id: 'data',
-    values: dataset.slice(0, WORDCLOUD_NUM_LIMIT)
+    values: isValidDataset(dataset) ? dataset.slice(0, WORDCLOUD_NUM_LIMIT) : []
   };
 
   return { spec };
@@ -74,7 +76,7 @@ export const sequenceData: Transformer<Context & { totalTime: number }, GetChart
 ) => {
   const { dataset, cell, totalTime, spec } = context;
   const timeField = cell.time as string;
-  const latestData = dataset;
+  const latestData = isValidDataset(dataset) ? dataset : [];
 
   // group the data by time field
   const timeArray: any[] = [];
@@ -115,9 +117,9 @@ export const sequenceData: Transformer<Context & { totalTime: number }, GetChart
     };
   });
 
-  spec.data = dataSpecs[0].data;
+  spec.data = dataSpecs.length > 0 ? dataSpecs[0].data : [];
 
-  const duration = totalTime ? totalTime / dataSpecs.length : 1000;
+  const duration = totalTime ? totalTime / (dataSpecs.length ? dataSpecs.length : 1) : 1000;
 
   //config the player
   spec.player = {
@@ -196,7 +198,7 @@ export const sequenceData: Transformer<Context & { totalTime: number }, GetChart
 export const sankeyData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   const { dataset, cell, spec } = context;
   const { source, target } = cell;
-  const linkData = dataset;
+  const linkData = isValidDataset(dataset) ? dataset : [];
   const nodes = [
     ...new Set([
       ...linkData.map((item: any) => item[source as string]),
@@ -325,24 +327,24 @@ export const colorLine: Transformer<Context, GetChartSpecOutput> = (context: Con
 
 export const cartesianLine: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign field in spec according to cell
-  const { cell, dataset, spec } = context;
+  const { cell, spec, fieldInfo } = context;
+  const cellNew = { ...cell };
   spec.xField = cell.x;
   spec.yField = cell.y;
   if (cell.color) {
     spec.seriesField = cell.color;
   } else {
     //no color field. choose a discrete field among remaining fields
-    const dataFields = Object.keys(dataset[0]);
-    const remainedFields = dataFields.filter(f => !spec.xField.includes(f) && spec.yField !== f);
-    const colorField = remainedFields.find(f => {
-      const fieldType = detectAxesType(spec.data.values, f);
-      return fieldType === 'band';
-    });
+    const remainedFields = fieldInfo.filter(
+      ({ fieldName }) => !spec.xField.includes(fieldName) && spec.yField !== fieldName
+    );
+    const colorField = getFieldByDataType(remainedFields, [DataType.STRING, DataType.DATE]);
     if (colorField) {
-      spec.seriesField = colorField;
+      spec.seriesField = colorField.fieldName;
+      cellNew.color = colorField.fieldName;
     }
   }
-  return { spec };
+  return { spec, cell: cellNew };
 };
 
 export const pieField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
@@ -611,12 +613,12 @@ export const sankeyField: Transformer<Context, GetChartSpecOutput> = (context: C
 export const boxPlotField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   const { cell, dataset, spec } = context;
   const { x, y } = cell;
-  const data = dataset as { [key: string]: number }[];
+  const data = isValidDataset(dataset) ? (dataset as { [key: string]: number }[]) : [];
   // assign x field
   spec.xField = x;
   // assign y field
   // 1. sort y field according to its value
-  array(y).sort((a, b) => data[0][a] - data[0][b]);
+  array(y).sort((a, b) => data[0]?.[a] ?? 0 - data[0]?.[b] ?? 0);
   const yFieldsLen = y.length;
   // 2. Map the maximum, minimum, median, and upper and lower quartiles respectively according to numerical value.
   spec.minField = y[0]; // Minimum value field: the field with the smallest value.
@@ -676,7 +678,8 @@ export const sankeyLink: Transformer<Context, GetChartSpecOutput> = (context: Co
 
 export const cartesianBar: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign fields according to cell
-  const { cell, dataset, spec } = context;
+  const { cell, fieldInfo, spec } = context;
+  const cellNew = { ...cell };
   const flattenedXField = Array.isArray(cell.x) ? cell.x : [cell.x];
   if (cell.color && cell.color.length > 0 && cell.color !== cell.x) {
     flattenedXField.push(cell.color);
@@ -687,18 +690,17 @@ export const cartesianBar: Transformer<Context, GetChartSpecOutput> = (context: 
     spec.seriesField = cell.color;
   } else {
     //没有分配颜色字段，从剩下的字段里选择一个离散字段分配到颜色上
-    const dataFields = Object.keys(dataset[0] ?? {});
-    const remainedFields = dataFields.filter(f => !spec.xField.includes(f) && spec.yField !== f);
-    const colorField = remainedFields.find(f => {
-      const fieldType = detectAxesType(spec.data.values, f);
-      return fieldType === 'band';
-    });
+    const remainedFields = fieldInfo.filter(
+      ({ fieldName }) => !spec.xField.includes(fieldName) && spec.yField !== fieldName
+    );
+    const colorField = getFieldByDataType(remainedFields, [DataType.STRING, DataType.DATE]);
     if (colorField) {
-      spec.seriesField = colorField;
-      spec.xField.push(colorField);
+      spec.seriesField = colorField.fieldName;
+      spec.xField.push(colorField.fieldName);
+      cellNew.color = colorField.fieldName;
     }
   }
-  return { spec };
+  return { spec, cell: cellNew };
 };
 
 export const rankingBarField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
@@ -915,14 +917,16 @@ export const rankingBarLabel: Transformer<Context, GetChartSpecOutput> = (contex
 };
 
 export const scatterAxis: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec } = context;
+  const { spec, fieldInfo } = context;
 
   const xField = spec.xField;
   const yField = spec.yField;
+  const xFieldInfo = fieldInfo.find(field => xField === field.fieldName);
+  const yFieldInfo = fieldInfo.find(field => yField === field.fieldName);
   spec.axes = [
     {
       orient: 'bottom',
-      type: detectAxesType(spec.data.values, xField),
+      type: [DataType.DATE, DataType.STRING].includes(xFieldInfo.type) ? 'band' : 'linear',
       label: {
         style: {
           fill: '#FFFFFF'
@@ -937,7 +941,7 @@ export const scatterAxis: Transformer<Context, GetChartSpecOutput> = (context: C
     },
     {
       orient: 'left',
-      type: detectAxesType(spec.data.values, yField),
+      type: [DataType.DATE, DataType.STRING].includes(yFieldInfo.type) ? 'band' : 'linear',
       label: {
         style: {
           fill: '#FFFFFF'
@@ -955,7 +959,7 @@ export const scatterAxis: Transformer<Context, GetChartSpecOutput> = (context: C
 };
 
 const oneByOneDelayFunc = (delay: number) => (datum: any) => {
-  const group = datum['__CHARTSPACE_DEFAULT_DATA_INDEX'] % oneByOneGroupSize;
+  const group = datum.__CHARTSPACE_DEFAULT_DATA_INDEX % oneByOneGroupSize;
   return group * delay;
 };
 

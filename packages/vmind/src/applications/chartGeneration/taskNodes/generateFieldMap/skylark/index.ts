@@ -1,7 +1,7 @@
-import { LLMBasedTaskNodeMeta } from 'src/base/metaTypes';
+import type { LLMBasedTaskNodeMeta } from 'src/base/metaTypes';
 import { TaskNodeType } from 'src/base/taskNode/types';
 import { ModelType } from 'src/common/typings';
-import { GenerateFieldMapContext, GenerateFieldMapOutput } from '../types';
+import type { GenerateFieldMapContext, GenerateFieldMapOutput } from '../types';
 import { FieldMapGenerationPrompt } from './prompt';
 import { generateFieldMapRequester, parseFieldMapResponse } from './utils';
 import { patchPipelines } from './patcher';

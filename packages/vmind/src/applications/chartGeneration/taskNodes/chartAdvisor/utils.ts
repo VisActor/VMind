@@ -1,6 +1,7 @@
-import { ChartType, DataTypeName } from '@visactor/chart-advisor';
-import { Cell } from '../../types';
-import { SimpleFieldInfo } from 'src/common/typings';
+import type { DataTypeName } from '@visactor/chart-advisor';
+import { ChartType } from '@visactor/chart-advisor';
+import type { Cell } from '../../types';
+import type { SimpleFieldInfo } from 'src/common/typings';
 import { isArray } from 'lodash';
 
 export const typeMap = (type: string): DataTypeName => {
@@ -67,13 +68,12 @@ const checkChannel = (cell: any, channel: string, count = 1) => {
     // channel exist and is a string
     return true;
   }
-  if (Array.isArray(cell[channel]) && cell[channel].length === count) {
+  if (Array.isArray(cell[channel]) && cell[channel].length >= count) {
     // channel is a array
     return true;
-  } else {
-    console.error(`cell mismatch channel '${channel}'`);
-    return false;
   }
+  console.error(`cell mismatch channel '${channel}'`);
+  return false;
 };
 
 export const checkChartTypeAndCell = (chartType: string, cell: any, fieldInfo: SimpleFieldInfo[]): boolean => {
@@ -85,12 +85,12 @@ export const checkChartTypeAndCell = (chartType: string, cell: any, fieldInfo: S
     }
     if (isArray(cellField)) {
       if (!cellField.every(f => f && fieldList.includes(f))) {
-        console.error(`missing field ${cellField}`);
+        console.warn(`missing field ${cellField}`);
         //throw `missing field ${cellField}`;
       }
     } else {
       if (cellField && !fieldList.includes(cellField)) {
-        console.error(`missing field ${cellField}`);
+        console.warn(`missing field ${cellField}`);
         //throw `missing field ${cellField}`;
       }
     }

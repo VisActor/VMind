@@ -1,5 +1,6 @@
 import { sampleSize, isNumber, isInteger, isString, isArray, capitalize, startCase } from 'lodash';
-import { DataItem, DataType, ROLE, SimpleFieldInfo } from '../../../../common/typings';
+import type { DataItem, SimpleFieldInfo } from '../../../../common/typings';
+import { DataType, ROLE } from '../../../../common/typings';
 import dayjs from 'dayjs';
 import { uniqArray } from '@visactor/vutils';
 import alasql from 'alasql';
@@ -47,7 +48,7 @@ export const getFieldDomain = (dataset: DataItem[], column: string, role: ROLE) 
 };
 
 export const detectFieldType = (dataset: DataItem[], column: string): SimpleFieldInfo => {
-  let fieldType: DataType | undefined = undefined;
+  let fieldType: DataType | undefined;
   //detect field type based on rules
   //The data types have the following inclusion relationships:
   //date=>string
@@ -72,39 +73,38 @@ export const detectFieldType = (dataset: DataItem[], column: string): SimpleFiel
         fieldType = DataType.STRING;
       }
       return true;
-    } else {
-      //already has a fieldType, check consistency
-      if (fieldType == DataType.DATE && !validateDate(value)) {
-        //current value is not date, field is string type
+    }
+    //already has a fieldType, check consistency
+    if (fieldType === DataType.DATE && !validateDate(value)) {
+      //current value is not date, field is string type
+      fieldType = DataType.STRING;
+      return false;
+    }
+    if (fieldType === DataType.INT) {
+      if (isNaN(numberValue)) {
+        //current value is not number, field is string type
         fieldType = DataType.STRING;
         return false;
-      }
-      if (fieldType == DataType.INT) {
-        if (isNaN(numberValue)) {
-          //current value is not number, field is string type
-          fieldType = DataType.STRING;
-          return false;
-        } else if (!isInteger(numberValue)) {
-          //current value is not int, convert to float type and continue checking
-          fieldType = DataType.FLOAT;
-          return true;
-        }
+      } else if (!isInteger(numberValue)) {
+        //current value is not int, convert to float type and continue checking
+        fieldType = DataType.FLOAT;
         return true;
       }
-      if (fieldType == DataType.FLOAT) {
-        if (isNaN(numberValue)) {
-          //current value is not number, field is string type
-          fieldType = DataType.STRING;
-          return false;
-        }
-        return true;
-      }
-      if (fieldType == DataType.STRING) {
-        //no need to detect.
+      return true;
+    }
+    if (fieldType === DataType.FLOAT) {
+      if (isNaN(numberValue)) {
+        //current value is not number, field is string type
+        fieldType = DataType.STRING;
         return false;
       }
       return true;
     }
+    if (fieldType === DataType.STRING) {
+      //no need to detect.
+      return false;
+    }
+    return true;
   });
   const role = [DataType.STRING, DataType.DATE].includes(fieldType) ? ROLE.DIMENSION : ROLE.MEASURE;
   const domain = getFieldDomain(dataset, column, role);
@@ -181,13 +181,12 @@ export const replaceString = (str: string | number, replaceMap: Map<string, stri
   }
   if (replaceMap.has(str)) {
     return replaceMap.get(str);
-  } else {
-    //Some string may be linked by ASCII characters as non-ASCII characters.Traversing the replaceMap and replaced it to the original character
-    const replaceKeys = [...replaceMap.keys()];
-    return replaceKeys.reduce((prev, cur) => {
-      return replaceAll(prev, cur, replaceMap.get(cur));
-    }, str);
   }
+  //Some string may be linked by ASCII characters as non-ASCII characters.Traversing the replaceMap and replaced it to the original character
+  const replaceKeys = [...replaceMap.keys()];
+  return replaceKeys.reduce((prev, cur) => {
+    return replaceAll(prev, cur, replaceMap.get(cur));
+  }, str);
 };
 
 //replace data keys and data values according to replaceMap
@@ -324,9 +323,8 @@ const matchColumnName = (columnName: string, fieldName: string) => {
 
   if (columnWithoutString === fieldWithoutSpace) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 };
 
 /**
@@ -353,9 +351,8 @@ export const replaceBlankSpace = (sql: string, fieldNames: string[]) => {
     const validColumnName = validColumnNames[index];
     if (validColumnName !== originColumnName) {
       return replaceAll(prev, originColumnName, validColumnName);
-    } else {
-      return prev;
     }
+    return prev;
   }, sql);
   return finalSql;
 };

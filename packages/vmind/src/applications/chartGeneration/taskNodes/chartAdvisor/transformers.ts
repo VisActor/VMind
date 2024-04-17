@@ -1,9 +1,10 @@
-import { TaskError, VMindDataset, VizSchema } from 'src/common/typings';
+import type { VMindDataset, VizSchema } from 'src/common/typings';
 import { chartTypeMap, checkChartTypeAndCell, getCell, typeMap } from './utils';
 import { ChartType, chartAdvisor } from '@visactor/chart-advisor';
-import { Transformer } from 'src/base/tools/transformer';
-import { ChartAdvisorContext, ChartAdvisorOutput } from './types';
-import { Cell } from '../../types';
+import type { Transformer } from 'src/base/tools/transformer';
+import type { ChartAdvisorContext, ChartAdvisorOutput } from './types';
+import type { Cell } from '../../types';
+import { isValidDataset } from 'src/common/dataProcess';
 
 const availableChartTypeList = [
   ChartType.COLUMN,
@@ -66,6 +67,19 @@ export const getAdvisedListTransformer: Transformer<ChartAdvisorContext, getAdvi
   context: ChartAdvisorContext
 ) => {
   const { vizSchema, dataset } = context;
+  const chartSource = 'chartAdvisor';
+
+  if (!isValidDataset(dataset)) {
+    return {
+      advisedList: [],
+      chartSource,
+      usage: {
+        prompt_tokens: 0,
+        completion_tokens: 0,
+        total_tokens: 0
+      }
+    };
+  }
   // call rule-based method to get recommended chart type and fieldMap(cell)
   const { scores } = getAdvisedChartList(vizSchema, dataset);
   const advisedList = scores
@@ -76,7 +90,6 @@ export const getAdvisedListTransformer: Transformer<ChartAdvisorContext, getAdvi
       dataset: result.dataset,
       score: result.score
     }));
-  const chartSource = 'chartAdvisor';
 
   return {
     advisedList,
@@ -92,6 +105,15 @@ export const getAdvisedListTransformer: Transformer<ChartAdvisorContext, getAdvi
 const getTop1AdvisedChart: Transformer<getAdvisedListOutput, ChartAdvisorOutput> = (context: getAdvisedListOutput) => {
   const { advisedList, chartSource, usage } = context;
   // call rule-based method to get recommended chart type and fieldMap(cell)
+  if (advisedList.length === 0) {
+    return {
+      chartType: 'BAR CHART',
+      cell: {},
+      dataset: undefined,
+      chartSource,
+      usage
+    };
+  }
   const result = advisedList[0];
   return {
     chartType: result.chartType,
