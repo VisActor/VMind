@@ -111,6 +111,7 @@ class VMind {
     fieldInfo: SimpleFieldInfo[],
     dataset?: VMindDataset,
     options?: {
+      chartTypeList: string[];
       colorPalette?: string[];
       animationDuration?: number;
       enableDataQuery?: boolean;
@@ -217,4 +218,5 @@ class VMind {
   }
 }
 
+export { ChartType } from 'src/common/typings/index';
 export default VMind;

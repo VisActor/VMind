@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { SUPPORTED_CHART_LIST } from 'src/applications/chartGeneration/constants';
 
 export const ChartAdvisorPromptEnglish = (
