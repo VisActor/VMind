@@ -1,10 +1,11 @@
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
 import { isArray, isNil } from 'lodash';
 
-import { Transformer } from 'src/base/tools/transformer';
+import type { Transformer } from 'src/base/tools/transformer';
 import { foldDatasetByYField, getFieldByDataType, getFieldByRole, getRemainedFields } from 'src/common/utils/utils';
 import { DataType, ROLE } from 'src/common/typings';
-import { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
+import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
+import { isValidDataset } from 'src/common/dataProcess';
 
 const CARTESIAN_CHART_LIST = [
   'Dynamic Bar Chart',
@@ -95,9 +96,11 @@ export const patchYField: Transformer<
 
     if (chartTypeNew === 'BAR CHART' || chartTypeNew === 'LINE CHART' || chartTypeNew === 'DUAL AXIS CHART') {
       //use fold to visualize more than 2 y fields
-      datasetNew = foldDatasetByYField(datasetNew, y, fieldInfo);
-      cellNew.y = FOLD_VALUE.toString();
-      cellNew.color = FOLD_NAME.toString();
+      if (isValidDataset(datasetNew)) {
+        datasetNew = foldDatasetByYField(datasetNew, y, fieldInfo);
+        cellNew.y = FOLD_VALUE.toString();
+        cellNew.color = FOLD_NAME.toString();
+      }
     } else {
       chartTypeNew = 'SCATTER PLOT';
       cellNew = {
@@ -296,24 +299,32 @@ export const patchDynamicBarChart: Transformer<
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
   const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
+  let chartTypeNew = chartType;
 
   if (chartType === 'DYNAMIC BAR CHART') {
     if (!cell.time || cell.time === '' || cell.time.length === 0) {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
 
-      //动态条形图没有time字段，选择一个离散字段作为time
+      //Dynamic bar chart does not have a time field, choose a discrete field as time.
       const timeField = getFieldByDataType(remainedFields, [DataType.DATE]);
       if (timeField) {
         cellNew.time = timeField.fieldName;
       } else {
-        cellNew.time = remainedFields[0].fieldName;
+        const stringField = getFieldByDataType(remainedFields, [DataType.STRING]);
+        if (stringField) {
+          cellNew.time = stringField.fieldName;
+        } else {
+          //no available field, set chart type to bar chart
+          chartTypeNew = 'BAR CHART';
+        }
       }
     }
   }
 
   return {
     //...context,
-    cell: cellNew
+    cell: cellNew,
+    chartType: chartTypeNew
   };
 };
 

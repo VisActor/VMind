@@ -1,25 +1,19 @@
 import { _chatToVideoWasm } from '../chart-to-video';
-import {
-  ILLMOptions,
-  TimeType,
-  Model,
-  SimpleFieldInfo,
-  DataItem,
-  OuterPackages,
-  ModelType,
-  VMindDataset
-} from '../common/typings';
+import type { ILLMOptions, TimeType, SimpleFieldInfo, DataItem, OuterPackages, VMindDataset } from '../common/typings';
+import { Model, ModelType } from '../common/typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
-import { VMindApplicationMap } from './types';
+import type { VMindApplicationMap } from './types';
 import { BaseApplication } from 'src/base/application';
-import {
+import type {
   ChartGenerationContext,
   ChartGenerationOutput,
   DataAggregationContext,
   DataAggregationOutput
 } from 'src/applications/types';
 import applicationMetaList, { ApplicationType } from 'src/applications';
-import { calculateTokenUsage, estimateVideoTime } from 'src/common/utils/utils';
+import { calculateTokenUsage, estimateVideoTime, fillSpecTemplateWithData } from 'src/common/utils/utils';
+import { isNil } from 'lodash';
+import type { Cell } from 'src/applications/chartGeneration/types';
 
 class VMind {
   private _FPS = 30;
@@ -46,7 +40,9 @@ class VMind {
     this._applicationMap = applicationList;
   }
 
-  public addApplication() {}
+  addApplication() {
+    return;
+  }
 
   private getApplication(name: ApplicationType, modelType: ModelType) {
     return this._applicationMap[name][modelType];
@@ -105,7 +101,7 @@ class VMind {
    *
    * @param userPrompt user's visualization intention (what aspect they want to show in the data)
    * @param fieldInfo information about fields in the dataset. field name, type, etc. You can get fieldInfo using parseCSVData or parseCSVDataWithLLM
-   * @param dataset raw dataset used in the chart
+   * @param dataset raw dataset used in the chart. It can be empty and will return a spec template in this case. User can call fillSpecTemplateWithData to fill data into spec template.
    * @param colorPalette color palette of the chart
    * @param animationDuration duration of chart animation.
    * @returns spec and time duration of the chart.
@@ -113,17 +109,22 @@ class VMind {
   async generateChart(
     userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
     fieldInfo: SimpleFieldInfo[],
-    dataset: VMindDataset,
-    enableDataQuery = true,
-    colorPalette?: string[],
-    animationDuration?: number
+    dataset?: VMindDataset,
+    options?: {
+      chartTypeList: string[];
+      colorPalette?: string[];
+      animationDuration?: number;
+      enableDataQuery?: boolean;
+    }
   ): Promise<ChartGenerationOutput> {
     const modelType = this.getModelType();
     let finalDataset = dataset;
     let finalFieldInfo = fieldInfo;
+
     let queryDatasetUsage;
+    const { enableDataQuery, colorPalette, animationDuration } = options;
     try {
-      if (enableDataQuery && modelType !== ModelType.CHART_ADVISOR) {
+      if (!isNil(dataset) && enableDataQuery && modelType !== ModelType.CHART_ADVISOR) {
         //run data aggregation first
         const dataAggregationContext: DataAggregationContext = {
           userInput: userPrompt,
@@ -175,6 +176,20 @@ class VMind {
     };
   }
 
+  /**
+   * user can generate a spec template without dataset in generateChart
+   * fill the spec template with dataset.
+   * @param spec
+   * @param dataset
+   * @param cell
+   * @param fieldInfo
+   * @param totalTime
+   * @returns
+   */
+  fillSpecWithData(spec: any, dataset: VMindDataset, cell: Cell, fieldInfo: SimpleFieldInfo[], totalTime?: number) {
+    return fillSpecTemplateWithData(spec, dataset, cell, fieldInfo, totalTime);
+  }
+
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {
     const { VChart, FFmpeg, fetchFile, ManualTicker } = outerPackages;
     const outName = `out`;
@@ -203,4 +218,5 @@ class VMind {
   }
 }
 
+export { ChartType } from 'src/common/typings/index';
 export default VMind;

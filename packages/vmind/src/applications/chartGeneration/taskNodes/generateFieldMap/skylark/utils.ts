@@ -1,8 +1,7 @@
-import { Requester } from 'src/base/tools/requester';
-import { GenerateFieldMapContext, GenerateFieldMapOutput } from '../types';
+import type { Requester } from 'src/base/tools/requester';
+import type { GenerateFieldMapContext, GenerateFieldMapOutput } from '../types';
 import { parseSkylarkResponse, requestSkyLark } from 'src/common/utils/skylark';
-import { Parser } from 'src/base/tools/parser';
-import { SUPPORTED_CHART_LIST } from 'src/applications/chartGeneration/constants';
+import type { Parser } from 'src/base/tools/parser';
 import { omit } from 'lodash';
 
 export const generateFieldMapRequester: Requester<GenerateFieldMapContext> = async (

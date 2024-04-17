@@ -109,6 +109,7 @@ export function ChartPreview(props: IPropsType) {
       vchartRef.current = null;
       return;
     }
+    spec.animation = false;
     if (isNil(vchartRef.current)) {
       const cs = new VChart(spec, {
         dom: 'chart',

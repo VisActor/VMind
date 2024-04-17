@@ -1,4 +1,4 @@
-import { BaseApplication } from 'src/base/application';
+import type { BaseApplication } from 'src/base/application';
 
 export type VMindApplicationMap = {
   [name: string]: {
