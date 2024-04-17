@@ -6,14 +6,6 @@ import {
   VIDEO_LENGTH_BY_CHART_TYPE
 } from 'src/applications/chartGeneration/taskNodes/getChartSpec/VChart/constants';
 
-export const detectAxesType = (values: any[], field: string) => {
-  const isNumber = values.every(d => !d[field] || !isNaN(Number(d[field])));
-  if (isNumber) {
-    return 'linear';
-  }
-  return 'band';
-};
-
 export const calculateTokenUsage = (usageList: any[]) => {
   const totalUsage = {
     completion_tokens: 0,
