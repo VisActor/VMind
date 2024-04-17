@@ -11,8 +11,9 @@ import type {
   DataAggregationOutput
 } from 'src/applications/types';
 import applicationMetaList, { ApplicationType } from 'src/applications';
-import { calculateTokenUsage, estimateVideoTime } from 'src/common/utils/utils';
+import { calculateTokenUsage, estimateVideoTime, fillSpecTemplateWithData } from 'src/common/utils/utils';
 import { isNil } from 'lodash';
+import type { Cell } from 'src/applications/chartGeneration/types';
 
 class VMind {
   private _FPS = 30;
@@ -100,7 +101,7 @@ class VMind {
    *
    * @param userPrompt user's visualization intention (what aspect they want to show in the data)
    * @param fieldInfo information about fields in the dataset. field name, type, etc. You can get fieldInfo using parseCSVData or parseCSVDataWithLLM
-   * @param dataset raw dataset used in the chart
+   * @param dataset raw dataset used in the chart. It can be empty and will return a spec template in this case. User can call fillSpecTemplateWithData to fill data into spec template.
    * @param colorPalette color palette of the chart
    * @param animationDuration duration of chart animation.
    * @returns spec and time duration of the chart.
@@ -172,6 +173,20 @@ class VMind {
       chartType,
       time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
     };
+  }
+
+  /**
+   * user can generate a spec template without dataset in generateChart
+   * fill the spec template with dataset.
+   * @param spec
+   * @param dataset
+   * @param cell
+   * @param fieldInfo
+   * @param totalTime
+   * @returns
+   */
+  fillSpecWithData(spec: any, dataset: VMindDataset, cell: Cell, fieldInfo: SimpleFieldInfo[], totalTime?: number) {
+    return fillSpecTemplateWithData(spec, dataset, cell, fieldInfo, totalTime);
   }
 
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {

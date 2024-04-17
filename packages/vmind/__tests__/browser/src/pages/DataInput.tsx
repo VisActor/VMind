@@ -129,20 +129,27 @@ export function DataInput(props: IPropsType) {
     //const dataset = mockData4;
     //const fieldInfo = vmind?.getFieldInfo(dataset);
     const { fieldInfo, dataset } = vmind.parseCSVData(csv);
+
     const finalFieldInfo = fieldInfo.map(info => ({ fieldName: info.fieldName, role: info.role, type: info.type }));
-    console.log(finalFieldInfo);
+    //const finalFieldInfo = fieldInfo
+
+    //const finalDataset = dataset
+    const finalDataset = undefined;
 
     const startTime = new Date().getTime();
-    const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, undefined, {});
+    const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {});
     const endTime = new Date().getTime();
     console.log(chartGenerationRes);
     if (isArray(chartGenerationRes)) {
       props.onSpecListGenerate(chartGenerationRes.map(res => res.spec));
     } else {
-      const { spec, time } = chartGenerationRes;
+      const { spec, time, cell } = chartGenerationRes;
+
+      const finalSpec = vmind.fillSpecWithData(spec, dataset, cell, finalFieldInfo, time.totalTime);
+      //const finalSpec = spec
+
       const costTime = endTime - startTime;
-      console.log(spec);
-      props.onSpecGenerate(spec, time as any, costTime);
+      props.onSpecGenerate(finalSpec, time as any, costTime);
     }
 
     setLoading(false);
