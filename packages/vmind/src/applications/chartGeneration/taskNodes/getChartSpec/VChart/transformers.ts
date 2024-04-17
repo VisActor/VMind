@@ -10,7 +10,7 @@ import {
   animationDuration,
   oneByOneGroupSize
 } from './constants';
-import { detectAxesType, getFieldByDataType } from 'src/common/utils/utils';
+import { getFieldByDataType } from 'src/common/utils/utils';
 import { array } from '@visactor/vutils';
 import { isValidDataset } from 'src/common/dataProcess';
 import { DataType } from 'src/common/typings';
@@ -917,14 +917,16 @@ export const rankingBarLabel: Transformer<Context, GetChartSpecOutput> = (contex
 };
 
 export const scatterAxis: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec } = context;
+  const { spec, fieldInfo } = context;
 
   const xField = spec.xField;
   const yField = spec.yField;
+  const xFieldInfo = fieldInfo.find(field => xField === field.fieldName);
+  const yFieldInfo = fieldInfo.find(field => yField === field.fieldName);
   spec.axes = [
     {
       orient: 'bottom',
-      type: detectAxesType(spec.data.values, xField),
+      type: [DataType.DATE, DataType.STRING].includes(xFieldInfo.type) ? 'band' : 'linear',
       label: {
         style: {
           fill: '#FFFFFF'
@@ -939,7 +941,7 @@ export const scatterAxis: Transformer<Context, GetChartSpecOutput> = (context: C
     },
     {
       orient: 'left',
-      type: detectAxesType(spec.data.values, yField),
+      type: [DataType.DATE, DataType.STRING].includes(yFieldInfo.type) ? 'band' : 'linear',
       label: {
         style: {
           fill: '#FFFFFF'
