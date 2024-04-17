@@ -1,10 +1,10 @@
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
 import { isArray, isNil } from 'lodash';
 
-import { Transformer } from 'src/base/tools/transformer';
+import type { Transformer } from 'src/base/tools/transformer';
 import { foldDatasetByYField, getFieldByDataType, getFieldByRole, getRemainedFields } from 'src/common/utils/utils';
 import { DataType, ROLE } from 'src/common/typings';
-import { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
+import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
 
 const CARTESIAN_CHART_LIST = [
   'Dynamic Bar Chart',

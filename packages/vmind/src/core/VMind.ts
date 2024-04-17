@@ -1,18 +1,10 @@
 import { _chatToVideoWasm } from '../chart-to-video';
-import {
-  ILLMOptions,
-  TimeType,
-  Model,
-  SimpleFieldInfo,
-  DataItem,
-  OuterPackages,
-  ModelType,
-  VMindDataset
-} from '../common/typings';
+import type { ILLMOptions, TimeType, SimpleFieldInfo, DataItem, OuterPackages, VMindDataset } from '../common/typings';
+import { Model, ModelType } from '../common/typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
-import { VMindApplicationMap } from './types';
+import type { VMindApplicationMap } from './types';
 import { BaseApplication } from 'src/base/application';
-import {
+import type {
   ChartGenerationContext,
   ChartGenerationOutput,
   DataAggregationContext,
@@ -47,7 +39,9 @@ class VMind {
     this._applicationMap = applicationList;
   }
 
-  public addApplication() {}
+  addApplication() {
+    return;
+  }
 
   private getApplication(name: ApplicationType, modelType: ModelType) {
     return this._applicationMap[name][modelType];
@@ -124,10 +118,11 @@ class VMind {
     const modelType = this.getModelType();
     let finalDataset = dataset;
     let finalFieldInfo = fieldInfo;
+
     let queryDatasetUsage;
-    const { enableDataQuery } = options;
+    const { enableDataQuery, colorPalette, animationDuration } = options;
     try {
-      if ((isNil(enableDataQuery) || enableDataQuery) && modelType !== ModelType.CHART_ADVISOR) {
+      if (!isNil(dataset) && (isNil(enableDataQuery) || enableDataQuery) && modelType !== ModelType.CHART_ADVISOR) {
         //run data aggregation first
         const dataAggregationContext: DataAggregationContext = {
           userInput: userPrompt,
