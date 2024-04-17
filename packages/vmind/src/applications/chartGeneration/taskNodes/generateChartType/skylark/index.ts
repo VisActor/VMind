@@ -5,7 +5,7 @@ import { ModelType } from 'src/common/typings';
 import type { GenerateChartTypeContext, GenerateChartTypeOutput } from '../types';
 import { generateChartTypeRequester, parseChartTypeResponse } from './utils';
 import { ChartTypeGenerationPrompt } from './prompt';
-import { patchChartType } from './patcher';
+import { patchChartType } from '../../utils';
 
 const GenerateChartTypeTaskNodeMeta: LLMBasedTaskNodeMeta<GenerateChartTypeContext, GenerateChartTypeOutput> = {
   type: TaskNodeType.LLM_BASED,

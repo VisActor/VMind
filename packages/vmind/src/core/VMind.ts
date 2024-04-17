@@ -1,5 +1,13 @@
 import { _chatToVideoWasm } from '../chart-to-video';
-import type { ILLMOptions, TimeType, SimpleFieldInfo, DataItem, OuterPackages, VMindDataset } from '../common/typings';
+import type {
+  ILLMOptions,
+  TimeType,
+  SimpleFieldInfo,
+  DataItem,
+  OuterPackages,
+  VMindDataset,
+  ChartType
+} from '../common/typings';
 import { Model, ModelType } from '../common/typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
 import type { VMindApplicationMap } from './types';
@@ -11,9 +19,10 @@ import type {
   DataAggregationOutput
 } from 'src/applications/types';
 import applicationMetaList, { ApplicationType } from 'src/applications';
-import { calculateTokenUsage, estimateVideoTime, fillSpecTemplateWithData } from 'src/common/utils/utils';
+import { calculateTokenUsage, fillSpecTemplateWithData } from 'src/common/utils/utils';
 import { isNil } from 'lodash';
 import type { Cell } from 'src/applications/chartGeneration/types';
+import { SUPPORTED_CHART_LIST } from 'src/applications/chartGeneration/constants';
 
 class VMind {
   private _FPS = 30;
@@ -104,6 +113,7 @@ class VMind {
    * @param dataset raw dataset used in the chart. It can be empty and will return a spec template in this case. User can call fillSpecTemplateWithData to fill data into spec template.
    * @param colorPalette color palette of the chart
    * @param animationDuration duration of chart animation.
+   * @param chartTypeList supported chart list. VMind will generate a chart among this list.
    * @returns spec and time duration of the chart.
    */
   async generateChart(
@@ -111,7 +121,7 @@ class VMind {
     fieldInfo: SimpleFieldInfo[],
     dataset?: VMindDataset,
     options?: {
-      chartTypeList: string[];
+      chartTypeList: ChartType[];
       colorPalette?: string[];
       animationDuration?: number;
       enableDataQuery?: boolean;
@@ -122,7 +132,7 @@ class VMind {
     let finalFieldInfo = fieldInfo;
 
     let queryDatasetUsage;
-    const { enableDataQuery, colorPalette, animationDuration } = options;
+    const { enableDataQuery, colorPalette, animationDuration, chartTypeList } = options;
     try {
       if (!isNil(dataset) && enableDataQuery && modelType !== ModelType.CHART_ADVISOR) {
         //run data aggregation first
@@ -154,7 +164,8 @@ class VMind {
       dataset: finalDataset,
       llmOptions: this._options,
       colors: colorPalette,
-      totalTime: animationDuration
+      totalTime: animationDuration,
+      chartTypeList: chartTypeList ?? SUPPORTED_CHART_LIST
     };
 
     const chartGenerationResult = await this.runApplication(ApplicationType.ChartGeneration, modelType, context);
