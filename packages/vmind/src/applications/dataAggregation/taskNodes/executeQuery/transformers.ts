@@ -1,6 +1,6 @@
-import { Transformer } from 'src/base/tools/transformer';
-import { SimpleFieldInfo, VMindDataset } from 'src/common/typings';
-import { ExecuteQueryContext, ExecuteQueryOutput, SQL } from '../../types';
+import type { Transformer } from 'src/base/tools/transformer';
+import type { SimpleFieldInfo, VMindDataset } from 'src/common/typings';
+import type { ExecuteQueryContext, ExecuteQueryOutput, SQL } from '../../types';
 import {
   parseRespondField,
   replaceBlankSpace,
