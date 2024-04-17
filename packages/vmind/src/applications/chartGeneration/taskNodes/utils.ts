@@ -1,10 +1,26 @@
-import { Transformer } from 'src/base/tools/transformer';
-import { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from './generateTypeAndFieldMap/types';
+import type { Transformer } from 'src/base/tools/transformer';
+import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from './generateTypeAndFieldMap/types';
+import type { ChartType } from 'src/common/typings';
+import { replaceAll } from 'src/common/utils/utils';
 
 export const addChartSource: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
-  GenerateChartAndFieldMapOutput
+  Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
   const { llmOptions } = context;
-  return { ...context, chartSource: llmOptions.model };
+  return { chartSource: llmOptions.model };
+};
+
+export const patchChartType: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, chartTypeList } = context;
+  const chartTypeNew: ChartType = replaceAll(chartType, '-', ' ') as ChartType;
+
+  if (!chartTypeList.includes(chartTypeNew)) {
+    throw Error('Unsupported Chart Type. Please Change User Input');
+  }
+
+  return { chartType: chartTypeNew.toUpperCase() as ChartType };
 };
