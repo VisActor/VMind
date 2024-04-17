@@ -1,5 +1,5 @@
-import { ApplicationMeta } from 'src/base/metaTypes';
-import { ChartGenerationContext, ChartGenerationOutput } from '../types';
+import type { ApplicationMeta } from 'src/base/metaTypes';
+import type { ChartGenerationContext, ChartGenerationOutput } from '../types';
 import GetVizSchemaTaskNodeMeta from './taskNodes/getVizSchema';
 import ChartGenerationTaskNodeGPTMeta from './taskNodes/generateTypeAndFieldMap/GPT';
 import ChartAdvisorErrorWrapper from './taskNodes/chartAdvisor/errorWrapper';
@@ -9,6 +9,7 @@ import GenerateChartTypeTaskNodeMeta from './taskNodes/generateChartType/skylark
 import GenerateFieldMapTaskNodeMeta from './taskNodes/generateFieldMap/skylark';
 import GetAdvisedListTaskNodeMeta from './taskNodes/chartAdvisor';
 import getVChartSpecFromListTaskNodeMeta from './taskNodes/getChartSpec/VChart/getSpecFromList';
+import FormatOutputTaskNodeMeta from './taskNodes/formatOutput';
 
 /**
  * GPT version of intelligent chart generation application
@@ -24,7 +25,8 @@ const chartGenerationGPTMeta: ApplicationMeta<ChartGenerationContext, ChartGener
     { taskNode: GetVizSchemaTaskNodeMeta, name: 'getVizSchema' },
     { taskNode: ChartGenerationTaskNodeGPTMeta, name: 'generateChart' },
     { taskNode: ChartAdvisorErrorWrapper, name: 'chartAdvisorHandler' },
-    { taskNode: getVChartSpecTaskNodeMeta, name: 'getVChartSpec' }
+    { taskNode: getVChartSpecTaskNodeMeta, name: 'getVChartSpec' },
+    { taskNode: FormatOutputTaskNodeMeta, name: 'formatOutput' }
   ]
 };
 
@@ -44,7 +46,8 @@ const chartGenerationSkylarkMeta: ApplicationMeta<ChartGenerationContext, ChartG
     { taskNode: GenerateChartTypeTaskNodeMeta, name: 'generateChartType' },
     { taskNode: GenerateFieldMapTaskNodeMeta, name: 'generateFieldMap' },
     { taskNode: ChartAdvisorErrorWrapper, name: 'chartAdvisorHandler' },
-    { taskNode: getVChartSpecTaskNodeMeta, name: 'getVChartSpec' }
+    { taskNode: getVChartSpecTaskNodeMeta, name: 'getVChartSpec' },
+    { taskNode: FormatOutputTaskNodeMeta, name: 'formatOutput' }
   ]
 };
 

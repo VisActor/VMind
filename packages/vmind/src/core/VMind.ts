@@ -163,7 +163,7 @@ class VMind {
       return chartGenerationResult.advisedList;
     }
 
-    const { chartType, spec, cell, chartSource } = chartGenerationResult;
+    const { chartType, spec, cell, chartSource, time } = chartGenerationResult;
     const usage = calculateTokenUsage([queryDatasetUsage, chartGenerationResult.usage]);
     return {
       //...chartGenerationResult,
@@ -172,7 +172,7 @@ class VMind {
       cell,
       chartSource,
       chartType,
-      time: estimateVideoTime(chartType, spec, animationDuration ? animationDuration * 1000 : undefined)
+      time
     };
   }
 
