@@ -85,12 +85,12 @@ export const checkChartTypeAndCell = (chartType: string, cell: any, fieldInfo: S
     }
     if (isArray(cellField)) {
       if (!cellField.every(f => f && fieldList.includes(f))) {
-        console.error(`missing field ${cellField}`);
+        console.warn(`missing field ${cellField}`);
         //throw `missing field ${cellField}`;
       }
     } else {
       if (cellField && !fieldList.includes(cellField)) {
-        console.error(`missing field ${cellField}`);
+        console.warn(`missing field ${cellField}`);
         //throw `missing field ${cellField}`;
       }
     }

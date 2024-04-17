@@ -1,7 +1,6 @@
 import { error, log } from 'console';
-import VMind from '../../src/index';
+import VMind, { Model } from '../../src/index';
 
-import { Model } from '../../src/typings';
 import {
   mockUserInput10,
   mockUserInput2,

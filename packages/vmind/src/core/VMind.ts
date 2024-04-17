@@ -20,6 +20,7 @@ import {
 } from 'src/applications/types';
 import applicationMetaList, { ApplicationType } from 'src/applications';
 import { calculateTokenUsage, estimateVideoTime } from 'src/common/utils/utils';
+import { isNil } from 'lodash';
 
 class VMind {
   private _FPS = 30;
@@ -113,17 +114,20 @@ class VMind {
   async generateChart(
     userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
     fieldInfo: SimpleFieldInfo[],
-    dataset: VMindDataset,
-    enableDataQuery = true,
-    colorPalette?: string[],
-    animationDuration?: number
+    dataset?: VMindDataset,
+    options?: {
+      colorPalette?: string[];
+      animationDuration?: number;
+      enableDataQuery: boolean;
+    }
   ): Promise<ChartGenerationOutput> {
     const modelType = this.getModelType();
     let finalDataset = dataset;
     let finalFieldInfo = fieldInfo;
     let queryDatasetUsage;
+    const { enableDataQuery } = options;
     try {
-      if (enableDataQuery && modelType !== ModelType.CHART_ADVISOR) {
+      if ((isNil(enableDataQuery) || enableDataQuery) && modelType !== ModelType.CHART_ADVISOR) {
         //run data aggregation first
         const dataAggregationContext: DataAggregationContext = {
           userInput: userPrompt,
