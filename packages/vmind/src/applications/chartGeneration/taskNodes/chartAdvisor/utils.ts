@@ -1,8 +1,9 @@
+import { isArray } from 'lodash';
 import type { DataTypeName } from '@visactor/chart-advisor';
 import { ChartType } from '@visactor/chart-advisor';
 import type { Cell } from '../../types';
 import type { SimpleFieldInfo } from 'src/common/typings';
-import { isArray } from 'lodash';
+import { ChartType as VMindChartType } from 'src/common/typings';
 
 export const typeMap = (type: string): DataTypeName => {
   if (['string'].includes(type)) {
@@ -13,6 +14,26 @@ export const typeMap = (type: string): DataTypeName => {
     return 'number';
   }
   return 'string';
+};
+
+export const VMindChartTypeMap = {
+  [VMindChartType.BarChart]: [
+    ChartType.COLUMN,
+    ChartType.COLUMN_PERCENT,
+    ChartType.COLUMN_PARALLEL,
+    ChartType.BAR,
+    ChartType.BAR_PERCENT,
+    ChartType.BAR_PARALLEL
+  ],
+  [VMindChartType.LineChart]: [ChartType.LINE, ChartType.AREA, ChartType.AREA_PERCENT],
+  [VMindChartType.PieChart]: [ChartType.PIE, ChartType.ANNULAR],
+  [VMindChartType.RoseChart]: [ChartType.ROSE],
+  [VMindChartType.ScatterPlot]: [ChartType.SCATTER],
+  [VMindChartType.DualAxisChart]: [ChartType.DUAL_AXIS],
+  [VMindChartType.WordCloud]: [ChartType.WORD_CLOUD],
+  [VMindChartType.FunnelChart]: [ChartType.FUNNEL],
+  [VMindChartType.SankeyChart]: [ChartType.SANKEY],
+  [VMindChartType.RadarChart]: [ChartType.RADAR]
 };
 
 export const chartTypeMap = (advisorChartType: ChartType) => {
