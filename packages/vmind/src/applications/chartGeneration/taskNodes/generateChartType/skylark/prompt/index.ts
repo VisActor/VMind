@@ -1,20 +1,30 @@
 import { Prompt } from 'src/base/tools/prompt';
 import type { GenerateChartTypeContext } from '../../types';
-import { chartRecommendConstraints, chartRecommendKnowledge } from './knowledge';
 import { getChartRecommendPrompt } from './template';
 import { getStrFromArray } from 'src/common/utils/utils';
+import { chartKnowledgeBase } from './knowledge';
 
 export class ChartTypeGenerationPrompt extends Prompt<GenerateChartTypeContext> {
   constructor() {
     super('');
   }
   getSystemPrompt(context: GenerateChartTypeContext): string {
-    const { llmOptions } = context;
-    //@TODO: change the examples according to supported chart list.
-    //call skylark to get recommended chart
-    const chartRecommendKnowledgeStr = getStrFromArray(chartRecommendKnowledge);
-    const chartRecommendConstraintsStr = getStrFromArray(chartRecommendConstraints);
+    const { llmOptions, chartTypeList } = context;
+
+    const chartKnowledge = chartTypeList.reduce((res, chartType) => {
+      const { knowledge } = chartKnowledgeBase[chartType];
+      return [...res, ...(knowledge ?? [])];
+    }, []);
+    const chartRecommendKnowledgeStr = getStrFromArray(chartKnowledge);
+
+    const chartConstraints = chartTypeList.reduce((res, chartType) => {
+      const { constraints } = chartKnowledgeBase[chartType];
+      return [...res, ...(constraints ?? [])];
+    }, []);
+    const chartRecommendConstraintsStr = getStrFromArray(chartConstraints);
+
     const chartRecommendPrompt = getChartRecommendPrompt(
+      chartTypeList,
       chartRecommendKnowledgeStr,
       chartRecommendConstraintsStr,
       llmOptions.showThoughts ?? true
