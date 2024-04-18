@@ -130,3 +130,37 @@ Response:
 }
 }
 \`\`\``;
+
+export const barChartExample1 = (showThoughts: boolean) => `User Input: 帮我展示不同区域各商品销售额。
+Data field description: [
+{
+"id":"商品名称",
+"type":"string",
+"role":"dimension"
+},
+{
+"id":"region",
+"type":"string",
+"role":"dimension"
+},
+{
+"id":"销售额",
+"type":"int",
+"role":"measure"
+}
+]
+
+Response:
+\`\`\`
+{${showThoughts ? '\n"thought": "Your thoughts",' : ''}
+"CHART_TYPE": "Bar Chart",
+"FIELD_MAP": {
+"x": "商品名称",
+"y": "销售额"
+}${
+  showThoughts
+    ? ",\n\"REASON\": \"User wants to show the sales of different products in different regions, which is suitable for displaying with a bar chart. The '商品名称' is used as the x-axis because it's a string field, and the '销售额' is used as the y - axis because it's a number field. The 'region' field can be used to distinguish different regions, but since the user did not specify the color channel, we will not use it.\""
+    : ''
+}
+}
+\`\`\``;

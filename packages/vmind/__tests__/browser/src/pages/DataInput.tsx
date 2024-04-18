@@ -38,7 +38,7 @@ import {
   mockUserInput17,
   mockUserInput18
 } from '../constants/mockData';
-import VMind from '../../../../src/index';
+import VMind, { ChartType } from '../../../../src/index';
 import { Model } from '../../../../src/index';
 import { isArray } from 'lodash';
 import { mockDataset, mockData2, mockData3, mockData4 } from './mockData';
@@ -138,7 +138,10 @@ export function DataInput(props: IPropsType) {
     const finalDataset = specTemplateTest ? undefined : dataset;
 
     const startTime = new Date().getTime();
-    const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {});
+    const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
+      enableDataQuery: false,
+      chartTypeList: [ChartType.BarChart, ChartType.LineChart, ChartType.ScatterPlot]
+    });
     const endTime = new Date().getTime();
     console.log(chartGenerationRes);
     if (isArray(chartGenerationRes)) {
