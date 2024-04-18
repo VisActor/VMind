@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 export const chartRecommendKnowledge = [
   'Bar chart shows the changes or comparisons of various categories of data.',
   'Line Chart shows the trend of data over time.',

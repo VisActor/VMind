@@ -1,5 +1,5 @@
 import { Prompt } from 'src/base/tools/prompt';
-import { GenerateChartTypeContext } from '../../types';
+import type { GenerateChartTypeContext } from '../../types';
 import { chartRecommendConstraints, chartRecommendKnowledge } from './knowledge';
 import { getChartRecommendPrompt } from './template';
 import { getStrFromArray } from 'src/common/utils/utils';

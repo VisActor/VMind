@@ -52,6 +52,7 @@ export type SimpleFieldInfo = {
 };
 
 export enum ChartType {
+  DynamicBarChart = 'Dynamic Bar Chart',
   BarChart = 'Bar Chart',
   LineChart = 'Line Chart',
   PieChart = 'Pie Chart',
@@ -63,8 +64,7 @@ export enum ChartType {
   FunnelChart = 'Funnel Chart',
   DualAxisChart = 'Dual Axis Chart',
   WaterFallChart = 'Waterfall Chart',
-  BoxPlot = 'Box Plot',
-  DynamicBarChart = 'Dynamic Bar Chart'
+  BoxPlot = 'Box Plot'
 }
 
 export type GPTChartAdvisorResult = {
