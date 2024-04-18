@@ -57,7 +57,7 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
     }, []);
 
     const visualChannelsStr = uniqArray(visualChannels)
-      .map((channel: string) => `"${channel}": ${visualChannelInfoMap[channel]}`)
+      .map((channel: string) => `"${channel}": ${visualChannelInfoMap[channel](sortedChartTypeList)}`)
       .join('\n');
 
     const constraintsStr = getStrFromArray(chartGenerationConstraints);
