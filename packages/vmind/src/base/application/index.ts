@@ -1,10 +1,10 @@
 import { ILLMOptions } from 'src/common/typings';
-import { ApplicationMeta, LLMBasedTaskNodeMeta, RuleBasedTaskNodeMeta, TaskNode } from '../metaTypes';
-import { BaseTaskNode } from '../taskNode/baseTaskNode';
+import type { ApplicationMeta, LLMBasedTaskNodeMeta, RuleBasedTaskNodeMeta, TaskNode } from '../metaTypes';
+import type { BaseTaskNode } from '../taskNode/baseTaskNode';
 import LLMBasedTaskNode from '../taskNode/llmBasedTaskNode';
 import { TaskNodeType } from '../taskNode/types';
 import { ChatManager } from '../tools/chatManager';
-import { IApplication } from './types';
+import type { IApplication } from './types';
 import { RuleBasedTaskNode } from '../taskNode/ruleBasedTaskNode';
 
 /**
@@ -60,12 +60,14 @@ export class BaseApplication<Context, DSL> implements IApplication<Context, DSL>
     this.updateContext({ ...context });
 
     const handler = async (pre: any, curTask: { name: string; task: BaseTaskNode<Context, any> }) => {
+      //console.log(curTask.name)
       const result = await curTask.task.executeTask(this.context);
       //Put the running result of the current node into the context.
       this.updateContext({
         ...this.context,
         ...result
       });
+      //console.log(result)
       return this.context;
     };
 

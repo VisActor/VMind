@@ -133,8 +133,7 @@ export const chartGenerationErrorWrapper: Transformer<ChartAdvisorContext & Char
   context: ChartAdvisorContext & ChartAdvisorOutput
 ) => {
   const { error, chartType, fieldInfo, cell } = context as any;
-  const checkResult = checkChartTypeAndCell(chartType, cell, fieldInfo);
-  if (error || !checkResult) {
+  if (error || !checkChartTypeAndCell(chartType, cell, fieldInfo)) {
     console.warn('LLM generation error, use rule generation.');
     return chartAdvisorHandler(context);
   }

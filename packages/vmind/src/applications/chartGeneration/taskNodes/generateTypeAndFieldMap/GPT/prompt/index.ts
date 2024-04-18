@@ -68,7 +68,7 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
       return [...res, ...exampleStr];
     }, []);
 
-    const examplesStr = (chartExamples.length > 0 ? chartExamples : defaultExamples).join(
+    const examplesStr = (chartExamples.length > 0 ? chartExamples.slice(0, 4) : defaultExamples).join(
       `\n\n------------------------\n\n`
     );
 

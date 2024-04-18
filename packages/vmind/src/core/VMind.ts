@@ -31,7 +31,7 @@ class VMind {
   private _applicationMap: VMindApplicationMap;
 
   constructor(options?: ILLMOptions) {
-    this._options = { ...(options ?? {}) };
+    this._options = { ...(options ?? {}), showThoughts: options.showThoughts ?? true }; //apply default settings
     this._model = options.model ?? Model.GPT3_5;
     this.registerApplications();
   }
@@ -121,7 +121,7 @@ class VMind {
     fieldInfo: SimpleFieldInfo[],
     dataset?: VMindDataset,
     options?: {
-      chartTypeList: ChartType[];
+      chartTypeList?: ChartType[];
       colorPalette?: string[];
       animationDuration?: number;
       enableDataQuery?: boolean;
@@ -134,7 +134,7 @@ class VMind {
     let queryDatasetUsage;
     const { enableDataQuery, colorPalette, animationDuration, chartTypeList } = options;
     try {
-      if (!isNil(dataset) && enableDataQuery && modelType !== ModelType.CHART_ADVISOR) {
+      if (!isNil(dataset) && (isNil(enableDataQuery) || enableDataQuery) && modelType !== ModelType.CHART_ADVISOR) {
         //run data aggregation first
         const dataAggregationContext: DataAggregationContext = {
           userInput: userPrompt,
@@ -229,5 +229,4 @@ class VMind {
   }
 }
 
-export { ChartType } from 'src/common/typings/index';
 export default VMind;

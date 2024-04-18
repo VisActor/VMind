@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { ChartType } from 'src/common/typings';
-import { dynamicBarChart1, lineChartExample1, lineChartExample2, pieChartExample1 } from './examples';
+import { barChartExample1, dynamicBarChart1, lineChartExample1, lineChartExample2, pieChartExample1 } from './examples';
 import type { ChartKnowledge } from './types';
 
 export const visualChannelInfoMap = {
@@ -19,12 +19,12 @@ export const visualChannelInfoMap = {
 };
 export const chartKnowledgeDict: ChartKnowledge = {
   [ChartType.BarChart]: {
-    index: 3,
+    index: 4,
     visualChannels: ['x', 'y', 'color'],
-    examples: []
+    examples: [barChartExample1]
   },
   [ChartType.LineChart]: {
-    index: 4,
+    index: 3,
     visualChannels: ['x', 'y', 'color'],
     examples: [lineChartExample1, lineChartExample2]
   },
