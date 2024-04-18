@@ -1,7 +1,10 @@
 import { Prompt } from 'src/base/tools/prompt';
 import { ChartAdvisorPromptEnglish } from './template';
-import { GenerateChartAndFieldMapContext } from '../../types';
+import type { GenerateChartAndFieldMapContext } from '../../types';
 import { pick } from 'lodash';
+import { getStrFromArray } from 'src/common/utils/utils';
+import { chartGenerationConstraints, chartKnowledgeDict, defaultExamples, visualChannelInfoMap } from './knowledges';
+import { uniqArray } from '@visactor/vutils';
 
 const patchUserInput = (userInput: string) => {
   const FULL_WIDTH_SYMBOLS = ['，', '。'];
@@ -36,11 +39,48 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
     super('');
   }
   getSystemPrompt(context: GenerateChartAndFieldMapContext) {
-    const { llmOptions } = context;
-    //@TODO: change the examples according to supported chart list.
-    const QueryDatasetPrompt = ChartAdvisorPromptEnglish(llmOptions.showThoughts ?? true);
+    const { llmOptions, chartTypeList } = context;
+    const showThoughts = llmOptions.showThoughts ?? true;
+
+    const chartKnowledge = chartTypeList.reduce((res, chartType) => {
+      const { knowledge } = chartKnowledgeDict[chartType];
+      return [...res, ...(knowledge ?? [])];
+    }, []);
+
+    const knowledgeStr = getStrFromArray(chartKnowledge);
+
+    const visualChannels = chartTypeList.reduce((res, chartType) => {
+      const { visualChannels } = chartKnowledgeDict[chartType];
+      return [...res, ...visualChannels];
+    }, []);
+
+    const visualChannelsStr = uniqArray(visualChannels)
+      .map((channel: string) => `"${channel}": ${visualChannelInfoMap[channel]}`)
+      .join('\n');
+
+    const constraintsStr = getStrFromArray(chartGenerationConstraints);
+
+    const chartExamples = chartTypeList.reduce((res, chartType) => {
+      const { examples } = chartKnowledgeDict[chartType];
+      const exampleStr = examples.map(e => e(showThoughts));
+      return [...res, ...exampleStr];
+    }, []);
+
+    const examplesStr = (chartExamples.length > 0 ? chartExamples : defaultExamples).join(
+      `\n\n------------------------\n\n`
+    );
+
+    const QueryDatasetPrompt = ChartAdvisorPromptEnglish(
+      showThoughts,
+      chartTypeList,
+      knowledgeStr,
+      visualChannelsStr,
+      constraintsStr,
+      examplesStr
+    );
     return QueryDatasetPrompt;
   }
+
   getUserPrompt(context: GenerateChartAndFieldMapContext): string {
     const { userInput: userInputOrigin, vizSchema } = context;
     const userInput = patchUserInput(userInputOrigin);

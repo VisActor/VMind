@@ -3,6 +3,7 @@ import { isArray, isNil } from 'lodash';
 
 import type { Transformer } from 'src/base/tools/transformer';
 import { foldDatasetByYField, getFieldByDataType, getFieldByRole, getRemainedFields } from 'src/common/utils/utils';
+import type { ChartType } from 'src/common/typings';
 import { DataType, ROLE } from 'src/common/typings';
 import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
 import { isValidDataset } from 'src/common/dataProcess';
@@ -88,13 +89,20 @@ export const patchYField: Transformer<
   // 3. In other cases, the chart type is corrected to scatter plot.
 
   if (y && isArray(y) && y.length > 1) {
-    if (chartTypeNew === 'BOX PLOT' || (chartTypeNew === 'DUAL AXIS CHART' && y.length === 2)) {
+    if (
+      chartTypeNew === ('BOX PLOT' as ChartType) ||
+      (chartTypeNew === ('DUAL AXIS CHART' as ChartType) && y.length === 2)
+    ) {
       return {
         ...context
       };
     }
 
-    if (chartTypeNew === 'BAR CHART' || chartTypeNew === 'LINE CHART' || chartTypeNew === 'DUAL AXIS CHART') {
+    if (
+      chartTypeNew === ('BAR CHART' as ChartType) ||
+      chartTypeNew === ('LINE CHART' as ChartType) ||
+      chartTypeNew === ('DUAL AXIS CHART' as ChartType)
+    ) {
       //use fold to visualize more than 2 y fields
       if (isValidDataset(datasetNew)) {
         datasetNew = foldDatasetByYField(datasetNew, y, fieldInfo);
@@ -102,7 +110,7 @@ export const patchYField: Transformer<
         cellNew.color = FOLD_NAME.toString();
       }
     } else {
-      chartTypeNew = 'SCATTER PLOT';
+      chartTypeNew = 'SCATTER PLOT' as ChartType;
       cellNew = {
         ...cell,
         x: y[0],
@@ -129,7 +137,7 @@ export const patchBoxPlot: Transformer<
     ...cell
   };
   const { y } = cellNew;
-  if (chartType === 'BOX PLOT') {
+  if (chartType === ('BOX PLOT' as ChartType)) {
     if (typeof y === 'string' && y.split(',').length > 1) {
       cellNew.y = y.split(',').map(str => str.trim());
     } else if (isNil(y) || y.length === 0) {
@@ -195,8 +203,8 @@ export const patchDualAxis: Transformer<
   const cellNew: any = { ...cell };
   //Dual-axis drawing yLeft and yRight
 
-  if (chartType === 'DUAL AXIS CHART' && cellNew.yLeft && cellNew.yRight) {
-    cellNew.y = [cellNew.yLeft, cellNew.yRight];
+  if (chartType === ('DUAL AXIS CHART' as ChartType)) {
+    cellNew.y = [cellNew.y, cellNew.yLeft, cellNew.yRight, cellNew.y1, cellNew.y2].filter(Boolean).flat();
   }
 
   return {
@@ -212,12 +220,12 @@ export const patchPieChart: Transformer<
   const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
 
-  if (chartType === 'ROSE CHART') {
+  if (chartType === ('ROSE CHART' as ChartType)) {
     cellNew.angle = cellNew.radius ?? cellNew.size ?? cellNew.angle;
   }
 
   //Pie chart must have color field and the angle field
-  if (chartType === 'PIE CHART' || chartType === 'ROSE CHART') {
+  if (chartType === ('PIE CHART' as ChartType) || chartType === ('ROSE CHART' as ChartType)) {
     if (!cellNew.color || !cellNew.angle) {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
 
@@ -255,7 +263,7 @@ export const patchWordCloud: Transformer<
   const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
 
-  if (chartType === 'WORD CLOUD') {
+  if (chartType === ('WORD CLOUD' as ChartType)) {
     if (!cellNew.size || !cellNew.color || cellNew.color === cellNew.size) {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
 
@@ -301,7 +309,7 @@ export const patchDynamicBarChart: Transformer<
   const cellNew = { ...cell };
   let chartTypeNew = chartType;
 
-  if (chartType === 'DYNAMIC BAR CHART') {
+  if (chartType === ('DYNAMIC BAR CHART' as ChartType)) {
     if (!cell.time || cell.time === '' || cell.time.length === 0) {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
 
@@ -315,7 +323,7 @@ export const patchDynamicBarChart: Transformer<
           cellNew.time = stringField.fieldName;
         } else {
           //no available field, set chart type to bar chart
-          chartTypeNew = 'BAR CHART';
+          chartTypeNew = 'BAR CHART' as ChartType;
         }
       }
     }
