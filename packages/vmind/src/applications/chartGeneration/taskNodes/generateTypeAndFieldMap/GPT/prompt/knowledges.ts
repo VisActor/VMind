@@ -19,42 +19,52 @@ export const visualChannelInfoMap = {
 };
 export const chartKnowledgeDict: ChartKnowledge = {
   [ChartType.BarChart]: {
+    index: 3,
     visualChannels: ['x', 'y', 'color'],
     examples: []
   },
   [ChartType.LineChart]: {
+    index: 4,
     visualChannels: ['x', 'y', 'color'],
     examples: [lineChartExample1, lineChartExample2]
   },
   [ChartType.PieChart]: {
+    index: 2,
     visualChannels: ['color', 'angle'],
     examples: [pieChartExample1]
   },
   [ChartType.ScatterPlot]: {
+    index: 5,
     visualChannels: ['x', 'y', 'color', 'size'],
     examples: []
   },
   [ChartType.WordCloud]: {
+    index: 6,
     visualChannels: ['color', 'size'],
     examples: []
   },
   [ChartType.RoseChart]: {
+    index: 7,
     visualChannels: ['color', 'radius', 'angle'],
     examples: []
   },
   [ChartType.RadarChart]: {
+    index: 8,
     visualChannels: ['x', 'y', 'color', 'angle', 'value'],
     examples: []
   },
   [ChartType.SankeyChart]: {
+    index: 9,
     visualChannels: ['source', 'target', 'value'],
     examples: []
   },
   [ChartType.FunnelChart]: {
+    index: 10,
     visualChannels: ['x', 'y', 'color', 'value'],
     examples: []
   },
   [ChartType.DualAxisChart]: {
+    index: 11,
     visualChannels: ['x', 'y'],
     examples: [],
     knowledge: [
@@ -62,14 +72,17 @@ export const chartKnowledgeDict: ChartKnowledge = {
     ]
   },
   [ChartType.WaterFallChart]: {
+    index: 12,
     visualChannels: ['x', 'y'],
     examples: []
   },
   [ChartType.BoxPlot]: {
+    index: 13,
     visualChannels: ['x', 'y'],
     examples: []
   },
   [ChartType.DynamicBarChart]: {
+    index: 1,
     visualChannels: ['x', 'y', 'color', 'time'],
     examples: [dynamicBarChart1],
     knowledge: [
