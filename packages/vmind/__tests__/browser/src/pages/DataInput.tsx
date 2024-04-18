@@ -140,7 +140,7 @@ export function DataInput(props: IPropsType) {
     const startTime = new Date().getTime();
     const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
       enableDataQuery: false
-      //chartTypeList: [ChartType.BarChart, ChartType.LineChart, ChartType.ScatterPlot]
+      //chartTypeList: [ChartType.BarChart, ChartType.LineChart,]
     });
     const endTime = new Date().getTime();
     console.log(chartGenerationRes);
