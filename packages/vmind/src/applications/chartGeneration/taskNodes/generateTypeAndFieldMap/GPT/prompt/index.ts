@@ -42,14 +42,16 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
     const { llmOptions, chartTypeList } = context;
     const showThoughts = llmOptions.showThoughts ?? true;
 
-    const chartKnowledge = chartTypeList.reduce((res, chartType) => {
+    const sortedChartTypeList = chartTypeList.sort((a, b) => chartKnowledgeDict[a].index - chartKnowledgeDict[b].index);
+
+    const chartKnowledge = sortedChartTypeList.reduce((res, chartType) => {
       const { knowledge } = chartKnowledgeDict[chartType];
       return [...res, ...(knowledge ?? [])];
     }, []);
 
     const knowledgeStr = getStrFromArray(chartKnowledge);
 
-    const visualChannels = chartTypeList.reduce((res, chartType) => {
+    const visualChannels = sortedChartTypeList.reduce((res, chartType) => {
       const { visualChannels } = chartKnowledgeDict[chartType];
       return [...res, ...visualChannels];
     }, []);
@@ -60,7 +62,7 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
 
     const constraintsStr = getStrFromArray(chartGenerationConstraints);
 
-    const chartExamples = chartTypeList.reduce((res, chartType) => {
+    const chartExamples = sortedChartTypeList.reduce((res, chartType) => {
       const { examples } = chartKnowledgeDict[chartType];
       const exampleStr = examples.map(e => e(showThoughts));
       return [...res, ...exampleStr];
