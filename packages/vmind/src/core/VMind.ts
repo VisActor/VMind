@@ -50,6 +50,7 @@ class VMind {
   }
 
   addApplication() {
+    //@TODO: support user registered applications
     return;
   }
 

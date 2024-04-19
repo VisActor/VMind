@@ -235,29 +235,30 @@ export const color: Transformer<Context, GetChartSpecOutput> = (context: Context
 export const colorBar: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   const { colors, spec } = context;
   // spec.data = [dataset]
-  let colorThemes = COLOR_THEMES.default;
-  if (colors && colors.length > 0) {
-    colorThemes = colors;
-  }
+  const colorThemes = COLOR_THEMES.default;
 
-  //apply transparent gradient
-  spec.color = colorThemes.map(c => ({
-    gradient: 'linear',
-    x0: 0.01,
-    y0: 0,
-    x1: 0.01,
-    y1: 1,
-    stops: [
-      {
-        offset: 0,
-        color: `#${c.split('#')[1]}FF`
-      },
-      {
-        offset: 1,
-        color: `#${c.split('#')[1]}00`
-      }
-    ]
-  }));
+  if (colors && colors.length > 0) {
+    spec.color = colors;
+  } else {
+    //apply transparent gradient
+    spec.color = colorThemes.map(c => ({
+      gradient: 'linear',
+      x0: 0.01,
+      y0: 0,
+      x1: 0.01,
+      y1: 1,
+      stops: [
+        {
+          offset: 0,
+          color: `#${c.split('#')[1]}FF`
+        },
+        {
+          offset: 1,
+          color: `#${c.split('#')[1]}00`
+        }
+      ]
+    }));
+  }
 
   return { spec };
 };
@@ -265,29 +266,29 @@ export const colorBar: Transformer<Context, GetChartSpecOutput> = (context: Cont
 export const colorDynamicBar: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   const { colors, spec } = context;
   // spec.data = [dataset]
-  let colorThemes = COLOR_THEMES.default;
+  const colorThemes = COLOR_THEMES.default;
   if (colors && colors.length > 0) {
-    colorThemes = colors;
+    spec.color = colors;
+  } else {
+    //apply transparent gradient
+    spec.color = colorThemes.map(c => ({
+      gradient: 'linear',
+      x0: 1,
+      y0: 0.01,
+      x1: 0.01,
+      y1: 0.01,
+      stops: [
+        {
+          offset: 0,
+          color: `#${c.split('#')[1]}FF`
+        },
+        {
+          offset: 1,
+          color: `#${c.split('#')[1]}00`
+        }
+      ]
+    }));
   }
-
-  //apply transparent gradient
-  spec.color = colorThemes.map(c => ({
-    gradient: 'linear',
-    x0: 1,
-    y0: 0.01,
-    x1: 0.01,
-    y1: 0.01,
-    stops: [
-      {
-        offset: 0,
-        color: `#${c.split('#')[1]}FF`
-      },
-      {
-        offset: 1,
-        color: `#${c.split('#')[1]}00`
-      }
-    ]
-  }));
 
   return { spec };
 };
