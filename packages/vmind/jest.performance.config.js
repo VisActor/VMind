@@ -13,7 +13,8 @@ module.exports = {
   testTimeout: 60000,
   moduleNameMapper: {
     axios: 'axios/dist/node/axios.cjs',
-    'd3-hierarchy': 'd3-hierarchy/dist/d3-hierarchy.min.js'
+    'd3-hierarchy': 'd3-hierarchy/dist/d3-hierarchy.min.js',
+    '^src/(.*)$': '<rootDir>/src/$1',
   },
   verbose: true,
   // 在测试之前设置环境变量

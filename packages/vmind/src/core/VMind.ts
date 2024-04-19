@@ -31,8 +31,8 @@ class VMind {
   private _applicationMap: VMindApplicationMap;
 
   constructor(options?: ILLMOptions) {
-    this._options = { ...(options ?? {}), showThoughts: options.showThoughts ?? true }; //apply default settings
-    this._model = options.model ?? Model.GPT3_5;
+    this._options = { ...(options ?? {}), showThoughts: options?.showThoughts ?? true }; //apply default settings
+    this._model = options?.model ?? Model.GPT3_5;
     this.registerApplications();
   }
 
@@ -133,7 +133,7 @@ class VMind {
     let finalFieldInfo = fieldInfo;
 
     let queryDatasetUsage;
-    const { enableDataQuery, colorPalette, animationDuration, chartTypeList } = options;
+    const { enableDataQuery, colorPalette, animationDuration, chartTypeList } = options ?? {};
     try {
       if (!isNil(dataset) && (isNil(enableDataQuery) || enableDataQuery) && modelType !== ModelType.CHART_ADVISOR) {
         //run data aggregation first

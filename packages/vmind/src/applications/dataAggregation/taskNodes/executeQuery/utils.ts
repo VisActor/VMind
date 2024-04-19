@@ -4,8 +4,9 @@ import { DataType, ROLE } from '../../../../common/typings';
 import dayjs from 'dayjs';
 import { uniqArray } from '@visactor/vutils';
 import alasql from 'alasql';
-import { RESERVE_REPLACE_MAP, operators } from './constants';
+
 import { replaceAll } from 'src/common/utils/utils';
+import { alasqlKeywordList } from './constants';
 
 export const readTopNLine = (csvFile: string, n: number) => {
   // get top n lines of a csv file
@@ -134,6 +135,20 @@ export function generateRandomString(len: number) {
   return result;
 }
 
+const operatorList = [
+  ['+', `_${generateRandomString(3)}_PLUS_${generateRandomString(3)}_`],
+  ['-', `_${generateRandomString(3)}_DASH_${generateRandomString(3)}_`],
+  ['*', `_${generateRandomString(3)}_ASTERISK_${generateRandomString(3)}_`],
+  ['/', `_${generateRandomString(3)}_SLASH_${generateRandomString(3)}_`]
+];
+
+const operators = operatorList.map(op => op[0]);
+
+const RESERVE_REPLACE_MAP = new Map<string, string>([
+  ...operatorList,
+  ...(alasqlKeywordList.map(keyword => [keyword, generateRandomString(10)]) as any)
+]);
+
 export const swapMap = (map: Map<string, string>) => {
   //swap the map
   const swappedMap = new Map();
@@ -150,7 +165,7 @@ export const swapMap = (map: Map<string, string>) => {
  * @param str
  * @returns
  */
-export const replaceNonASCIICharacters = (str: string) => {
+const replaceNonASCIICharacters = (str: string) => {
   const nonAsciiCharMap = new Map();
 
   const newStr = str.replace(/([^\x00-\x7F]+)/g, m => {

@@ -1,5 +1,3 @@
-import { generateRandomString } from './utils';
-
 export const alasqlKeywordList = [
   'ABSOLUTE',
   'ACTION',
@@ -181,17 +179,3 @@ export const alasqlKeywordList = [
   'WITH',
   'WORK'
 ];
-
-export const operatorList = [
-  ['+', `_${generateRandomString(3)}_PLUS_${generateRandomString(3)}_`],
-  ['-', `_${generateRandomString(3)}_DASH_${generateRandomString(3)}_`],
-  ['*', `_${generateRandomString(3)}_ASTERISK_${generateRandomString(3)}_`],
-  ['/', `_${generateRandomString(3)}_SLASH_${generateRandomString(3)}_`]
-];
-
-export const operators = operatorList.map(op => op[0]);
-
-export const RESERVE_REPLACE_MAP = new Map<string, string>([
-  ...operatorList,
-  ...(alasqlKeywordList.map(keyword => [keyword, generateRandomString(10)]) as any)
-]);
