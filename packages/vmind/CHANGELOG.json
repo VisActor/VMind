@@ -2,6 +2,33 @@
   "name": "@visactor/vmind",
   "entries": [
     {
+      "version": "1.2.9",
+      "tag": "@visactor/vmind_v1.2.9",
+      "date": "Fri, 19 Apr 2024 08:54:48 GMT",
+      "comments": {}
+    },
+    {
+      "version": "1.2.8",
+      "tag": "@visactor/vmind_v1.2.8",
+      "date": "Fri, 19 Apr 2024 08:54:47 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "support chart type list in chart generation"
+          },
+          {
+            "comment": "refactor the base framework of VMind"
+          },
+          {
+            "comment": "support chart generation without dataset"
+          },
+          {
+            "comment": "replace alasql keywords in sql"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.2.7",
       "tag": "@visactor/vmind_v1.2.7",
       "date": "Tue, 26 Mar 2024 09:43:52 GMT",

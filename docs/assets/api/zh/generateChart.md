@@ -8,7 +8,7 @@ generateChart函数用于图表智能生成。
 - GPT-3.5
 - GPT-4
 - [skylark2-pro](https://www.volcengine.com/product/yunque)
-- [chart-advisor](../guide/Basic_tutorial/Chart_Advisor)
+- [chart-advisor](../guide/Basic_Tutorial/Chart_Advisor)
 
 ## 接口参数：
 

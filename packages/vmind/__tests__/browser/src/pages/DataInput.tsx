@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useState, useCallback, useMemo } from 'react';
 import './index.scss';
 import {
@@ -34,9 +35,10 @@ import {
   mockUserInput13,
   mockUserInput14,
   mockUserInput16,
-  mockUserInput17
+  mockUserInput17,
+  mockUserInput18
 } from '../constants/mockData';
-import VMind from '../../../../src/index';
+import VMind, { ArcoTheme, ChartType, VeOThemeNewEnergy } from '../../../../src/index';
 import { Model } from '../../../../src/index';
 import { isArray } from 'lodash';
 import { mockDataset, mockData2, mockData3, mockData4 } from './mockData';
@@ -77,7 +79,8 @@ const demoDataList: { [key: string]: any } = {
   'Shopping Mall Sales Performance': mallSalesData,
   'Global GDP': mockUserInput6Eng,
   'Sales of different drinkings': mockUserInput3Eng,
-  'Multi measure': mockUserInput17
+  'Multi measure': mockUserInput17,
+  DataQuery: mockUserInput18
 };
 
 const globalVariables = (import.meta as any).env;
@@ -89,12 +92,13 @@ const ModelConfigMap: any = {
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
+const specTemplateTest = false;
 export function DataInput(props: IPropsType) {
   const defaultDataKey = Object.keys(demoDataList)[3];
   const [describe, setDescribe] = useState<string>(demoDataList[defaultDataKey].input);
   const [csv, setCsv] = useState<string>(demoDataList[defaultDataKey].csv);
-  const [spec, setSpec] = useState<string>('');
-  const [time, setTime] = useState<number>(1000);
+  //const [spec, setSpec] = useState<string>('');
+  //const [time, setTime] = useState<number>(1000);
   const [model, setModel] = useState<Model>(Model.GPT3_5);
   const [cache, setCache] = useState<boolean>(true);
   const [showThoughts, setShowThoughts] = useState<boolean>(false);
@@ -104,10 +108,10 @@ export function DataInput(props: IPropsType) {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const vmind = useMemo(() => {
+  const vmind: VMind = useMemo(() => {
     if (!url || !apiKey) {
       Message.error('Please set your LLM URL and API Key!!!');
-      return null;
+      return null as unknown as VMind;
     }
     return new VMind({
       url,
@@ -122,21 +126,36 @@ export function DataInput(props: IPropsType) {
 
   const askGPT = useCallback(async () => {
     //setLoading(true);
-    const { fieldInfo, dataset } = vmind.parseCSVData(csv);
     //const { fieldInfo: fieldInfoQuery, dataset: datasetQuery } = await vmind?.dataQuery(describe, fieldInfo, dataset);
-    //const { fieldInfo, dataset, usage } = await vmind.parseCSVDataWithLLM(csv, describe);
-
     //const dataset = mockData4;
     //const fieldInfo = vmind?.getFieldInfo(dataset);
+    const { fieldInfo, dataset } = vmind.parseCSVData(csv);
+
+    const finalFieldInfo = specTemplateTest
+      ? fieldInfo.map(info => ({ fieldName: info.fieldName, role: info.role, type: info.type }))
+      : fieldInfo;
+
+    const finalDataset = specTemplateTest ? undefined : dataset;
+
     const startTime = new Date().getTime();
-    const chartGenerationRes = await vmind.generateChart(describe, fieldInfo, dataset, true);
+    const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
+      //enableDataQuery: false,
+      //chartTypeList: [ChartType.BarChart, ChartType.LineChart],
+      colorPalette: ArcoTheme.colorScheme
+    });
     const endTime = new Date().getTime();
+    console.log(chartGenerationRes);
     if (isArray(chartGenerationRes)) {
       props.onSpecListGenerate(chartGenerationRes.map(res => res.spec));
     } else {
-      const { spec, time } = chartGenerationRes;
+      const { spec, time, cell } = chartGenerationRes;
+
+      const finalSpec = specTemplateTest
+        ? vmind.fillSpecWithData(spec, dataset, cell, finalFieldInfo, time.totalTime)
+        : spec;
+
       const costTime = endTime - startTime;
-      props.onSpecGenerate(spec, time as any, costTime);
+      props.onSpecGenerate(finalSpec, time as any, costTime);
     }
 
     setLoading(false);
@@ -287,12 +306,7 @@ export function DataInput(props: IPropsType) {
         <Button
           loading={loading}
           onClick={() => {
-            if (spec) {
-              const jsonSpec = new Function(`return ${spec}`)();
-              props.onSpecGenerate(jsonSpec, { totalTime: time } as any);
-            } else {
-              askGPT();
-            }
+            askGPT();
           }}
           disabled={!url || !apiKey}
           shape="round"

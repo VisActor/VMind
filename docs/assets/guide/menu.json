@@ -23,10 +23,10 @@
       }
     },
     {
-      "path": "Basic",
+      "path": "Basic_Tutorial",
       "title": {
-        "zh": "入门",
-        "en": "Basic"
+        "zh": "基础教程",
+        "en": "Basic Tutorial"
       },
       "children": [
         {
@@ -42,16 +42,7 @@
             "zh": "如何在项目中引用 VMind",
             "en": "How to Import VMind"
           }
-        }
-      ]
-    },
-    {
-      "path": "Basic_Tutorial",
-      "title": {
-        "zh": "基础教程",
-        "en": "Basic Tutorial"
-      },
-      "children": [
+        },
         {
           "path": "Create_VMind_Instance",
           "title": {

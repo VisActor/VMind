@@ -1,6 +1,21 @@
 # Change Log - @visactor/vmind
 
-This log was last generated on Tue, 26 Mar 2024 09:43:52 GMT and should not be manually modified.
+This log was last generated on Fri, 19 Apr 2024 08:54:48 GMT and should not be manually modified.
+
+## 1.2.9
+Fri, 19 Apr 2024 08:54:48 GMT
+
+_Version update only_
+
+## 1.2.8
+Fri, 19 Apr 2024 08:54:47 GMT
+
+### Updates
+
+- support chart type list in chart generation
+- refactor the base framework of VMind
+- support chart generation without dataset
+- replace alasql keywords in sql
 
 ## 1.2.7
 Tue, 26 Mar 2024 09:43:52 GMT
