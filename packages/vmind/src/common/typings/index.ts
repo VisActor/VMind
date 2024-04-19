@@ -162,3 +162,8 @@ export type PatchPipeline = (
 ) => { chartType: string; cell: Cell; dataset: DataItem[]; fieldInfo: SimpleFieldInfo[] };
 
 export type TaskError = { error: boolean };
+
+export type VMindTheme = {
+  colorScheme: string[];
+  background: string;
+};

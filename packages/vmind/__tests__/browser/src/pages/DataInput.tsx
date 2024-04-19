@@ -38,7 +38,7 @@ import {
   mockUserInput17,
   mockUserInput18
 } from '../constants/mockData';
-import VMind, { ChartType } from '../../../../src/index';
+import VMind, { ArcoTheme, ChartType, VeOThemeNewEnergy } from '../../../../src/index';
 import { Model } from '../../../../src/index';
 import { isArray } from 'lodash';
 import { mockDataset, mockData2, mockData3, mockData4 } from './mockData';
@@ -139,8 +139,9 @@ export function DataInput(props: IPropsType) {
 
     const startTime = new Date().getTime();
     const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
-      enableDataQuery: false,
-      chartTypeList: [ChartType.BarChart, ChartType.LineChart]
+      //enableDataQuery: false,
+      //chartTypeList: [ChartType.BarChart, ChartType.LineChart],
+      colorPalette: ArcoTheme.colorScheme
     });
     const endTime = new Date().getTime();
     console.log(chartGenerationRes);

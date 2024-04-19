@@ -1,8 +1,6 @@
 import type { RuleBasedTaskNodeMeta } from 'src/base/metaTypes';
 import { TaskNodeType } from 'src/base/taskNode/types';
 import type { GetChartSpecContext, GetChartSpecOutput } from '../types';
-import { estimateVideoTime } from 'src/common/utils/utils';
-import { animationDuration } from './constants';
 import { uniqBy } from 'lodash';
 import type { ChartGenerationOutput } from 'src/applications/types';
 import type { Transformer } from 'src/base/tools/transformer';
