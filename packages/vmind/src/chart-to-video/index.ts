@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import { OuterPackages, TimeType } from '../typings';
+import { OuterPackages, TimeType } from '../common/typings';
 
 let idx = 0;
 export async function _chatToVideoWasm(

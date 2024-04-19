@@ -1,7 +1,6 @@
 import { error, log } from 'console';
-import VMind from '../../src/index';
+import VMind, { Model } from '../../src/index';
 
-import { Model } from '../../src/typings';
 import {
   mockUserInput10,
   mockUserInput2,
@@ -28,6 +27,8 @@ import {
 
 const TEST_GPT = false;
 const TEST_SKYLARK = true;
+const ShowThoughts = false;
+const EnableDataQuery = true;
 
 const demoDataList: { [key: string]: any } = {
   pie: mockUserInput2,
@@ -62,7 +63,7 @@ const modelResultMap = {
   [Model.SKYLARK2]: { totalCount: 0, successCount: 0, totalTime: 0 }
 };
 
-const testPerformance = (model: Model, vmind: any) => {
+const testPerformance = (model: Model, vmind: VMind) => {
   dataList.some((dataName, index) => {
     if (index >= START_INDEX) {
       it(dataName, async done => {
@@ -71,9 +72,11 @@ const testPerformance = (model: Model, vmind: any) => {
         const { fieldInfo, dataset } = vmind.parseCSVData(csv);
         //const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csv, describe);
         const startTime = new Date().getTime();
-        const { spec, time, chartSource } = await vmind.generateChart(input, fieldInfo, dataset);
+        const { spec, time, chartSource, chartType } = await vmind.generateChart(input, fieldInfo, dataset, {
+          enableDataQuery: EnableDataQuery
+        });
         const endTime = new Date().getTime();
-        log('generated chart type: ' + spec.type);
+        log('generated chart type: ' + chartType);
         if (chartSource !== 'chartAdvisor') {
           const costTime = endTime - startTime;
           log('time cost: ' + costTime / 1000 + 's');
@@ -98,7 +101,7 @@ if (gptKey && gptURL && TEST_GPT) {
     url: gptURL,
     model: Model.GPT3_5,
     cache: true,
-    showThoughts: false,
+    showThoughts: ShowThoughts,
     headers: {
       'api-key': gptKey
     }
