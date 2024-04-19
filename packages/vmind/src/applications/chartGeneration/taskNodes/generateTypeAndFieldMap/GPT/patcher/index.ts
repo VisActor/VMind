@@ -3,7 +3,7 @@ import { isArray, isNil } from 'lodash';
 
 import type { Transformer } from 'src/base/tools/transformer';
 import { foldDatasetByYField, getFieldByDataType, getFieldByRole, getRemainedFields } from 'src/common/utils/utils';
-import type { ChartType } from 'src/common/typings';
+import { ChartType } from 'src/common/typings';
 import { DataType, ROLE } from 'src/common/typings';
 import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
 import { isValidDataset } from 'src/common/dataProcess';
@@ -99,9 +99,10 @@ export const patchYField: Transformer<
     }
 
     if (
-      chartTypeNew === ('BAR CHART' as ChartType) ||
-      chartTypeNew === ('LINE CHART' as ChartType) ||
-      chartTypeNew === ('DUAL AXIS CHART' as ChartType)
+      chartTypeNew === ChartType.BarChart.toUpperCase() ||
+      chartTypeNew === ChartType.LineChart.toUpperCase() ||
+      chartTypeNew === ChartType.DualAxisChart.toUpperCase() ||
+      chartTypeNew === ChartType.RadarChart.toUpperCase()
     ) {
       //use fold to visualize more than 2 y fields
       if (isValidDataset(datasetNew)) {
