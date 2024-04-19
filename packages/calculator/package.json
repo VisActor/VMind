@@ -1,6 +1,6 @@
 {
   "name": "@visactor/calculator",
-  "version": "1.2.7",
+  "version": "1.2.8-alpha.0",
   "description": "SQL-like query executor with DSL",
   "main": "lib",
   "module": "es",
