@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
-import { SUPPORTED_CHART_LIST } from 'src/applications/chartGeneration/constants';
+import type { ChartType } from 'src/common/typings';
 
 export const getChartRecommendPrompt = (
+  chartTypeList: ChartType[],
   knowledgeStr: string,
   constraintsStr: string,
   showThoughts: boolean
@@ -9,14 +10,13 @@ export const getChartRecommendPrompt = (
 Your task is:
 1. Based on the user's command, infer the user's intention and data field description, such as comparison, trend, proportion, distribution, etc. Don't consider intentions that the current data field cannot show.
 2. Select a single chart type that best suites the data and user's intention from the list of supported charts: ${JSON.stringify(
-  SUPPORTED_CHART_LIST
+  chartTypeList
 )}.
 3. Response in YAML format without any additional descriptions
 
 Here is some knowledge you can refer to when selecting chart type:
 ${knowledgeStr}
-
-Must follow these constraints:
+${constraintsStr.length > 0 ? '\nMust follow these constraints:' : ''}
 ${constraintsStr}
 
 Let's think step by step. ${showThoughts ? 'Fill your thoughts in {thoughts}.' : ''}

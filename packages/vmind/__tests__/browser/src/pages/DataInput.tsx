@@ -38,7 +38,7 @@ import {
   mockUserInput17,
   mockUserInput18
 } from '../constants/mockData';
-import VMind from '../../../../src/index';
+import VMind, { ChartType } from '../../../../src/index';
 import { Model } from '../../../../src/index';
 import { isArray } from 'lodash';
 import { mockDataset, mockData2, mockData3, mockData4 } from './mockData';
@@ -92,6 +92,7 @@ const ModelConfigMap: any = {
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
+const specTemplateTest = false;
 export function DataInput(props: IPropsType) {
   const defaultDataKey = Object.keys(demoDataList)[3];
   const [describe, setDescribe] = useState<string>(demoDataList[defaultDataKey].input);
@@ -130,14 +131,17 @@ export function DataInput(props: IPropsType) {
     //const fieldInfo = vmind?.getFieldInfo(dataset);
     const { fieldInfo, dataset } = vmind.parseCSVData(csv);
 
-    const finalFieldInfo = fieldInfo.map(info => ({ fieldName: info.fieldName, role: info.role, type: info.type }));
-    //const finalFieldInfo = fieldInfo
+    const finalFieldInfo = specTemplateTest
+      ? fieldInfo.map(info => ({ fieldName: info.fieldName, role: info.role, type: info.type }))
+      : fieldInfo;
 
-    //const finalDataset = dataset
-    const finalDataset = undefined;
+    const finalDataset = specTemplateTest ? undefined : dataset;
 
     const startTime = new Date().getTime();
-    const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {});
+    const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
+      enableDataQuery: false,
+      chartTypeList: [ChartType.BarChart, ChartType.LineChart]
+    });
     const endTime = new Date().getTime();
     console.log(chartGenerationRes);
     if (isArray(chartGenerationRes)) {
@@ -145,8 +149,9 @@ export function DataInput(props: IPropsType) {
     } else {
       const { spec, time, cell } = chartGenerationRes;
 
-      const finalSpec = vmind.fillSpecWithData(spec, dataset, cell, finalFieldInfo, time.totalTime);
-      //const finalSpec = spec
+      const finalSpec = specTemplateTest
+        ? vmind.fillSpecWithData(spec, dataset, cell, finalFieldInfo, time.totalTime)
+        : spec;
 
       const costTime = endTime - startTime;
       props.onSpecGenerate(finalSpec, time as any, costTime);

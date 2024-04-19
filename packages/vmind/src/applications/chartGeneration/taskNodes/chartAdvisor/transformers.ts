@@ -1,31 +1,11 @@
 import type { VMindDataset, VizSchema } from 'src/common/typings';
-import { chartTypeMap, checkChartTypeAndCell, getCell, typeMap } from './utils';
-import { ChartType, chartAdvisor } from '@visactor/chart-advisor';
+import { VMindChartTypeMap, chartTypeMap, checkChartTypeAndCell, getCell, typeMap } from './utils';
+import type { ChartType } from '@visactor/chart-advisor';
+import { chartAdvisor } from '@visactor/chart-advisor';
 import type { Transformer } from 'src/base/tools/transformer';
 import type { ChartAdvisorContext, ChartAdvisorOutput } from './types';
 import type { Cell } from '../../types';
 import { isValidDataset } from 'src/common/dataProcess';
-
-const availableChartTypeList = [
-  ChartType.COLUMN,
-  ChartType.COLUMN_PERCENT,
-  ChartType.COLUMN_PARALLEL,
-  ChartType.BAR,
-  ChartType.BAR_PERCENT,
-  ChartType.BAR_PARALLEL,
-  ChartType.LINE,
-  ChartType.AREA,
-  ChartType.AREA_PERCENT,
-  ChartType.PIE,
-  ChartType.ANNULAR,
-  ChartType.ROSE,
-  ChartType.SCATTER,
-  ChartType.DUAL_AXIS,
-  ChartType.WORD_CLOUD,
-  ChartType.FUNNEL,
-  ChartType.SANKEY,
-  ChartType.RADAR
-];
 
 /**
  * call @visactor/chart-advisor to get the list of advised charts
@@ -66,7 +46,7 @@ type getAdvisedListOutput = {
 export const getAdvisedListTransformer: Transformer<ChartAdvisorContext, getAdvisedListOutput> = (
   context: ChartAdvisorContext
 ) => {
-  const { vizSchema, dataset } = context;
+  const { vizSchema, dataset, chartTypeList } = context;
   const chartSource = 'chartAdvisor';
 
   if (!isValidDataset(dataset)) {
@@ -82,6 +62,10 @@ export const getAdvisedListTransformer: Transformer<ChartAdvisorContext, getAdvi
   }
   // call rule-based method to get recommended chart type and fieldMap(cell)
   const { scores } = getAdvisedChartList(vizSchema, dataset);
+  const availableChartTypeList = chartTypeList.reduce(
+    (res, chartType) => [...res, ...(VMindChartTypeMap[chartType] ?? [])],
+    []
+  );
   const advisedList = scores
     .filter((d: any) => availableChartTypeList.includes(d.chartType) && d.score - 0 >= 0.00000001)
     .map((result: any) => ({
@@ -133,8 +117,7 @@ export const chartGenerationErrorWrapper: Transformer<ChartAdvisorContext & Char
   context: ChartAdvisorContext & ChartAdvisorOutput
 ) => {
   const { error, chartType, fieldInfo, cell } = context as any;
-  const checkResult = checkChartTypeAndCell(chartType, cell, fieldInfo);
-  if (error || !checkResult) {
+  if (error || !checkChartTypeAndCell(chartType, cell, fieldInfo)) {
     console.warn('LLM generation error, use rule generation.');
     return chartAdvisorHandler(context);
   }

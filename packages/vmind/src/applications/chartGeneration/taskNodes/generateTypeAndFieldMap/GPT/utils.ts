@@ -25,12 +25,10 @@ export const parseChartGenerationResponse: Parser<
   if (advisorResJson.error) {
     throw Error((advisorResJson as any).message);
   }
-  if (!SUPPORTED_CHART_LIST.includes(advisorResJson.CHART_TYPE)) {
-    throw Error('Unsupported Chart Type. Please Change User Input');
-  }
+
   const { CHART_TYPE, FIELD_MAP } = advisorResJson;
 
-  return { chartType: CHART_TYPE.toUpperCase() as ChartType, cell: FIELD_MAP, usage: advisorRes.usage };
+  return { chartType: CHART_TYPE as ChartType, cell: FIELD_MAP, usage: advisorRes.usage };
 };
 
 export const chartGenerationRequestLLM: Requester<GenerateChartAndFieldMapContext> = async (
