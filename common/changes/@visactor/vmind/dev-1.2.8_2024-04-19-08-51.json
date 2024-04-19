@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vmind",
+      "comment": "support chart type list in chart generation",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vmind"
+}
