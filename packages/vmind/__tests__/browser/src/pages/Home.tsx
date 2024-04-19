@@ -25,10 +25,12 @@ export function Home() {
         <DataInput
           onSpecGenerate={(spec, time, costTime) => {
             setSpec(spec);
+            setSpecList([]);
             setTime(time);
             setCostTime(costTime);
           }}
           onSpecListGenerate={(specList: any[], time: any, costTime: number) => {
+            setSpec(undefined);
             setSpecList(specList);
             setTime(time);
             setCostTime(costTime);
