@@ -6,7 +6,7 @@ import type { Transformer } from 'src/base/tools/transformer';
 import type { ChartAdvisorContext, ChartAdvisorOutput } from './types';
 import type { Cell } from '../../types';
 import { isValidDataset } from 'src/common/dataProcess';
-
+import { ChartType as VMindChartType } from 'src/common/typings';
 /**
  * call @visactor/chart-advisor to get the list of advised charts
  * sorted by scores of each chart type
@@ -91,7 +91,7 @@ const getTop1AdvisedChart: Transformer<getAdvisedListOutput, ChartAdvisorOutput>
   // call rule-based method to get recommended chart type and fieldMap(cell)
   if (advisedList.length === 0) {
     return {
-      chartType: 'BAR CHART',
+      chartType: VMindChartType.BarChart.toUpperCase() as VMindChartType,
       cell: {},
       dataset: undefined,
       chartSource,
@@ -100,7 +100,7 @@ const getTop1AdvisedChart: Transformer<getAdvisedListOutput, ChartAdvisorOutput>
   }
   const result = advisedList[0];
   return {
-    chartType: result.chartType,
+    chartType: result.chartType as VMindChartType,
     cell: getCell(result.cell),
     dataset: result.dataset,
     chartSource,

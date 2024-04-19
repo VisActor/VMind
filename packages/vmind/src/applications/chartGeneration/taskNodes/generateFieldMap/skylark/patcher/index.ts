@@ -2,6 +2,7 @@ import type { Transformer } from 'src/base/tools/transformer';
 import type { GenerateFieldMapContext, GenerateFieldMapOutput } from '../../types';
 import { isArray, isString } from 'lodash';
 import { matchFieldWithoutPunctuation } from './utils';
+import { ChartType } from 'src/common/typings';
 import { DataType, ROLE } from 'src/common/typings';
 import { calculateTokenUsage, foldDatasetByYField } from 'src/common/utils/utils';
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
@@ -62,8 +63,8 @@ const patchColorField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>
       cellNew.color = undefined;
       if (['BAR CHART', 'LINE CHART', 'DUAL AXIS CHART'].includes(chartTypeNew)) {
         cellNew.y = [cellNew.y, color].flat();
-        if (chartTypeNew === 'DUAL AXIS CHART' && cellNew.y.length > 2) {
-          chartTypeNew = 'BAR CHART';
+        if (chartTypeNew === ChartType.DualAxisChart.toUpperCase() && cellNew.y.length > 2) {
+          chartTypeNew = ChartType.BarChart.toUpperCase() as ChartType;
         }
       }
     }
@@ -77,7 +78,7 @@ const patchColorField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>
 const patchRadarChart: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
   const { chartType, cell } = context;
 
-  if (chartType === 'RADAR CHART') {
+  if (chartType === ChartType.RadarChart.toUpperCase()) {
     const cellNew = {
       x: cell.angle,
       y: cell.value,
@@ -94,7 +95,7 @@ const patchRadarChart: Transformer<PatchContext, Partial<GenerateFieldMapOutput>
 const patchBoxPlot: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
   const { chartType, cell } = context;
 
-  if (chartType === 'BOX PLOT') {
+  if (chartType === ChartType.BoxPlot.toUpperCase()) {
     const { x, min, q1, median, q3, max } = cell as any;
     const cellNew = {
       x,
@@ -107,12 +108,16 @@ const patchBoxPlot: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> =
   return context;
 };
 
-const patchBarChart: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
+const patchFoldField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
   const { chartType, cell, fieldInfo, dataset } = context;
   const chartTypeNew = chartType;
   const cellNew = { ...cell };
   let datasetNew = dataset;
-  if (chartTypeNew === 'BAR CHART' || chartTypeNew === 'LINE CHART') {
+  if (
+    chartTypeNew === ChartType.BarChart.toUpperCase() ||
+    chartTypeNew === ChartType.LineChart.toUpperCase() ||
+    chartTypeNew === ChartType.RadarChart.toUpperCase()
+  ) {
     if (isValidDataset(datasetNew) && isArray(cellNew.y) && cellNew.y.length > 1) {
       datasetNew = foldDatasetByYField(datasetNew, cellNew.y, fieldInfo);
       cellNew.y = FOLD_VALUE.toString();
@@ -131,7 +136,7 @@ const patchDualAxisChart: Transformer<PatchContext, Partial<GenerateFieldMapOutp
   const cellNew: any = { ...cell };
   //Dual-axis drawing yLeft and yRight
 
-  if (chartType === 'DUAL AXIS CHART') {
+  if (chartType === ChartType.DualAxisChart.toUpperCase()) {
     cellNew.y = [
       ...(isArray(cellNew.y) ? cellNew.y : []),
       cellNew.leftAxis,
@@ -151,7 +156,7 @@ const patchDynamicBarChart: Transformer<PatchContext, Partial<GenerateFieldMapOu
   };
   let chartTypeNew = chartType;
 
-  if (chartType === 'DYNAMIC BAR CHART') {
+  if (chartType === ChartType.DynamicBarChart.toUpperCase()) {
     if (!cellNew.time || cellNew.time === '' || cellNew.time.length === 0) {
       const flattenedXField = Array.isArray(cellNew.x) ? cellNew.x : [cellNew.x];
       const usedFields = Object.values(cellNew).filter(f => !Array.isArray(f));
@@ -172,7 +177,7 @@ const patchDynamicBarChart: Transformer<PatchContext, Partial<GenerateFieldMapOu
           cellNew.time = stringField.fieldName;
         } else {
           //no available field, set chart type to bar chart
-          chartTypeNew = 'BAR CHART';
+          chartTypeNew = ChartType.BarChart.toUpperCase() as ChartType;
         }
       }
     }
@@ -217,7 +222,7 @@ export const patchPipelines: Transformer<PatchContext, Partial<GenerateFieldMapO
   patchColorField,
   patchRadarChart,
   patchBoxPlot,
-  patchBarChart,
+  patchFoldField,
   patchDualAxisChart,
   patchDynamicBarChart,
   patchArrayField
