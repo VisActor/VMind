@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 export const getFieldMapPrompt = (
   chartType: string,
   availableChannels: string,

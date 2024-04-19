@@ -21,6 +21,7 @@ export type ChartGenerationContext = {
   userInput: string;
   fieldInfo: SimpleFieldInfo[];
   dataset?: VMindDataset;
+  chartTypeList: ChartType[]; //supported chart list
 } & {
   totalTime?: number;
   colors?: string[];

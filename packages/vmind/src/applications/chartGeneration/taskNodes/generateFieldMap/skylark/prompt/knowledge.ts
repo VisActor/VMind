@@ -1,4 +1,5 @@
-import { ChannelInfo } from './types';
+/* eslint-disable max-len */
+import type { ChannelInfo } from './types';
 
 export const ChartFieldInfo: ChannelInfo = {
   'BAR CHART': {
