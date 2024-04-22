@@ -1,3 +1,20 @@
+# v1.2.9
+
+2024-04-19
+
+
+**🆕 New 新增功能ures**
+
+- **@visactor/vmind**: Refactored the VMind basic framework: abstracted TaskNode, Application class, used Meta for flow arrangement, and improved code reusability and scalability.
+- **@visactor/vmind**: Intelligent chart generation: supports generating spec templates without a data set; supports filling data into spec templates.
+- **@visactor/vmind**: Intelligent chart generation: supports selecting chart types from a specified list of chart types.
+
+**🐛 Fixes**
+
+Intelligent data aggregation: replaced alasql keyword in SQL to further improve the success rate of SQL execution.
+
+[更多详情请查看 v1.2.9](https://github.com/VisActor/VMind/releases/tag/v1.2.9)
+
 
 # v1.2.7
 
