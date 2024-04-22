@@ -149,7 +149,9 @@ export enum Model {
 }
 ```
 
-VMind支持csv格式和json格式的数据集。为了在后续流程中使用 csv 数据，需要调用数据处理方法，提取数据中的字段信息，并转换成结构化的 dataset。VMind 提供了基于规则的方法`parseCSVData`来获取字段信息：
+VMind支持csv格式和json格式的数据集。
+
+为了在后续流程中使用 csv 数据，需要调用数据处理方法，提取数据中的字段信息，并转换成结构化的 dataset。VMind 提供了基于规则的方法`parseCSVData`来获取字段信息：
 
 ```typescript
 //传入 csv 字符串，获得 fieldInfo 和json结构的dataset

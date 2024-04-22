@@ -161,7 +161,9 @@ export enum Model {
 }
 ```
 
-VMind supports datasets in both CSV and JSON formats. To use CSV data in subsequent processes, you need to call the data processing method to extract field information and convert it into a structured dataset. VMind provides a rule-based method `parseCSVData` to obtain field information:
+VMind supports datasets in both CSV and JSON formats.
+
+To use CSV data in subsequent processes, you need to call the data processing method to extract field information and convert it into a structured dataset. VMind provides a rule-based method `parseCSVData` to obtain field information:
 
 ```typescript
 // Pass in the CSV string to obtain the fieldInfo and the JSON-structured dataset
