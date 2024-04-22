@@ -2,7 +2,8 @@
 # generateChart
 
 ## Interface Description:
-The generateChart function is used for intelligent chart generation.
+The generateChart function is used to call LLM to complete intelligent generation of charts, and returns the generated chart spec, chart type, and field mapping, etc.
+If the passed in dataset is undefined, a spec template will be generated, and fillSpecWithData can be called later to fill data into the spec.
 
 ## Supported Models:
 - GPT-3.5
@@ -10,44 +11,80 @@ The generateChart function is used for intelligent chart generation.
 - [skylark2-pro](https://www.volcengine.com/product/yunque)
 - [chart-advisor](../guide/Basic_Tutorial/Chart_Advisor)
 
+## Chart Type List
+VMind supports 13 common chart types:
+```typescript
+export enum ChartType {
+DynamicBarChart = 'Dynamic Bar Chart',
+BarChart = 'Bar Chart',
+LineChart = 'Line Chart',
+PieChart = 'Pie Chart',
+ScatterPlot = 'Scatter Plot',
+WordCloud = 'Word Cloud',
+RoseChart = 'Rose Chart',
+RadarChart = 'Radar Chart',
+SankeyChart = 'Sankey Chart',
+FunnelChart = 'Funnel Chart',
+DualAxisChart = 'Dual Axis Chart',
+WaterFallChart = 'Waterfall Chart',
+BoxPlot = 'Box Plot'
+}
+```
+You can restrict the type of chart generated through the chartTypeList in the options parameter.
+
+
 ## Interface Parameters:
 
 ```typescript
 interface GenerateChartParams {
-userPrompt: string;
-fieldInfo: Array<{
-fieldName: string;
-type: string;
-role: string;
-}>;
-dataset: Array<Record<string, any>>;
-enableDataQuery?: boolean;
-colorPalette?: Array<string>;
-animationDuration?: number;
+  userPrompt: string;
+  fieldInfo: Array<{
+    fieldName: string;
+    type: string;
+    role: string;
+  }>;
+  dataset?: Array<Record<string, any>>;
+  options?: {
+    chartTypeList?: ChartType[];
+    colorPalette?: string[];
+    animationDuration?: number;
+    enableDataQuery?: boolean;
+  }
 }
 ```
 
-- userPrompt (string): The visualization intent of the user (what information you want to display with the chart)
-- fieldInfo (Array): Information about the fields in the dataset, including field names, types, etc.
-- dataset (Array): The dataset used for the chart
-- enableDataQuery (boolean, optional): Determines whether to enable data aggregation during chart generation
-- colorPalette (Array<string>, optional): Used to set the color palette of the chart
-- animationDuration (number, optional): Used to set the duration of the chart animation
+- userPrompt (string): User's visualization intention (What information you want to show in the chart)
+- fieldInfo (Array): Information about the fields in the dataset, including field name, type, etc
+- dataset (Array): The raw dataset used in the chart, it can be undefined. If dataset is undefined, a spec template will be generated and fillSpecTemplateWithData can be called later to fill data into the spec template.
+- options: Optional, option parameters, include the following:
+
+  - chartTypeList (ChartType[], optional): Supported chart type list. If not undefined, a chart will be generated from the chart types specified in this list.
+  - enableDataQuery (boolean, optional): Determines whether to enable data aggregation during chart generation
+  - colorPalette (Array<string>, optional): Used to set the color palette of the chart
+  - animationDuration (number, optional): Used to set the playback duration of the chart animation
 
 ## Return Value Type:
 
 ```typescript
 interface GenerateChartResult {
-spec: Record<string, any>;
-time: {
-totalTime : number;
-frameArr: number[];
-};
+  spec: Record<string, any>;
+  chartType: Record<string, string | string[]>;
+  cell: Cell;
+  chartSource: string;
+  usage: any;
+  time: {
+    totalTime : number;
+    frameArr: number[];
+  };
 }
 ```
 
-- spec (Object): The generated VChart chart spec
-- time (number): Duration information of the chart animation, which can be used to export GIFs and videos
+- spec (Object): The generated VChart chart spec. If the dataset is empty, it is a spec template that does not contain data
+- chartType (ChartType): The type of the chart generated, see `Chart Type List` section
+- cell (Record<string, string | string[]>): The field mapping in the chart, describing how the fields in the dataset map to the various visual channels on the chart
+- chartSource: string: The source of the chart generation. If the chart is successfully generated using LLM, it is the specific model name; if the final use is [rule-based chart generation](../guide/Basic_Tutorial/Chart_Advisor), then it is chart-advisor
+- usage (any): Total LLM token consumption
+- time (number): The duration of the chart animation, which can be used to export GIF and video
 
 ## Usage Example:
 
@@ -55,10 +92,128 @@ frameArr: number[];
 import VMind from '@visactor/vmind';
 
 const vmind = new VMind(options)
-const userPrompt = 'show me the changes in sales rankings of various car brand';
+const dataset=[
+{
+"Product Name": "Coke",
+"region": "south",
+"Sales": 2350
+},
+{
+"Product Name": "Coke",
+"region": "east",
+"Sales": 1027
+},
+{
+"Product Name": "Coke",
+"region": "west",
+"Sales": 1027
+},
+{
+"Product Name": "Coke",
+"region": "north",
+"Sales": 1027
+}
+]
+const userPrompt = 'Show product sales in different regions';
+const fieldInfo=vmind.getFieldInfo(dataset)
+
+const { spec } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
+```
+
+### Generate a chart with a custom color palette
+```typescript
+//Setting up a custom color palette
 const colorPalette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
 
-const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset, true, colorPalette);
+const { spec } = await vmind.generateChart(userPrompt, fieldInfo, dataset, {colorPalette});
+```
+
+### Limit the type of charts generated
+```typescript
+import VMind, {ChartType} from '@visactor/vmind';
+
+//Restrict the generation of the following types of charts: bar charts, line charts, scatter plots, pie charts, word clouds
+const chartTypeList = [
+ChartType.BarChart,
+ChartType.LineChart,
+ChartType.ScatterPlot,
+ChartType.PieChart,
+ChartType.WordCloud
+]
+
+const { spec } = await vmind.generateChart(userPrompt, fieldInfo, dataset, {chartTypeList});
+```
+
+### Generate a spec template without a dataset
+In some cases, we may generate a chart without a specific dataset, but only with data fields (for example, generate a chart based on the fields in the dataset before querying, and then complete the relevant query based on the type and fields of the chart generated), and then call the fillSpecWithData method to get the final spec for chart rendering:
+
+```typescript
+import VMind from '@visactor/vmind';
+
+const vmind = new VMind(options)
+
+const userPrompt = 'Show product sales in different regions';
+const fieldInfo=[
+{
+"fieldName": "Product Name",
+"type": "string",
+"role": "dimension",
+"domain": [
+"Coke",
+"Sprite",
+"Fanta",
+"Awake"
+]
+},
+{
+"fieldName": "region",
+"type": "string",
+"role": "dimension",
+"domain": [
+"south",
+"east",
+"west",
+"north"
+]
+},
+{
+"fieldName": "Sales",
+"type": "int",
+"role": "measure",
+"domain": [
+28,
+2350
+]
+}
+]
+//Do not pass in the dataset, generate a spec template
+const { spec, cell } = await vmind.generateChart(userPrompt, fieldInfo);
+
+//Fill in data into the template
+const dataset=[
+{
+"Product Name": "Coke",
+"region": "south",
+"Sales": 2350
+},
+{
+"Product Name": "Coke",
+"region": "east",
+"Sales": 1027
+},
+{
+"Product Name": "Coke",
+"region": "west",
+"Sales": 1027
+},
+{
+"Product Name": "Coke",
+"region": "north",
+"Sales": 1027
+}
+]
+
+const spec = vmind.fillSpecWithData(spec, dataset, cell, fieldInfo)
 ```
 
 ## Notes:
