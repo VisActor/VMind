@@ -128,6 +128,27 @@ const colorPalette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8
 const { spec } = await vmind.generateChart(userPrompt, fieldInfo, dataset, {colorPalette});
 ```
 
+VMind also comes built-in with [Arco-design](https://www.visactor.io/vchart/theme/demo/arco), [Semi-design](https://www.visactor.io/vchart/theme/demo/semi), [VeO design](https://www.visactor.io/vchart/theme/demo/arco), and other multiple theme color palettes, which can be directly imported to use:
+```typescript
+import VMind, {ArcoTheme} from '@visactor/vmind';
+
+// Use Arco-design color palette
+const {spec} = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
+colorPalette: ArcoTheme.colorScheme
+});
+```
+Built-in color palette list:
+- `SemiTheme`: Semi design theme color palette
+- `ArcoTheme`: Arco design theme color palette
+- `VeOTheme`: VeO design theme color palette
+- `VeOThemeFinance`: VeO design for finance industry theme color palette
+- `VeOThemeGovernment`: VeO design for government industry theme color palette
+- `VeOThemeConsumer`: VeO design for consumer industry theme color palette
+- `VeOThemeAutomobile`: VeO design for automobile industry theme color palette
+- `VeOThemeCulturalTourism`: VeO design for cultural tourism industry theme color palette
+- `VeOThemeMedical`: VeO design for medical industry theme color palette
+- `VeOThemeNewEnergy`: VeO design for new energy industry theme color palette
+
 ### Limit the type of charts generated
 ```typescript
 import VMind, {ChartType} from '@visactor/vmind';
