@@ -6,7 +6,7 @@ getFieldInfo接口用于解析JSON结构的数据以获得其中的字段信息(
 ```typescript
 export type SimpleFieldInfo = {
   fieldName: string;
-  description?: string; //additional description of the field. This will help the model have a more comprehensive understanding of this field, improving the quality of chart generation.
+  description?: string;
   type: 'int' | 'float' | 'string' | 'date';
   role: 'dimension' | 'measure';
   domain?: (string | number)[];
