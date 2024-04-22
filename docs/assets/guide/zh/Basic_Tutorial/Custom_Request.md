@@ -25,7 +25,7 @@ type LLMResponse = {
 
 ```
 
-`customRequestFunc`对象有三个属性：`chartAdvisor`，`dataProcess`和`dataQuery`，它们分别对应VMind中的图表生成(`vmind.generateChart`)，数据处理(`vmind.parseCSVDataWithLLM`)和数据聚合(`vmind.dataQuery`)三个功能。每个属性都是一个`RequestFunc`类型的函数，这个函数的参数分别是模型执行任务时的提示信息`prompt`，用户输入的展示意图`userPrompt`和`options`对象。当VMind在请求LLM服务时，会调用你自定义的函数，并将这三个参数传入。你需要在自定义的函数中使用`prompt`和`userPrompt`来请求LLM服务，并按照`LLMResponse`的格式返回模型的生成结果。`LLMResponse`的结构与OpenAI completions API的结构相同（详情请见[The chat completion object](https://platform.openai.com/docs/api-reference/chat/object)）。
+`customRequestFunc`对象有两个属性：`chartAdvisor`和`dataQuery`，它们分别对应VMind中的图表生成(`vmind.generateChart`)和数据聚合(`vmind.dataQuery`)三个功能。每个属性都是一个`RequestFunc`类型的函数，这个函数的参数分别是模型执行任务时的提示信息`prompt`，用户输入的展示意图`userPrompt`和`options`对象。当VMind在请求LLM服务时，会调用你自定义的函数，并将这三个参数传入。你需要在自定义的函数中使用`prompt`和`userPrompt`来请求LLM服务，并按照`LLMResponse`的格式返回模型的生成结果。`LLMResponse`的结构与OpenAI completions API的结构相同（详情请见[The chat completion object](https://platform.openai.com/docs/api-reference/chat/object)）。
 
 需要注意的是，`customRequestFunc`中的函数都是异步函数，VMind会使用`await`来等待模型请求的结束。
 

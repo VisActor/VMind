@@ -60,7 +60,7 @@ In traditional chart generation steps, in order to make a complete chart, you ne
 
 And to generate a chart with VMind, you only need to:
 
-1. Provide a set of data you want to display (csv format)
+1. Provide a set of data you want to display (csv or JSON format)
 2. Describe your requirements for the chart, such as what information you want to display in the chart, what style of color matching to use, etc.
 
 For example, we want to use the following product sales data to show the sales of various products in different regions:
@@ -84,7 +84,10 @@ For example, we want to use the following product sales data to show the sales o
 | Red Bull     | west   | 532   |
 | Red Bull     | north  | 498   |
 
-In order to use csv data in the subsequent process, you need to call the data processing method, extract the field information in the data, and convert it into a structured dataset. VMind provides methods based on rules and large models to obtain field information:
+To use data in CSV or JSON formats in subsequent processes, it's necessary to call data processing methods to convert CSV data to a JSON format dataset and obtain fieldInfo, or directly obtain fieldInfo from JSON formatted data. VMind provides rule-based methods to get this information. These methods will not transfer detailed data to a larger model.
+
+We can call parseCSVData to obtain a JSON format dataset and fieldInfo from CSV data for intelligent chart generation and data aggregation:
+
 ```ts
 const csvData = `Product Name,region,Sales
 Cola,south,2350
@@ -105,8 +108,36 @@ Red Bull,west,532
 Red Bull,north,498`;
 //Pass in the csv string to get fieldInfo and dataset for chart generation
 const { fieldInfo, dataset } = vmind.parseCSVData(csvData);
-//Pass in the csv string and the user's display intention, call the large model, and get fieldInfo and dataset for chart generation. NOTE: This will send the data to the large model
-const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csvData, userInput);
+```
+
+If you already have JSON formatted data, we can also call the getFieldInfo method to obtain fieldInfo from the data:
+```ts
+const dataset=[
+{
+"Product name": "Coke",
+"region": "south",
+"Sales": 2350
+},
+{
+"Product name": "Coke",
+"region": "east",
+"Sales": 1027
+},
+{
+"Product name": "Coke",
+"region": "west",
+"Sales": 1027
+},
+{
+"Product name": "Coke",
+"region": "north",
+"Sales": 1027
+},
+...
+]
+
+const vmind = new VMind(options)
+const fieldInfo = vmind.getFieldInfo(dataset);
 ```
 
 The content we want to show is "the changes in the sales rankings of various car brands". Call the generateChart method and pass the data and display content description directly to VMind:
