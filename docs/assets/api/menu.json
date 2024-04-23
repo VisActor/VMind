@@ -16,10 +16,17 @@
       }
     },
     {
-      "path": "parseCSVDataWithLLM",
+      "path": "getFieldInfo",
       "title": {
-        "zh": "parseCSVDataWithLLM",
-        "en": "parseCSVDataWithLLM"
+        "zh": "getFieldInfo",
+        "en": "getFieldInfo"
+      }
+    },
+    {
+      "path": "fillSpecWithData",
+      "title": {
+        "zh": "fillSpecWithData",
+        "en": "fillSpecWithData"
       }
     },
     {

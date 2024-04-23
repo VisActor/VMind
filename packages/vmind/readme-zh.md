@@ -6,6 +6,31 @@
 
 </div>
 
+
+<div align="center">
+
+不仅自动，还很智能.开源智能可视化解决方案.
+
+<p align="center">
+  <a href="https://www.visactor.io/vmind">Introduction</a> •
+  <a href="https://www.visactor.io/vmind/example">Demo</a> •
+  <a href="https://www.visactor.io/vmind/guide/Intro_to_VMind">Tutorial</a> •
+  <a href="https://www.visactor.io/vmind/api/VMind_Instance">API</a>•
+  <a href="https://www.visactor.io/vmind/openapi">OpenApi</a>
+</p>
+
+![](https://github.com/visactor/vmind/actions/workflows/bug-server.yml/badge.svg)
+![](https://github.com/visactor/vmind/actions/workflows/unit-test.yml/badge.svg)
+[![npm Version](https://img.shields.io/npm/v/@visactor/vmind.svg)](https://www.npmjs.com/package/@visactor/vmind)
+[![npm Download](https://img.shields.io/npm/dm/@visactor/vmind.svg)](https://www.npmjs.com/package/@visactor/vmind)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/VisActor/VMind/blob/main/CONTRIBUTING.md#your-first-pull-request)
+
+![](https://img.shields.io/badge/language-TypeScript-red.svg) [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/visactor/vmind/blob/main/LICENSE)
+
+</div>
+
+## 简介
+
 `@visactor/vmind` 是由 [VisActor](https://www.visactor.io/) 为您提供的基于大模型的图表智能组件，包括对话式的图表智能生成与编辑能力。它提供了一个自然语言交互接口，仅需一句话，您就能够轻松使用`@visactor/vmind` 创建图表叙事作品，并通过连续的对话进行编辑，极大地提高您创作数据可视化作品的效率。
 
 `@visactor/vmind` 的主要特点包括：
@@ -124,13 +149,39 @@ export enum Model {
 }
 ```
 
-为了在后续流程中使用 csv 数据，需要调用数据处理方法，提取数据中的字段信息，并转换成结构化的 dataset。VMind 提供了基于规则的和基于大模型的方法来获取字段信息：
+VMind支持csv格式和json格式的数据集。为了在后续流程中使用 csv 数据，需要调用数据处理方法，提取数据中的字段信息，并转换成结构化的 dataset。VMind 提供了基于规则的方法`parseCSVData`来获取字段信息：
 
 ```typescript
-//传入 csv 字符串，获得 fieldInfo 和 dataset 用于图表生成
+//传入 csv 字符串，获得 fieldInfo 和json结构的dataset
 const { fieldInfo, dataset } = vmind.parseCSVData(csv);
-//传入 csv 字符串，和用户的展示意图，调用大模型，获得 fieldInfo 和 dataset 用于图表生成。NOTE：这将会把明数据传给大模型
-const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csv, userInput);
+```
+
+我们也可以调用`getFieldInfo`方法，传入json格式的数据集，获取fieldInfo：
+```typescript
+//传入 json数据集，获得 fieldInfo
+const dataset=[
+    {
+        "Product name": "Coke",
+        "region": "south",
+        "Sales": 2350
+    },
+    {
+        "Product name": "Coke",
+        "region": "east",
+        "Sales": 1027
+    },
+    {
+        "Product name": "Coke",
+        "region": "west",
+        "Sales": 1027
+    },
+    {
+        "Product name": "Coke",
+        "region": "north",
+        "Sales": 1027
+    }
+]
+const fieldInfo  = vmind.getFieldInfo(dataset);
 ```
 
 我们想要展示的内容为“各品牌汽车销量排行的变化”。调用 generateChart 方法，将数据和展示内容描述直接传递给 VMind：
