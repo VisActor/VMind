@@ -7,10 +7,10 @@ In this article, we will showcase the application of VMind in various scenarios,
 ## Chart Intelligent Assistant
 VMind can become a visualization agent of a large language model, responsible for tasks such as chart generation and chart editing, to create a "Chart Intelligent Assistant". This assistant can serve as an independent robot or be integrated into other products in the form of Copilot.
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-eng-1.jpeg" width="300">
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-eng-2.jpeg" width="300">
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-eng-3.jpeg" width="300">
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-eng-4.jpeg" width="300">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-eng-1.jpeg" width="250">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-eng-2.jpeg" width="250">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-eng-3.jpeg" width="250">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-eng-4.jpeg" width="250">
 
 As a chart intelligent assistant, VMind can automatically generate corresponding charts based on the natural language description entered by the user. Regardless of whether you need to display a time-series line chart or a bar chart of different categories, VMind can respond quickly and help you select chart types and generate charts. With VMind, users can create beautiful and information-rich charts without a deep understanding of chart design, greatly improving work efficiency.
 Experience address:
@@ -20,8 +20,8 @@ Experience address:
 ## Visualization Narrative - WordCloud Cube
 VisActor has been committed to exploring the application of data visualization in narrative scenarios, and VMind will also launch the intelligent narrative function. We have combined VMind with the Coze platform to launch the WordCloud Cube robot. Users only need to upload the title and core words of the word cloud, and VMind can intelligently generate personalized word clouds of various themes for users.
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/wordcloud_cube-1.png" width="400">
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/wordcloud_cube-2.png" width="400">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/wordcloud_cube-1.png" width="350">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/wordcloud_cube-2.png" width="350">
 <img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/wordcloud_cube-4.png" width="450">
 
 </br>
@@ -49,15 +49,15 @@ Integrating VMind into video editing tools will also form a complete closed loop
 ## Document Assistant
 When writing reports or documents, accurate and beautiful charts are essential. The document assistant created based on VMind can help users quickly generate charts from selected data and insert them into documents.
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant-1-2.png" width="250">
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant-2.png" width="350">
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant-3.png" width="250">
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant-4.png" width="350">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant-1-2.png" width="500">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant-2.png" width="600">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant-3.png" width="500">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant-4.png" width="600">
 
 In addition, VMind will also introduce an intelligent insight function. This function can intelligently identify insights in chart data and automatically add annotations to it. These annotations can directly display specific data values, provide additional explanations and context information, and help readers better understand charts.
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant_6.png" width="400">
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant_5.png" width="600">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant_6.png" width="600">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant_5.png" width="800">
 
 
 ## VMind Open API
