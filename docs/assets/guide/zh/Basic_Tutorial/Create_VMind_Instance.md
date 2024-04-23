@@ -20,7 +20,6 @@ export interface ILLMOptions {
   showThoughts?: boolean;
   customRequestFunc?: {
     chartAdvisor: RequestFunc;
-    dataProcess: RequestFunc;
     dataQuery: RequestFunc;
   };
   [key: string]: any;
@@ -92,7 +91,6 @@ VMind通过requestGPT方法，通过HTTP请求进行LLM服务的调用。然而�
 ```ts
 type customRequestFunc= {
   chartAdvisor: RequestFunc;
-  dataProcess: RequestFunc;
   dataQuery: RequestFunc;
 };
 
@@ -108,7 +106,7 @@ export type LLMResponse = {
 };
 ```
 
-chartAdvisor，dataProcess和dataQuery分别对应图表生成，数据处理和数据聚合时调用LLM的方法。每个方法需要接收模型prompt，用户输入和VMind options作为参数，并确保返回的对象与OpenAI completions API结构相同（详情请见[The chat completion object](https://platform.openai.com/docs/api-reference/chat/object)）。
+chartAdvisor和dataQuery分别对应图表生成，数据处理和数据聚合时调用LLM的方法。每个方法需要接收模型prompt，用户输入和VMind options作为参数，并确保返回的对象与OpenAI completions API结构相同（详情请见[The chat completion object](https://platform.openai.com/docs/api-reference/chat/object)）。
 下面展示一个使用RPC进行图表智能生成的例子：
 ```ts
 import VMind, { Model } from '@visactor/vmind'

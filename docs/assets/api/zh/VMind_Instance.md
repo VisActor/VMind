@@ -20,7 +20,6 @@ export interface ILLMOptions {
   showThoughts?: boolean; // 是否将模型的思考过程添加到输出结果中
   customRequestFunc?: {
     chartAdvisor: RequestFunc;
-    dataProcess: RequestFunc;
     dataQuery: RequestFunc;
   }; // 自定义LLM服务的调用方法
   [key: string]: any;
