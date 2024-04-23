@@ -485,7 +485,7 @@ At this point we have obtained the chart spec, field mapping cell and chart type
 
 ```typescript
 // Fill in data in the template
-const dataset=[
+const dataset = [
 {
 "Product Name": "Coke",
 "region": "south",

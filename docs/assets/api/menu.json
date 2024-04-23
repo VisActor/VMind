@@ -23,6 +23,13 @@
       }
     },
     {
+      "path": "fillSpecWithData",
+      "title": {
+        "zh": "fillSpecWithData",
+        "en": "fillSpecWithData"
+      }
+    },
+    {
       "path": "dataQuery",
       "title": {
         "zh": "dataQuery",
