@@ -430,7 +430,7 @@ console.log(cell)
 这表示VMind将商品名称字段映射到图表的x轴，销售额字段映射到y轴，region字段映射到柱子的颜色上。
 
 ### chartSource
-图表生成来源。若成功使用LLM生成图表，则为具体的模型名；若最终使用[基于规则的图表生成](../guide/Basic_Tutorial/Chart_Advisor)，则为chart-advisor
+图表生成来源。若成功使用LLM生成图表，则为具体的模型名；若最终使用[基于规则的图表生成](./Chart_Advisor)，则为chart-advisor
 
 ## 生成spec模板
 在没有具体数据集、仅有数据字段的情况下，我们也可能需要生成图表。比如，在进行查询之前，我们可以根据数据集中的字段先生成一个图表，之后依据图表的类型和含有的字段执行相关查询。在这种情况下，调用generateChart方法时无需传入具体的数据集，而是先产生一个spec模板，后续再通过fillSpecWithData方法获取最终用于图表渲染的spec。

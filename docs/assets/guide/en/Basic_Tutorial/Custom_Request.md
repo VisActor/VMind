@@ -9,7 +9,6 @@ The type definition of `customRequestFunc` is as follows:
 ```ts
 type customRequestFunc= {
   chartAdvisor: RequestFunc; // Chart generation stage
-  dataProcess: RequestFunc; // Data processing stage
   dataQuery: RequestFunc; // Data aggregation stage
 };
 

@@ -432,7 +432,7 @@ Its cell is as follows:
 This indicates that VMind maps the product name field to the x-axis of the chart, the sales field to the y-axis, and the region field to the color of the column.
 
 ### chartSource
-The source of the chart generation. If the chart is successfully generated using LLM, it is the specific model name; if it finally uses [rule-based chart generation](../guide/Basic_Tutorial/Chart_Advisor), it is chart-advisor
+The source of the chart generation. If the chart is successfully generated using LLM, it is the specific model name; if it finally uses [rule-based chart generation](./Chart_Advisor), it is chart-advisor
 
 ## Generate spec template
 Even without a specific dataset and with only data fields, we may need to generate a chart. For example, we can generate a chart based on the fields in the dataset before querying, and then execute related queries based on the type of chart and the fields it contains. In this case, when calling the generateChart method, there is no need to pass in a specific dataset, but to first generate a spec template, and then obtain the final spec used for chart rendering through the fillSpecWithData method later.

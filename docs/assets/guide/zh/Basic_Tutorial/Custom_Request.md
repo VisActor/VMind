@@ -8,7 +8,6 @@
 ```ts
 type customRequestFunc= {
 chartAdvisor: RequestFunc; //图表生成阶段
-dataProcess: RequestFunc; //数据处理阶段
 dataQuery: RequestFunc; //数据聚合阶段
 };
 
