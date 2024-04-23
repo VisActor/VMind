@@ -132,10 +132,10 @@ export type SimpleFieldInfo = {
 ```
 
 
-⚠️注意： **大语言模型将依赖fieldInfo中的字段描述description，在图表生成、数据聚合时对字段进行选择。fieldInfo中的description不是必选项，可以通过parseCSVDataWithLLM函数自动生成。**
+⚠️注意： **大语言模型将依赖fieldInfo中的字段名和description，在图表生成、数据聚合时对字段进行选择，description不是必选项。fieldInfo可通过调用getFieldInfo或parseCSVData生成。**
 
 # 数据处理函数
-CSV数据是一种通用的、相对简单的文件格式，它以纯文本形式存储表格数据。在本章，我们将介绍如何使用VMind内置的数据处理函数，将csv数据转换为dataset和fieldInfo
+CSV数据是一种通用的、相对简单的文件格式，它以纯文本形式存储表格数据。JSON是一种轻量级的数据交换格式，可以被多种编程语言解析和生成，被广泛应用于Web应用程序中。在本章，我们将介绍如何使用VMind内置的数据处理函数，将CSV数据转换为JSON格式的数据集dataset，并获取字段信息fieldInfo，或者直接从JSON格式的数据中获取fieldInfo。
 
 ## parseCSVData
 VMind中的parseCSVData函数能够将csv字符串转换为dataset结构，并通过规则提取字段信息生成fieldInfo。在函数执行过程中，不会请求大语言模型。
@@ -191,36 +191,45 @@ dataset和fieldInfo可直接用于VMind中的图表生成、数据聚合。
 
 由于该函数未将数据传递给大语言模型，无法获得fieldInfo中的字段描述description。你也可以对其进行补充，以获得更好的图表生成效果。
 
+parseCSVData更多信息参见[parseCSVData API](../../api/parseCSVData)
 
-## parseCSVDataWithLLM
-VMind中的parseCSVDataWithLLM函数会将csv数据取前5行传递给大语言模型，结合用户的图表展示意图，获得dataset和fieldInfo。
+
+## getFieldInfo
+VMind中的getFieldInfo函数用于解析JSON结构的数据以获得其中的字段信息(fieldInfo)。该函数基于规则解析获得fieldInfo，在函数执行过程中，不会请求大语言模型。
 使用示例如下：
 ```ts
-import VMind from '@visactor/vmind'
-const csv=`Product name,region,Sales
-Coke,south,2350
-Coke,east,1027
-Coke,west,1027
-Coke,north,1027
-Sprite,south,215
-Sprite,east,654
-Sprite,west,159
-Sprite,north,28
-Fanta,south,345
-Fanta,east,654
-Fanta,west,2100
-Fanta,north,1679
-Mirinda,south,1476
-Mirinda,east,830
-Mirinda,west,532
-Mirinda,north,498`
+const dataset=[
+    {
+        "Product name": "Coke",
+        "region": "south",
+        "Sales": 2350
+    },
+    {
+        "Product name": "Coke",
+        "region": "east",
+        "Sales": 1027
+    },
+    {
+        "Product name": "Coke",
+        "region": "west",
+        "Sales": 1027
+    },
+    {
+        "Product name": "Coke",
+        "region": "north",
+        "Sales": 1027
+    },
+    ...
+]
 
-const userPrompt=`展示各商品在不同区域销售额`
 const vmind = new VMind(options)
-const { fieldInfo, dataset } = vmind.parseCSVData(csv, userPrompt);
+const fieldInfo  = vmind.getFieldInfo(dataset);
 ```
 
 关于VMind实例的创建以及options中的详细配置，可以参见[创建VMind实例](./Create_VMind_Instance)
 
 
-在这个例子中，返回的dataset和fieldInfo均与上一章的商品销售数据集dataset相同。
+在这个例子中，返回的fieldInfo与上一章的商品销售数据集相同。
+
+getFieldInfo更多信息参见[getFieldInfo API](../../api/getFieldInfo)
+

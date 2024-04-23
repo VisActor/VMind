@@ -20,7 +20,6 @@ export interface ILLMOptions {
   showThoughts?: boolean; // whether to add the model's thinking process to the output results
   customRequestFunc?: {
     chartAdvisor: RequestFunc;
-    dataProcess: RequestFunc;
     dataQuery: RequestFunc;
   }; // custom method for calling the LLM service
   [key: string]: any;

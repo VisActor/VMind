@@ -149,13 +149,41 @@ export enum Model {
 }
 ```
 
-为了在后续流程中使用 csv 数据，需要调用数据处理方法，提取数据中的字段信息，并转换成结构化的 dataset。VMind 提供了基于规则的和基于大模型的方法来获取字段信息：
+VMind支持csv格式和json格式的数据集。
+
+为了在后续流程中使用 csv 数据，需要调用数据处理方法，提取数据中的字段信息，并转换成结构化的 dataset。VMind 提供了基于规则的方法`parseCSVData`来获取字段信息：
 
 ```typescript
-//传入 csv 字符串，获得 fieldInfo 和 dataset 用于图表生成
+//传入 csv 字符串，获得 fieldInfo 和json结构的dataset
 const { fieldInfo, dataset } = vmind.parseCSVData(csv);
-//传入 csv 字符串，和用户的展示意图，调用大模型，获得 fieldInfo 和 dataset 用于图表生成。NOTE：这将会把明数据传给大模型
-const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csv, userInput);
+```
+
+我们也可以调用`getFieldInfo`方法，传入json格式的数据集，获取fieldInfo：
+```typescript
+//传入 json数据集，获得 fieldInfo
+const dataset=[
+    {
+        "Product name": "Coke",
+        "region": "south",
+        "Sales": 2350
+    },
+    {
+        "Product name": "Coke",
+        "region": "east",
+        "Sales": 1027
+    },
+    {
+        "Product name": "Coke",
+        "region": "west",
+        "Sales": 1027
+    },
+    {
+        "Product name": "Coke",
+        "region": "north",
+        "Sales": 1027
+    }
+]
+const fieldInfo  = vmind.getFieldInfo(dataset);
 ```
 
 我们想要展示的内容为“各品牌汽车销量排行的变化”。调用 generateChart 方法，将数据和展示内容描述直接传递给 VMind：

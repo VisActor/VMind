@@ -21,7 +21,6 @@ export interface ILLMOptions {
   showThoughts?: boolean;
   customRequestFunc?: {
     chartAdvisor: RequestFunc;
-    dataProcess: RequestFunc;
     dataQuery: RequestFunc;
   };
   [key: string]: any;
@@ -93,7 +92,6 @@ This parameter has three RequestFunc type values, the complete type definition i
 ```ts
 type customRequestFunc= {
   chartAdvisor: RequestFunc;
-  dataProcess: RequestFunc;
   dataQuery: RequestFunc;
 };
 
@@ -109,7 +107,7 @@ export type LLMResponse = {
 };
 ```
 
-chartAdvisor, dataProcess, and dataQuery correspond to the methods of calling the LLM during chart generation, data processing, and data aggregation, respectively. Each method needs to receive the model prompt, user input, and VMind options as parameters, and ensure that the returned object is the same as the OpenAI completions API structure (see [The chat completion object](https://platform.openai.com/docs/api-reference/chat/object)).
+chartAdvisor and dataQuery correspond to the methods of calling the LLM during chart generation, data processing, and data aggregation, respectively. Each method needs to receive the model prompt, user input, and VMind options as parameters, and ensure that the returned object is the same as the OpenAI completions API structure (see [The chat completion object](https://platform.openai.com/docs/api-reference/chat/object)).
 Here is an example of using RPC for intelligent chart generation:
 ```ts
 import VMind, { Model } from '@visactor/vmind'
