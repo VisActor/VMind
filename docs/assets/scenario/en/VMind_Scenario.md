@@ -7,10 +7,10 @@ In this article, we will showcase the application of VMind in various scenarios,
 ## Chart Intelligent Assistant
 VMind can become a visualization agent of a large language model, responsible for tasks such as chart generation and chart editing, to create a "Chart Intelligent Assistant". This assistant can serve as an independent robot or be integrated into other products in the form of Copilot.
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-1.png" width="300">
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-2.png" width="300">
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-3.png" width="300">
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-4.png" width="300">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-eng-1.jpeg" width="300">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-eng-2.jpeg" width="300">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-eng-3.jpeg" width="300">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_chart_assistant-eng-4.jpeg" width="300">
 
 As a chart intelligent assistant, VMind can automatically generate corresponding charts based on the natural language description entered by the user. Regardless of whether you need to display a time-series line chart or a bar chart of different categories, VMind can respond quickly and help you select chart types and generate charts. With VMind, users can create beautiful and information-rich charts without a deep understanding of chart design, greatly improving work efficiency.
 Experience address:
