@@ -56,3 +56,65 @@ VisActor一直致力于探究数据可视化在叙事场景中的应用，VMind�
 此外，VMind还将推出智能洞察功能，这个功能能够智能地识别图表数据中的洞察，并自动为其添加标注。这些标注可以直接展示具体的数据数值，同时提供额外的解释和上下文信息，帮助读者更好地理解图表。
 <img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant_6.png" width="400">
 <img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant_5.png" width="600">
+
+## VMind Open API
+对于某些不适合接入前端SDK（例如Python Notebook或后端场景）或者不方便申请LLM服务的场景，我们还提供了Open API服务，用户可以通过HTTP请求的形式使用VMind，满足多样化的图表可视化需求。
+
+Open API请求示例：
+```curl
+curl --location 'VMind Open API服务地址' \
+--header 'api-key: 服务密钥' \
+--form 'data="[
+    {
+        \"商品名称\": \"可乐\",
+        \"region\": \"south\",
+        \"销售额\": 2350
+    },
+    {
+        \"商品名称\": \"可乐\",
+        \"region\": \"east\",
+        \"销售额\": 1027
+    },
+    {
+        \"商品名称\": \"可乐\",
+        \"region\": \"west\",
+        \"销售额\": 1027
+    }
+]"' \
+--form 'model="skylark"' \
+--form 'userPrompt="帮我展示北方各商品销售额"' \
+```
+
+返回值：
+```json
+{
+    "chart": [
+        {
+            "chartSource": "skylark2-pro-4k-v1.2", //图表生成来源
+            "chartType": "BAR CHART", //图表类型
+            "spec": { //生成的VChart Spec
+                "type": "bar",
+                "xField": [
+                    "region",
+                    "商品名称"
+                ],
+                "yField": "销售额",
+                "seriesField": "商品名称",
+                //...省略更多spec内容
+            },
+            "usage": { //LLM token消耗明细
+                "completion_tokens": 19,
+                "prompt_tokens": 1109,
+                "total_tokens": 1128
+            },
+            "time": { //图表动画时长
+                "totalTime": 2000,
+                "frameArr": []
+            }
+        }
+    ]
+}
+```
+
+VMind Open API目前支持skylark2-pro模型进行智能数据聚合和图表生成，以及chart-advisor完成基于规则的图表推荐。
+

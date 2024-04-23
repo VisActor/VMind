@@ -58,3 +58,65 @@ In addition, VMind will also introduce an intelligent insight function. This fun
 
 <img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant_6.png" width="400">
 <img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/vmind_doc_assistant_5.png" width="600">
+
+
+## VMind Open API
+For some scenarios that are not suitable for introducing front-end SDK (such as Python Notebook or backend scenarios) or inconvenient for applying for LLM service, we also provide Open API service. Users can use VMind through HTTP requests to meet diverse chart visualization needs.
+
+Open API request example:
+```curl
+curl --location 'VMind Open API service address' \
+--header 'api-key: service key' \
+--form 'data="[
+{
+\"product name\": \"Cola\",
+\"region\": \"south\",
+\"sales\": 2350
+},
+{
+\"product name\": \"Cola\",
+\"region\": \"east\",
+\"sales\": 1027
+},
+{
+\"product name\": \"Cola\",
+\"region\": \"west\",
+\"sales\": 1027
+}
+]"' \
+--form 'model="skylark"' \
+--form 'userPrompt="Show me the sales of various products in the north"' \
+```
+
+Return value:
+```json
+{
+"chart": [
+{
+"chartSource": "skylark2-pro-4k-v1.2", //chart generation source
+"chartType": "BAR CHART", //chart type
+"spec": { //generated VChart Spec
+"type": "bar",
+"xField": [
+"region",
+"product name"
+],
+"yField": "sales",
+"seriesField": "product name",
+//...omit more spec content
+},
+"usage": { //LLM token consumption details
+"completion_tokens": 19,
+"prompt_tokens": 1109,
+"total_tokens": 1128
+},
+"time": { //chart animation duration
+"totalTime": 2000,
+"frameArr": []
+}
+}
+]
+}
+```
+
+VMind Open API currently supports skylark2-pro model for intelligent data aggregation and chart generation, and chart-advisor for rule-based chart recommendation.
