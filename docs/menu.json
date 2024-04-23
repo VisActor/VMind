@@ -6,5 +6,9 @@
   {
     "menu": "api",
     "type": "markdown"
+  },
+  {
+    "menu": "scenario",
+    "type": "markdown"
   }
 ]
