@@ -1,0 +1,12 @@
+{
+  "menu": "scripts",
+  "children": [
+    {
+      "path": "VMind_Scenario",
+      "title": {
+        "zh": "VMind应用案例",
+        "en": "VMind Application Case"
+      }
+    }
+  ]
+}
