@@ -1,10 +1,10 @@
-import { ModelType } from 'src/common/typings';
-import { TaskNodeType } from './taskNode/types';
-import { Parser } from './tools/parser';
-import { Patcher } from './tools/patcher';
-import { Prompt } from './tools/prompt';
-import { Requester } from './tools/requester';
-import { Transformer } from './tools/transformer';
+import type { ModelType } from '../common/typings';
+import type { TaskNodeType } from './taskNode/types';
+import type { Parser } from './tools/parser';
+import type { Patcher } from './tools/patcher';
+import type { Prompt } from './tools/prompt';
+import type { Requester } from './tools/requester';
+import type { Transformer } from './tools/transformer';
 
 /**
  * meta used to describe LLM-based task node (see LLMBasedTaskNode class)

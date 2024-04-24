@@ -1,5 +1,5 @@
-import { TaskError } from 'src/common/typings';
-import { ITaskNode, TaskNodeType } from './types';
+import type { TaskError } from '../../common/typings';
+import type { ITaskNode, TaskNodeType } from './types';
 
 /**
  * A task node in VMind application, used to complete a specific task, such as requesting a large model for chart type, DSL parsing and conversion, etc.

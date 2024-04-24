@@ -1,10 +1,10 @@
 import JSON5 from 'json5';
 import { isArray } from 'lodash';
-import { LLMResponse, SimpleFieldInfo } from 'src/common/typings';
-import { Parser } from 'src/base/tools/parser';
-import { GetQuerySQLContext, GetQuerySQLOutput, SQL } from 'src/applications/dataAggregation/types';
-import { Requester } from 'src/base/tools/requester';
-import { parseGPTResponse, requestGPT } from 'src/common/utils/gpt';
+import type { LLMResponse, SimpleFieldInfo } from '../../../../../common/typings';
+import type { Parser } from '../../../../../base/tools/parser';
+import type { GetQuerySQLContext, GetQuerySQLOutput, SQL } from '../../../../../applications/dataAggregation/types';
+import type { Requester } from '../../../../../base/tools/requester';
+import { parseGPTResponse, requestGPT } from '../../../../../common/utils/gpt';
 
 type DataQueryResponse = {
   sql: SQL;

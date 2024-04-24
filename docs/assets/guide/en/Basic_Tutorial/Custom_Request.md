@@ -9,7 +9,6 @@ The type definition of `customRequestFunc` is as follows:
 ```ts
 type customRequestFunc= {
   chartAdvisor: RequestFunc; // Chart generation stage
-  dataProcess: RequestFunc; // Data processing stage
   dataQuery: RequestFunc; // Data aggregation stage
 };
 
@@ -26,7 +25,7 @@ type LLMResponse = {
 
 ```
 
-The `customRequestFunc` object has three properties: `chartAdvisor`, `dataProcess`, and `dataQuery`, which correspond to the three functions of chart generation (`vmind.generateChart`), data processing (`vmind.parseCSVDataWithLLM`), and data aggregation (`vmind.dataQuery`) in VMind. Each property is a function of type `RequestFunc`, the parameters of which are the prompt information `prompt`, the user input display intention `userPrompt`, and the `options` object when the model executes the task. When VMind requests the LLM service, it will call your custom function and pass these three parameters. You need to use `prompt` and `userPrompt` to request the LLM service in your custom function and return the model's generated results in the format of `LLMResponse`. The structure of `LLMResponse` is the same as that of the OpenAI completions API (for details, see [The chat completion object](https://platform.openai.com/docs/api-reference/chat/object)).
+The `customRequestFunc` object has two properties: `chartAdvisor` and `dataQuery`, which correspond to the three functions of chart generation (`vmind.generateChart`) and data aggregation (`vmind.dataQuery`) in VMind. Each property is a function of type `RequestFunc`, the parameters of which are the prompt information `prompt`, the user input display intention `userPrompt`, and the `options` object when the model executes the task. When VMind requests the LLM service, it will call your custom function and pass these three parameters. You need to use `prompt` and `userPrompt` to request the LLM service in your custom function and return the model's generated results in the format of `LLMResponse`. The structure of `LLMResponse` is the same as that of the OpenAI completions API (for details, see [The chat completion object](https://platform.openai.com/docs/api-reference/chat/object)).
 
 Note that the functions in `customRequestFunc` are asynchronous, and VMind will use `await` to wait for the end of the model request.
 

@@ -1,10 +1,10 @@
-import type { ApplicationMeta } from 'src/base/metaTypes';
+import type { ApplicationMeta } from '../../base/metaTypes';
 import type { ChartGenerationContext, ChartGenerationOutput } from '../types';
 import GetVizSchemaTaskNodeMeta from './taskNodes/getVizSchema';
 import ChartGenerationTaskNodeGPTMeta from './taskNodes/generateTypeAndFieldMap/GPT';
 import ChartAdvisorErrorWrapper from './taskNodes/chartAdvisor/errorWrapper';
 import getVChartSpecTaskNodeMeta from './taskNodes/getChartSpec/VChart';
-import { ModelType } from 'src/common/typings';
+import { ModelType } from '../../common/typings';
 import GenerateChartTypeTaskNodeMeta from './taskNodes/generateChartType/skylark';
 import GenerateFieldMapTaskNodeMeta from './taskNodes/generateFieldMap/skylark';
 import GetAdvisedListTaskNodeMeta from './taskNodes/chartAdvisor';
