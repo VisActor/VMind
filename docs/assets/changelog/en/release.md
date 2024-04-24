@@ -1,3 +1,14 @@
+# v1.2.11
+
+2024-04-24
+
+
+**🐛 Fixes**
+
+Fix reference error in node.
+
+[more detail about v1.2.11](https://github.com/VisActor/VMind/releases/tag/v1.2.11)
+
 # v1.2.9
 
 2024-04-19
