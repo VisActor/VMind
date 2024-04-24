@@ -1,5 +1,5 @@
 import { Select } from 'node-sql-parser';
-import { Query, TableData } from 'src/types';
+import { Query, TableData } from '../types';
 
 export type SQLAst = Select;
 export type ASTParserPipe = (query: Partial<Query>, context: ASTParserContext) => Partial<Query>;

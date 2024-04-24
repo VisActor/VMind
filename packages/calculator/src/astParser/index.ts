@@ -1,11 +1,10 @@
 import NodeSQLParser from 'node-sql-parser';
-import { query } from 'src/query';
+import { query } from '../query';
 import { SQLAst, SimpleFieldInfo } from './type';
-import { Query, TableData } from 'src/types';
+import { Query, TableData } from '../types';
 import { parseRespondField, preprocessSQL } from './utils';
 import { parseSqlAST } from './parseSqlAST';
 import { isArray } from 'lodash';
-
 
 /**
  * query the source dataset according to user's input and fieldInfo to get aggregated dataset
@@ -14,11 +13,7 @@ import { isArray } from 'lodash';
  * @param fieldInfo
  * @param sourceDataset
  */
-export const queryDataset = async (
-  sql: string,
-  fieldInfo: SimpleFieldInfo[],
-  sourceDataset: TableData,
-) => {
+export const queryDataset = async (sql: string, fieldInfo: SimpleFieldInfo[], sourceDataset: TableData) => {
   const { validStr, replaceMap } = preprocessSQL(sql, fieldInfo);
   const parser = new NodeSQLParser.Parser();
 

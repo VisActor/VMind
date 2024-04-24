@@ -1,4 +1,4 @@
-import { TableData } from 'src/types';
+import { TableData } from '../types';
 import { select, from, groupBy, having, limit, orderBy, where } from './astPipes';
 import { ASTParserPipe, SQLAst, SimpleFieldInfo } from './type';
 import { execPipeline } from './utils';
