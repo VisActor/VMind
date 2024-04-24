@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import { ChartType } from 'src/common/typings';
+import { ChartType } from '../../../../../../common/typings';
 
 type ChartKnowledgeBase = {
   [chartType: string]: {

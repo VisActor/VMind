@@ -11,18 +11,18 @@ import type {
 import { Model, ModelType } from '../common/typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
 import type { VMindApplicationMap } from './types';
-import { BaseApplication } from 'src/base/application';
 import type {
   ChartGenerationContext,
   ChartGenerationOutput,
   DataAggregationContext,
   DataAggregationOutput
-} from 'src/applications/types';
-import applicationMetaList, { ApplicationType } from 'src/applications';
-import { calculateTokenUsage, fillSpecTemplateWithData } from 'src/common/utils/utils';
+} from '../applications/types';
+import applicationMetaList, { ApplicationType } from '../applications';
+import { calculateTokenUsage, fillSpecTemplateWithData } from '../common/utils/utils';
 import { isNil } from 'lodash';
-import type { Cell } from 'src/applications/chartGeneration/types';
-import { SUPPORTED_CHART_LIST } from 'src/applications/chartGeneration/constants';
+import type { Cell } from '../applications/chartGeneration/types';
+import { SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
+import { BaseApplication } from '../base/application';
 
 class VMind {
   private _FPS = 30;

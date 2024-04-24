@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { uniqArray } from '@visactor/vutils';
 import alasql from 'alasql';
 
-import { replaceAll } from 'src/common/utils/utils';
+import { replaceAll } from '../../../../common/utils/utils';
 import { alasqlKeywordList } from './constants';
 
 export const readTopNLine = (csvFile: string, n: number) => {

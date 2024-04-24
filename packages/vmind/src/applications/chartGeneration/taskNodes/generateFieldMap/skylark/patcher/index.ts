@@ -1,13 +1,13 @@
-import type { Transformer } from 'src/base/tools/transformer';
+import type { Transformer } from '../../../../../../base/tools/transformer';
 import type { GenerateFieldMapContext, GenerateFieldMapOutput } from '../../types';
 import { isArray, isString } from 'lodash';
 import { matchFieldWithoutPunctuation } from './utils';
-import { ChartType } from 'src/common/typings';
-import { DataType, ROLE } from 'src/common/typings';
-import { calculateTokenUsage, foldDatasetByYField } from 'src/common/utils/utils';
+import { ChartType } from '../../../../../../common/typings';
+import { DataType, ROLE } from '../../../../../../common/typings';
+import { calculateTokenUsage, foldDatasetByYField } from '../../../../../../common/utils/utils';
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
 import { addChartSource } from '../../../utils';
-import { isValidDataset } from 'src/common/dataProcess';
+import { isValidDataset } from '../../../../../../common/dataProcess';
 
 type PatchContext = GenerateFieldMapContext & GenerateFieldMapOutput;
 

@@ -2,8 +2,8 @@ import { isArray } from 'lodash';
 import type { DataTypeName } from '@visactor/chart-advisor';
 import { ChartType } from '@visactor/chart-advisor';
 import type { Cell } from '../../types';
-import type { SimpleFieldInfo } from 'src/common/typings';
-import { ChartType as VMindChartType } from 'src/common/typings';
+import type { SimpleFieldInfo } from '../../../../common/typings';
+import { ChartType as VMindChartType } from '../../../../common/typings';
 
 export const typeMap = (type: string): DataTypeName => {
   if (['string'].includes(type)) {

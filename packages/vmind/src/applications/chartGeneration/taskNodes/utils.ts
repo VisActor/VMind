@@ -1,7 +1,7 @@
-import type { Transformer } from 'src/base/tools/transformer';
+import type { Transformer } from '../../../base/tools/transformer';
 import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from './generateTypeAndFieldMap/types';
-import type { ChartType } from 'src/common/typings';
-import { replaceAll } from 'src/common/utils/utils';
+import type { ChartType } from '../../../common/typings';
+import { replaceAll } from '../../../common/utils/utils';
 
 export const addChartSource: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
