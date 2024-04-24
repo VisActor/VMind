@@ -1,5 +1,5 @@
-import { Transformer } from 'src/base/tools/transformer';
-import { GetChartSpecContext, GetChartSpecOutput } from '../types';
+import type { Transformer } from '../../../../../base/tools/transformer';
+import type { GetChartSpecContext, GetChartSpecOutput } from '../types';
 import {
   axis,
   cartesianBar,

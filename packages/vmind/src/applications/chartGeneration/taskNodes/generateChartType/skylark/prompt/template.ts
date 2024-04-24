@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import type { ChartType } from 'src/common/typings';
+import type { ChartType } from '../../../../../../common/typings';
 
 export const getChartRecommendPrompt = (
   chartTypeList: ChartType[],

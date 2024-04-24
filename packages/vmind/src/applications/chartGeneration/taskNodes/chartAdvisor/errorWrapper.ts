@@ -1,6 +1,6 @@
-import { TaskNodeMeta } from 'src/base/metaTypes';
-import { TaskNodeType } from 'src/base/taskNode/types';
-import { ChartAdvisorContext, ChartAdvisorOutput } from './types';
+import type { TaskNodeMeta } from '../../../../base/metaTypes';
+import { TaskNodeType } from '../../../../base/taskNode/types';
+import type { ChartAdvisorContext, ChartAdvisorOutput } from './types';
 import { chartGenerationErrorWrapper } from './transformers';
 
 const ChartAdvisorErrorWrapper: TaskNodeMeta<ChartAdvisorContext, ChartAdvisorOutput> = {

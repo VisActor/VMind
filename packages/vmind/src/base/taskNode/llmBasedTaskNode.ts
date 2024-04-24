@@ -1,12 +1,12 @@
-import { Prompt } from 'src/base/tools/prompt';
+import type { Prompt } from '../../base/tools/prompt';
 import { BaseTaskNode } from './baseTaskNode';
-import { Parser } from 'src/base/tools/parser';
-import { Patcher } from 'src/base/tools/patcher';
-import { ChatManager } from 'src/base/tools/chatManager';
-import { ILLMOptions, ModelType, TaskError } from 'src/common/typings';
+import type { Parser } from '../../base/tools/parser';
+import type { Patcher } from '../../base/tools/patcher';
+import { ChatManager } from '../../base/tools/chatManager';
+import type { ILLMOptions, ModelType, TaskError } from '../../common/typings';
 import { TaskNodeType } from './types';
-import { Requester } from '../tools/requester';
-import { getObjectProperties } from 'src/common/utils/utils';
+import type { Requester } from '../tools/requester';
+import { getObjectProperties } from '../../common/utils/utils';
 
 export interface ILLMTaskNode<Context, DSL> {
   modelType: ModelType;

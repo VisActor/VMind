@@ -1,12 +1,12 @@
-import type { VMindDataset, VizSchema } from 'src/common/typings';
+import type { VMindDataset, VizSchema } from '../../../../common/typings';
 import { VMindChartTypeMap, chartTypeMap, checkChartTypeAndCell, getCell, typeMap } from './utils';
 import type { ChartType } from '@visactor/chart-advisor';
 import { chartAdvisor } from '@visactor/chart-advisor';
-import type { Transformer } from 'src/base/tools/transformer';
+import type { Transformer } from '../../../../base/tools/transformer';
 import type { ChartAdvisorContext, ChartAdvisorOutput } from './types';
 import type { Cell } from '../../types';
-import { isValidDataset } from 'src/common/dataProcess';
-import { ChartType as VMindChartType } from 'src/common/typings';
+import { isValidDataset } from '../../../../common/dataProcess';
+import { ChartType as VMindChartType } from '../../../../common/typings';
 /**
  * call @visactor/chart-advisor to get the list of advised charts
  * sorted by scores of each chart type

@@ -1,8 +1,8 @@
-import { ApplicationMeta } from 'src/base/metaTypes';
+import type { ApplicationMeta } from '../../base/metaTypes';
 import ExecuteQueryTaskNodeMeta from './taskNodes/executeQuery';
 import GetSQLTaskNodeGPTMeta from './taskNodes/generateQuerySQL/GPT';
-import { ModelType } from 'src/common/typings';
-import { DataAggregationContext, DataAggregationOutput } from '../types';
+import { ModelType } from '../../common/typings';
+import type { DataAggregationContext, DataAggregationOutput } from '../types';
 import GetSQLTaskNodeSkylarkMeta from './taskNodes/generateQuerySQL/skylark';
 
 /**

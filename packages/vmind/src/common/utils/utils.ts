@@ -1,11 +1,11 @@
-import type { DataItem, DataType, ROLE, SimpleFieldInfo, VMindDataset } from 'src/common/typings';
+import type { DataItem, DataType, ROLE, SimpleFieldInfo, VMindDataset } from '../../common/typings';
 import { FOLD_NAME, FOLD_VALUE, fold } from '@visactor/chart-advisor';
-import type { Cell } from 'src/applications/chartGeneration/types';
+import type { Cell } from '../../applications/chartGeneration/types';
 import {
   DEFAULT_VIDEO_LENGTH,
   VIDEO_LENGTH_BY_CHART_TYPE
-} from 'src/applications/chartGeneration/taskNodes/getChartSpec/VChart/constants';
-import type { Spec } from 'src/applications/chartGeneration/taskNodes/getChartSpec/types';
+} from '../../applications/chartGeneration/taskNodes/getChartSpec/VChart/constants';
+import type { Spec } from '../../applications/chartGeneration/taskNodes/getChartSpec/types';
 import {
   data,
   dualAxisSeries,
@@ -14,7 +14,7 @@ import {
   sankeyData,
   sequenceData,
   wordCloudData
-} from 'src/applications/chartGeneration/taskNodes/getChartSpec/VChart/transformers';
+} from '../../applications/chartGeneration/taskNodes/getChartSpec/VChart/transformers';
 import { isArray } from 'lodash';
 
 export const calculateTokenUsage = (usageList: any[]) => {

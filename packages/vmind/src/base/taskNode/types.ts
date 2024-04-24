@@ -1,4 +1,4 @@
-import { TaskError } from 'src/common/typings';
+import type { TaskError } from '../../common/typings';
 
 export interface ITaskNode<Context, DSL> {
   name: string;
