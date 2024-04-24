@@ -1,4 +1,4 @@
-import type { ChartType, ILLMOptions, SimpleFieldInfo, VMindDataset } from 'src/common/typings';
+import type { ChartType, ILLMOptions, SimpleFieldInfo, VMindDataset } from '../common/typings';
 import type { Cell } from './chartGeneration/types';
 
 //context of the DataAggregation Application

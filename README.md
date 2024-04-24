@@ -42,7 +42,7 @@ English | [简体中文](readme-zh.md)
 
 </div>
 
-## 简介
+## Introduction
 
 `@visactor/vmind` is an intelligent chart component based on LLM provided by [VisActor](https://www.visactor.io/), including dialog-based chart generation and editing capabilities. It provides a natural language interaction interface, allowing you to easily create chart narrative works with `@visactor/VMind` with just one sentence, and edit them through continuous dialogue, greatly improving your efficiency in creating data visualization works.
 
@@ -161,13 +161,42 @@ export enum Model {
 }
 ```
 
-In order to use csv data in subsequent processes, you need to call the data processing method, extract the field information in the data, and convert it into a structured dataset. VMind provides rule-based and large model-based methods to obtain field information:
+VMind supports datasets in both CSV and JSON formats.
+
+To use CSV data in subsequent processes, you need to call the data processing method to extract field information and convert it into a structured dataset. VMind provides a rule-based method `parseCSVData` to obtain field information:
 
 ```typescript
-//Pass in csv string to get fieldInfo and dataset for chart generation
+// Pass in the CSV string to obtain the fieldInfo and the JSON-structured dataset
 const { fieldInfo, dataset } = vmind.parseCSVData(csv);
-//Pass in csv string and user's display intention, call large model, get fieldInfo and dataset for chart generation. NOTE: This will pass the raw data to the large model
-const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csv, userInput);
+```
+
+We can also call the `getFieldInfo` method to obtain the fieldInfo by passing in a JSON-formatted dataset:
+
+```typescript
+// Pass in a JSON-formatted dataset to obtain the fieldInfo
+const dataset=[
+{
+"Product name": "Coke",
+"region": "south",
+"Sales": 2350
+},
+{
+"Product name": "Coke",
+"region": "east",
+"Sales": 1027
+},
+{
+"Product name": "Coke",
+"region": "west",
+"Sales": 1027
+},
+{
+"Product name": "Coke",
+"region": "north",
+"Sales": 1027
+}
+]
+const fieldInfo = vmind.getFieldInfo(dataset);
 ```
 
 We want to show "the changes in sales rankings of various car brands". Call the generateChart method and pass the data and display content description directly to VMind:

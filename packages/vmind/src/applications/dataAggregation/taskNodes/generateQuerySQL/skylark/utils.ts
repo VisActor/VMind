@@ -1,9 +1,9 @@
-import { LLMResponse } from 'src/common/typings';
-import { matchJSONStr, replaceAll } from 'src/common/utils/utils';
-import { GetQuerySQLContext } from 'src/applications/dataAggregation/types';
-import { Requester } from 'src/base/tools/requester';
+import type { LLMResponse } from '../../../../../common/typings';
+import { matchJSONStr, replaceAll } from '../../../../../common/utils/utils';
+import type { GetQuerySQLContext } from '../../../../../applications/dataAggregation/types';
+import type { Requester } from '../../../../../base/tools/requester';
 import JSON5 from 'json5';
-import { requestSkyLark } from 'src/common/utils/skylark';
+import { requestSkyLark } from '../../../../../common/utils/skylark';
 
 export const parseJson = (JsonStr: string, prefix?: string) => {
   const parseNoPrefixStr = (str: string) => {

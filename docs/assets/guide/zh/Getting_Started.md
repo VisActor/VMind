@@ -60,7 +60,7 @@ const vmind = new VMind({
 
 而使用 VMind 生成一张图表，你仅需要：
 
-1. 提供一份想要展示的数据（csv 格式）
+1. 提供一份想要展示的数据（csv 或JSON格式）
 2. 描述你对图表的要求，例如想在图表中展示哪些信息，使用何种风格的配色等等
 
 例如，我们想使用下面的商品销售额数据，展示不同区域各商品销售额：
@@ -84,7 +84,10 @@ const vmind = new VMind({
 | 醒目     | west   | 532    |
 | 醒目     | north  | 498    |
 
-为了在后续流程中使用csv数据，需要调用数据处理方法，提取数据中的字段信息，并转换成结构化的dataset。VMind提供了基于规则的和基于大模型的方法来获取字段信息：
+为了在后续流程中使用csv或JSON格式的数据，需要调用数据处理方法，将CSV数据转换为JSON格式的数据集dataset，并获取字段信息fieldInfo，或者直接从JSON格式的数据中获取fieldInfo。VMind提供了基于规则的方法来获取这些信息。这些方法都不会把明细数据传给大模型。
+
+我们可以调用parseCSVData，从CSV数据获取JSON格式的dataset和fieldInfo，用于图表智能生成和数据聚合：
+
 ```ts
 const csvData = `商品名称,region,销售额
 可乐,south,2350
@@ -105,8 +108,36 @@ const csvData = `商品名称,region,销售额
 醒目,north,498`;
 //传入csv字符串，获得fieldInfo和dataset用于图表生成
 const { fieldInfo, dataset } = vmind.parseCSVData(csvData);
-//传入csv字符串，和用户的展示意图，调用大模型，获得fieldInfo和dataset用于图表生成。NOTE：这将会把明数据传给大模型
-const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csvData, userInput);
+```
+
+如果你已经有了一份JSON格式的数据，我们也可以调用getFieldInfo方法，从数据中获取fieldInfo：
+```ts
+const dataset=[
+    {
+        "Product name": "Coke",
+        "region": "south",
+        "Sales": 2350
+    },
+    {
+        "Product name": "Coke",
+        "region": "east",
+        "Sales": 1027
+    },
+    {
+        "Product name": "Coke",
+        "region": "west",
+        "Sales": 1027
+    },
+    {
+        "Product name": "Coke",
+        "region": "north",
+        "Sales": 1027
+    },
+    ...
+]
+
+const vmind = new VMind(options)
+const fieldInfo  = vmind.getFieldInfo(dataset);
 ```
 
 我们想要展示的内容为“各品牌汽车销量排行的变化”。调用generateChart方法，将数据和展示内容描述直接传递给VMind：

@@ -35,10 +35,10 @@
 
 `@visactor/vmind` 的主要特点包括：
 
-- **易于使用**：仅需提供您期望展示的数据+一句话描述您想要展示的信息，`@visactor/vmind`会自动帮您完成图表生成。在现有图表的基础上，一句话描述您想对图表做出的修改，`@visactor/vmind`会帮您实现您想要的效果。
-- **扩展性强**：`@visactor/vmind` 的组件可以轻松地扩展和定制，可以根据需要添加新的功能和特性。默认使用 OpenAI GPT 模型，您可将轻松将其替换为任何一个文本大模型。
-- **轻松叙事**：基于`@visactor/vchart`强大的图表叙事能力，`@visactor/vmind` 支持生成多种类型的图表，包括折线图、柱状图、饼图等，还可生成动态条形图等动态图表，方便您进行数据叙事。更多图表类型正在接入中。您还可以使用对话式编辑功能轻易修改图表样式和动画效果，方便您进行叙事创作。
-- **一键导出**：`@visactor/vmind` 内置了图表导出模块，您可将所创建的图表叙事导出为视频或 GIF 进行展示。
+- **易于使用**：一行代码、一句话完成图表创建与编辑
+- **极致性能**：图表生成、数据聚合等任务耗时均在4s以下
+- **表现力强**：支持13种常见的图表类型，支持数据聚合、筛选、排序等指令
+- **安全合规**：支持GPT、云雀模型，支持自定义模型调用方式；不会传递明细数据给大模型，符合安全合规要求
 
 ## 开发指南
 
@@ -149,13 +149,41 @@ export enum Model {
 }
 ```
 
-为了在后续流程中使用 csv 数据，需要调用数据处理方法，提取数据中的字段信息，并转换成结构化的 dataset。VMind 提供了基于规则的和基于大模型的方法来获取字段信息：
+VMind支持csv格式和json格式的数据集。
+
+为了在后续流程中使用 csv 数据，需要调用数据处理方法，提取数据中的字段信息，并转换成结构化的 dataset。VMind 提供了基于规则的方法`parseCSVData`来获取字段信息：
 
 ```typescript
-//传入 csv 字符串，获得 fieldInfo 和 dataset 用于图表生成
+//传入 csv 字符串，获得 fieldInfo 和json结构的dataset
 const { fieldInfo, dataset } = vmind.parseCSVData(csv);
-//传入 csv 字符串，和用户的展示意图，调用大模型，获得 fieldInfo 和 dataset 用于图表生成。NOTE：这将会把明数据传给大模型
-const { fieldInfo, dataset } = await vmind.parseCSVDataWithLLM(csv, userInput);
+```
+
+我们也可以调用`getFieldInfo`方法，传入json格式的数据集，获取fieldInfo：
+```typescript
+//传入 json数据集，获得 fieldInfo
+const dataset=[
+    {
+        "Product name": "Coke",
+        "region": "south",
+        "Sales": 2350
+    },
+    {
+        "Product name": "Coke",
+        "region": "east",
+        "Sales": 1027
+    },
+    {
+        "Product name": "Coke",
+        "region": "west",
+        "Sales": 1027
+    },
+    {
+        "Product name": "Coke",
+        "region": "north",
+        "Sales": 1027
+    }
+]
+const fieldInfo  = vmind.getFieldInfo(dataset);
 ```
 
 我们想要展示的内容为“各品牌汽车销量排行的变化”。调用 generateChart 方法，将数据和展示内容描述直接传递给 VMind：

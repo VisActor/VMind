@@ -1,6 +1,6 @@
-import { LOCATION, SimpleFieldInfo, VizSchema } from 'src/common/typings';
-import { Transformer } from 'src/base/tools/transformer';
-import { GetVizSchemaContext, GetVizSchemaOutput } from './types';
+import type { LOCATION, SimpleFieldInfo, VizSchema } from '../../../../common/typings';
+import type { Transformer } from '../../../../base/tools/transformer';
+import type { GetVizSchemaContext, GetVizSchemaOutput } from './types';
 
 /**
  * Generate a vizSchema from fieldInfo

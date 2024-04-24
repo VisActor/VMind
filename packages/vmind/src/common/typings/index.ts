@@ -1,6 +1,6 @@
 import type { FFmpeg } from '@ffmpeg/ffmpeg';
 import type { ManualTicker, DefaultTimeline } from '@visactor/vrender-core';
-import type { Cell } from 'src/applications/chartGeneration/types';
+import type { Cell } from '../../applications/chartGeneration/types';
 //models that VMind support
 //more models is under developing
 export enum Model {

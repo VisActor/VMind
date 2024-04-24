@@ -1,7 +1,7 @@
-import { Prompt } from 'src/base/tools/prompt';
+import { Prompt } from '../../../../../../base/tools/prompt';
 import { getQueryDatasetPrompt } from './template';
-import { GetQuerySQLContext } from 'src/applications/dataAggregation/types';
-import { DataAggregationContext } from 'src/applications/types';
+import type { GetQuerySQLContext } from '../../../../../../applications/dataAggregation/types';
+import type { DataAggregationContext } from '../../../../../../applications/types';
 
 const patchQueryInput = (userInput: string) => {
   return userInput;

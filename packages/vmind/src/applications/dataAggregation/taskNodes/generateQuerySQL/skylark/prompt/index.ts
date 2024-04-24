@@ -1,7 +1,7 @@
-import { Prompt } from 'src/base/tools/prompt';
-import { GetQuerySQLContext } from 'src/applications/dataAggregation/types';
+import { Prompt } from '../../../../../../base/tools/prompt';
+import type { GetQuerySQLContext } from '../../../../../../applications/dataAggregation/types';
 import { getQueryDatasetPrompt } from './template';
-import { DataAggregationContext } from 'src/applications/types';
+import type { DataAggregationContext } from '../../../../../../applications/types';
 
 const patchDataQueryInput = (userInput: string) =>
   userInput + ' 使用` `包裹sql中的所有列名。使用支持的聚合函数将所有的度量列聚合。';

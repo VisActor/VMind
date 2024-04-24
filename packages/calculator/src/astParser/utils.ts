@@ -1,6 +1,6 @@
 import { isInteger, isString } from 'lodash';
 import { ASTParserContext, ASTParserPipe, DataType, ROLE, SimpleFieldInfo } from './type';
-import { Query, TableData } from 'src/types';
+import { Query, TableData } from '../types';
 
 export const execPipeline = (src: Partial<Query>, pipes: ASTParserPipe[], context: ASTParserContext) =>
   pipes.reduce((pre: Partial<Query>, pipe: ASTParserPipe) => {
@@ -83,7 +83,6 @@ export const replaceNonASCIICharacters = (str: string) => {
 
   return { validStr: newStr, replaceMap: swappedMap };
 };
-
 
 const swapMap = (map: Map<string, string>) => {
   //swap the map
@@ -217,7 +216,6 @@ export const detectFieldType = (dataset: TableData, column: string): SimpleField
     role: [DataType.STRING, DataType.DATE].includes(fieldType) ? ROLE.DIMENSION : ROLE.MEASURE
   };
 };
-
 
 /**
  * replace random strings into its original string according to replaceMap
