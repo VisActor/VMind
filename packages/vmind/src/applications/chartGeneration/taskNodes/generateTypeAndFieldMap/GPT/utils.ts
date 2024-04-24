@@ -1,9 +1,8 @@
-import { SUPPORTED_CHART_LIST } from 'src/applications/chartGeneration/constants';
-import type { Cell } from 'src/applications/chartGeneration/types';
-import type { Parser } from 'src/base/tools/parser';
-import type { Requester } from 'src/base/tools/requester';
-import { parseGPTResponse, requestGPT } from 'src/common/utils/gpt';
-import type { ChartType } from 'src/common/typings';
+import type { Cell } from '../../../../../applications/chartGeneration/types';
+import type { Parser } from '../../../../../base/tools/parser';
+import type { Requester } from '../../../../../base/tools/requester';
+import { parseGPTResponse, requestGPT } from '../../../../../common/utils/gpt';
+import type { ChartType } from '../../../../../common/typings';
 import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../types';
 
 type GPTChartAdvisorResult = {

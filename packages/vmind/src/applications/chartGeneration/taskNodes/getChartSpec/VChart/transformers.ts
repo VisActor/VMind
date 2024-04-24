@@ -1,4 +1,4 @@
-import type { Transformer } from 'src/base/tools/transformer';
+import type { Transformer } from '../../../../../base/tools/transformer';
 import type { GetChartSpecContext, GetChartSpecOutput } from '../types';
 import {
   COLOR_THEMES,
@@ -10,10 +10,10 @@ import {
   animationDuration,
   oneByOneGroupSize
 } from './constants';
-import { getFieldByDataType } from 'src/common/utils/utils';
+import { getFieldByDataType } from '../../../../../common/utils/utils';
 import { array } from '@visactor/vutils';
-import { isValidDataset } from 'src/common/dataProcess';
-import { DataType } from 'src/common/typings';
+import { isValidDataset } from '../../../../../common/dataProcess';
+import { DataType } from '../../../../../common/typings';
 
 type Context = GetChartSpecContext & GetChartSpecOutput;
 

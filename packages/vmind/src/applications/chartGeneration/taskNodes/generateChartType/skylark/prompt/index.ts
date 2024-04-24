@@ -1,7 +1,7 @@
-import { Prompt } from 'src/base/tools/prompt';
+import { Prompt } from '../../../../../../base/tools/prompt';
 import type { GenerateChartTypeContext } from '../../types';
 import { getChartRecommendPrompt } from './template';
-import { getStrFromArray } from 'src/common/utils/utils';
+import { getStrFromArray } from '../../../../../../common/utils/utils';
 import { chartKnowledgeBase } from './knowledge';
 
 export class ChartTypeGenerationPrompt extends Prompt<GenerateChartTypeContext> {

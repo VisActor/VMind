@@ -1,9 +1,9 @@
-import type { RuleBasedTaskNodeMeta } from 'src/base/metaTypes';
-import { TaskNodeType } from 'src/base/taskNode/types';
+import type { RuleBasedTaskNodeMeta } from '../../../../../base/metaTypes';
+import { TaskNodeType } from '../../../../../base/taskNode/types';
 import type { GetChartSpecContext, GetChartSpecOutput } from '../types';
 import { uniqBy } from 'lodash';
-import type { ChartGenerationOutput } from 'src/applications/types';
-import type { Transformer } from 'src/base/tools/transformer';
+import type { ChartGenerationOutput } from '../../../../../applications/types';
+import type { Transformer } from '../../../../../base/tools/transformer';
 import getVChartSpecTaskNodeMeta from '.';
 import FormatOutputTaskNodeMeta from '../../formatOutput';
 

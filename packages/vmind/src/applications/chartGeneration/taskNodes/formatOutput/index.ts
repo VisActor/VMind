@@ -1,9 +1,9 @@
-import type { ChartGenerationContext, ChartGenerationOutput } from 'src/applications/types';
-import type { RuleBasedTaskNodeMeta } from 'src/base/metaTypes';
-import { TaskNodeType } from 'src/base/taskNode/types';
-import type { Transformer } from 'src/base/tools/transformer';
-import { ChartType } from 'src/common/typings';
-import { estimateVideoTime } from 'src/common/utils/utils';
+import type { ChartGenerationContext, ChartGenerationOutput } from '../../../../applications/types';
+import type { RuleBasedTaskNodeMeta } from '../../../../base/metaTypes';
+import { TaskNodeType } from '../../../../base/taskNode/types';
+import type { Transformer } from '../../../../base/tools/transformer';
+import { ChartType } from '../../../../common/typings';
+import { estimateVideoTime } from '../../../../common/utils/utils';
 
 const chartTypeMap = Object.keys(ChartType).reduce((prev, cur) => {
   const value = ChartType[cur];
