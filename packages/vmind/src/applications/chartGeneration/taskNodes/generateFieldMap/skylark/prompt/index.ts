@@ -1,7 +1,7 @@
-import { Prompt } from 'src/base/tools/prompt';
-import { GenerateFieldMapContext } from '../../types';
+import { Prompt } from '../../../../../../base/tools/prompt';
+import type { GenerateFieldMapContext } from '../../types';
 import { ChartFieldInfo } from './knowledge';
-import { getStrFromArray, getStrFromDict } from 'src/common/utils/utils';
+import { getStrFromArray, getStrFromDict } from '../../../../../../common/utils/utils';
 import { getFieldMapPrompt } from './template';
 
 export class FieldMapGenerationPrompt extends Prompt<GenerateFieldMapContext> {

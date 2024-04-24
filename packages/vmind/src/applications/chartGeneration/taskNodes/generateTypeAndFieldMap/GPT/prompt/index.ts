@@ -1,8 +1,8 @@
-import { Prompt } from 'src/base/tools/prompt';
+import { Prompt } from '../../../../../../base/tools/prompt';
 import { ChartAdvisorPromptEnglish } from './template';
 import type { GenerateChartAndFieldMapContext } from '../../types';
 import { pick } from 'lodash';
-import { getStrFromArray } from 'src/common/utils/utils';
+import { getStrFromArray } from '../../../../../../common/utils/utils';
 import { chartGenerationConstraints, chartKnowledgeDict, defaultExamples, visualChannelInfoMap } from './knowledges';
 import { uniqArray } from '@visactor/vutils';
 

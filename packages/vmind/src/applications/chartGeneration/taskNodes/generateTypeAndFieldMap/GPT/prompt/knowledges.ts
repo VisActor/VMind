@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { ChartType } from 'src/common/typings';
+import { ChartType } from '../../../../../../common/typings';
 import { barChartExample1, dynamicBarChart1, lineChartExample1, lineChartExample2, pieChartExample1 } from './examples';
 import type { ChartKnowledge } from './types';
 

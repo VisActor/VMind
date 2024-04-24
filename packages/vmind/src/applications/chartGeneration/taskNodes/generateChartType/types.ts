@@ -1,4 +1,4 @@
-import type { ChartType } from 'src/common/typings';
+import type { ChartType } from '../../../../common/typings';
 import type { GetVizSchemaContext, GetVizSchemaOutput } from '../getVizSchema/types';
 
 export type GenerateChartTypeContext = GetVizSchemaContext & GetVizSchemaOutput;
