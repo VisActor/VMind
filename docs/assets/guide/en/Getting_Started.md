@@ -39,15 +39,15 @@ Use the following code to initialize a VMind instance:
 import VMind, { Model } from '@visactor/vmind'
 
 const vmind = new VMind({
-url, //Specify your large model service url. The default is https://api.openai.com/v1/chat/completions
+url, //Specify your LLM service url. The default is https://api.openai.com/v1/chat/completions
 model: Model.GPT3_5, //Specify the model you specify
-headers: { //Specify the header when calling the large model service
+headers: { //Specify the header when calling the LLM service
 'api-key': apiKey //Your LLM API Key
 }
 })
 ```
 
-When initializing the VMind instance, you can specify the url of the large model service, the type of model, custom model request methods and other parameters. For detailed tutorials, please go to the [Create VMind Instance](./Basic_Tutorial/Create_VMind_Instance) chapter
+When initializing the VMind instance, you can specify the url of the LLM service, the type of model, custom model request methods and other parameters. For detailed tutorials, please go to the [Create VMind Instance](./Basic_Tutorial/Create_VMind_Instance) chapter
 
 ## Chart Intelligent Generation Module
 

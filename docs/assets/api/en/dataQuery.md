@@ -75,7 +75,7 @@ const { fieldInfo, dataset } = vmind.dataQuery(userPrompt, sourceFieldInfo, sour
 
 ## Notes:
 
-- The dataQuery method will pass userPrompt and fieldInfo to the large model to generate SQL, but the detailed data in the dataset will not be passed.
+- The dataQuery method will pass userPrompt and fieldInfo to the LLM to generate SQL, but the detailed data in the dataset will not be passed.
 - During the execution of dataQuery, the currently supported SQL keywords are: SELECT, GROUP BY, WHERE, HAVING, ORDER BY, LIMIT. The currently supported aggregation functions are: MAX(), MIN(), SUM(), COUNT(), AVG(), but complex SQL operations such as subqueries, JOIN, conditional statements, etc. are not supported.
 
 ## Related Tutorials

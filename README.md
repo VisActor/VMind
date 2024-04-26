@@ -134,17 +134,17 @@ Next, import VMind at the top of the JavaScript file
 import VMind from '@visactor/vmind';
 ```
 
-VMind currently supports OpenAI GPT-3.5, GPT-4 models and skylark-pro series models. Users can specify the model type to be called when initializing the VMind object, and pass in the URL of the large model service. Next, we initialize a VMind instance and pass in the model type and model url:
+VMind currently supports OpenAI GPT-3.5, GPT-4 models and skylark-pro series models. Users can specify the model type to be called when initializing the VMind object, and pass in the URL of the LLM service. Next, we initialize a VMind instance and pass in the model type and model url:
 
 ```typescript
 import { Model } from '@visactor/vmind';
 
 const vmind = new VMind({
-  url: LLM_SERVICE_URL, //URL of the large model service
+  url: LLM_SERVICE_URL, //URL of the LLM service
   model: Model.SKYLARK, //Currently supports gpt-3.5, gpt-4, skylark pro models. The specified model will be called in subsequent chart generation
   headers: {
     'api-key': LLM_API_KEY
-  } //headers will be used directly as the request header in the large model request. You can put the model api key in the header
+  } //headers will be used directly as the request header in the LLM request. You can put the model api key in the header
 });
 ```
 
