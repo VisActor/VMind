@@ -208,7 +208,7 @@ const fieldInfo=[
 }
 ]
 //Do not pass in the dataset, generate a spec template
-const { spec, cell } = await vmind.generateChart(userPrompt, fieldInfo);
+const { spec } = await vmind.generateChart(userPrompt, fieldInfo);
 
 //Fill in data into the template
 const dataset=[
@@ -234,7 +234,7 @@ const dataset=[
 }
 ]
 
-const spec = vmind.fillSpecWithData(spec, dataset, cell, fieldInfo)
+const spec = vmind.fillSpecWithData(spec, dataset)
 ```
 
 ## Notes:
