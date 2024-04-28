@@ -18,11 +18,12 @@ import type {
   DataAggregationOutput
 } from '../applications/types';
 import applicationMetaList, { ApplicationType } from '../applications';
-import { calculateTokenUsage, fillSpecTemplateWithData } from '../common/utils/utils';
+import { calculateTokenUsage } from '../common/utils/utils';
 import { isNil } from 'lodash';
 import type { Cell } from '../applications/chartGeneration/types';
 import { SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
+import { fillSpecTemplateWithData } from '../common/specUtils';
 
 class VMind {
   private _FPS = 30;
@@ -198,8 +199,8 @@ class VMind {
    * @param totalTime
    * @returns
    */
-  fillSpecWithData(spec: any, dataset: VMindDataset, cell: Cell, fieldInfo: SimpleFieldInfo[], totalTime?: number) {
-    return fillSpecTemplateWithData(spec, dataset, cell, fieldInfo, totalTime);
+  fillSpecWithData(spec: any, dataset: VMindDataset, totalTime?: number) {
+    return fillSpecTemplateWithData(spec, dataset, totalTime);
   }
 
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {
