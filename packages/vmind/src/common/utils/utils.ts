@@ -5,17 +5,6 @@ import {
   DEFAULT_VIDEO_LENGTH,
   VIDEO_LENGTH_BY_CHART_TYPE
 } from '../../applications/chartGeneration/taskNodes/getChartSpec/VChart/constants';
-import type { Spec } from '../../applications/chartGeneration/taskNodes/getChartSpec/types';
-import {
-  data,
-  dualAxisSeries,
-  funnelData,
-  legend,
-  sankeyData,
-  sequenceData,
-  wordCloudData
-} from '../../applications/chartGeneration/taskNodes/getChartSpec/VChart/transformers';
-import { isArray } from 'lodash';
 
 export const calculateTokenUsage = (usageList: any[]) => {
   const totalUsage = {
@@ -114,79 +103,3 @@ export const getStrFromDict = (dict: Record<string, string>) =>
   Object.keys(dict)
     .map(key => `${key}: ${dict[key]}`)
     .join('\n');
-
-export const fillSpecTemplateWithData = (
-  template: Spec,
-  dataset: VMindDataset,
-  cell: Cell,
-  fieldInfo: SimpleFieldInfo[],
-  totalTime?: number
-) => {
-  const { type } = template;
-  const cellNew = { ...cell };
-
-  const context: any = {
-    spec: template,
-    dataset,
-    cell: cellNew,
-    totalTime
-  };
-
-  if (type === 'bar' && template.player) {
-    //dynamic bar chart
-    const { spec } = sequenceData(context);
-    return spec;
-  }
-  if (['bar', 'line'].includes(type)) {
-    let datasetNew = dataset;
-
-    if (isArray(cellNew.y) && cellNew.y.length > 1) {
-      //bar chart and line chart can visualize multiple y fields
-      datasetNew = foldDatasetByYField(datasetNew, cellNew.y, fieldInfo);
-      cellNew.y = FOLD_VALUE.toString();
-      cellNew.color = FOLD_NAME.toString();
-      template.yField = cellNew.y;
-      template.seriesField = cellNew.color;
-      template.xField = isArray(template.xField)
-        ? [...template.xField, cellNew.color]
-        : [template.xField, cellNew.color];
-    }
-
-    const contextNew: any = {
-      spec: template,
-      dataset: datasetNew,
-      cell: cellNew,
-      totalTime
-    };
-    const { spec: spec1 } = data(contextNew);
-    const { spec } = legend({ ...contextNew, spec: spec1 });
-
-    return spec;
-  }
-  if (['pie', 'scatter', 'rose', 'radar', 'waterfall', 'boxPlot'].includes(type)) {
-    const { spec } = data(context);
-    return spec;
-  }
-  if ('common' === type) {
-    //dual-axis chart
-    const { spec: spec1 } = data(context);
-    const { spec: spec2 } = legend({ ...context, spec: spec1 });
-
-    const { spec } = dualAxisSeries({ ...context, spec: spec2 });
-    return spec;
-  }
-  if (type === 'wordCloud') {
-    const { spec } = wordCloudData(context);
-    return spec;
-  }
-  if (type === 'funnel') {
-    const { spec } = funnelData(context);
-    return spec;
-  }
-  if (type === 'sankey') {
-    const { spec } = sankeyData(context);
-    return spec;
-  }
-  const { spec } = data(context);
-  return spec;
-};
