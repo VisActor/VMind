@@ -78,10 +78,17 @@ export const sequenceData: Transformer<Context & { totalTime: number }, GetChart
   const timeField = cell.time as string;
   const latestData = isValidDataset(dataset) ? dataset : [];
 
+  //add the time field into spec, although it has no use for chart rendering.
+  //it can be used in getCellFromSpec.
+  spec.timeField = timeField;
+
   // group the data by time field
   const timeArray: any[] = [];
   const contentMap = {} as any;
   latestData.forEach((element: any) => {
+    if (!element[timeField]) {
+      return;
+    }
     const time = element[timeField].toString();
     if (!timeArray.includes(time)) {
       timeArray.push(time);
