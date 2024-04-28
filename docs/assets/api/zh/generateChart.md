@@ -208,7 +208,7 @@ const fieldInfo=[
     }
 ]
 //不传入dataset，生成spec模板
-const { spec, cell } = await vmind.generateChart(userPrompt, fieldInfo);
+const { spec } = await vmind.generateChart(userPrompt, fieldInfo);
 
 //向模板中填入数据
 const dataset=[
@@ -234,7 +234,7 @@ const dataset=[
     }
 ]
 
-const spec = vmind.fillSpecWithData(spec, dataset, cell, fieldInfo)
+const spec = vmind.fillSpecWithData(spec, dataset)
 ```
 
 ## 注意事项：
