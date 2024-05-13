@@ -36,12 +36,13 @@ import {
   mockUserInput14,
   mockUserInput16,
   mockUserInput17,
-  mockUserInput18
-} from '../constants/mockData';
-import VMind, { ArcoTheme, ChartType, VeOThemeNewEnergy } from '../../../../src/index';
-import { Model } from '../../../../src/index';
+  mockUserInput18,
+  SalesRecordsData
+} from '../../constants/mockData';
+import VMind, { ArcoTheme, ChartType, VeOThemeNewEnergy } from '../../../../../src/index';
+import { Model } from '../../../../../src/index';
 import { isArray } from 'lodash';
-import { mockDataset, mockData2, mockData3, mockData4 } from './mockData';
+import { mockDataset, mockData2, mockData3, mockData4 } from '../mockData';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -80,7 +81,8 @@ const demoDataList: { [key: string]: any } = {
   'Global GDP': mockUserInput6Eng,
   'Sales of different drinkings': mockUserInput3Eng,
   'Multi measure': mockUserInput17,
-  DataQuery: mockUserInput18
+  DataQuery: mockUserInput18,
+  salesData: SalesRecordsData
 };
 
 const globalVariables = (import.meta as any).env;
