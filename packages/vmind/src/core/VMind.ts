@@ -15,7 +15,9 @@ import type {
   ChartGenerationContext,
   ChartGenerationOutput,
   DataAggregationContext,
-  DataAggregationOutput
+  DataAggregationOutput,
+  InsightContext,
+  InsightOutput
 } from '../applications/types';
 import applicationMetaList, { ApplicationType } from '../applications';
 import { calculateTokenUsage } from '../common/utils/utils';
@@ -24,6 +26,7 @@ import type { Cell } from '../applications/chartGeneration/types';
 import { SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
 import { fillSpecTemplateWithData } from '../common/specUtils';
+import type { ApplicationMeta } from '../base/metaTypes';
 
 class VMind {
   private _FPS = 30;
@@ -38,10 +41,10 @@ class VMind {
   }
 
   private registerApplications() {
-    const applicationList = {};
+    const applicationList: any = {};
     Object.keys(applicationMetaList).forEach(applicationName => {
       applicationList[applicationName] = {};
-      const applicationMetaByModel = applicationMetaList[applicationName];
+      const applicationMetaByModel: any = applicationMetaList[applicationName as ApplicationType];
       Object.keys(applicationMetaByModel).forEach(modelType => {
         const applicationMeta = applicationMetaByModel[modelType];
         applicationList[applicationName][modelType] = new BaseApplication(applicationMeta);
@@ -187,6 +190,23 @@ class VMind {
       chartType,
       time
     };
+  }
+
+  async intelligentInsight(
+    spec: any,
+    dataset?: VMindDataset,
+    fieldInfo?: SimpleFieldInfo[],
+    cell?: Cell
+  ): Promise<InsightOutput> {
+    const modelType = this.getModelType();
+    const context: InsightContext = {
+      dataset,
+      spec,
+      fieldInfo,
+      cell,
+      llmOptions: this._options
+    };
+    return await this.runApplication(ApplicationType.IntelligentInsight, modelType, context);
   }
 
   /**
