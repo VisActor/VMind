@@ -17,7 +17,8 @@ import {
 import VMind, { ArcoTheme } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
 import { isArray } from 'lodash';
-import { SalesLineChart } from '../../constants/insightData';
+import { DualAxisChartData, SalesLineChart } from '../../constants/insightData';
+import JSON5 from 'json5';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -27,7 +28,8 @@ type IPropsType = {
   onInsightGenerate: (spec: any, insights: any, costTime: number) => void;
 };
 const demoDataList: { [key: string]: any } = {
-  SalesLineChart: SalesLineChart
+  SalesLineChart: SalesLineChart,
+  DualAxisChart: DualAxisChartData
 };
 
 const globalVariables = (import.meta as any).env;
@@ -74,7 +76,8 @@ export function DataInput(props: IPropsType) {
 
   const getInsight = useCallback(async () => {
     const startTime = new Date().getTime();
-
+    const specJson = JSON5.parse(spec);
+    await vmind.intelligentInsight(specJson);
     const endTime = new Date().getTime();
 
     const costTime = endTime - startTime;

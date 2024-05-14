@@ -12,7 +12,7 @@ import { isArray } from 'lodash';
 import { getFieldInfoFromDataset } from '../dataProcess';
 import { foldDatasetByYField } from '../utils/utils';
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
-import type { SimpleFieldInfo, VMindDataset } from '../typings';
+import { ChartType, type SimpleFieldInfo, type VMindDataset } from '../typings';
 import type { Cell } from '../../applications/chartGeneration/types';
 
 /**
@@ -44,6 +44,9 @@ const removeInvalidFieldFromCell = (cell: Cell, fieldInfo: SimpleFieldInfo[]) =>
  * @returns
  */
 export const getCellFromSpec = (spec: Spec) => {
+  if (!spec) {
+    return {};
+  }
   const { type } = spec;
   if (type === 'bar' && spec.player) {
     //dynamic bar chart
@@ -201,4 +204,68 @@ export const fillSpecTemplateWithData = (template: Spec, dataset: VMindDataset, 
   }
   const { spec } = data(context);
   return spec;
+};
+
+export const getDatasetFromSpec = (spec: any) => {
+  if (!spec) {
+    return [];
+  }
+  return spec.data.map((d: any) => d.values).flat(2);
+};
+
+/**
+ * extract vmind chart type from spec
+ * @param spec
+ * @returns
+ */
+export const getChartTypeFromSpec = (spec: any): ChartType => {
+  if (!spec) {
+    return undefined;
+  }
+  const { type } = spec;
+  if (type === 'bar') {
+    return ChartType.BarChart;
+  }
+  if (type === 'line') {
+    return ChartType.LineChart;
+  }
+  if (type === 'pie') {
+    return ChartType.PieChart;
+  }
+  if (type === 'wordCloud') {
+    return ChartType.WordCloud;
+  }
+  if (type === 'scatter') {
+    return ChartType.ScatterPlot;
+  }
+  if (type === 'funnel') {
+    return ChartType.FunnelChart;
+  }
+  if (type === 'rose') {
+    return ChartType.RoseChart;
+  }
+  if (type === 'radar') {
+    return ChartType.RadarChart;
+  }
+  if (type === 'sankey') {
+    return ChartType.SankeyChart;
+  }
+  if (type === 'waterfall') {
+    return ChartType.WaterFallChart;
+  }
+  if (type === 'boxPlot') {
+    return ChartType.BoxPlot;
+  }
+  if (type === 'common') {
+    //check if the common chart is dual-axis chart
+    const { series } = spec;
+    if (series.length === 2 && series.every((s: any) => s.type === 'bar' || s.type === 'line')) {
+      return ChartType.DualAxisChart;
+    }
+    if (series.length === 1) {
+      return getChartTypeFromSpec(series[0]);
+    }
+  }
+  //unsupported spec
+  return undefined;
 };
