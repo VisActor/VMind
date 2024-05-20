@@ -30,11 +30,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "lodash": "4.17.21"
+    "lodash-es": "~4.17.21"
   },
   "devDependencies": {
     "@types/jest": "^26.0.0",
-    "@types/lodash": "4.14.182",
     "@types/node": "*",
     "jest": "^26.0.0",
     "ts-jest": "^26.0.0",
@@ -47,6 +46,7 @@
     "@internal/ts-config": "workspace:*",
     "@internal/eslint-config": "workspace:*",
     "@internal/bundler": "workspace:*",
-    "@rushstack/eslint-patch": "~1.1.4"
+    "@rushstack/eslint-patch": "~1.1.4",
+    "@types/lodash-es": "~4.17.12"
   }
 }

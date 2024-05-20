@@ -1,5 +1,5 @@
 import { isTemporal } from './dataUtil';
-import { cloneDeep, uniq } from 'lodash';
+import { cloneDeep, uniq } from 'lodash-es';
 import {
   ChartType,
   MeasureDataset,

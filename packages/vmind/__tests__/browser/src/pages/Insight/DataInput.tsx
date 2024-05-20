@@ -16,7 +16,6 @@ import {
 } from '@arco-design/web-react';
 import VMind, { ArcoTheme } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
-import { isArray } from 'lodash';
 import { DualAxisChartData, SalesLineChart } from '../../constants/insightData';
 import JSON5 from 'json5';
 

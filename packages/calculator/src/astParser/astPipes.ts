@@ -1,4 +1,4 @@
-import { isArray } from 'lodash';
+import { isArray } from 'lodash-es';
 import type { AggrFunc, ColumnRef, Expr, Param, Value } from 'node-sql-parser';
 
 import type { ASTParserContext, ASTParserPipe, SimpleFieldInfo } from './type';

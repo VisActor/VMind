@@ -1,4 +1,4 @@
-import { isInteger, isString } from 'lodash';
+import { isInteger, isString } from 'lodash-es';
 import { ASTParserContext, ASTParserPipe, DataType, ROLE, SimpleFieldInfo } from './type';
 import { Query, TableData } from '../types';
 

@@ -1,4 +1,4 @@
-import { sampleSize, isNumber, isInteger, isString, isArray, capitalize, startCase } from 'lodash';
+import { sampleSize, isNumber, isInteger, isString, capitalize } from 'lodash-es';
 import type { DataItem, SimpleFieldInfo } from '../../../../common/typings';
 import { DataType, ROLE } from '../../../../common/typings';
 import dayjs from 'dayjs';

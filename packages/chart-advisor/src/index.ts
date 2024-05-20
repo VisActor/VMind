@@ -10,7 +10,7 @@ import type {
 } from './type';
 import { scorer as defaultScorer } from './score';
 import * as dataUtils from './dataUtil';
-import { isNil, isNaN } from 'lodash';
+import { isNil, isNaN } from 'lodash-es';
 
 export { fold } from './fieldUtils';
 export { FOLD_NAME, FOLD_VALUE } from './constant';
