@@ -315,7 +315,7 @@ If you would like to contribute, please read the [Code of Conduct ](./CODE_OF_CO
 
 Small streams converge to make great rivers and seas!
 
-<a href="https://github.com/visactor/vrender/graphs/contributors"><img src="https://contrib.rocks/image?repo=visactor/vrender" /></a>
+<a href="https://github.com/visactor/vmind/graphs/contributors"><img src="https://contrib.rocks/image?repo=visactor/vmind" /></a>
 
 # License
 
