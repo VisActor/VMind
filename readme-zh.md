@@ -293,3 +293,15 @@ const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset, 
 #### 饼图
 
 ![Alt text](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/VChart-Video-3.gif)
+
+# 参与贡献
+
+如想参与贡献，请先阅读 [行为准则](./CODE_OF_CONDUCT.md) 和 [贡献指南](./CONTRIBUTING.zh-CN.md)。
+
+细流成河，终成大海！
+
+<a href="https://github.com/visactor/vrender/graphs/contributors"><img src="https://contrib.rocks/image?repo=visactor/vrender" /></a>
+
+# 许可证
+
+[MIT 协议](./LICENSE)
