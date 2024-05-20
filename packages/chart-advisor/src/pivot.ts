@@ -1,4 +1,4 @@
-import { isNil, range, uniq } from 'lodash';
+import { isNil, range, uniq } from 'lodash-es';
 
 import { getDomainFromDataset } from './fieldUtils';
 import { UniqueId, Dataset, Datasets, DataItem, PivotTree } from './type';

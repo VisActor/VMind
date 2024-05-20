@@ -1,4 +1,4 @@
-import { cloneDeep, isNil, uniq, isNaN } from 'lodash';
+import { cloneDeep, isNil, uniq, isNaN } from 'lodash-es';
 import { DataTypeName } from './type';
 //将vizData中的dataset数组展开 后端版本可直接获取到dataSource，不用执行此方法
 const restoreDataItem = item => {

@@ -1,5 +1,6 @@
 import type { ChartType, ILLMOptions, SimpleFieldInfo, VMindDataset } from '../common/typings';
 import type { Cell } from './chartGeneration/types';
+import type { VMindInsight } from './IngelligentInsight/types';
 
 //context of the DataAggregation Application
 export type DataAggregationContext = {
@@ -34,4 +35,17 @@ export type ChartGenerationOutput = {
   chartSource: string;
   usage: any; //token usage of the LLM
   time?: { totalTime: number; frameArr: any[] };
+};
+
+export type InsightContext = {
+  spec?: any;
+  dataset?: VMindDataset;
+  fieldInfo?: SimpleFieldInfo[];
+  cell?: Cell;
+  llmOptions: ILLMOptions;
+};
+
+export type InsightOutput = {
+  spec: any; //spec with annotations
+  insights: VMindInsight[];
 };

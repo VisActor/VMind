@@ -29,10 +29,9 @@
   "dependencies": {
     "ts-pattern": "~4.1.4",
     "node-sql-parser": "~4.17.0",
-    "lodash": "4.17.21"
+    "lodash-es": "~4.17.21"
   },
   "devDependencies": {
-    "@types/lodash": "4.14.182",
     "@types/jest": "^26.0.0",
     "@typescript-eslint/eslint-plugin": "5.30.0",
     "@typescript-eslint/parser": "5.30.0",
@@ -45,6 +44,7 @@
     "typescript": "4.9.5",
     "@internal/ts-config": "workspace:*",
     "@internal/eslint-config": "workspace:*",
-    "@internal/bundler": "workspace:*"
+    "@internal/bundler": "workspace:*",
+    "@types/lodash-es": "~4.17.12"
   }
 }

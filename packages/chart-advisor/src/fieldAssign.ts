@@ -1,4 +1,4 @@
-import { clone, cloneDeep } from 'lodash';
+import { clone, cloneDeep } from 'lodash-es';
 import { AutoChartCell } from './type';
 import * as dataUtils from './dataUtil';
 

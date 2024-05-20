@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import './index.scss';
 import { Button, Input, Card, Space, Modal, Spin } from '@arco-design/web-react';
 import VChart from '@visactor/vchart';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 
 const TextArea = Input.TextArea;
 

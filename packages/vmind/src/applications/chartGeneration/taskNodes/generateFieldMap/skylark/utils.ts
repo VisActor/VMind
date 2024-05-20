@@ -2,7 +2,7 @@ import type { Requester } from '../../../../../base/tools/requester';
 import type { GenerateFieldMapContext, GenerateFieldMapOutput } from '../types';
 import { parseSkylarkResponse, requestSkyLark } from '../../../../../common/utils/skylark';
 import type { Parser } from '../../../../../base/tools/parser';
-import { omit } from 'lodash';
+import { omit } from 'lodash-es';
 
 export const generateFieldMapRequester: Requester<GenerateFieldMapContext> = async (
   prompt: string,
