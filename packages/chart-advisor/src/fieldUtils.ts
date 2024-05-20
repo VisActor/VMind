@@ -1,4 +1,4 @@
-import { uniq, pick, omit } from 'lodash';
+import { uniq, pick, omit } from 'lodash-es';
 import { FoldInfo } from './type';
 import { Dataset, UniqueId, DataItem, AliasMap } from './type';
 

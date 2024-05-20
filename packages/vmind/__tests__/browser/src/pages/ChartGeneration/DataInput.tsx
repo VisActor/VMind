@@ -39,10 +39,9 @@ import {
   mockUserInput18,
   SalesRecordsData
 } from '../../constants/mockData';
-import VMind, { ArcoTheme, ChartType, VeOThemeNewEnergy } from '../../../../../src/index';
+import VMind, { ArcoTheme } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
-import { isArray } from 'lodash';
-import { mockDataset, mockData2, mockData3, mockData4 } from '../mockData';
+import { isArray } from 'lodash-es';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;

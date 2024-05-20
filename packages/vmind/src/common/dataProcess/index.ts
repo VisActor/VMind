@@ -2,7 +2,7 @@ import { DataSet, DataView, csvParser, fold } from '@visactor/vdataset';
 import type { DataItem, SimpleFieldInfo, VMindDataset } from '../typings';
 import { DataType } from '../typings';
 import { getFieldInfo } from '../../applications/dataAggregation/taskNodes/executeQuery/utils';
-import { isArray, isNil } from 'lodash';
+import { isArray, isNil } from 'lodash-es';
 
 export const parseCSVWithVChart = (csvString: string) => {
   //Parse csv string to VChart Dataview so it can be directly used in VChart spec
