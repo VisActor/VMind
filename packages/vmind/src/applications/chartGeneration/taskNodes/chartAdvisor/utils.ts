@@ -1,4 +1,4 @@
-import { isArray } from 'lodash';
+import { isArray } from 'lodash-es';
 import type { DataTypeName } from '@visactor/chart-advisor';
 import { ChartType } from '@visactor/chart-advisor';
 import type { Cell } from '../../types';

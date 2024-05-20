@@ -21,12 +21,11 @@ import type {
 } from '../applications/types';
 import applicationMetaList, { ApplicationType } from '../applications';
 import { calculateTokenUsage } from '../common/utils/utils';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 import type { Cell } from '../applications/chartGeneration/types';
 import { SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
 import { fillSpecTemplateWithData } from '../common/specUtils';
-import type { ApplicationMeta } from '../base/metaTypes';
 
 class VMind {
   private _FPS = 30;

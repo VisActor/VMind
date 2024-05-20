@@ -79,23 +79,23 @@
     "react-router-dom": "6.9.0",
     "@visactor/vchart": "^1.10.4",
     "@rollup/plugin-dynamic-import-vars": "~2.1.0",
-    "@types/lodash": "4.14.182",
     "@types/node": "*",
     "dotenv": "~16.3.1",
     "@ffmpeg/ffmpeg": "^0.11.6",
     "@visactor/vrender-core": "^0.17.23",
-    "canvas": "^2.11.2"
+    "canvas": "^2.11.2",
+    "@types/lodash-es": "~4.17.12"
   },
   "dependencies": {
     "@visactor/chart-advisor": "workspace:1.2.11",
     "@visactor/vdataset": "~0.17.4",
     "@visactor/vutils": "~0.17.4",
     "axios": "^1.4.0",
-    "lodash": "4.17.21",
     "json5": "~2.2.3",
     "dayjs": "~1.11.10",
     "js-yaml": "~4.1.0",
     "@visactor/calculator": "workspace:1.2.11",
-    "alasql": "~4.3.2"
+    "alasql": "~4.3.2",
+    "lodash-es": "~4.17.21"
   }
 }

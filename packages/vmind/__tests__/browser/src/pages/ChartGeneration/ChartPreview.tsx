@@ -6,7 +6,7 @@ import { ManualTicker, defaultTimeline } from '@visactor/vrender-core';
 import VMind from '../../../../../src';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { createCanvas } from 'canvas';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 
 const TextArea = Input.TextArea;
 
@@ -14,11 +14,11 @@ type IPropsType = {
   spec: any;
   specList?: any;
   time:
-    | {
-        totalTime: number;
-        frameArr: any[];
-      }
-    | undefined;
+  | {
+    totalTime: number;
+    frameArr: any[];
+  }
+  | undefined;
   costTime: number;
 };
 
