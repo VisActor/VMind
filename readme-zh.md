@@ -300,7 +300,7 @@ const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset, 
 
 细流成河，终成大海！
 
-<a href="https://github.com/visactor/vrender/graphs/contributors"><img src="https://contrib.rocks/image?repo=visactor/vrender" /></a>
+<a href="https://github.com/visactor/vmind/graphs/contributors"><img src="https://contrib.rocks/image?repo=visactor/vmind" /></a>
 
 # 许可证
 
