@@ -23,6 +23,13 @@
       }
     },
     {
+      "path": "Contribution_Guide",
+      "title": {
+        "zh": "贡献指南",
+        "en": "Contribution Guide"
+      }
+    },
+    {
       "path": "Basic_Tutorial",
       "title": {
         "zh": "基础教程",
