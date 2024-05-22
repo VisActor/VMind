@@ -6,7 +6,7 @@ import { ManualTicker, defaultTimeline } from '@visactor/vrender-core';
 import VMind from '../../../../../src';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { createCanvas } from 'canvas';
-import { isNil } from 'lodash-es';
+import { isNil } from '@visactor/vutils';
 
 const TextArea = Input.TextArea;
 

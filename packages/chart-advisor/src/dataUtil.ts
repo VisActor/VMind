@@ -1,5 +1,13 @@
-import { cloneDeep, isNil, uniq, isNaN } from 'lodash-es';
+import { cloneDeep, isNil, isNumber, uniqArray } from '@visactor/vutils';
 import { DataTypeName } from './type';
+
+export function isNaN(value: any) {
+  // An `NaN` primitive is the only value that is not equal to itself.
+  // Perform the `toStringTag` check first to avoid errors with some
+  // ActiveX objects in IE.
+  return isNumber(value) && value != +value;
+}
+
 //将vizData中的dataset数组展开 后端版本可直接获取到dataSource，不用执行此方法
 const restoreDataItem = item => {
   if (!Array.isArray(item)) {
@@ -65,6 +73,6 @@ export const calQuantile = (dataset, q) => {
 };
 
 //数组去重
-export const unique = arr => uniq(arr);
+export const unique = arr => uniqArray(arr);
 
 export const isTemporal = (type: DataTypeName) => type === 'date';

@@ -10,9 +10,10 @@ import type {
 } from './type';
 import { scorer as defaultScorer } from './score';
 import * as dataUtils from './dataUtil';
-import { isNil, isNaN } from 'lodash-es';
+import { isNil } from '@visactor/vutils';
+import { isNaN } from './dataUtil';
 
-export { fold } from './fieldUtils';
+export { fold, omit } from './fieldUtils';
 export { FOLD_NAME, FOLD_VALUE } from './constant';
 
 export function chartAdvisor(params: AdviserParams): AdviseResult {
