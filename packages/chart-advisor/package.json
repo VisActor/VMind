@@ -30,7 +30,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "lodash-es": "~4.17.21"
+    "@visactor/vutils": "~0.17.4"
   },
   "devDependencies": {
     "@types/jest": "^26.0.0",
@@ -46,7 +46,6 @@
     "@internal/ts-config": "workspace:*",
     "@internal/eslint-config": "workspace:*",
     "@internal/bundler": "workspace:*",
-    "@rushstack/eslint-patch": "~1.1.4",
-    "@types/lodash-es": "~4.17.12"
+    "@rushstack/eslint-patch": "~1.1.4"
   }
 }

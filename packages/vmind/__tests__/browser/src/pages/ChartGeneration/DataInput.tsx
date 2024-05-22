@@ -41,7 +41,7 @@ import {
 } from '../../constants/mockData';
 import VMind, { ArcoTheme } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
-import { isArray } from 'lodash-es';
+import { isArray } from '@visactor/vutils';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;

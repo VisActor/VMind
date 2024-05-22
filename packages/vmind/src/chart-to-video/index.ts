@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep } from '@visactor/vutils';
 import type { OuterPackages, TimeType } from '../common/typings';
 
 let idx = 0;

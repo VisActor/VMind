@@ -1,12 +1,13 @@
-import { sampleSize, isNumber, isInteger, isString, capitalize } from 'lodash-es';
+import { isNumber, isString } from '@visactor/vutils';
 import type { DataItem, SimpleFieldInfo } from '../../../../common/typings';
 import { DataType, ROLE } from '../../../../common/typings';
 import dayjs from 'dayjs';
 import { uniqArray } from '@visactor/vutils';
 import alasql from 'alasql';
 
-import { replaceAll } from '../../../../common/utils/utils';
+import { capitalize, replaceAll, sampleSize } from '../../../../common/utils/utils';
 import { alasqlKeywordList } from './constants';
+import { isInteger } from '@visactor/calculator';
 
 export const readTopNLine = (csvFile: string, n: number) => {
   // get top n lines of a csv file

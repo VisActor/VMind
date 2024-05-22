@@ -1,4 +1,4 @@
-import { clone, cloneDeep } from 'lodash-es';
+import { cloneDeep } from '@visactor/vutils';
 import { AutoChartCell } from './type';
 import * as dataUtils from './dataUtil';
 
