@@ -66,7 +66,7 @@ export const retainDatasetField = (dataset: Dataset, fields: UniqueId[]): Datase
 
 // 移除dataset中的某些字段
 export const removeDatasetField = (dataset: Dataset, fields: UniqueId[]): Dataset =>
-  dataset.map((data: DataItem) => omit(data, fields)) as Dataset;
+  dataset.map((data: DataItem) => omit(data, fields as any)) as Dataset;
 
 /**
  * 维度笛卡尔积的原始信息，因此可以通过cartesianInfo匹配原始的维度字段
@@ -124,7 +124,7 @@ export const fold = (
   dataset.forEach((data: DataItem) => {
     fields.forEach((field: UniqueId) => {
       // 是否保留被展开的字段
-      const _data = retains ? data : omit(data, fields);
+      const _data = retains ? data : omit(data, fields as any);
       _dataset.push({
         ..._data,
         [foldName]: aliasMap ? aliasMap[field] : field,
