@@ -1,6 +1,6 @@
 import axios from 'axios';
 import JSON5 from 'json5';
-import { omit } from 'lodash-es';
+import { omit } from '@visactor/chart-advisor';
 import type { ILLMOptions, LLMResponse } from '../../common/typings';
 import { matchJSONStr } from './utils';
 

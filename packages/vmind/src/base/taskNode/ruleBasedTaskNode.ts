@@ -3,7 +3,7 @@ import { BaseTaskNode } from './baseTaskNode';
 import { TaskNodeType } from './types';
 import type { TaskError } from '../../common/typings';
 import { getObjectProperties } from '../../common/utils/utils';
-import { isFunction } from 'lodash-es';
+import { isFunction } from '@visactor/vutils';
 
 /**
  * rule-based taskNode, which consists of a series of Pipelines

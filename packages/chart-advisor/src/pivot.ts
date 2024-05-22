@@ -1,4 +1,4 @@
-import { isNil, range, uniq } from 'lodash-es';
+import { isNil, range, uniqArray } from '@visactor/vutils';
 
 import { getDomainFromDataset } from './fieldUtils';
 import { UniqueId, Dataset, Datasets, DataItem, PivotTree } from './type';
@@ -157,7 +157,7 @@ const pivotTree = (keys: UniqueId[], pathList: Path[], deep = 0): PivotTree => {
   }
   const getDomainFromPath = () => {
     const nodes: string[] = pathList.map((path: Path) => path[deep]);
-    return uniq(nodes);
+    return uniqArray(nodes) as string[];
   };
   const field: UniqueId = keys[deep];
   const domain: string[] = getDomainFromPath();

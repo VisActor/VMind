@@ -1,5 +1,5 @@
 import { isTemporal } from './dataUtil';
-import { cloneDeep, uniq } from 'lodash-es';
+import { cloneDeep } from '@visactor/vutils';
 import {
   ChartType,
   MeasureDataset,
@@ -462,10 +462,6 @@ export const scorer: Scorer = params => {
     const combineDatasets: Dataset[] = combineMetadata.map(metaData => metaData.dataset);
     const combineCells: any[] = combineMetadata.map(metaData => metaData.cell);
 
-    const combineColorItems: string[] = uniq(
-      combineMetadata.map(metaData => metaData.colorItems).reduce((pre: string[], cur: string[]) => pre.concat(cur), [])
-    );
-
     // 透视分析
     const {
       datasets: combinePivotDataSet,
@@ -738,11 +734,6 @@ export const scorer: Scorer = params => {
     );
 
     const combineDatasets: Dataset[] = combineMetadata.map(metaData => metaData.dataset);
-    const combineCells: any[] = combineMetadata.map(metaData => metaData.cell);
-
-    const combineColorItems: string[] = uniq(
-      combineMetadata.map(metaData => metaData.colorItems).reduce((pre: string[], cur: string[]) => pre.concat(cur), [])
-    );
 
     // 透视分析
     const {

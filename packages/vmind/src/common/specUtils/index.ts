@@ -8,7 +8,7 @@ import {
   sequenceData,
   wordCloudData
 } from '../../applications/chartGeneration/taskNodes/getChartSpec/VChart/transformers';
-import { isArray } from 'lodash-es';
+import { isArray } from '@visactor/vutils';
 import { getFieldInfoFromDataset } from '../dataProcess';
 import { foldDatasetByYField } from '../utils/utils';
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
