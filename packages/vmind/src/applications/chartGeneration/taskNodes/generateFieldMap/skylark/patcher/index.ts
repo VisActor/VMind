@@ -1,6 +1,6 @@
 import type { Transformer } from '../../../../../../base/tools/transformer';
 import type { GenerateFieldMapContext, GenerateFieldMapOutput } from '../../types';
-import { isArray, isString } from 'lodash-es';
+import { isArray, isString } from '@visactor/vutils';
 import { matchFieldWithoutPunctuation } from './utils';
 import { ChartType } from '../../../../../../common/typings';
 import { DataType, ROLE } from '../../../../../../common/typings';

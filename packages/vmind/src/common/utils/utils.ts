@@ -103,3 +103,41 @@ export const getStrFromDict = (dict: Record<string, string>) =>
   Object.keys(dict)
     .map(key => `${key}: ${dict[key]}`)
     .join('\n');
+
+export const uniqBy = (array: any, key: string) => {
+  const seen = new Set();
+  return array.filter((item: any) => {
+    const k = item[key];
+    if (k === undefined) {
+      return false;
+    }
+    if (!seen.has(k)) {
+      seen.add(k);
+      return true;
+    }
+    return false;
+  });
+};
+
+export const capitalize = (str: any) => {
+  if (typeof str !== 'string') {
+    return '';
+  }
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
+export const sampleSize = (array: any, n: number) => {
+  const length = array === null ? 0 : array.length;
+  if (!length || n < 1) {
+    return [];
+  }
+  n = n > length ? length : n;
+  const randIndexs = [];
+  while (randIndexs.length < n) {
+    const rand = Math.floor(Math.random() * length);
+    if (randIndexs.indexOf(rand) === -1) {
+      randIndexs.push(rand);
+    }
+  }
+  return randIndexs.map(i => array[i]);
+};

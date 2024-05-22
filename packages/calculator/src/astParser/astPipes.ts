@@ -1,4 +1,4 @@
-import { isArray } from 'lodash-es';
+import { isArray } from '@visactor/vutils';
 import type { AggrFunc, ColumnRef, Expr, Param, Value } from 'node-sql-parser';
 
 import type { ASTParserContext, ASTParserPipe, SimpleFieldInfo } from './type';

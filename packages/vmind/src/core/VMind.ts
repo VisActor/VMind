@@ -21,7 +21,7 @@ import type {
 } from '../applications/types';
 import applicationMetaList, { ApplicationType } from '../applications';
 import { calculateTokenUsage } from '../common/utils/utils';
-import { isNil } from 'lodash-es';
+import { isNil } from '@visactor/vutils';
 import type { Cell } from '../applications/chartGeneration/types';
 import { SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
