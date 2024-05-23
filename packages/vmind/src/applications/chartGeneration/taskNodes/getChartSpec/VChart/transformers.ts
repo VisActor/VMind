@@ -16,7 +16,7 @@ import {
   oneByOneGroupSize
 } from './constants';
 import { getFieldByDataType } from '../../../../../common/utils/utils';
-import { array } from '@visactor/vutils';
+import { array, isArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
 import { DataType } from '../../../../../common/typings';
 
@@ -898,6 +898,14 @@ export const legend: Transformer<Context, GetChartSpecOutput> = (context: Contex
       }
     }
   ];
+  if (!spec.seriesField && cell.y) {
+    spec.legends[0].data = (data: any) => {
+      return data.map((d: any, index: number) => ({
+        ...d,
+        label: isArray(cell.y) ? cell.y[index] : cell.y
+      }));
+    };
+  }
   return { spec };
 };
 

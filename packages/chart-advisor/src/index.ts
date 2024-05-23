@@ -138,4 +138,14 @@ export function chartAdvisor(params: AdviserParams): AdviseResult {
   }
 }
 
-export { Scorer, AdviserParams, ScoreResult, ChartType, AdviseResult, DataTypeName, MeasureField, DimensionField };
+export {
+  Scorer,
+  AdviserParams,
+  ScoreResult,
+  ChartType,
+  AdviseResult,
+  DataTypeName,
+  MeasureField,
+  DimensionField,
+  dataUtils
+};
