@@ -5,7 +5,12 @@ import {
   DEFAULT_PIE_VIDEO_LENGTH,
   DEFAULT_VIDEO_LENGTH,
   DEFAULT_VIDEO_LENGTH_LONG,
+  DIMENSION_AXIS_ID,
   LINEAR_COLOR_THEMES,
+  MAIN_SERIES_ID,
+  MEASURE_AXIS_LEFT_ID,
+  MEASURE_AXIS_RIGHT_ID,
+  SUB_SERIES_ID,
   WORDCLOUD_NUM_LIMIT,
   animationDuration,
   oneByOneGroupSize
@@ -461,7 +466,7 @@ export const dualAxisSeries: Transformer<Context, GetChartSpecOutput> = (context
   spec.series = [
     {
       type: 'bar',
-      id: cell.y[0],
+      id: MAIN_SERIES_ID,
       data: {
         id: spec.data.id + '_bar',
         values: spec.data.values
@@ -478,7 +483,7 @@ export const dualAxisSeries: Transformer<Context, GetChartSpecOutput> = (context
     },
     {
       type: 'line',
-      id: cell.y[cell.y?.length - 1],
+      id: SUB_SERIES_ID,
       dataIndex: 0,
       data: {
         id: spec.data.id + '_line',
@@ -507,16 +512,29 @@ export const dualAxisAxes: Transformer<Context, GetChartSpecOutput> = (context: 
   const { spec } = context;
   spec.axes = [
     {
+      id: DIMENSION_AXIS_ID,
       type: 'band',
       orient: 'bottom'
     },
     {
+      id: MEASURE_AXIS_LEFT_ID,
+      seriesId: MAIN_SERIES_ID,
       type: 'linear',
-      orient: 'left'
+      orient: 'left',
+      label: {
+        style: {}
+      }
     },
     {
+      id: MEASURE_AXIS_RIGHT_ID,
+      seriesId: SUB_SERIES_ID,
       type: 'linear',
-      orient: 'right'
+      orient: 'right',
+      tick: { visible: false },
+      grid: { visible: false },
+      label: {
+        style: {}
+      }
     }
   ];
   return { spec };

@@ -22,3 +22,10 @@ export const VIDEO_LENGTH_BY_CHART_TYPE: Record<string, number> = {
   wordCloud: DEFAULT_VIDEO_LENGTH_LONG,
   wordcloud: DEFAULT_VIDEO_LENGTH_LONG
 };
+
+export const DIMENSION_AXIS_ID = 'dimensionAxis';
+export const MEASURE_AXIS_LEFT_ID = 'measureAxisLeft';
+export const MEASURE_AXIS_RIGHT_ID = 'measureAxisRight';
+
+export const MAIN_SERIES_ID = 'mainSeries';
+export const SUB_SERIES_ID = 'subSeries';
