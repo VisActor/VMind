@@ -37,7 +37,8 @@ import {
   mockUserInput16,
   mockUserInput17,
   mockUserInput18,
-  SalesRecordsData
+  SalesRecordsData,
+  gmvData
 } from '../../constants/mockData';
 import VMind, { ArcoTheme } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
@@ -74,6 +75,7 @@ const demoDataList: { [key: string]: any } = {
   radar: mockUserInput14,
   sankey: mockUserInput15,
   'box-plot': mockUserInput16,
+  gmv: gmvData,
   'Electric vehicle sales': carSaleMockData,
   'College entrance examination': acceptRatioData,
   'Shopping Mall Sales Performance': mallSalesData,
@@ -87,7 +89,7 @@ const demoDataList: { [key: string]: any } = {
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
   [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.SKYLARK]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
+  [Model.SKYLARK2_v1_2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
   [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
 };
@@ -289,8 +291,7 @@ export function DataInput(props: IPropsType) {
           <Radio value={Model.GPT3_5}>GPT-3.5</Radio>
           <Radio value={Model.GPT4}>GPT-4</Radio>
           <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
-
-          <Radio value={Model.SKYLARK}>skylark pro</Radio>
+          <Radio value={Model.SKYLARK2_v1_2}>skylark2 pro-v1.2</Radio>
           <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
         </RadioGroup>
       </div>

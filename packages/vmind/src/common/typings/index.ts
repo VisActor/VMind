@@ -6,8 +6,8 @@ import type { Cell } from '../../applications/chartGeneration/types';
 export enum Model {
   GPT3_5 = 'gpt-3.5-turbo',
   GPT4 = 'gpt-4',
-  SKYLARK = 'skylark-pro',
   SKYLARK2 = 'skylark2-pro-4k',
+  SKYLARK2_v1_2 = 'skylark2-pro-4k-v1.2',
   CHART_ADVISOR = 'chart-advisor'
 }
 
