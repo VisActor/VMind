@@ -334,7 +334,7 @@ export const mergeMap = (map1: Map<string, string>, map2: Map<string, string>) =
  * @param fieldName
  * @returns
  */
-const matchColumnName = (columnName: string, fieldName: string) => {
+export const matchColumnName = (columnName: string, fieldName: string) => {
   const fieldWithoutSpace = fieldName.replace(/\s/g, '');
   const columnWithoutString = columnName.replace(/\s/g, '');
 
