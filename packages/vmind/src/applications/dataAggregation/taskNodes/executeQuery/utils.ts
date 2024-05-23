@@ -199,7 +199,8 @@ export const replaceString = (str: string | number, replaceMap: Map<string, stri
     return replaceMap.get(str);
   }
   //Some string may be linked by ASCII characters as non-ASCII characters.Traversing the replaceMap and replaced it to the original character
-  const replaceKeys = [...replaceMap.keys()];
+  //sort the replace keys according to their length to make sure longer string can be replaced first
+  const replaceKeys = [...replaceMap.keys()].sort((a, b) => b.length - a.length);
   return replaceKeys.reduce((prev, cur) => {
     return replaceAll(prev, cur, replaceMap.get(cur));
   }, str);
