@@ -8,6 +8,7 @@ import { calculateTokenUsage, foldDatasetByYField } from '../../../../../../comm
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
 import { addChartSource } from '../../../utils';
 import { isValidDataset } from '../../../../../../common/dataProcess';
+import { dataUtils } from '@visactor/chart-advisor';
 
 type PatchContext = GenerateFieldMapContext & GenerateFieldMapOutput;
 
@@ -104,6 +105,43 @@ const patchBoxPlot: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> =
     return {
       cell: cellNew
     };
+  }
+  return context;
+};
+
+const patchDifferentMeasureLevel: Transformer<PatchContext, any> = (context: PatchContext) => {
+  //if the difference in the level of two measures in cartesian chart is enormous, use Dual-axis chart
+  const { chartType, cell, dataset } = context;
+  const chartTypeNew = chartType;
+  const cellNew = { ...cell };
+  const datasetNew = dataset;
+  if (chartTypeNew === ChartType.BarChart.toUpperCase()) {
+    if (isValidDataset(datasetNew) && isArray(cellNew.y) && cellNew.y.length === 2) {
+      //The maximum value within the indicators/the smallest value within the Q1 (lower quartile) of the indicators is greater than 100 (different index values are not on the same magnitude level), use a dual-axis chart.
+      const measureSet = cellNew.y.map(y => {
+        return datasetNew.map(data => parseFloat(data[y] as string)).filter(Boolean);
+      });
+      let minQ1 = Math.min(
+        ...measureSet.map(measureValues => {
+          const Q1 = dataUtils.calQuantile({ data: measureValues }, 0.25);
+          return Math.abs(Q1);
+        })
+      );
+      let maxMax = Math.max(...measureSet.map(measureValues => Math.max(...measureValues)));
+
+      if (minQ1 === 0) {
+        minQ1 = 1;
+      }
+      if (maxMax === 0) {
+        maxMax = 1;
+      }
+
+      if (maxMax / minQ1 > 100) {
+        return {
+          chartType: ChartType.DualAxisChart.toUpperCase()
+        };
+      }
+    }
   }
   return context;
 };
@@ -222,6 +260,7 @@ export const patchPipelines: Transformer<PatchContext, Partial<GenerateFieldMapO
   patchColorField,
   patchRadarChart,
   patchBoxPlot,
+  patchDifferentMeasureLevel,
   patchFoldField,
   patchDualAxisChart,
   patchDynamicBarChart,
