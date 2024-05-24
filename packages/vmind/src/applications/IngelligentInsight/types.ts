@@ -19,9 +19,15 @@ export type VMindInsight = {
   significant: number; // The prominence of insights, used for sorting
 };
 
+export type InsightAlgorithm = (context: any) => VMindInsight;
+
 export type DataProcessOutput = {
   chartType: ChartType;
   cell: Cell;
   fieldInfo: SimpleFieldInfo[];
   dataset: VMindDataset;
+};
+
+export type ExtractInsightOutput = {
+  insights: VMindInsight[];
 };
