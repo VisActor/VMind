@@ -1,6 +1,6 @@
 import type { ChartType, ILLMOptions, SimpleFieldInfo, VMindDataset } from '../common/typings';
 import type { Cell } from './chartGeneration/types';
-import type { VMindInsight } from './IngelligentInsight/types';
+import type { InsightAlgorithm, VMindInsight } from './IngelligentInsight/types';
 
 //context of the DataAggregation Application
 export type DataAggregationContext = {
@@ -43,6 +43,7 @@ export type InsightContext = {
   fieldInfo?: SimpleFieldInfo[];
   cell?: Cell;
   llmOptions: ILLMOptions;
+  insightAlgorithms?: InsightAlgorithm[];
 };
 
 export type InsightOutput = {
