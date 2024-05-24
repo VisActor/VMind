@@ -2,6 +2,7 @@ import type { ApplicationMeta } from '../../base/metaTypes';
 import { ModelType } from '../../common/typings';
 import type { InsightContext, InsightOutput } from '../types';
 import DataProcessTaskNodeMeta from './taskNodes/dataProcess';
+import ExtractInsightTaskNodeMeta from './taskNodes/extractInsight';
 
 const intelligentInsightGPTMeta: ApplicationMeta<InsightContext, InsightOutput> = {
   name: 'IntelligentInsight',
@@ -9,6 +10,10 @@ const intelligentInsightGPTMeta: ApplicationMeta<InsightContext, InsightOutput> 
     {
       taskNode: DataProcessTaskNodeMeta,
       name: 'dataProcess'
+    },
+    {
+      taskNode: ExtractInsightTaskNodeMeta,
+      name: 'extractInsight'
     }
   ]
 };

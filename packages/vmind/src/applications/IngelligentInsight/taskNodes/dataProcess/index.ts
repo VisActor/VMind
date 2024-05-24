@@ -31,7 +31,6 @@ const extractDataFromContext: Transformer<InsightContext, DataProcessOutput> = (
   return { dataset, cell, fieldInfo, chartType };
 };
 
-// eslint-disable-next-line no-undef
 const DataProcessTaskNodeMeta: RuleBasedTaskNodeMeta<InsightContext, InsightOutput> = {
   type: TaskNodeType.RULE_BASED,
   pipelines: [extractDataFromContext]
