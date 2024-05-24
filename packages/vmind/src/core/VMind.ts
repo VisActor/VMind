@@ -26,24 +26,33 @@ import type { Cell } from '../applications/chartGeneration/types';
 import { SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
 import { fillSpecTemplateWithData } from '../common/specUtils';
+import type { InsightAlgorithm } from '../applications/IngelligentInsight/types';
+import type { ApplicationMeta, TaskNode } from '../base/metaTypes';
 
+type MetaMapByModel = { [key: ModelType | string]: ApplicationMeta<any, any> };
+
+type RuntimeMetaMap = {
+  [key: string]: MetaMapByModel;
+};
 class VMind {
   private _FPS = 30;
   private _options: ILLMOptions | undefined;
   private _model: Model | string;
   private _applicationMap: VMindApplicationMap;
+  private _runtimeMetaMap: RuntimeMetaMap;
 
   constructor(options?: ILLMOptions) {
     this._options = { ...(options ?? {}), showThoughts: options?.showThoughts ?? true }; //apply default settings
     this._model = options?.model ?? Model.GPT3_5;
+    this._runtimeMetaMap = applicationMetaList;
     this.registerApplications();
   }
 
   private registerApplications() {
     const applicationList: any = {};
-    Object.keys(applicationMetaList).forEach(applicationName => {
+    Object.keys(this._runtimeMetaMap).forEach(applicationName => {
       applicationList[applicationName] = {};
-      const applicationMetaByModel: any = applicationMetaList[applicationName as ApplicationType];
+      const applicationMetaByModel: any = this._runtimeMetaMap[applicationName as ApplicationType];
       Object.keys(applicationMetaByModel).forEach(modelType => {
         const applicationMeta = applicationMetaByModel[modelType];
         applicationList[applicationName][modelType] = new BaseApplication(applicationMeta);
@@ -52,9 +61,29 @@ class VMind {
     this._applicationMap = applicationList;
   }
 
-  addApplication() {
-    //@TODO: support user registered applications
+  addApplication(applicationMeta: ApplicationMeta<any, any>, modelType: ModelType | string) {
+    const { name } = applicationMeta;
+    if (!this._applicationMap[name]) {
+      this._applicationMap[name] = {};
+    }
+    this._applicationMap[name][modelType] = new BaseApplication(applicationMeta);
     return;
+  }
+
+  setTaskNode(applicationName: string, modelType: ModelType | string, taskNode: TaskNode<any>) {
+    const applicationMeta = this._runtimeMetaMap[applicationName]?.[modelType];
+    if (applicationMeta) {
+      const { taskNodes } = applicationMeta;
+      const originalTaskNode = taskNodes.find(t => t.name === taskNode.name);
+      if (originalTaskNode) {
+        originalTaskNode.taskNode = taskNode.taskNode;
+        this._applicationMap[applicationName][modelType] = new BaseApplication(applicationMeta);
+      } else {
+        throw 'task node name error!';
+      }
+    } else {
+      throw 'application name error!';
+    }
   }
 
   private getApplication(name: ApplicationType, modelType: ModelType) {
@@ -195,7 +224,8 @@ class VMind {
     spec: any,
     dataset?: VMindDataset,
     fieldInfo?: SimpleFieldInfo[],
-    cell?: Cell
+    cell?: Cell,
+    insightAlgorithms?: InsightAlgorithm[]
   ): Promise<InsightOutput> {
     const modelType = this.getModelType();
     const context: InsightContext = {
@@ -203,7 +233,8 @@ class VMind {
       spec,
       fieldInfo,
       cell,
-      llmOptions: this._options
+      llmOptions: this._options,
+      insightAlgorithms
     };
     return await this.runApplication(ApplicationType.IntelligentInsight, modelType, context);
   }
