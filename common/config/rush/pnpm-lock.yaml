@@ -144,8 +144,8 @@ importers:
       '@types/react-dom': ^18.0.0
       '@typescript-eslint/eslint-plugin': 5.30.0
       '@typescript-eslint/parser': 5.30.0
-      '@visactor/calculator': workspace:1.2.11
-      '@visactor/chart-advisor': workspace:1.2.11
+      '@visactor/calculator': workspace:1.2.12-alpha.6
+      '@visactor/chart-advisor': workspace:1.2.12-alpha.6
       '@visactor/vchart': ^1.10.4
       '@visactor/vdataset': ~0.17.4
       '@visactor/vrender-core': ^0.17.23
