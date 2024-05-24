@@ -1,6 +1,17 @@
 import type { ChartType, SimpleFieldInfo, VMindDataset } from '../../common/typings';
 import type { Cell } from '../chartGeneration/types';
 
+export enum InsightType {
+  Outlier = 'outlier',
+  ExtremeValue = 'extreme_value',
+  MajorityValue = 'majority_value',
+  TurningPoint = 'turning_point',
+  OverallTrend = 'overall_trend',
+  AbnormalTrend = 'abnormal_trend',
+  Correlation = 'correlation',
+  Volatility = 'volatility'
+}
+
 export type VMindInsight = {
   type: string; // Insight type
   data: {
@@ -19,7 +30,12 @@ export type VMindInsight = {
   significant: number; // The prominence of insights, used for sorting
 };
 
-export type InsightAlgorithm = (context: any) => VMindInsight;
+export type InsightAlgorithm = {
+  name: string; //specific algorithm name of this insight algorithm
+  chartType: ChartType[]; //supported chart type of this insight algorithm
+  insightType: InsightType;
+  algorithmFunction: (context: any) => VMindInsight;
+};
 
 export type DataProcessOutput = {
   chartType: ChartType;
