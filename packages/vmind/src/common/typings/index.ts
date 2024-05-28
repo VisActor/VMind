@@ -136,7 +136,8 @@ export type VizSchema = {
 export enum ModelType {
   GPT = 'gpt',
   SKYLARK = 'skylark',
-  CHART_ADVISOR = 'chart-advisor'
+  CHART_ADVISOR = 'chart-advisor',
+  CUSTOM = 'custom'
 }
 
 export type ChartGenerationProps = {
