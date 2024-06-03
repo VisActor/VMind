@@ -118,9 +118,15 @@ export function DataInput(props: IPropsType) {
       model,
       cache,
       showThoughts: showThoughts,
-      headers: {
-        'api-key': apiKey
-      }
+      headers:
+        model.includes(Model.GPT3_5) || model.includes(Model.GPT4)
+          ? {
+              //must has Authorization: `Bearer ${openAIKey}` if use openai api
+              Authorization: `Bearer ${apiKey}`
+            }
+          : {
+              'api-key': apiKey
+            }
     });
   }, [apiKey, cache, model, showThoughts, url]);
 

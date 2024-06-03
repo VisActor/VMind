@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vmind",
+      "comment": "send authorization header when use openai models",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vmind"
+}
