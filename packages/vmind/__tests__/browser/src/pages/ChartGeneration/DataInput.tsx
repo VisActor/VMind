@@ -134,6 +134,8 @@ export function DataInput(props: IPropsType) {
     //const fieldInfo = vmind?.getFieldInfo(dataset);
     const { fieldInfo, dataset } = vmind.parseCSVData(csv);
 
+    console.log(dataset);
+
     console.log(fieldInfo);
     const finalFieldInfo = specTemplateTest
       ? fieldInfo.map(info => ({ fieldName: info.fieldName, role: info.role, type: info.type }))

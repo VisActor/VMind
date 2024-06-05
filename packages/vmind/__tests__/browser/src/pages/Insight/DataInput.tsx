@@ -34,7 +34,7 @@ const demoDataList: { [key: string]: any } = {
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
   [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.SKYLARK]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
+  [Model.SKYLARK2_v1_2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
   [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
 };
@@ -80,9 +80,10 @@ export function DataInput(props: IPropsType) {
     const endTime = new Date().getTime();
 
     const costTime = endTime - startTime;
+    console.log(costTime);
 
     setLoading(false);
-  }, []);
+  }, [spec, vmind]);
 
   return (
     <div className="left-sider">
