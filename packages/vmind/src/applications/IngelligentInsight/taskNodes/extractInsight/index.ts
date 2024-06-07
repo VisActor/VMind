@@ -17,7 +17,7 @@ const executeInsightAlgo: Transformer<InsightContext & DataProcessOutput, Extrac
     const { chartType: algoSupportedChartType, algorithmFunction } = algoInfo;
     if (algoSupportedChartType.includes(chartType)) {
       const res = algorithmFunction(insightAlgorithmContext);
-      insights.push(res);
+      insights.push(...res);
     }
   });
 
