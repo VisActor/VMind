@@ -19,6 +19,7 @@ import { getFieldByDataType } from '../../../../../common/utils/utils';
 import { array, isArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
 import { DataType } from '../../../../../common/typings';
+import { COLOR_FIELD } from '../../../../../../../chart-advisor/src/constant';
 
 type Context = GetChartSpecContext & GetChartSpecOutput;
 
@@ -463,22 +464,24 @@ export const waterfallStackLabel: Transformer<Context, GetChartSpecOutput> = (co
 export const dualAxisSeries: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign series in dual-axis chart
   const { cell, spec } = context;
+  const { color } = cell;
+  const dataValues = spec.data.values;
+
   spec.series = [
     {
       type: 'bar',
       id: MAIN_SERIES_ID,
       data: {
         id: spec.data.id + '_bar',
-        values: spec.data.values
+        values: color ? dataValues : dataValues.map((d: any) => ({ ...d, [COLOR_FIELD]: cell.y[0] }))
       },
       dataIndex: 0,
       label: { visible: true },
       xField: cell.x,
       yField: cell.y[0],
+      seriesField: color ? (isArray(color) ? color[0] : color) : COLOR_FIELD,
       bar: {
-        style: {
-          fill: spec.color[0]
-        }
+        style: {}
       }
     },
     {
@@ -487,23 +490,22 @@ export const dualAxisSeries: Transformer<Context, GetChartSpecOutput> = (context
       dataIndex: 0,
       data: {
         id: spec.data.id + '_line',
-        values: spec.data.values
+        values: color ? dataValues : dataValues.map((d: any) => ({ ...d, [COLOR_FIELD]: cell.y[1] }))
       },
       label: { visible: true },
       xField: cell.x,
       yField: cell.y[cell.y?.length - 1],
+      seriesField: color ? (isArray(color) ? color[0] : color) : COLOR_FIELD,
+
       line: {
-        style: {
-          stroke: spec.color[1]
-        }
+        style: {}
       },
       point: {
-        style: {
-          fill: spec.color[1]
-        }
+        style: {}
       }
     }
   ];
+  spec.data = undefined;
   return { spec };
 };
 
@@ -898,14 +900,7 @@ export const legend: Transformer<Context, GetChartSpecOutput> = (context: Contex
       }
     }
   ];
-  if (!spec.seriesField && cell.y) {
-    spec.legends[0].data = (data: any) => {
-      return data.map((d: any, index: number) => ({
-        ...d,
-        label: isArray(cell.y) ? cell.y[index] : cell.y
-      }));
-    };
-  }
+
   return { spec };
 };
 

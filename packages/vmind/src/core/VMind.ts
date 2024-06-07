@@ -244,9 +244,6 @@ class VMind {
    * fill the spec template with dataset.
    * @param spec
    * @param dataset
-   * @param cell
-   * @param fieldInfo
-   * @param totalTime
    * @returns
    */
   fillSpecWithData(spec: any, dataset: VMindDataset, totalTime?: number) {
