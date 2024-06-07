@@ -36,12 +36,13 @@ import {
   mockUserInput14,
   mockUserInput16,
   mockUserInput17,
-  mockUserInput18
+  mockUserInput18,
+  mockUserTextInput1,
+  mockUserTextInput2
 } from '../constants/mockData';
-import VMind, { ArcoTheme, ChartType, VeOThemeNewEnergy } from '../../../../src/index';
-import { Model } from '../../../../src/index';
+import VMind, { ArcoTheme, InputType, Model } from '../../../../src/index';
 import { isArray } from 'lodash';
-import { mockDataset, mockData2, mockData3, mockData4 } from './mockData';
+import { VMindDataset } from "../../../../src/common/typings";
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -82,21 +83,32 @@ const demoDataList: { [key: string]: any } = {
   'Multi measure': mockUserInput17,
   DataQuery: mockUserInput18
 };
+const demoTextList: { [key: string]: any } = {
+  demo: mockUserTextInput1,
+  demo2: mockUserTextInput2
+};
 
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
   [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.SKYLARK]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_SKYLARK_KEY },
+  [Model.GPT3_5_1106]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+// const OPENAI_API_URL = 'https://api.gptapi.us/v1/chat/completions';
 
 const specTemplateTest = false;
 export function DataInput(props: IPropsType) {
   const defaultDataKey = Object.keys(demoDataList)[3];
   const [describe, setDescribe] = useState<string>(demoDataList[defaultDataKey].input);
   const [csv, setCsv] = useState<string>(demoDataList[defaultDataKey].csv);
+  const defaultDataKeyForTextInput = Object.keys(demoTextList)[0];
+  const [text, setText] = useState<string>(demoTextList[defaultDataKeyForTextInput].text);
+  const [userInput, setUserInput] = useState<string>(demoTextList[defaultDataKeyForTextInput].input);
+  const [dataset, setDataset] = useState<string>('');
+  const [instructionByLLM, setInstructionByLLM] = useState<string>('');
   //const [spec, setSpec] = useState<string>('');
   //const [time, setTime] = useState<number>(1000);
   const [model, setModel] = useState<Model>(Model.GPT3_5);
@@ -105,8 +117,9 @@ export function DataInput(props: IPropsType) {
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
   const [apiKey, setApiKey] = React.useState(ModelConfigMap[model]?.key);
-
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingGenerateData, setLoadingGenerateData] = useState<boolean>(false);
+  const [inputType, setInputType] = React.useState(InputType.CSV_INPUT);
 
   const vmind: VMind = useMemo(() => {
     if (!url || !apiKey) {
@@ -119,12 +132,19 @@ export function DataInput(props: IPropsType) {
       cache,
       showThoughts: showThoughts,
       headers: {
-        'api-key': apiKey
+        'api-key': apiKey,
+        // 'Authorization': `Bearer ${apiKey}`
       }
     });
   }, [apiKey, cache, model, showThoughts, url]);
 
-  const askGPT = useCallback(async () => {
+  const dataset2Csv = (dataset: VMindDataset) => {
+    const header = Object.keys(dataset[0]).join(',');
+    const rows = dataset.map(obj => Object.values(obj).join(','));
+    return `${header}\n${rows.join('\n')}`;
+  }
+
+  const askGPT = useCallback(async (csv: string, describe: string) => {
     //setLoading(true);
     //const { fieldInfo: fieldInfoQuery, dataset: datasetQuery } = await vmind?.dataQuery(describe, fieldInfo, dataset);
     //const dataset = mockData4;
@@ -161,71 +181,112 @@ export function DataInput(props: IPropsType) {
 
     setLoading(false);
   }, [vmind, csv, describe, props]);
+  const askGPTForGenerateData = useCallback(async () => {
+    const { instruction, dataset, fieldInfo } = await vmind.extractDataFromText(text, userInput);
+
+    console.log(instruction, dataset, fieldInfo);
+    setDataset(dataset2Csv(dataset));
+    setInstructionByLLM(instruction);
+
+    setLoadingGenerateData(false);
+  }, [vmind, text, userInput, props]);
 
   return (
     <div className="left-sider">
+      <div style={{ width: '90%', marginTop:20, marginBottom: 10 }}>
+        <RadioGroup value={model} onChange={v => setModel(v)}>
+          <Radio value={Model.GPT3_5_1106}>GPT-3.5-1106</Radio>
+          <Radio value={Model.GPT3_5}>GPT-3.5</Radio>
+          <Radio value={Model.GPT4}>GPT-4</Radio>
+          <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
+
+          <Radio value={Model.SKYLARK}>skylark pro</Radio>
+          <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
+        </RadioGroup>
+      </div>
+      <div style={{ width: '90%', marginBottom: 10 }}>
+        <Checkbox checked={cache} onChange={v => setCache(v)}>
+          Enable Cache
+        </Checkbox>
+      </div>
+      <div style={{ width: '90%', marginBottom: 10 }}>
+        <Checkbox checked={showThoughts} onChange={v => setShowThoughts(v)}>
+          Show Thoughts
+        </Checkbox>
+      </div>
       <div
         style={{
           width: '90%',
           marginBottom: 10
         }}
       >
-        <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center' }}>
+        <div style={{ marginTop: 10, display: 'flex', justifyContent: 'center' }}>
           <Button size="small" style={{ width: 200 }} shape="round" type="primary" onClick={() => setVisible(true)}>
             Set API-Key and LLM URL
           </Button>
         </div>
       </div>
+      <Divider/>
       <div style={{ width: '90%', marginBottom: 20 }}>
-        <p>
-          <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-            0
-          </Avatar>
-          <span style={{ marginLeft: 10 }}>Select Demo Data (optional)</span>
-        </p>
-        <Select
-          style={{
-            width: '100%'
-          }}
-          defaultValue={defaultDataKey}
-          onChange={v => {
-            const dataObj = demoDataList[v];
-            setDescribe(dataObj.input);
-            setCsv(dataObj.csv);
-          }}
-        >
-          {Object.keys(demoDataList).map(name => (
-            <Option key={name} value={name}>
-              {name}
-            </Option>
-          ))}
-        </Select>
+        <div style={{ marginTop: 20 }}>
+          <RadioGroup value={inputType} onChange={type => setInputType(type)}>
+            <Radio value={InputType.CSV_INPUT}>csv format input</Radio>
+            <Radio value={InputType.TEXT_INPUT}>text format input</Radio>
+          </RadioGroup>
+        </div>
       </div>
+      {
+        inputType === InputType.CSV_INPUT ? (
+          <div>
+            <div style={{ width: '90%', marginBottom: 20 }}>
+              <p>
+                <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+                  0
+                </Avatar>
+                <span style={{ marginLeft: 10 }}>Select Demo Data (optional)</span>
+              </p>
+              <Select
+                style={{
+                  width: '100%'
+                }}
+                defaultValue={defaultDataKey}
+                onChange={v => {
+                  const dataObj = demoDataList[v];
+                  setDescribe(dataObj.input);
+                  setCsv(dataObj.csv);
+                }}
+              >
+                {Object.keys(demoDataList).map(name => (
+                  <Option key={name} value={name}>
+                    {name}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+            <div>
+              <p>
+                <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+                  1
+                </Avatar>
+                <span style={{ marginLeft: 10 }}>What would you like to visualize?</span>
+              </p>
 
-      <div>
-        <p>
-          <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-            1
-          </Avatar>
-          <span style={{ marginLeft: 10 }}>What would you like to visualize?</span>
-        </p>
-
-        <TextArea
-          placeholder={describe}
-          value={describe}
-          onChange={v => setDescribe(v)}
-          style={{ minHeight: 80, marginTop: 20, background: 'transparent', border: '1px solid #eee' }}
-        />
-      </div>
-      <Divider style={{ marginTop: 30 }} />
-      <div>
-        <p>
-          <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-            2
-          </Avatar>
-          <span style={{ marginLeft: 10 }}>Input your data file in csv format</span>
-        </p>
-        {/*<Upload
+              <TextArea
+                placeholder={describe}
+                value={describe}
+                onChange={v => setDescribe(v)}
+                style={{ minHeight: 80, marginTop: 20, background: 'transparent', border: '1px solid #eee' }}
+              />
+            </div>
+            <Divider style={{ marginTop: 30 }} />
+            <div>
+              <p>
+                <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+                  2
+                </Avatar>
+                <span style={{ marginLeft: 10 }}>Input your data file in csv format</span>
+              </p>
+              {/*<Upload
           drag
           accept='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'
           onDrop={(e) => {
@@ -251,14 +312,170 @@ export function DataInput(props: IPropsType) {
           }}
           tip='Only pictures can be uploaded'
         />*/}
-        <TextArea
-          placeholder={csv}
-          value={csv}
-          onChange={v => setCsv(v)}
-          style={{ minHeight: 160, marginTop: 20, background: 'transparent', border: '1px solid #eee' }}
-        />
-      </div>
+              <TextArea
+                placeholder={csv}
+                value={csv}
+                onChange={v => setCsv(v)}
+                style={{ minHeight: 160, marginTop: 20, background: 'transparent', border: '1px solid #eee' }}
+              />
+            </div>
+          </div>
+        ) : (
+          <div style={{ width: '90%', display: "flex", flexDirection: 'column' }}>
+            <div>
+              <p>
+                <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+                  0
+                </Avatar>
+                <span style={{ marginLeft: 10 }}>Select Demo Data (optional)</span>
+              </p>
+              <Select
+                style={{width: '100%'}}
+                // defaultValue={defaultDataKeyForTextInput}
+                onChange={v => {
+                  const dataObj = demoTextList[v];
+                  setText(dataObj.text)
+                  setUserInput(dataObj.input)
+                }}
+              >
+                {Object.keys(demoTextList).map(name => (
+                  <Option key={name} value={name}>
+                    {name}
+                  </Option>
+                ))}
+              </Select>
+            </div>
 
+            <div style={{marginTop: 20}}>
+              <p>
+                <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+                  1
+                </Avatar>
+                <span style={{ marginLeft: 10 }}>Input your data in text format</span>
+              </p>
+              <TextArea
+                placeholder={text}
+                value={text}
+                onChange={v => setText(v)}
+                style={{ minHeight: 200, background: 'transparent', border: '1px solid #eee' }}
+              />
+            </div>
+
+            <div style={{marginTop: 20}}>
+              <p>
+                <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+                  2
+                </Avatar>
+                <span style={{ marginLeft: 10 }}>What would you like to visualize from this text?</span>
+              </p>
+              <TextArea
+                placeholder={userInput}
+                value={userInput}
+                onChange={v => setUserInput(v)}
+                style={{ minHeight: 80, background: 'transparent', border: '1px solid #eee' }}
+              />
+            </div>
+
+            <div className="generate-botton" style={{ alignSelf: "center", marginTop: 20 }}>
+              <Button
+                loading={loading}
+                onClick={() => {
+                  askGPTForGenerateData();
+                }}
+                disabled={!url || !apiKey}
+                shape="round"
+                type="primary"
+              >
+                generate data (preview)
+              </Button>
+            </div>
+
+            <Divider style={{ marginTop: 60 }} />
+
+            <div>
+              <p>
+                <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+                  3
+                </Avatar>
+                <span style={{ marginLeft: 10 }}>generate csv format data</span>
+              </p>
+              {/*<Upload
+                drag
+                accept='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'
+                onDrop={(e) => {
+                  let uploadFile = e.dataTransfer.files[0]
+                  if (isAcceptFile(uploadFile, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel')) {
+                    return
+                  } else {
+                    Message.info('不接受的文件类型，请重新上传指定文件类型~');
+                  }
+                }}
+                customRequest={(option) => {
+                  const { file } = option;
+                  var reader = new FileReader();
+                  reader.readAsArrayBuffer(file);
+                  reader.addEventListener('load', async (event) => {
+                    const result = reader.result;
+                    if (!result) {
+                      return;
+                    }
+                    const csv = await excel2csv(result);
+                    csv && setCsv(csv);
+                  });
+                }}
+                tip='Only pictures can be uploaded'
+              />*/}
+              <TextArea
+                placeholder={dataset}
+                value={dataset}
+                onChange={v => setDataset(v)}
+                style={{ minHeight: 160, marginTop: 20, background: 'transparent', border: '1px solid #eee' }}
+              />
+            </div>
+
+            <div>
+              <p>
+                <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+                  4
+                </Avatar>
+                <span style={{ marginLeft: 10 }}>generate instruction</span>
+              </p>
+              {/*<Upload
+          drag
+          accept='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'
+          onDrop={(e) => {
+            let uploadFile = e.dataTransfer.files[0]
+            if (isAcceptFile(uploadFile, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel')) {
+              return
+            } else {
+              Message.info('不接受的文件类型，请重新上传指定文件类型~');
+            }
+          }}
+          customRequest={(option) => {
+            const { file } = option;
+            var reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.addEventListener('load', async (event) => {
+              const result = reader.result;
+              if (!result) {
+                return;
+              }
+              const csv = await excel2csv(result);
+              csv && setCsv(csv);
+            });
+          }}
+          tip='Only pictures can be uploaded'
+        />*/}
+              <TextArea
+                placeholder={instructionByLLM}
+                value={instructionByLLM}
+                onChange={v => setInstructionByLLM(v)}
+                style={{ minHeight: 80, marginTop: 20, background: 'transparent', border: '1px solid #eee' }}
+              />
+            </div>
+          </div>
+        )
+      }
       <Divider style={{ marginTop: 60 }} />
       {/*
       <div>
@@ -283,31 +500,13 @@ export function DataInput(props: IPropsType) {
         />
         <InputNumber defaultValue={time} onChange={v => setTime(v)}></InputNumber>
       </div>*/}
-      <div style={{ width: '90%', marginBottom: 10 }}>
-        <RadioGroup value={model} onChange={v => setModel(v)}>
-          <Radio value={Model.GPT3_5}>GPT-3.5</Radio>
-          <Radio value={Model.GPT4}>GPT-4</Radio>
-          <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
-
-          <Radio value={Model.SKYLARK}>skylark pro</Radio>
-          <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
-        </RadioGroup>
-      </div>
-      <div style={{ width: '90%', marginBottom: 10 }}>
-        <Checkbox checked={cache} onChange={v => setCache(v)}>
-          Enable Cache
-        </Checkbox>
-      </div>
-      <div style={{ width: '90%', marginBottom: 20 }}>
-        <Checkbox checked={showThoughts} onChange={v => setShowThoughts(v)}>
-          Show Thoughts
-        </Checkbox>
-      </div>
       <div className="generate-botton">
         <Button
           loading={loading}
           onClick={() => {
-            askGPT();
+            inputType === InputType.CSV_INPUT
+              ? askGPT(csv, describe)
+              : askGPT(dataset, instructionByLLM)
           }}
           disabled={!url || !apiKey}
           shape="round"
