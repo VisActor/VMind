@@ -19,7 +19,7 @@ import { getFieldByDataType } from '../../../../../common/utils/utils';
 import { array, isArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
 import { DataType } from '../../../../../common/typings';
-import { COLOR_FIELD } from '../../../../../../../chart-advisor/src/constant';
+import { COLOR_FIELD } from '@visactor/chart-advisor';
 
 type Context = GetChartSpecContext & GetChartSpecOutput;
 
