@@ -23,6 +23,7 @@ import { isNil } from 'lodash';
 import type { Cell } from '../applications/chartGeneration/types';
 import { SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
+import {DataExtractionContext, DataExtractionOutput} from "../applications/types";
 
 class VMind {
   private _FPS = 30;
@@ -62,6 +63,28 @@ class VMind {
     const application = this.getApplication(applicationName, modelType);
     return application.runTasks(context);
   }
+
+  /**
+   * Extract json format data from the text, and generate instructions that can be used for drawing
+   */
+  async extractDataFromText(
+    dataText: string,
+    userPrompt?: string,
+    options?: {
+      chartTypeList?: ChartType[];
+    }
+  ): Promise<DataExtractionOutput> {
+    const modelType = this.getModelType();
+    const { chartTypeList } = options ?? {};
+    const context: DataExtractionContext = {
+      userInput: userPrompt,
+      dataText: dataText,
+      llmOptions: this._options,
+      chartTypeList: chartTypeList ?? SUPPORTED_CHART_LIST
+    };
+    return await this.runApplication(ApplicationType.DataExtraction, modelType, context);
+  }
+
 
   /**
    * parse csv string and get the name, type of each field using rule-based method.
