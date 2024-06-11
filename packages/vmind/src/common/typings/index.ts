@@ -5,10 +5,15 @@ import type { Cell } from '../../applications/chartGeneration/types';
 //more models is under developing
 export enum Model {
   GPT3_5 = 'gpt-3.5-turbo',
+  GPT3_5_1106 = 'gpt-3.5-turbo-1106',
   GPT4 = 'gpt-4',
   SKYLARK2 = 'skylark2-pro-4k',
   SKYLARK2_v1_2 = 'skylark2-pro-4k-v1.2',
   CHART_ADVISOR = 'chart-advisor'
+}
+export enum InputType {
+  CSV_INPUT = 'csv-format-input',
+  TEXT_INPUT = 'text-format-input'
 }
 
 export type LLMResponse = {
@@ -39,6 +44,7 @@ export interface ILLMOptions {
     chartAdvisor?: RequestFunc;
     dataProcess?: RequestFunc;
     dataQuery?: RequestFunc;
+    dataExtraction?: RequestFunc;
   };
   [key: string]: any;
 }
@@ -136,7 +142,8 @@ export type VizSchema = {
 export enum ModelType {
   GPT = 'gpt',
   SKYLARK = 'skylark',
-  CHART_ADVISOR = 'chart-advisor'
+  CHART_ADVISOR = 'chart-advisor',
+  CUSTOM = 'custom'
 }
 
 export type ChartGenerationProps = {

@@ -309,3 +309,14 @@ Under development, stay tuned
 
 ![Alt text](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/VChart-Video-3.gif)
 
+# Contribution
+
+If you would like to contribute, please read the [Code of Conduct ](./CODE_OF_CONDUCT.md) and [ Guide](./CONTRIBUTING.md) first。
+
+Small streams converge to make great rivers and seas!
+
+<a href="https://github.com/visactor/vmind/graphs/contributors"><img src="https://contrib.rocks/image?repo=visactor/vmind" /></a>
+
+# License
+
+[MIT License](./LICENSE)

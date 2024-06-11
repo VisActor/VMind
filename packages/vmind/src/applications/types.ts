@@ -2,6 +2,21 @@ import type { ChartType, ILLMOptions, SimpleFieldInfo, VMindDataset } from '../c
 import type { Cell } from './chartGeneration/types';
 import type { InsightAlgorithm, VMindInsight } from './IngelligentInsight/types';
 
+//context of the DataExtraction Application
+export type DataExtractionContext = {
+  llmOptions: ILLMOptions;
+  userInput: string;
+  dataText: string;
+  chartTypeList: ChartType[]; //supported chart list
+};
+
+//output of the DataExtraction Application
+export type DataExtractionOutput = {
+  instruction: string;
+  dataset: VMindDataset;
+  fieldInfo: SimpleFieldInfo[];
+};
+
 //context of the DataAggregation Application
 export type DataAggregationContext = {
   llmOptions: ILLMOptions;
