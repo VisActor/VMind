@@ -16,7 +16,7 @@ type DataExtractionResponse = {
 };
 
 const parseGPTExtractionResponse = (response: string) => {
-  const instruction = response.match(/instruction:\n?```(.*?)```/s)[1];
+  const instruction = response.match(/instruction:\n?```(.*?)```/s)?.[1];
   const datasetStr = response.match(/dataset:\n?```(.*?)```/s)[1];
   let dataset = [];
   try {

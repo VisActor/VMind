@@ -109,7 +109,7 @@ class VMind {
     const modelType = this.getModelType();
     const { chartTypeList } = options ?? {};
     const context: DataExtractionContext = {
-      userInput: userPrompt,
+      userInput: userPrompt ?? '',
       dataText: dataText,
       llmOptions: this._options,
       chartTypeList: chartTypeList ?? SUPPORTED_CHART_LIST
