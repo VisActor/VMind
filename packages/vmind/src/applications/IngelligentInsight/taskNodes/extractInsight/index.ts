@@ -11,7 +11,7 @@ const executeInsightAlgo: Transformer<InsightContext & DataProcessOutput, Extrac
 ) => {
   const { insightAlgorithms = defaultInsightAlgorithms, chartType } = context;
   const insights: VMindInsight[] = [];
-  const insightAlgorithmContext = { ...pick(context, ['chartType', 'dataset', 'fieldInfo', 'cell']), insights };
+  const insightAlgorithmContext = { ...context, insights };
 
   insightAlgorithms.forEach(algoInfo => {
     const { chartType: algoSupportedChartType, algorithmFunction } = algoInfo;

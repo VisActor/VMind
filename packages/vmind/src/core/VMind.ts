@@ -246,21 +246,25 @@ class VMind {
 
   async intelligentInsight(
     spec: any,
-    dataset?: VMindDataset,
-    fieldInfo?: SimpleFieldInfo[],
-    cell?: Cell,
-    insightAlgorithms?: InsightAlgorithm[]
+    options: {
+      dataset?: VMindDataset;
+      fieldInfo?: SimpleFieldInfo[];
+      cell?: Cell;
+      insightAlgorithms?: InsightAlgorithm[];
+    }
   ): Promise<InsightOutput> {
     const modelType = this.getModelType();
     const context: InsightContext = {
-      dataset,
       spec,
-      fieldInfo,
-      cell,
       llmOptions: this._options,
-      insightAlgorithms
+      ...options
     };
-    return await this.runApplication(ApplicationType.IntelligentInsight, modelType, context);
+    const { insights, spec: specWithInsight } = await this.runApplication(
+      ApplicationType.IntelligentInsight,
+      modelType,
+      context
+    );
+    return { insights, spec: specWithInsight };
   }
 
   /**
