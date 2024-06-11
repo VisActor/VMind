@@ -109,10 +109,12 @@ class VMind {
   private getModelType() {
     if (this._model.includes(ModelType.GPT)) {
       return ModelType.GPT;
-    } else if (this._model.includes(ModelType.SKYLARK)) {
+    } else if (this._model.includes(ModelType.SKYLARK) || this._model.includes(ModelType.CUSTOM)) {
       return ModelType.SKYLARK;
+    } else if (this._model.includes(ModelType.CHART_ADVISOR)) {
+      return ModelType.CHART_ADVISOR;
     }
-    return ModelType.CHART_ADVISOR;
+    return ModelType.SKYLARK;
   }
 
   async dataQuery(
