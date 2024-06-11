@@ -28,6 +28,7 @@ import { BaseApplication } from '../base/application';
 import { fillSpecTemplateWithData } from '../common/specUtils';
 import type { InsightAlgorithm } from '../applications/IngelligentInsight/types';
 import type { ApplicationMeta, TaskNode } from '../base/metaTypes';
+import type { DataExtractionContext, DataExtractionOutput } from '../applications/types';
 
 type MetaMapByModel = { [key: ModelType | string]: ApplicationMeta<any, any> };
 
@@ -96,6 +97,27 @@ class VMind {
   }
 
   /**
+   * Extract json format data from the text, and generate instructions that can be used for drawing
+   */
+  async extractDataFromText(
+    dataText: string,
+    userPrompt?: string,
+    options?: {
+      chartTypeList?: ChartType[];
+    }
+  ): Promise<DataExtractionOutput> {
+    const modelType = this.getModelType();
+    const { chartTypeList } = options ?? {};
+    const context: DataExtractionContext = {
+      userInput: userPrompt,
+      dataText: dataText,
+      llmOptions: this._options,
+      chartTypeList: chartTypeList ?? SUPPORTED_CHART_LIST
+    };
+    return await this.runApplication(ApplicationType.DataExtraction, modelType, context);
+  }
+
+  /**
    * parse csv string and get the name, type of each field using rule-based method.
    * @param csvString csv data user want to visualize
    * @returns fieldInfo and raw dataset.
@@ -118,10 +140,12 @@ class VMind {
   private getModelType() {
     if (this._model.includes(ModelType.GPT)) {
       return ModelType.GPT;
-    } else if (this._model.includes(ModelType.SKYLARK)) {
+    } else if (this._model.includes(ModelType.SKYLARK) || this._model.includes(ModelType.CUSTOM)) {
       return ModelType.SKYLARK;
+    } else if (this._model.includes(ModelType.CHART_ADVISOR)) {
+      return ModelType.CHART_ADVISOR;
     }
-    return ModelType.CHART_ADVISOR;
+    return ModelType.SKYLARK;
   }
 
   async dataQuery(
