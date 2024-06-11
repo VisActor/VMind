@@ -16,8 +16,19 @@ import {
 } from '@arco-design/web-react';
 import VMind, { ArcoTheme } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
-import { mockUserTextInput1, mockUserTextInput2 } from '../../constants/mockData';
-import JSON5 from 'json5';
+import {
+  mockUserTextInput0,
+  mockUserTextInput1,
+  mockUserTextInput10,
+  mockUserTextInput2,
+  mockUserTextInput3,
+  mockUserTextInput4,
+  mockUserTextInput5,
+  mockUserTextInput6,
+  mockUserTextInput7,
+  mockUserTextInput8,
+  mockUserTextInput9
+} from '../../constants/mockData';
 import type { VMindDataset } from '../../../../../src/common/typings';
 
 const TextArea = Input.TextArea;
@@ -28,8 +39,17 @@ type IPropsType = {
   onDatasetGenerate: (payload: any) => void;
 };
 const demoTextList: { [key: string]: any } = {
+  demo0: mockUserTextInput0,
   demo: mockUserTextInput1,
-  demo2: mockUserTextInput2
+  demo2: mockUserTextInput2,
+  demo3: mockUserTextInput3,
+  demo4: mockUserTextInput4,
+  demo5: mockUserTextInput5,
+  demo6: mockUserTextInput6,
+  demo7: mockUserTextInput7,
+  demo8: mockUserTextInput8,
+  demo9: mockUserTextInput9,
+  demo10: mockUserTextInput10
 };
 
 const globalVariables = (import.meta as any).env;
@@ -160,10 +180,8 @@ export function DataInput(props: IPropsType) {
       <div style={{ width: '90%', marginBottom: 10 }}>
         <RadioGroup value={model} onChange={v => setModel(v)}>
           <Radio value={Model.GPT3_5}>GPT-3.5</Radio>
-          <Radio value={Model.GPT4}>GPT-4</Radio>
+          <Radio value={Model.GPT_4_0613}>GPT-4-0613</Radio>
           <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
-
-          <Radio value={Model.SKYLARK2}>skylark pro</Radio>
           <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
         </RadioGroup>
       </div>
