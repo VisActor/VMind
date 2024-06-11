@@ -8,7 +8,7 @@ import {
   sequenceData,
   wordCloudData
 } from '../../applications/chartGeneration/taskNodes/getChartSpec/VChart/transformers';
-import { isArray } from '@visactor/vutils';
+import { isArray, uniqArray } from '@visactor/vutils';
 import { getFieldInfoFromDataset } from '../dataProcess';
 import { foldDatasetByYField } from '../utils/utils';
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
@@ -94,7 +94,7 @@ export const getCellFromSpec = (spec: Spec) => {
     const series = spec.series ?? [];
     return {
       x: series[0]?.xField,
-      y: [series[0]?.yField, series[1]?.yField].filter(Boolean)
+      y: uniqArray([series[0]?.yField, series[1]?.yField].filter(Boolean))
     };
   }
   if (type === 'wordCloud') {

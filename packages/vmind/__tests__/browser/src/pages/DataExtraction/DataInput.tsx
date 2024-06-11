@@ -182,6 +182,7 @@ export function DataInput(props: IPropsType) {
           <Radio value={Model.GPT3_5}>GPT-3.5</Radio>
           <Radio value={Model.GPT_4_0613}>GPT-4-0613</Radio>
           <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
+          <Radio value={Model.SKYLARK2_v1_2}>skylark2-v1.2</Radio>
           <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
         </RadioGroup>
       </div>
