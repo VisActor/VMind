@@ -1,7 +1,8 @@
-import { IconBgColors, IconBulb } from '@arco-design/web-react/icon';
+import { IconBgColors, IconBulb, IconLanguage } from '@arco-design/web-react/icon';
 import { ChartGenerationPage } from './ChartGeneration/ChartGeneration';
 import React from 'react';
 import { InsightPage } from './Insight/Insight';
+import { DataExtractionPage } from './DataExtraction/DataExtraction';
 type MenuInfo = {
   menuItem: string;
   pageName: string;
@@ -12,7 +13,8 @@ type MenuInfo = {
 
 export enum PLAYGROUND_PAGES {
   CHART_GENERATION = 'chart_generation',
-  SMART_INSIGHT = 'smart-insight'
+  SMART_INSIGHT = 'smart-insight',
+  DATA_EXTRACTION = 'data-extraction'
 }
 
 export const PLAYGROUND_MENU_INFO: {
@@ -29,6 +31,12 @@ export const PLAYGROUND_MENU_INFO: {
     pageName: 'Smart Insight',
     component: <InsightPage />,
     icon: <IconBulb />
+  },
+  [PLAYGROUND_PAGES.DATA_EXTRACTION]: {
+    menuItem: 'Data Extraction',
+    pageName: 'Data Extraction',
+    component: <DataExtractionPage />,
+    icon: <IconLanguage />
   }
 };
 export const CollapseCSS = {
