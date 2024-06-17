@@ -50,3 +50,8 @@ export type DataProcessOutput = {
 export type ExtractInsightOutput = {
   insights: VMindInsight[];
 };
+
+export type GenerateTextOutput = {
+  insights: VMindInsight[];
+  usage: any;
+};

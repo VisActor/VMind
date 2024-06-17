@@ -46,6 +46,7 @@ export interface ILLMOptions {
     dataProcess?: RequestFunc;
     dataQuery?: RequestFunc;
     dataExtraction?: RequestFunc;
+    IntelligentInsight?: RequestFunc;
   };
   [key: string]: any;
 }
