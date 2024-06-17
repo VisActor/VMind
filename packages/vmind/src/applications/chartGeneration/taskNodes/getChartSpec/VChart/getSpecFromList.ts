@@ -1,11 +1,11 @@
 import type { RuleBasedTaskNodeMeta } from '../../../../../base/metaTypes';
 import { TaskNodeType } from '../../../../../base/taskNode/types';
 import type { GetChartSpecContext, GetChartSpecOutput } from '../types';
-import { uniqBy } from 'lodash';
 import type { ChartGenerationOutput } from '../../../../../applications/types';
 import type { Transformer } from '../../../../../base/tools/transformer';
 import getVChartSpecTaskNodeMeta from '.';
 import FormatOutputTaskNodeMeta from '../../formatOutput';
+import { uniqBy } from '../../../../../common/utils/utils';
 
 const runPipelines = (pipelines: any, context: any) => {
   const result = pipelines.reduce((pre: any, transformer: any) => {

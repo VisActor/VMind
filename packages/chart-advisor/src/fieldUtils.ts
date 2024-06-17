@@ -1,6 +1,15 @@
-import { uniq, pick, omit } from 'lodash';
+import { uniqArray, pick, isNumber, isNil } from '@visactor/vutils';
 import { FoldInfo } from './type';
 import { Dataset, UniqueId, DataItem, AliasMap } from './type';
+
+export function omit(obj: any, arr: string[]) {
+  if (isNil(obj) || isNil(arr)) {
+    return obj;
+  }
+  return Object.keys(obj)
+    .filter(k => !arr.includes(k))
+    .reduce((res, key) => ((res[key] = obj[key]), res), {});
+}
 
 /**
  * 输入二维数组，输出笛卡尔积长度
@@ -48,16 +57,16 @@ const product = (list: any[][]) =>
 // 从数据集中获取 domain map
 export const getDomainFromDataset = (dataset: Dataset, dim: UniqueId): string[] => {
   const values: string[] = dataset.map((d: DataItem) => String(d[dim]));
-  return uniq(values);
+  return uniqArray(values) as string[];
 };
 
 // 保留dataset中的某些字段
 export const retainDatasetField = (dataset: Dataset, fields: UniqueId[]): Dataset =>
-  dataset.map((data: DataItem) => pick(data, fields)) as Dataset;
+  dataset.map((data: DataItem) => pick(data, fields as any)) as Dataset;
 
 // 移除dataset中的某些字段
 export const removeDatasetField = (dataset: Dataset, fields: UniqueId[]): Dataset =>
-  dataset.map((data: DataItem) => omit(data, fields)) as Dataset;
+  dataset.map((data: DataItem) => omit(data, fields as any)) as Dataset;
 
 /**
  * 维度笛卡尔积的原始信息，因此可以通过cartesianInfo匹配原始的维度字段
@@ -115,7 +124,7 @@ export const fold = (
   dataset.forEach((data: DataItem) => {
     fields.forEach((field: UniqueId) => {
       // 是否保留被展开的字段
-      const _data = retains ? data : omit(data, fields);
+      const _data = retains ? data : omit(data, fields as any);
       _dataset.push({
         ..._data,
         [foldName]: aliasMap ? aliasMap[field] : field,

@@ -3,7 +3,7 @@ import { matchJSONStr, replaceAll } from '../../../../../common/utils/utils';
 import type { Requester } from '../../../../../base/tools/requester';
 import JSON5 from 'json5';
 import { requestSkyLark } from '../../../../../common/utils/skylark';
-import {DataExtractionContext} from "../../../../types";
+import { DataExtractionContext } from '../../../../types';
 
 export const parseJson = (JsonStr: string, prefix?: string) => {
   const parseNoPrefixStr = (str: string) => {

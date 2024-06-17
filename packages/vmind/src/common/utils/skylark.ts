@@ -1,7 +1,7 @@
 import axios from 'axios';
 import yaml from 'js-yaml';
 
-import { omit } from 'lodash';
+import { omit } from '@visactor/chart-advisor';
 import type { ILLMOptions, LLMResponse } from '../../common/typings';
 
 /**

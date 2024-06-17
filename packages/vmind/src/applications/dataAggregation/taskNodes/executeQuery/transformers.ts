@@ -2,6 +2,7 @@ import type { Transformer } from '../../../../base/tools/transformer';
 import type { SimpleFieldInfo, VMindDataset } from '../../../../common/typings';
 import type { ExecuteQueryContext, ExecuteQueryOutput, SQL } from '../../types';
 import {
+  matchColumnName,
   parseRespondField,
   replaceBlankSpace,
   replaceDataset,
@@ -29,8 +30,10 @@ type PatchSQLResult = {
 };
 export const patchSQLBeforeQuery: Transformer<ExecuteQueryContext, PatchSQLResult> = (context: ExecuteQueryContext) => {
   const { sql, sourceDataset } = context;
-  const { fieldInfo } = context;
+  const { fieldInfo, llmFieldInfo: propsLLMFieldInfo } = context;
   const fieldNames = fieldInfo.map((field: SimpleFieldInfo) => field.fieldName);
+
+  //remove invalid words in sql and get the replace map
   const { validStr, sqlReplaceMap, columnReplaceMap } = replaceInvalidWords(sql, fieldNames);
 
   //replace field names according to replaceMap
@@ -39,12 +42,25 @@ export const patchSQLBeforeQuery: Transformer<ExecuteQueryContext, PatchSQLResul
   //replace field names and data values according to replaceMap
   const validDataset = replaceDataset(validColumnDataset, sqlReplaceMap, false);
 
-  //replace blank spaces in column name
   const replacedFieldNames = fieldNames
     .map((field: string | number) => replaceString(field, columnReplaceMap))
     .map((field: string | number) => replaceString(field, sqlReplaceMap));
+
+  //replace blank spaces in column name
   const validSql = replaceBlankSpace(validStr, replacedFieldNames as string[]);
 
+  //also, replace field names in fieldInfo
+  const llmFieldInfo = propsLLMFieldInfo.map(field => {
+    const { fieldName } = field;
+    const temp = replaceString(fieldName, columnReplaceMap);
+    const validFieldName = replaceString(temp, sqlReplaceMap);
+
+    const matchedFieldName = replacedFieldNames.find(f => matchColumnName(validFieldName as string, f as string));
+    return {
+      ...field,
+      fieldName: matchedFieldName ?? validFieldName
+    };
+  });
   //sum all the non-aggregation measure columns
   const finalSql = sumAllMeasureFields(validSql, fieldInfo, columnReplaceMap, sqlReplaceMap);
 
@@ -53,7 +69,8 @@ export const patchSQLBeforeQuery: Transformer<ExecuteQueryContext, PatchSQLResul
     finalSql,
     validDataset,
     columnReplaceMap,
-    sqlReplaceMap
+    sqlReplaceMap,
+    llmFieldInfo
   };
 };
 
@@ -88,19 +105,33 @@ type RestoreResult = {
  * @param context
  * @returns restored dataset
  */
-export const restoreDatasetAfterQuery: Transformer<QueryResult & PatchSQLResult, RestoreResult> = (
-  context: QueryResult & PatchSQLResult
-) => {
-  const { columnReplaceMap, sqlReplaceMap, alasqlDataset } = context;
+export const restoreDatasetAfterQuery: Transformer<
+  { llmFieldInfo: SimpleFieldInfo[] } & QueryResult & PatchSQLResult,
+  RestoreResult
+> = (context: { llmFieldInfo: SimpleFieldInfo[] } & QueryResult & PatchSQLResult) => {
+  const { columnReplaceMap, sqlReplaceMap, alasqlDataset, llmFieldInfo: propsLLMFieldInfo } = context;
   //restore the dataset
   const columnReversedMap = swapMap(columnReplaceMap);
   const columnRestoredDataset = replaceDataset(alasqlDataset, columnReversedMap, true);
   const sqlReversedMap = swapMap(sqlReplaceMap);
   const sqlRestoredDataset = replaceDataset(columnRestoredDataset, sqlReversedMap, false);
 
+  //restore fieldMap
+  const llmFieldInfo = propsLLMFieldInfo.map(field => {
+    const { fieldName } = field;
+    const temp = replaceString(fieldName, columnReversedMap);
+    const validFieldName = replaceString(temp, sqlReversedMap);
+
+    return {
+      ...field,
+      fieldName: validFieldName
+    };
+  });
+
   return {
     //...context,
-    datasetAfterQuery: sqlRestoredDataset
+    datasetAfterQuery: sqlRestoredDataset,
+    llmFieldInfo
   };
 };
 
