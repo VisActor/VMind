@@ -3,6 +3,7 @@ import { ModelType } from '../../common/typings';
 import type { InsightContext, InsightOutput } from '../types';
 import DataProcessTaskNodeMeta from './taskNodes/dataProcess';
 import ExtractInsightTaskNodeMeta from './taskNodes/extractInsight';
+import GenerateInsightTextGPTMeta from './taskNodes/generateInsightText/GPT';
 
 const intelligentInsightGPTMeta: ApplicationMeta<InsightContext, InsightOutput> = {
   name: 'IntelligentInsight',
@@ -14,6 +15,10 @@ const intelligentInsightGPTMeta: ApplicationMeta<InsightContext, InsightOutput> 
     {
       taskNode: ExtractInsightTaskNodeMeta,
       name: 'extractInsight'
+    },
+    {
+      taskNode: GenerateInsightTextGPTMeta,
+      name: 'generateInsightText'
     }
   ]
 };
