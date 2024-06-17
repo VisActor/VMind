@@ -1,5 +1,5 @@
 # Rule-based Chart Generation
-VMind can automatically generate charts based on the current dataset in combination with the built-in @visactor/chart-advisor. Chart-advisor is fully dependent on visualization rules and does not need to call large language models. When you use generateChart, and the large model cannot successfully generate a chart, VMind will use chart-advisor as an alternative to create a chart.
+VMind can automatically generate charts based on the current dataset in combination with the built-in @visactor/chart-advisor. Chart-advisor is fully dependent on visualization rules and does not need to call large language models. When you use generateChart, and the LLM cannot successfully generate a chart, VMind will use chart-advisor as an alternative to create a chart.
 
 You can also actively choose to use chart-advisor to generate charts, just set the model type to chart-advisor when initializing the VMind object:
 ```ts

@@ -10,20 +10,12 @@ fillSpecWithData用于向spec模板中填入数据，以生成一个完整的spe
 fillSpecWithData(
   spec: any,
   dataset: Array<Record<string, any>>,
-  cell: Record<string, string | string[]>,
-  fieldInfo: Array<{
-    fieldName: string;
-    type: string;
-    role: string;
-  }>;
   totalTime?: number
   )
 ```
 
 - spec (any): spec模板，包含除data之外的所有属性。可通过[generateChart](./generateChart)生成
 - dataset (Array): 图表中使用的数据集，会被填充到spec模板中。
-- cell (Record<string, string | string[]>): 图表中的字段映射，描述数据集中的字段如何映射到图表的各个视觉通道上。可通过[generateChart](./generateChart)生成
-- fieldInfo (Array): 数据集中字段的信息，包括字段名称，类型等。可通过[getFieldInfo](./getFieldInfo)生成
 - totalTime (number): 可选项，图表动画时长（ms）
 
 ## 返回值：
@@ -72,7 +64,7 @@ const fieldInfo = [
     }
 ]
 //不传入dataset，生成spec模板
-const { spec, cell } = await vmind.generateChart(userPrompt, fieldInfo);
+const { spec } = await vmind.generateChart(userPrompt, fieldInfo);
 
 //向模板中填入数据
 const dataset = [
@@ -98,7 +90,7 @@ const dataset = [
     }
 ]
 
-const spec = vmind.fillSpecWithData(spec, dataset, cell, fieldInfo)
+const spec = vmind.fillSpecWithData(spec, dataset)
 ```
 
 ## 相关教程

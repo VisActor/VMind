@@ -1,45 +1,47 @@
-import React, { useState } from 'react';
-import { Layout } from '@arco-design/web-react';
-import { DataInput } from './DataInput';
-import { ChartPreview } from './ChartPreview';
+import React from 'react';
+import { Layout, Menu } from '@arco-design/web-react';
+import { CollapseCSS, PLAYGROUND_MENU_INFO, PLAYGROUND_PAGES } from './constants';
 const Sider = Layout.Sider;
 const Content = Layout.Content;
+const MenuItem = Menu.Item;
 
-export function Home() {
-  const [spec, setSpec] = useState<any>('');
-  const [specList, setSpecList] = useState<any>([]);
-
-  const [time, setTime] = useState<{
-    totalTime: number;
-    frameArr: any[];
-  }>();
-  const [costTime, setCostTime] = useState<number>(0);
+const LOCAL_STORAGE_MENU_KEY = 'VMind_playground_menu_key';
+export const Home: React.FC = props => {
+  const [selectedPage, setSelectedPage] = React.useState(
+    localStorage.getItem(LOCAL_STORAGE_MENU_KEY) ?? PLAYGROUND_PAGES.CHART_GENERATION
+  );
+  const [collapsed, setCollapsed] = React.useState(true);
   return (
-    <Layout>
+    <Layout style={CollapseCSS}>
       <Sider
-        style={{
-          height: '100%',
-          minWidth: 300
+        defaultCollapsed={true}
+        collapsed={collapsed}
+        onCollapse={(v, type) => {
+          type === 'clickTrigger' && setCollapsed(v);
         }}
+        breakpoint="xl"
+        collapsible
       >
-        <DataInput
-          onSpecGenerate={(spec, time, costTime) => {
-            setSpec(spec);
-            setSpecList([]);
-            setTime(time);
-            setCostTime(costTime);
+        <Menu
+          mode={'pop'}
+          selectedKeys={[selectedPage]}
+          onClickMenuItem={(key: any) => {
+            setSelectedPage(key);
+            localStorage.setItem(LOCAL_STORAGE_MENU_KEY, key);
           }}
-          onSpecListGenerate={(specList: any[], time: any, costTime: number) => {
-            setSpec(undefined);
-            setSpecList(specList);
-            setTime(time);
-            setCostTime(costTime);
-          }}
-        />
+        >
+          {Object.keys(PLAYGROUND_MENU_INFO).map(pageName => {
+            const item = PLAYGROUND_MENU_INFO[pageName];
+            return (
+              <MenuItem key={pageName}>
+                {item.icon}
+                {item.menuItem}
+              </MenuItem>
+            );
+          })}
+        </Menu>
       </Sider>
-      <Content>
-        <ChartPreview spec={spec} specList={specList} time={time} costTime={costTime} />
-      </Content>
+      <Layout>{PLAYGROUND_MENU_INFO[selectedPage].component}</Layout>
     </Layout>
   );
-}
+};

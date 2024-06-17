@@ -4,7 +4,7 @@ import { SQLAst, SimpleFieldInfo } from './type';
 import { Query, TableData } from '../types';
 import { parseRespondField, preprocessSQL } from './utils';
 import { parseSqlAST } from './parseSqlAST';
-import { isArray } from 'lodash';
+import { isArray } from '@visactor/vutils';
 
 /**
  * query the source dataset according to user's input and fieldInfo to get aggregated dataset
