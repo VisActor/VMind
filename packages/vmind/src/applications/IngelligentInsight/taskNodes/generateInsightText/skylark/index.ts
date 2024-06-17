@@ -1,17 +1,18 @@
-import type { GetQuerySQLContext, GetQuerySQLOutput } from '../../../../../applications/dataAggregation/types';
 import type { LLMBasedTaskNodeMeta } from '../../../../../base/metaTypes';
 import { TaskNodeType } from '../../../../../base/taskNode/types';
 import { ModelType } from '../../../../../common/typings';
-import { dataQueryRequestLLM, parseSkylarkResponseAsJSON } from './utils';
-import { SkylarkDataAggregationPrompt } from './prompt';
+import type { InsightContext } from '../../../../types';
+import type { GenerateTextOutput } from '../../../types';
+import { SkylarkInsightTextPrompt } from './prompt';
+import { parseInsightTextResponse, patchInsightText, requestInsightLLM } from './utils';
 
-const GetSQLTaskNodeSkylarkMeta: LLMBasedTaskNodeMeta<GetQuerySQLContext, GetQuerySQLOutput> = {
+const GenerateInsightTextSkylarkMeta: LLMBasedTaskNodeMeta<InsightContext, GenerateTextOutput> = {
   type: TaskNodeType.LLM_BASED,
   modelType: ModelType.SKYLARK,
-  parser: parseSkylarkResponseAsJSON,
-  patcher: [(input: GetQuerySQLContext) => input as unknown as GetQuerySQLOutput],
-  requester: dataQueryRequestLLM,
-  prompt: new SkylarkDataAggregationPrompt()
+  parser: parseInsightTextResponse,
+  patcher: [patchInsightText],
+  requester: requestInsightLLM,
+  prompt: new SkylarkInsightTextPrompt()
 };
 
-export default GetSQLTaskNodeSkylarkMeta;
+export default GenerateInsightTextSkylarkMeta;
