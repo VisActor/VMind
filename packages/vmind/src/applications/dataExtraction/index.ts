@@ -12,16 +12,12 @@ import GetDatasetTaskNodeSkylarkMeta from './taskNodes/generateDataset/skylark';
  */
 const dataExtractionGPTMeta: ApplicationMeta<DataExtractionContext, DataExtractionOutput> = {
   name: 'dataExtraction',
-  taskNodes: [
-    { taskNode: GetDatasetTaskNodeGPTMeta, name: 'getDataset' }
-  ]
+  taskNodes: [{ taskNode: GetDatasetTaskNodeGPTMeta, name: 'getDataset' }]
 };
 
 const dataExtractionSkylarkMeta: ApplicationMeta<DataExtractionContext, DataExtractionOutput> = {
   name: 'dataExtraction',
-  taskNodes: [
-    { taskNode: GetDatasetTaskNodeSkylarkMeta, name: 'getDataset' }
-  ]
+  taskNodes: [{ taskNode: GetDatasetTaskNodeSkylarkMeta, name: 'getDataset' }]
 };
 
 const dataExtractionMetaByModel = {

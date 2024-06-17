@@ -1,5 +1,5 @@
 import JSON5 from 'json5';
-import { isArray } from 'lodash';
+import { isArray } from '@visactor/vutils';
 import type { LLMResponse, SimpleFieldInfo } from '../../../../../common/typings';
 import type { Parser } from '../../../../../base/tools/parser';
 import type { GetQuerySQLContext, GetQuerySQLOutput, SQL } from '../../../../../applications/dataAggregation/types';

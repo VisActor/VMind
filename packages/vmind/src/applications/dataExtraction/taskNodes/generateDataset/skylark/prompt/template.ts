@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-export const VMIND_TEXT_SOURCE = 'VMind_text_source'
+export const VMIND_TEXT_SOURCE = 'VMind_text_source';
 export const dataExtractionPrompt = (
   showThoughts: boolean,
   supportedChartList: string[]

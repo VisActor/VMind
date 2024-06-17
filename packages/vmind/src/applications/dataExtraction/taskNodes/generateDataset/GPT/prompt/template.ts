@@ -1,19 +1,17 @@
 /* eslint-disable max-len */
 
-export const VMIND_TEXT_SOURCE = 'VMind_text_source'
-export const dataExtractionPrompt = (
-  showThoughts: boolean,
-  supportedChartList: string[]
-) => `You are an expert in data finishing and are good at digging data from text. This is a original text called ${VMIND_TEXT_SOURCE}. The user will tell you his command and original text ${VMIND_TEXT_SOURCE}.
-Your task is
-1. Sort out form data based on user instructions and original text ${VMIND_TEXT_SOURCE}. Users will use your data to draw a chart. Only respond to one JSON object.
+export const VMIND_TEXT_SOURCE = 'VMind_text_source';
+export const dataExtractionPrompt = (showThoughts: boolean, supportedChartList: string[]) => `#Tasks
+1. Translate the original text into tabular data in JSON format. Users will use your data to draw a chart. Only respond to one JSON object.
 2. Generate a natural language instructions for drawing charts, describe what to display using the chart. Supported chart types: ${JSON.stringify(
   supportedChartList
 )}.
 
+Please ensure the accuracy of the data and do not fabricate numbers that is not present in the original text. Do not use data that has never appeared in the text. Data entries can be missing, rather than being arbitrarily made up.
+
 Let's think step by step. ${showThoughts ? 'Fill your thoughts in {thought}.' : ''}
 
-Response in the following format:
+Response format:
 \`\`\`
 {
   ${showThoughts ? 'thoughts: string //your thoughts' : ''}
@@ -24,7 +22,7 @@ Response in the following format:
 
 #Examples:
 
-Original Text : 阿里目前在中国电商市场的份额差不多是四成。从年成交额维度看,阿里中国零售8万量级,拼多多4万量级,京东3万量级,抖音电商2.6万(支付口径)。
+Original Text : 阿里目前在中国电商市场的份额差不多是四成。从年成交额维度看,阿里中国零售负8万量级,拼多多4万量级,京东3万量级,抖音电商2.6万(支付口径)。
 User's Command: 对比各电商在年成交额维度的市场份额。
 
 Response:
@@ -35,7 +33,7 @@ Response:
   "dataset": [
     {
       "name": "阿里",
-      "retailVolume": 80000
+      "retailVolume": -80000
     },
     {
       "name": "拼多多",
@@ -58,8 +56,8 @@ You only need to return the JSON in your response directly to the user.
 Finish your tasks in one-step.
 
 # Constraints:
-1. Strictly define the type of return format, use JSON format to reply, do not include any extra content
-2. The number in the DataSet does not bring any unit, a data contains only one indicator
-3. Use supported chart types to display
+1. Strictly define the type of return format, use JSON format to reply, do not include any extra content.
+2. The numbers in the dataset do not carry any units, and one piece of data only contains one indicator.
+3. Use supported chart types to display.
 4. Show only one content at a time. If there are multiple contents to display at the same time, select one with the most data.
 `;

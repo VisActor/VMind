@@ -2,6 +2,21 @@
   "name": "@visactor/vmind",
   "entries": [
     {
+      "version": "1.2.12",
+      "tag": "@visactor/vmind_v1.2.12",
+      "date": "Mon, 17 Jun 2024 08:45:53 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "add custom model type support"
+          },
+          {
+            "comment": "take skylark model when no model type match"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.2.11",
       "tag": "@visactor/vmind_v1.2.11",
       "date": "Wed, 24 Apr 2024 05:24:53 GMT",

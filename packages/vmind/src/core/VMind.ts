@@ -15,33 +15,45 @@ import type {
   ChartGenerationContext,
   ChartGenerationOutput,
   DataAggregationContext,
-  DataAggregationOutput
+  DataAggregationOutput,
+  InsightContext,
+  InsightOutput
 } from '../applications/types';
 import applicationMetaList, { ApplicationType } from '../applications';
-import { calculateTokenUsage, fillSpecTemplateWithData } from '../common/utils/utils';
-import { isNil } from 'lodash';
+import { calculateTokenUsage } from '../common/utils/utils';
+import { isNil } from '@visactor/vutils';
 import type { Cell } from '../applications/chartGeneration/types';
 import { SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
-import {DataExtractionContext, DataExtractionOutput} from "../applications/types";
+import { fillSpecTemplateWithData } from '../common/specUtils';
+import type { InsightAlgorithm } from '../applications/IngelligentInsight/types';
+import type { ApplicationMeta, TaskNode } from '../base/metaTypes';
+import type { DataExtractionContext, DataExtractionOutput } from '../applications/types';
 
+type MetaMapByModel = { [key: ModelType | string]: ApplicationMeta<any, any> };
+
+type RuntimeMetaMap = {
+  [key: string]: MetaMapByModel;
+};
 class VMind {
   private _FPS = 30;
   private _options: ILLMOptions | undefined;
   private _model: Model | string;
   private _applicationMap: VMindApplicationMap;
+  private _runtimeMetaMap: RuntimeMetaMap;
 
   constructor(options?: ILLMOptions) {
     this._options = { ...(options ?? {}), showThoughts: options?.showThoughts ?? true }; //apply default settings
     this._model = options?.model ?? Model.GPT3_5;
+    this._runtimeMetaMap = applicationMetaList;
     this.registerApplications();
   }
 
   private registerApplications() {
-    const applicationList = {};
-    Object.keys(applicationMetaList).forEach(applicationName => {
+    const applicationList: any = {};
+    Object.keys(this._runtimeMetaMap).forEach(applicationName => {
       applicationList[applicationName] = {};
-      const applicationMetaByModel = applicationMetaList[applicationName];
+      const applicationMetaByModel: any = this._runtimeMetaMap[applicationName as ApplicationType];
       Object.keys(applicationMetaByModel).forEach(modelType => {
         const applicationMeta = applicationMetaByModel[modelType];
         applicationList[applicationName][modelType] = new BaseApplication(applicationMeta);
@@ -50,9 +62,29 @@ class VMind {
     this._applicationMap = applicationList;
   }
 
-  addApplication() {
-    //@TODO: support user registered applications
+  addApplication(applicationMeta: ApplicationMeta<any, any>, modelType: ModelType | string) {
+    const { name } = applicationMeta;
+    if (!this._applicationMap[name]) {
+      this._applicationMap[name] = {};
+    }
+    this._applicationMap[name][modelType] = new BaseApplication(applicationMeta);
     return;
+  }
+
+  setTaskNode(applicationName: string, modelType: ModelType | string, taskNode: TaskNode<any>) {
+    const applicationMeta = this._runtimeMetaMap[applicationName]?.[modelType];
+    if (applicationMeta) {
+      const { taskNodes } = applicationMeta;
+      const originalTaskNode = taskNodes.find(t => t.name === taskNode.name);
+      if (originalTaskNode) {
+        originalTaskNode.taskNode = taskNode.taskNode;
+        this._applicationMap[applicationName][modelType] = new BaseApplication(applicationMeta);
+      } else {
+        throw 'task node name error!';
+      }
+    } else {
+      throw 'application name error!';
+    }
   }
 
   private getApplication(name: ApplicationType, modelType: ModelType) {
@@ -77,14 +109,13 @@ class VMind {
     const modelType = this.getModelType();
     const { chartTypeList } = options ?? {};
     const context: DataExtractionContext = {
-      userInput: userPrompt,
+      userInput: userPrompt ?? '',
       dataText: dataText,
       llmOptions: this._options,
       chartTypeList: chartTypeList ?? SUPPORTED_CHART_LIST
     };
     return await this.runApplication(ApplicationType.DataExtraction, modelType, context);
   }
-
 
   /**
    * parse csv string and get the name, type of each field using rule-based method.
@@ -213,18 +244,38 @@ class VMind {
     };
   }
 
+  async intelligentInsight(
+    spec: any,
+    options: {
+      dataset?: VMindDataset;
+      fieldInfo?: SimpleFieldInfo[];
+      cell?: Cell;
+      insightAlgorithms?: InsightAlgorithm[];
+    }
+  ): Promise<InsightOutput> {
+    const modelType = this.getModelType();
+    const context: InsightContext = {
+      spec,
+      llmOptions: this._options,
+      ...options
+    };
+    const { insights, spec: specWithInsight } = await this.runApplication(
+      ApplicationType.IntelligentInsight,
+      modelType,
+      context
+    );
+    return { insights, spec: specWithInsight };
+  }
+
   /**
    * user can generate a spec template without dataset in generateChart
    * fill the spec template with dataset.
    * @param spec
    * @param dataset
-   * @param cell
-   * @param fieldInfo
-   * @param totalTime
    * @returns
    */
-  fillSpecWithData(spec: any, dataset: VMindDataset, cell: Cell, fieldInfo: SimpleFieldInfo[], totalTime?: number) {
-    return fillSpecTemplateWithData(spec, dataset, cell, fieldInfo, totalTime);
+  fillSpecWithData(spec: any, dataset: VMindDataset, totalTime?: number) {
+    return fillSpecTemplateWithData(spec, dataset, totalTime);
   }
 
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {

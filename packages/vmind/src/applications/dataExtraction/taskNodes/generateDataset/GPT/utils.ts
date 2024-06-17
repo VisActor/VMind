@@ -1,22 +1,22 @@
 import JSON5 from 'json5';
-import { isArray } from 'lodash';
 import type { LLMResponse } from '../../../../../common/typings';
 import type { Parser } from '../../../../../base/tools/parser';
 import type { Requester } from '../../../../../base/tools/requester';
 import { parseGPTResponse, requestGPT } from '../../../../../common/utils/gpt';
-import {DataItem, SimpleFieldInfo} from "../../../../../common/typings";
-import { DataExtractionContext, DataExtractionOutput } from "../../../../types";
+import type { DataItem, SimpleFieldInfo } from '../../../../../common/typings';
+import type { DataExtractionContext, DataExtractionOutput } from '../../../../types';
 import { getFieldInfoFromDataset } from '../../../../../common/dataProcess';
+import { isArray } from '@visactor/vutils';
 
 type DataExtractionResponse = {
-  dataset: DataItem[],
-  instruction: string,
+  dataset: DataItem[];
+  instruction: string;
   thoughts?: string;
   usage: any;
 };
 
 const parseGPTExtractionResponse = (response: string) => {
-  const instruction = response.match(/instruction:\n?```(.*?)```/s)[1];
+  const instruction = response.match(/instruction:\n?```(.*?)```/s)?.[1];
   const datasetStr = response.match(/dataset:\n?```(.*?)```/s)[1];
   let dataset = [];
   try {
@@ -30,7 +30,7 @@ const parseGPTExtractionResponse = (response: string) => {
     //fieldInfoStr is not a json string; try to wrap it with []
     dataset = JSON5.parse(`[${datasetStr}]`);
   }
-  let fieldInfo: SimpleFieldInfo[] = getFieldInfoFromDataset(dataset)
+  const fieldInfo: SimpleFieldInfo[] = getFieldInfoFromDataset(dataset);
   return {
     instruction,
     dataset,
