@@ -19,7 +19,7 @@ ${knowledge}
 
 Let's think step by step. ${showThoughts ? 'Fill your thoughts in {thought}.' : ''}
 
-Respone in the following format:
+Response in the following format:
 
 \`\`\`
 {${showThoughts ? '\n"thought" : your thoughts' : ''}

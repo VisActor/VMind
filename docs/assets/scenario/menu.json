@@ -2,10 +2,45 @@
   "menu": "scripts",
   "children": [
     {
-      "path": "VMind_Scenario",
+      "path": "Chart_Assistant",
       "title": {
-        "zh": "VMind应用案例",
-        "en": "VMind Application Case"
+        "zh": "图表助手",
+        "en": "Chart Assistant"
+      }
+    },
+    {
+      "path": "Wordcloud_Cube",
+      "title": {
+        "zh": "可视化叙事-词云魔方",
+        "en": "Visual Narration: Word Cloud Cube"
+      }
+    },
+    {
+      "path": "Data_Video",
+      "title": {
+        "zh": "数据视频创作",
+        "en": "Data video creation"
+      }
+    },
+    {
+      "path": "Document_Assistant",
+      "title": {
+        "zh": "文档助手",
+        "en": "Document Assistant"
+      }
+    },
+    {
+      "path": "Data_Development",
+      "title": {
+        "zh": "数据开发",
+        "en": "Data Development"
+      }
+    },
+    {
+      "path": "Open_API",
+      "title": {
+        "zh": "VMind Open API",
+        "en": "VMind Open API"
       }
     }
   ]

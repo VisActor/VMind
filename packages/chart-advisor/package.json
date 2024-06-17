@@ -1,6 +1,6 @@
 {
   "name": "@visactor/chart-advisor",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "description": "图表推荐模块",
   "main": "lib",
   "module": "es",
@@ -30,11 +30,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "lodash": "4.17.21"
+    "@visactor/vutils": "~0.17.4"
   },
   "devDependencies": {
     "@types/jest": "^26.0.0",
-    "@types/lodash": "4.14.182",
     "@types/node": "*",
     "jest": "^26.0.0",
     "ts-jest": "^26.0.0",

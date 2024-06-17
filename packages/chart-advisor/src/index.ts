@@ -10,10 +10,11 @@ import type {
 } from './type';
 import { scorer as defaultScorer } from './score';
 import * as dataUtils from './dataUtil';
-import { isNil, isNaN } from 'lodash';
+import { isNil } from '@visactor/vutils';
+import { isNaN } from './dataUtil';
 
-export { fold } from './fieldUtils';
-export { FOLD_NAME, FOLD_VALUE } from './constant';
+export { fold, omit } from './fieldUtils';
+export { FOLD_NAME, FOLD_VALUE, COLOR_FIELD } from './constant';
 
 export function chartAdvisor(params: AdviserParams): AdviseResult {
   const {
@@ -137,4 +138,14 @@ export function chartAdvisor(params: AdviserParams): AdviseResult {
   }
 }
 
-export { Scorer, AdviserParams, ScoreResult, ChartType, AdviseResult, DataTypeName, MeasureField, DimensionField };
+export {
+  Scorer,
+  AdviserParams,
+  ScoreResult,
+  ChartType,
+  AdviseResult,
+  DataTypeName,
+  MeasureField,
+  DimensionField,
+  dataUtils
+};
