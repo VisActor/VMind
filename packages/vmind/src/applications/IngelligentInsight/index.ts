@@ -4,6 +4,7 @@ import type { InsightContext, InsightOutput } from '../types';
 import DataProcessTaskNodeMeta from './taskNodes/dataProcess';
 import ExtractInsightTaskNodeMeta from './taskNodes/extractInsight';
 import GenerateInsightTextGPTMeta from './taskNodes/generateInsightText/GPT';
+import GenerateInsightTextSkylarkMeta from './taskNodes/generateInsightText/skylark';
 
 const intelligentInsightGPTMeta: ApplicationMeta<InsightContext, InsightOutput> = {
   name: 'IntelligentInsight',
@@ -25,7 +26,20 @@ const intelligentInsightGPTMeta: ApplicationMeta<InsightContext, InsightOutput> 
 
 const intelligentInsightSkylarkMeta: ApplicationMeta<InsightContext, InsightOutput> = {
   name: 'IntelligentInsight',
-  taskNodes: []
+  taskNodes: [
+    {
+      taskNode: DataProcessTaskNodeMeta,
+      name: 'dataProcess'
+    },
+    {
+      taskNode: ExtractInsightTaskNodeMeta,
+      name: 'extractInsight'
+    },
+    {
+      taskNode: GenerateInsightTextSkylarkMeta,
+      name: 'generateInsightText'
+    }
+  ]
 };
 
 const intelligentInsightMetaByModel = {
