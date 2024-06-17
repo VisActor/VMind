@@ -1,6 +1,14 @@
 # Change Log - @visactor/vmind
 
-This log was last generated on Wed, 24 Apr 2024 05:24:53 GMT and should not be manually modified.
+This log was last generated on Mon, 17 Jun 2024 08:45:53 GMT and should not be manually modified.
+
+## 1.2.12
+Mon, 17 Jun 2024 08:45:53 GMT
+
+### Updates
+
+- add custom model type support
+- take skylark model when no model type match
 
 ## 1.2.11
 Wed, 24 Apr 2024 05:24:53 GMT
