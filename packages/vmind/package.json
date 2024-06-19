@@ -94,6 +94,7 @@
     "dayjs": "~1.11.10",
     "js-yaml": "~4.1.0",
     "@visactor/calculator": "workspace:1.2.12",
-    "alasql": "~4.3.2"
+    "alasql": "~4.3.2",
+    "@visactor/vchart-theme": "^1.11.2"
   }
 }
