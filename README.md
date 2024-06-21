@@ -1,4 +1,3 @@
-
 <div align="center">
    <a href="https://github.com/VisActor#gh-light-mode-only" target="_blank">
     <img alt="VisActor Logo" width="200" src="https://github.com/VisActor/.github/blob/main/profile/logo_500_200_light.svg"/>
@@ -38,7 +37,7 @@ Not just automatic, but also fantastic.Open-source solution for intelligent visu
 
 <div align="center">
 
-English | [简体中文](readme-zh.md)
+English | [简体中文](readme-zh.md) | [日本語](README-ja.md)
 
 </div>
 
