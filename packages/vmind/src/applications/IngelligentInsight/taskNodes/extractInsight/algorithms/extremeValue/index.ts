@@ -3,6 +3,7 @@ import type { DataItem } from '../../../../../../common/typings';
 import { ChartType } from '../../../../../../common/typings';
 import type { InsightAlgorithm, VMindInsight } from '../../../../types';
 import { InsightType } from '../../../../types';
+import { DEFAULT_SERIES_NAME } from '../../../dataProcess/constants';
 
 const getExtremeValue = (
   dataset: DataItem[],
@@ -37,7 +38,7 @@ const getExtremeValue = (
         value: dataItem[measureId] as unknown as number,
         significant: percent / upperThreshold,
         fieldId: measureId,
-        seriesName,
+        seriesName: seriesName === DEFAULT_SERIES_NAME ? undefined : seriesName,
         info: {
           type: 'extreme_high',
           averageValue: avg,
@@ -52,7 +53,7 @@ const getExtremeValue = (
         value: dataItem[measureId] as unknown as number,
         significant: lowerThreshold / percent,
         fieldId: measureId,
-        seriesName,
+        seriesName: seriesName === DEFAULT_SERIES_NAME ? undefined : seriesName,
         info: {
           type: 'extreme_low',
           averageValue: avg,

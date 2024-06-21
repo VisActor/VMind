@@ -246,7 +246,7 @@ class VMind {
 
   async intelligentInsight(
     spec: any,
-    options: {
+    options?: {
       dataset?: VMindDataset;
       fieldInfo?: SimpleFieldInfo[];
       cell?: Cell;

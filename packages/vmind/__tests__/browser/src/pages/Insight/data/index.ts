@@ -1,3 +1,5 @@
+import { lineChartData } from './insightData';
+
 export const SalesLineChart = {
   spec: {
     type: 'line',
@@ -794,6 +796,149 @@ export const DualAxisChartData = {
       visible: true,
       orient: 'bottom'
     }
+  },
+  fieldInfo: undefined
+};
+
+export const CollegeEntranceLineChart = {
+  spec: {
+    type: 'line',
+    xField: ['年份'],
+    yField: ['高考录取率'],
+    data: [
+      {
+        id: 'data',
+        values: lineChartData
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true,
+        id: 'legend-discrete',
+        orient: 'bottom',
+        position: 'middle',
+        layoutType: 'normal',
+        maxRow: 1,
+        title: {
+          textStyle: {
+            fontSize: 12,
+            fill: '#E2E5EC'
+          }
+        },
+        layoutLevel: 30,
+        item: {
+          focus: true,
+          focusIconStyle: {
+            size: 14
+          },
+          maxWidth: 400,
+          spaceRow: 0,
+          spaceCol: 0,
+          padding: {
+            top: 1,
+            bottom: 1,
+            left: 1,
+            right: 1
+          },
+          background: {
+            visible: false,
+            style: {
+              fillOpacity: 0.001
+            }
+          },
+          label: {
+            style: {
+              fontSize: 12,
+              fill: '#E2E5EC'
+            }
+          },
+          shape: {
+            style: {
+              lineWidth: 0,
+              symbolType: 'circle',
+              fillOpacity: 1,
+              size: 10
+            }
+          }
+        },
+        pager: {
+          layout: 'horizontal',
+          padding: 0,
+          textStyle: {
+            fill: '#FDFDFE'
+          },
+          space: 0,
+          handler: {
+            preShape: 'triangleLeft',
+            nextShape: 'triangleRight',
+            style: {
+              fill: '#BBC2D0'
+            },
+            state: {
+              disable: {
+                fill: '#566582'
+              }
+            }
+          }
+        },
+        alignSelf: 'start',
+        padding: {
+          top: 16,
+          bottom: 0,
+          left: 0,
+          right: 0
+        }
+      }
+    ],
+    label: {
+      visible: false,
+      offset: 3,
+      overlap: {
+        hideOnHit: true,
+        avoidBaseMark: false,
+        strategy: [
+          {
+            type: 'position',
+            position: ['top', 'bottom']
+          }
+        ],
+        clampForce: true
+      },
+      style: {
+        fontSize: 12,
+        fontWeight: 'normal',
+        zIndex: 400,
+        lineHeight: '100%',
+        boundsPadding: [1, 0, 0, 0],
+        fill: '#FDFDFE',
+        strokeOpacity: 0
+      },
+      position: 'top',
+      smartInvert: false
+    },
+    seriesMark: 'line',
+    markOverlap: true,
+    region: [
+      {
+        clip: true
+      }
+    ],
+    background: 'rgba(255, 255, 255, 0)',
+    invalidType: 'break'
   },
   fieldInfo: undefined
 };
