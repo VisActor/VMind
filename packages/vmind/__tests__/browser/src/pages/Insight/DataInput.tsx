@@ -16,7 +16,19 @@ import {
 } from '@arco-design/web-react';
 import VMind, { ArcoTheme } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
-import { CollegeEntranceLineChart, DualAxisChartData, SalesLineChart } from './data';
+import {
+  ChangePointChart,
+  CollegeEntranceLineChart,
+  DualAxisChartData,
+  GroupedBarChart,
+  MultiLineChart,
+  MultiLineChart2,
+  SalesLineChart,
+  SalesLineChart2,
+  SalesLineChart3,
+  ScatterClusterChart,
+  ScatterPlotChart
+} from './data';
 import JSON5 from 'json5';
 
 const TextArea = Input.TextArea;
@@ -30,7 +42,15 @@ type IPropsType = {
 const demoDataList: { [key: string]: any } = {
   SalesLineChart: SalesLineChart,
   DualAxisChart: DualAxisChartData,
-  CollegeEntranceLineChart: CollegeEntranceLineChart
+  CollegeEntranceLineChart: CollegeEntranceLineChart,
+  SalesLineChart2: SalesLineChart2,
+  SalesLineChart3: SalesLineChart3,
+  GroupedBarChart: GroupedBarChart,
+  MultiLineChart: MultiLineChart,
+  ChangePointChart: ChangePointChart,
+  MultiLineChart2: MultiLineChart2,
+  ScatterPlotChart: ScatterPlotChart,
+  ScatterClusterChart: ScatterClusterChart
 };
 
 const globalVariables = (import.meta as any).env;

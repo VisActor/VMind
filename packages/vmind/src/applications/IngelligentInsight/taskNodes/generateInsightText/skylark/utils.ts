@@ -7,9 +7,13 @@ import type { VMindInsight } from '../../../types';
 export const parseInsightTextResponse: any = async (promises: any) => {
   const responseList = await Promise.all(promises).then(response => {
     return response.map(res => {
-      const choices = res.choices;
-      const insightText = replaceAll(choices[0].message.content, '\n', ' ');
-      return insightText;
+      try {
+        const choices = res.choices;
+        const insightText = replaceAll(choices[0].message.content, '\n', ' ');
+        return insightText;
+      } catch (e) {
+        return undefined;
+      }
     });
   });
   return { insightTextList: responseList };
