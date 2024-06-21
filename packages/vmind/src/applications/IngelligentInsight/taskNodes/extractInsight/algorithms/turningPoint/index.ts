@@ -4,6 +4,7 @@ import BayesianChangePoint from 'bayesian-changepoint';
 import { ChartType, type DataItem } from '../../../../../../common/typings';
 import type { InsightAlgorithm, VMindInsight } from '../../../../types';
 import { InsightType } from '../../../../types';
+import { DEFAULT_SERIES_NAME } from '../../../dataProcess/constants';
 
 const breakpointVerifier = (next: any, prev: any): boolean => {
   if (Math.abs(next.data - prev.data) >= 1) {
@@ -46,7 +47,7 @@ const turningPointAlgo = (context: any): VMindInsight[] => {
           type: InsightType.TurningPoint,
           data: [dataItem as any],
           fieldId: measureId,
-          seriesName: series,
+          seriesName: series === DEFAULT_SERIES_NAME ? undefined : series,
           value: dataItem[measureId] as unknown as number
         } as unknown as VMindInsight);
       });

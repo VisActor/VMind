@@ -4,6 +4,7 @@ import { originalMKTest, TrendType } from '../statistics';
 import type { InsightAlgorithm, VMindInsight } from '../../../../types';
 import { InsightType } from '../../../../types';
 import { ChartType } from '../../../../../../common/typings';
+import { DEFAULT_SERIES_NAME } from '../../../dataProcess/constants';
 
 type TrendInfo = {
   trend: string;
@@ -34,7 +35,7 @@ const abnormalTrendAlgo = (context: any) => {
           pValue,
           zScore,
           measureId,
-          series
+          series: series === DEFAULT_SERIES_NAME ? undefined : series
         });
       }
     });
@@ -56,9 +57,7 @@ const abnormalTrendAlgo = (context: any) => {
             fieldId: measureId,
             value: seriesTrend.trend,
             significant: 1 - seriesTrend.pValue,
-            info: {
-              seriesName: seriesTrend.series
-            }
+            seriesName: seriesTrend.series
           } as unknown as VMindInsight)
       );
       result.push(...seriesInsights);
@@ -78,9 +77,7 @@ const abnormalTrendAlgo = (context: any) => {
                 fieldId: measureId,
                 value: dt.trend,
                 significant: 1 - dt.pValue,
-                info: {
-                  seriesName: dt.series
-                }
+                seriesName: dt.series
               } as unknown as VMindInsight)
           );
           result.push(...decreaseInsights);

@@ -5,6 +5,7 @@ import type { InsightAlgorithm, VMindInsight } from '../../../../types';
 import { InsightType } from '../../../../types';
 import type { VMindDataset } from '../../../../../../common/typings';
 import { ChartType } from '../../../../../../common/typings';
+import { DEFAULT_SERIES_NAME } from '../../../dataProcess/constants';
 
 const volatilityAlgo = (context: any) => {
   const { seriesDataMap, cell } = context;
@@ -27,7 +28,7 @@ const volatilityAlgo = (context: any) => {
           fieldId: measureId,
           value: cv as unknown as number,
           significant: cv,
-          seriesName: series,
+          seriesName: series === DEFAULT_SERIES_NAME ? undefined : series,
           info: {
             cv
           }

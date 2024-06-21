@@ -3,6 +3,7 @@ import type { DataItem } from '../../../../../../common/typings';
 import { ChartType } from '../../../../../../common/typings';
 import type { InsightAlgorithm, VMindInsight } from '../../../../types';
 import { InsightType } from '../../../../types';
+import { DEFAULT_SERIES_NAME } from '../../../dataProcess/constants';
 
 const getMajorityInGroup = (
   dataset: DataItem[],
@@ -30,7 +31,7 @@ const getMajorityInGroup = (
         fieldId: measureId,
         value: dataItem[measureId] as unknown as number,
         significant: ratio,
-        seriesName,
+        seriesName: seriesName === DEFAULT_SERIES_NAME ? undefined : seriesName,
         info: {
           ratio
         }

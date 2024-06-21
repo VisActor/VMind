@@ -5,6 +5,7 @@ import normalize from 'array-normalize';
 import type { InsightAlgorithm } from '../../../../types';
 import { InsightType, type VMindInsight } from '../../../../types';
 import { ChartType } from '../../../../../../common/typings';
+import { DEFAULT_SERIES_NAME } from '../../../dataProcess/constants';
 
 const dbscanAlgo = (context: any) => {
   const { seriesDataMap, cell, dbscanEps: propsEps, dbscanMinPts: propsPts } = context;
@@ -48,7 +49,7 @@ const dbscanAlgo = (context: any) => {
         data: [dataItem],
         fieldId: [xField, yField[0]],
         value: [dataItem[xField], dataItem[yField[0]]],
-        seriesName: series
+        seriesName: series === DEFAULT_SERIES_NAME ? undefined : series
       } as unknown as VMindInsight;
     });
     result.push(...insights);

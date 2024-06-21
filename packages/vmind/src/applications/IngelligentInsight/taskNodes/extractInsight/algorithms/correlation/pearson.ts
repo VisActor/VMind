@@ -5,6 +5,7 @@ import type { InsightAlgorithm, VMindInsight } from '../../../../types';
 import { InsightType } from '../../../../types';
 import type { DataItem, VMindDataset } from '../../../../../../common/typings';
 import { ChartType } from '../../../../../../common/typings';
+import { DEFAULT_SERIES_NAME } from '../../../dataProcess/constants';
 
 const pearsonAlgo = (context: any) => {
   const { seriesDataMap, cell, insights, pearsonThreshold: propsPearsonThreshold } = context;
@@ -59,7 +60,7 @@ const pearsonAlgo = (context: any) => {
         type: InsightType.Correlation,
         fieldId: [xField, yField[0]],
         significant: Math.abs(pearsonCoefficient),
-        seriesName: series,
+        seriesName: series === DEFAULT_SERIES_NAME ? undefined : series,
         info: {
           isLinearCorrelation: true
         }

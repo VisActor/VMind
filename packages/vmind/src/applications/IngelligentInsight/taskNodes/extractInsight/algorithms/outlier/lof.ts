@@ -3,6 +3,7 @@ import euclideanDistance from 'euclidean-distance';
 import { isArray, isString } from '@visactor/vutils';
 import { ChartType, type DataItem } from '../../../../../../common/typings';
 import { InsightType, type InsightAlgorithm, type VMindInsight } from '../../../../types';
+import { DEFAULT_SERIES_NAME } from '../../../dataProcess/constants';
 
 type knnItem = number[];
 type KnnMap = knnItem[][];
@@ -128,7 +129,7 @@ const lofAlgoFunc = (context: any) => {
           fieldId: field,
           value: insightDataItem[field],
           significant: score - 1,
-          seriesName: group
+          seriesName: group === DEFAULT_SERIES_NAME ? undefined : group
         } as unknown as VMindInsight;
         result.push(lofInsight);
       });
