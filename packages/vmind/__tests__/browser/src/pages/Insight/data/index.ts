@@ -1,4 +1,14 @@
-import { lineChartData } from './insightData';
+import {
+  changePointData,
+  groupedBarData,
+  lineChartData,
+  lineChartData2,
+  lineChartData3,
+  MultiLineData,
+  multiLineData2,
+  scatterClusterData,
+  scatterPlotData
+} from './insightData';
 
 export const SalesLineChart = {
   spec: {
@@ -827,118 +837,286 @@ export const CollegeEntranceLineChart = {
     legends: [
       {
         type: 'discrete',
-        visible: true,
-        id: 'legend-discrete',
-        orient: 'bottom',
-        position: 'middle',
-        layoutType: 'normal',
-        maxRow: 1,
-        title: {
-          textStyle: {
-            fontSize: 12,
-            fill: '#E2E5EC'
-          }
-        },
-        layoutLevel: 30,
-        item: {
-          focus: true,
-          focusIconStyle: {
-            size: 14
-          },
-          maxWidth: 400,
-          spaceRow: 0,
-          spaceCol: 0,
-          padding: {
-            top: 1,
-            bottom: 1,
-            left: 1,
-            right: 1
-          },
-          background: {
-            visible: false,
-            style: {
-              fillOpacity: 0.001
-            }
-          },
-          label: {
-            style: {
-              fontSize: 12,
-              fill: '#E2E5EC'
-            }
-          },
-          shape: {
-            style: {
-              lineWidth: 0,
-              symbolType: 'circle',
-              fillOpacity: 1,
-              size: 10
-            }
-          }
-        },
-        pager: {
-          layout: 'horizontal',
-          padding: 0,
-          textStyle: {
-            fill: '#FDFDFE'
-          },
-          space: 0,
-          handler: {
-            preShape: 'triangleLeft',
-            nextShape: 'triangleRight',
-            style: {
-              fill: '#BBC2D0'
-            },
-            state: {
-              disable: {
-                fill: '#566582'
-              }
-            }
-          }
-        },
-        alignSelf: 'start',
-        padding: {
-          top: 16,
-          bottom: 0,
-          left: 0,
-          right: 0
-        }
+        visible: true
       }
-    ],
-    label: {
-      visible: false,
-      offset: 3,
-      overlap: {
-        hideOnHit: true,
-        avoidBaseMark: false,
-        strategy: [
-          {
-            type: 'position',
-            position: ['top', 'bottom']
-          }
-        ],
-        clampForce: true
-      },
-      style: {
-        fontSize: 12,
-        fontWeight: 'normal',
-        zIndex: 400,
-        lineHeight: '100%',
-        boundsPadding: [1, 0, 0, 0],
-        fill: '#FDFDFE',
-        strokeOpacity: 0
-      },
-      position: 'top',
-      smartInvert: false
-    },
-    seriesMark: 'line',
-    markOverlap: true,
-    region: [
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const SalesLineChart2 = {
+  spec: {
+    type: 'line',
+    xField: ['230925203632021'],
+    yField: ['10002'],
+    data: [
       {
-        clip: true
+        id: 'data',
+        values: lineChartData2
       }
     ],
-    background: 'rgba(255, 255, 255, 0)',
-    invalidType: 'break'
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const SalesLineChart3 = {
+  spec: {
+    type: 'line',
+    xField: ['230925203632021'],
+    yField: ['10002'],
+    data: [
+      {
+        id: 'data',
+        values: lineChartData3
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const GroupedBarChart = {
+  spec: {
+    type: 'bar',
+    xField: ['State'],
+    yField: ['Population'],
+    seriesField: 'Age',
+    data: [
+      {
+        id: 'data',
+        values: groupedBarData
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const MultiLineChart = {
+  spec: {
+    type: 'line',
+    xField: ['230925203632021'],
+    yField: ['10002'],
+    seriesField: '20001',
+    data: [
+      {
+        id: 'data',
+        values: MultiLineData
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const ChangePointChart = {
+  spec: {
+    type: 'line',
+    xField: ['x'],
+    yField: ['y'],
+    data: [
+      {
+        id: 'data',
+        values: changePointData
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const MultiLineChart2 = {
+  spec: {
+    type: 'line',
+    xField: ['type'],
+    yField: ['value'],
+    seriesField: 'country',
+    data: [
+      {
+        id: 'data',
+        values: multiLineData2
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const ScatterPlotChart = {
+  spec: {
+    type: 'scatter',
+    xField: ['GDP'],
+    yField: ['LifeExpectancy'],
+    seriesField: 'continent',
+    data: [
+      {
+        id: 'data',
+        values: scatterPlotData
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const ScatterClusterChart = {
+  spec: {
+    type: 'scatter',
+    xField: ['x'],
+    yField: ['horsepower'],
+    seriesField: 'cylinders',
+    data: [
+      {
+        id: 'data',
+        values: scatterClusterData
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
   },
   fieldInfo: undefined
 };
