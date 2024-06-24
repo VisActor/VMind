@@ -506,6 +506,7 @@ export const dualAxisSeries: Transformer<Context, GetChartSpecOutput> = (context
     }
   ];
   spec.data = undefined;
+  spec.labelLayout = 'region';
   return { spec };
 };
 
