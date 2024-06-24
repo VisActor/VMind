@@ -13,7 +13,7 @@ export enum InsightType {
 }
 
 export type VMindInsight = {
-  type: string; // Insight type
+  type: InsightType; // Insight type
   data: {
     // Abnormal data points
     index: number; // The index of the data point in the dataset
