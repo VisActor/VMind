@@ -244,15 +244,7 @@ class VMind {
     };
   }
 
-  async intelligentInsight(
-    spec: any,
-    options?: {
-      dataset?: VMindDataset;
-      fieldInfo?: SimpleFieldInfo[];
-      cell?: Cell;
-      insightAlgorithms?: InsightAlgorithm[];
-    }
-  ): Promise<InsightOutput> {
+  async intelligentInsight(spec: any, options?: Partial<InsightContext>): Promise<InsightOutput> {
     const modelType = this.getModelType();
     const context: InsightContext = {
       spec,

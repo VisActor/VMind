@@ -30,6 +30,7 @@ import {
   ScatterPlotChart
 } from './data';
 import JSON5 from 'json5';
+import { InsightLanguage } from '../../../../../src/applications/types';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -97,7 +98,11 @@ export function DataInput(props: IPropsType) {
   const getInsight = useCallback(async () => {
     const startTime = new Date().getTime();
     const specJson = JSON5.parse(spec);
-    const insights = await vmind.intelligentInsight(specJson, {});
+    const insights = await vmind.intelligentInsight(specJson, {
+      //insightNumberLimit: 2,
+      generateText: true
+      //language: InsightLanguage.EN
+    });
     const endTime = new Date().getTime();
     const costTime = endTime - startTime;
 
