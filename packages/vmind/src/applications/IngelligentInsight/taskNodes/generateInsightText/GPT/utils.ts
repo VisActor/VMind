@@ -23,11 +23,14 @@ export const patchInsightText = (context: any) => {
 };
 
 export const requestInsightLLM: Requester<any> = async (prompt: string, message: string, context: any) => {
-  const { llmOptions, insights } = context;
+  const { llmOptions, insights, generateText } = context;
+  if (!generateText) {
+    return [];
+  }
   const requestFunc = llmOptions.customRequestFunc?.IntelligentInsight ?? requestGPT;
   const insightTextPromises = insights.map((insight: VMindInsight) => {
     const userMessage = JSON.stringify(omit(insight, ['significant']), null, 4);
-    return requestFunc(prompt, userMessage, llmOptions);
+    return requestFunc(prompt, userMessage, { ...llmOptions, max_tokens: 50 });
   });
   return insightTextPromises;
 };
