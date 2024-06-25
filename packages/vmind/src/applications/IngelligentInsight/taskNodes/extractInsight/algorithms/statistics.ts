@@ -2,7 +2,6 @@
 /// <reference path="../../../../../../types/jstat.d.ts" />
 import jStat from 'jstat';
 import quantile from '@stdlib/stats-base-dists-t-quantile';
-import type { DataItem } from '../../../../../common/typings';
 
 export enum TrendType {
   NO_TREND = 'no trend',
