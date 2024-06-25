@@ -148,8 +148,8 @@ importers:
       '@types/react-dom': ^18.0.0
       '@typescript-eslint/eslint-plugin': 5.30.0
       '@typescript-eslint/parser': 5.30.0
-      '@visactor/calculator': workspace:1.2.12
-      '@visactor/chart-advisor': workspace:1.2.12
+      '@visactor/calculator': workspace:1.2.13-alpha.1
+      '@visactor/chart-advisor': workspace:1.2.13-alpha.1
       '@visactor/vchart': ^1.10.4
       '@visactor/vdataset': ~0.17.4
       '@visactor/vrender-core': ^0.17.23
@@ -5252,7 +5252,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.24.1_@babel+core@7.20.12
       magic-string: 0.27.0
       react-refresh: 0.14.2
-      vite: 3.2.6_3nkz6rpljilosylc4qp7fvkgxu
+      vite: 3.2.6
     transitivePeerDependencies:
       - supports-color
     dev: true
