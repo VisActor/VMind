@@ -8,7 +8,7 @@ import type {
   VMindDataset,
   ChartType
 } from '../common/typings';
-import { Model, ModelType } from '../common/typings';
+import { Model, ModelType, ChartTheme } from '../common/typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
 import type { VMindApplicationMap } from './types';
 import type {
@@ -182,6 +182,7 @@ class VMind {
       colorPalette?: string[];
       animationDuration?: number;
       enableDataQuery?: boolean;
+      theme?: ChartTheme | string;
     }
   ): Promise<ChartGenerationOutput> {
     const modelType = this.getModelType();
@@ -189,7 +190,7 @@ class VMind {
     let finalFieldInfo = fieldInfo;
 
     let queryDatasetUsage;
-    const { enableDataQuery, colorPalette, animationDuration, chartTypeList } = options ?? {};
+    const { enableDataQuery, colorPalette, animationDuration, theme, chartTypeList } = options ?? {};
     try {
       if (!isNil(dataset) && (isNil(enableDataQuery) || enableDataQuery) && modelType !== ModelType.CHART_ADVISOR) {
         //run data aggregation first
@@ -222,6 +223,7 @@ class VMind {
       llmOptions: this._options,
       colors: colorPalette,
       totalTime: animationDuration,
+      chartTheme: theme,
       chartTypeList: chartTypeList ?? SUPPORTED_CHART_LIST
     };
 

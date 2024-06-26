@@ -40,7 +40,7 @@ import {
   SalesRecordsData,
   gmvData
 } from '../../constants/mockData';
-import VMind, { ArcoTheme } from '../../../../../src/index';
+import VMind, { ArcoTheme, builtinThemeMap, BuiltinThemeType } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
 import { isArray } from '@visactor/vutils';
 
@@ -147,7 +147,8 @@ export function DataInput(props: IPropsType) {
     const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
       //enableDataQuery: false,
       //chartTypeList: [ChartType.BarChart, ChartType.LineChart],
-      colorPalette: ArcoTheme.colorScheme
+      // colorPalette: ArcoTheme.colorScheme,
+      theme: builtinThemeMap[BuiltinThemeType.VeOThemeAutomobileDark]
     });
     const endTime = new Date().getTime();
     console.log(chartGenerationRes);

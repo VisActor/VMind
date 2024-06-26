@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vmind",
+      "comment": "feat: Add theme parameter to generateChart API",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vmind"
+}
