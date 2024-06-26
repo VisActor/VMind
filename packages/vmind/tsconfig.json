@@ -1,6 +1,7 @@
 {
   "extends": "@internal/ts-config/tsconfig.base.json",
   "compilerOptions": {
+    "typeRoots": ["./node_modules/@types", "./types"],
     "types": ["jest", "node"],
     "lib": ["DOM", "ESNext"],
     "baseUrl": "./",
@@ -16,7 +17,7 @@
       "module": "commonjs"
     }
   },
-  "include": ["src"],
+  "include": ["src", "types"],
   "references": [
     {
       "path": "../calculator",

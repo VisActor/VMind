@@ -16,19 +16,42 @@ import {
 } from '@arco-design/web-react';
 import VMind, { ArcoTheme } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
-import { DualAxisChartData, SalesLineChart } from '../../constants/insightData';
+import {
+  ChangePointChart,
+  CollegeEntranceLineChart,
+  DualAxisChartData,
+  GroupedBarChart,
+  MultiLineChart,
+  MultiLineChart2,
+  SalesLineChart,
+  SalesLineChart2,
+  SalesLineChart3,
+  ScatterClusterChart,
+  ScatterPlotChart
+} from './data';
 import JSON5 from 'json5';
+import { InsightLanguage } from '../../../../../src/applications/types';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
 type IPropsType = {
-  onInsightGenerate: (spec: any, insights: any, costTime: number) => void;
+  onInsightGenerate: (insights: any, costTime: number) => void;
+  onSpecChange: (spec: any) => void;
 };
 const demoDataList: { [key: string]: any } = {
   SalesLineChart: SalesLineChart,
-  DualAxisChart: DualAxisChartData
+  DualAxisChart: DualAxisChartData,
+  CollegeEntranceLineChart: CollegeEntranceLineChart,
+  SalesLineChart2: SalesLineChart2,
+  SalesLineChart3: SalesLineChart3,
+  GroupedBarChart: GroupedBarChart,
+  MultiLineChart: MultiLineChart,
+  ChangePointChart: ChangePointChart,
+  MultiLineChart2: MultiLineChart2,
+  ScatterPlotChart: ScatterPlotChart,
+  ScatterClusterChart: ScatterClusterChart
 };
 
 const globalVariables = (import.meta as any).env;
@@ -40,7 +63,6 @@ const ModelConfigMap: any = {
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
-const specTemplateTest = false;
 export function DataInput(props: IPropsType) {
   const defaultDataKey = Object.keys(demoDataList)[0];
   const [spec, setSpec] = useState<string>(JSON.stringify(demoDataList[defaultDataKey].spec));
@@ -76,14 +98,21 @@ export function DataInput(props: IPropsType) {
   const getInsight = useCallback(async () => {
     const startTime = new Date().getTime();
     const specJson = JSON5.parse(spec);
-    await vmind.intelligentInsight(specJson);
+    const insights = await vmind.intelligentInsight(specJson, {
+      //insightNumberLimit: 2,
+      generateText: true
+      //language: InsightLanguage.EN
+    });
     const endTime = new Date().getTime();
-
     const costTime = endTime - startTime;
+
+    props.onInsightGenerate(insights, costTime);
+
     console.log(costTime);
+    console.log(insights);
 
     setLoading(false);
-  }, [spec, vmind]);
+  }, [props, spec, vmind]);
 
   return (
     <div className="left-sider">
@@ -112,7 +141,8 @@ export function DataInput(props: IPropsType) {
           defaultValue={defaultDataKey}
           onChange={v => {
             const dataObj = demoDataList[v];
-            setSpec(dataObj.spec);
+            setSpec(JSON.stringify(dataObj.spec));
+            props.onSpecChange(dataObj.spec);
             setFieldInfo(dataObj.fieldInfo);
           }}
         >

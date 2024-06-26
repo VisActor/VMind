@@ -19,10 +19,13 @@ export function InsightPage() {
         }}
       >
         <DataInput
-          onInsightGenerate={(spec, insights, costTime) => {
-            setSpec(spec);
+          onInsightGenerate={(insights, costTime) => {
+            setSpec(insights.spec);
             setInsights(insights);
             setCostTime(costTime);
+          }}
+          onSpecChange={(spec: any) => {
+            setSpec(spec);
           }}
         />
       </Sider>

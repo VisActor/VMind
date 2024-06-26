@@ -7,6 +7,7 @@ import { getFieldInfoFromDataset } from '../../../../common/dataProcess';
 import type { DataProcessOutput } from '../../types';
 import { isArray } from '@visactor/vutils';
 import type { DataItem } from '../../../../common/typings';
+import { DEFAULT_SERIES_NAME } from './constants';
 
 const extractDataFromContext: Transformer<InsightContext, DataProcessOutput> = (context: InsightContext) => {
   const { spec, fieldInfo: inputFieldInfo, cell: inputCell, dataset: inputDataset } = context;
@@ -46,7 +47,7 @@ const extractDataFromContext: Transformer<InsightContext, DataProcessOutput> = (
       seriesDataMap[groupBy].push(dataItem);
     });
   } else {
-    seriesDataMap.default = dataset;
+    seriesDataMap[DEFAULT_SERIES_NAME] = dataset;
   }
   const xField: string = isArray(cellx) ? cellx[0] : cellx;
   //group the data by xField

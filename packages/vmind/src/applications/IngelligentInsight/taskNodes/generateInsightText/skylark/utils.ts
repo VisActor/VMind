@@ -7,9 +7,13 @@ import type { VMindInsight } from '../../../types';
 export const parseInsightTextResponse: any = async (promises: any) => {
   const responseList = await Promise.all(promises).then(response => {
     return response.map(res => {
-      const choices = res.choices;
-      const insightText = replaceAll(choices[0].message.content, '\n', ' ');
-      return insightText;
+      try {
+        const choices = res.choices;
+        const insightText = replaceAll(choices[0].message.content, '\n', ' ');
+        return insightText;
+      } catch (e) {
+        return undefined;
+      }
     });
   });
   return { insightTextList: responseList };
@@ -22,11 +26,14 @@ export const patchInsightText = (context: any) => {
 };
 
 export const requestInsightLLM: Requester<any> = async (prompt: string, message: string, context: any) => {
-  const { llmOptions, insights } = context;
+  const { llmOptions, insights, generateText } = context;
+  if (!generateText) {
+    return [];
+  }
   const requestFunc = llmOptions.customRequestFunc?.IntelligentInsight ?? requestSkyLark;
   const insightTextPromises = insights.map((insight: VMindInsight) => {
     const userMessage = JSON.stringify(omit(insight, ['significant']), null, 4);
-    return requestFunc(prompt, userMessage, llmOptions);
+    return requestFunc(prompt, userMessage, { ...llmOptions, max_tokens: 50 });
   });
   return insightTextPromises;
 };
