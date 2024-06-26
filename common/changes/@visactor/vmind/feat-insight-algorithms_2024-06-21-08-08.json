@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vmind",
+      "comment": "add some insight algorithms",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vmind"
+}

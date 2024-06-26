@@ -53,6 +53,10 @@ export type ChartGenerationOutput = {
   time?: { totalTime: number; frameArr: any[] };
 };
 
+export enum InsightLanguage {
+  ZH = 'zh',
+  EN = 'en'
+}
 export type InsightContext = {
   spec?: any;
   dataset?: VMindDataset;
@@ -60,6 +64,9 @@ export type InsightContext = {
   cell?: Cell;
   llmOptions: ILLMOptions;
   insightAlgorithms?: InsightAlgorithm[];
+  insightNumberLimit?: number;
+  generateText?: boolean;
+  language?: InsightLanguage;
 };
 
 export type InsightOutput = {

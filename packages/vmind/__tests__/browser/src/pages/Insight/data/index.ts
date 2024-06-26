@@ -1,3 +1,15 @@
+import {
+  changePointData,
+  groupedBarData,
+  lineChartData,
+  lineChartData2,
+  lineChartData3,
+  MultiLineData,
+  multiLineData2,
+  scatterClusterData,
+  scatterPlotData
+} from './insightData';
+
 export const SalesLineChart = {
   spec: {
     type: 'line',
@@ -794,6 +806,317 @@ export const DualAxisChartData = {
       visible: true,
       orient: 'bottom'
     }
+  },
+  fieldInfo: undefined
+};
+
+export const CollegeEntranceLineChart = {
+  spec: {
+    type: 'line',
+    xField: ['年份'],
+    yField: ['高考录取率'],
+    data: [
+      {
+        id: 'data',
+        values: lineChartData
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const SalesLineChart2 = {
+  spec: {
+    type: 'line',
+    xField: ['230925203632021'],
+    yField: ['10002'],
+    data: [
+      {
+        id: 'data',
+        values: lineChartData2
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const SalesLineChart3 = {
+  spec: {
+    type: 'line',
+    xField: ['230925203632021'],
+    yField: ['10002'],
+    data: [
+      {
+        id: 'data',
+        values: lineChartData3
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const GroupedBarChart = {
+  spec: {
+    type: 'bar',
+    xField: ['State'],
+    yField: ['Population'],
+    seriesField: 'Age',
+    data: [
+      {
+        id: 'data',
+        values: groupedBarData
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const MultiLineChart = {
+  spec: {
+    type: 'line',
+    xField: ['230925203632021'],
+    yField: ['10002'],
+    seriesField: '20001',
+    data: [
+      {
+        id: 'data',
+        values: MultiLineData
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const ChangePointChart = {
+  spec: {
+    type: 'line',
+    xField: ['x'],
+    yField: ['y'],
+    data: [
+      {
+        id: 'data',
+        values: changePointData
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const MultiLineChart2 = {
+  spec: {
+    type: 'line',
+    xField: ['type'],
+    yField: ['value'],
+    seriesField: 'country',
+    data: [
+      {
+        id: 'data',
+        values: multiLineData2
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const ScatterPlotChart = {
+  spec: {
+    type: 'scatter',
+    xField: ['GDP'],
+    yField: ['LifeExpectancy'],
+    seriesField: 'continent',
+    data: [
+      {
+        id: 'data',
+        values: scatterPlotData
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
+  },
+  fieldInfo: undefined
+};
+
+export const ScatterClusterChart = {
+  spec: {
+    type: 'scatter',
+    xField: ['x'],
+    yField: ['horsepower'],
+    seriesField: 'cylinders',
+    data: [
+      {
+        id: 'data',
+        values: scatterClusterData
+      }
+    ],
+    axes: [
+      {
+        type: 'band',
+        orient: 'bottom',
+        visible: true
+      },
+      {
+        type: 'linear',
+
+        orient: 'left',
+        visible: true
+      }
+    ],
+    legends: [
+      {
+        type: 'discrete',
+        visible: true
+      }
+    ]
   },
   fieldInfo: undefined
 };
