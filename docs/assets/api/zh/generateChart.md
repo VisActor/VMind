@@ -10,6 +10,7 @@ generateChart函数用于调用LLM完成图表智能生成，返回生成的图�
 - GPT-4
 - [skylark2-pro](https://www.volcengine.com/product/yunque)
 - [chart-advisor](../guide/Basic_Tutorial/Chart_Advisor)
+- Custom
 
 ## 图表类型列表
 VMind支持13种常见的图表类型：
@@ -208,7 +209,7 @@ const fieldInfo=[
     }
 ]
 //不传入dataset，生成spec模板
-const { spec, cell } = await vmind.generateChart(userPrompt, fieldInfo);
+const { spec } = await vmind.generateChart(userPrompt, fieldInfo);
 
 //向模板中填入数据
 const dataset=[
@@ -234,7 +235,7 @@ const dataset=[
     }
 ]
 
-const spec = vmind.fillSpecWithData(spec, dataset, cell, fieldInfo)
+const spec = vmind.fillSpecWithData(spec, dataset)
 ```
 
 ## 注意事项：
@@ -244,6 +245,7 @@ const spec = vmind.fillSpecWithData(spec, dataset, cell, fieldInfo)
 - VMind默认会为生成的图表添加入场动画，因此它还会返回图表动画的时长time。如果你想关闭图表动画，可以将spec.animation设为false。
 - 当设定模型类型为chart-advisor时，将不需调用大型语言模型生成图表，产生的结果将包括多种图表，详情可参见[基于规则的图表生成](../guide/Basic_Tutorial/Chart_Advisor)。
 - generateChart方法不传入数据集时，无法使用智能数据聚合。
+- 在使用 `Custom` 自定义模型时，会调用 `skylark` 模型的流程。
 
 ## 相关教程
 - [图表智能生成](../guide/Basic_Tutorial/Chart_Generation)

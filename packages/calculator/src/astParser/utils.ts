@@ -1,6 +1,7 @@
-import { isInteger, isString } from 'lodash';
+import { isString } from '@visactor/vutils';
 import { ASTParserContext, ASTParserPipe, DataType, ROLE, SimpleFieldInfo } from './type';
 import { Query, TableData } from '../types';
+import { isInteger } from '../utils';
 
 export const execPipeline = (src: Partial<Query>, pipes: ASTParserPipe[], context: ASTParserContext) =>
   pipes.reduce((pre: Partial<Query>, pipe: ASTParserPipe) => {

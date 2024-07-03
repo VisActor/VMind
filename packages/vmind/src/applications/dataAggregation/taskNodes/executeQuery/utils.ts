@@ -1,12 +1,13 @@
-import { sampleSize, isNumber, isInteger, isString, isArray, capitalize, startCase } from 'lodash';
+import { isNumber, isString } from '@visactor/vutils';
 import type { DataItem, SimpleFieldInfo } from '../../../../common/typings';
 import { DataType, ROLE } from '../../../../common/typings';
 import dayjs from 'dayjs';
 import { uniqArray } from '@visactor/vutils';
 import alasql from 'alasql';
 
-import { replaceAll } from '../../../../common/utils/utils';
+import { capitalize, replaceAll, sampleSize } from '../../../../common/utils/utils';
 import { alasqlKeywordList } from './constants';
+import { isInteger } from '@visactor/calculator';
 
 export const readTopNLine = (csvFile: string, n: number) => {
   // get top n lines of a csv file
@@ -198,7 +199,8 @@ export const replaceString = (str: string | number, replaceMap: Map<string, stri
     return replaceMap.get(str);
   }
   //Some string may be linked by ASCII characters as non-ASCII characters.Traversing the replaceMap and replaced it to the original character
-  const replaceKeys = [...replaceMap.keys()];
+  //sort the replace keys according to their length to make sure longer string can be replaced first
+  const replaceKeys = [...replaceMap.keys()].sort((a, b) => b.length - a.length);
   return replaceKeys.reduce((prev, cur) => {
     return replaceAll(prev, cur, replaceMap.get(cur));
   }, str);
@@ -332,7 +334,7 @@ export const mergeMap = (map1: Map<string, string>, map2: Map<string, string>) =
  * @param fieldName
  * @returns
  */
-const matchColumnName = (columnName: string, fieldName: string) => {
+export const matchColumnName = (columnName: string, fieldName: string) => {
   const fieldWithoutSpace = fieldName.replace(/\s/g, '');
   const columnWithoutString = columnName.replace(/\s/g, '');
 
