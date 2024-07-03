@@ -36,12 +36,13 @@ import {
   mockUserInput14,
   mockUserInput16,
   mockUserInput17,
-  mockUserInput18
-} from '../constants/mockData';
-import VMind, { ArcoTheme, ChartType, VeOThemeNewEnergy } from '../../../../src/index';
-import { Model } from '../../../../src/index';
-import { isArray } from 'lodash';
-import { mockDataset, mockData2, mockData3, mockData4 } from './mockData';
+  mockUserInput18,
+  SalesRecordsData,
+  gmvData
+} from '../../constants/mockData';
+import VMind, { ArcoTheme } from '../../../../../src/index';
+import { Model } from '../../../../../src/index';
+import { isArray } from '@visactor/vutils';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -74,19 +75,21 @@ const demoDataList: { [key: string]: any } = {
   radar: mockUserInput14,
   sankey: mockUserInput15,
   'box-plot': mockUserInput16,
+  gmv: gmvData,
   'Electric vehicle sales': carSaleMockData,
   'College entrance examination': acceptRatioData,
   'Shopping Mall Sales Performance': mallSalesData,
   'Global GDP': mockUserInput6Eng,
   'Sales of different drinkings': mockUserInput3Eng,
   'Multi measure': mockUserInput17,
-  DataQuery: mockUserInput18
+  DataQuery: mockUserInput18,
+  salesData: SalesRecordsData
 };
 
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
   [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.SKYLARK]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
+  [Model.SKYLARK2_v1_2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
   [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
 };
@@ -132,6 +135,8 @@ export function DataInput(props: IPropsType) {
     //const dataset = mockData4;
     //const fieldInfo = vmind?.getFieldInfo(dataset);
     const { fieldInfo, dataset } = vmind.parseCSVData(csv);
+
+    console.log(dataset);
 
     console.log(fieldInfo);
     const finalFieldInfo = specTemplateTest
@@ -290,8 +295,7 @@ export function DataInput(props: IPropsType) {
           <Radio value={Model.GPT3_5}>GPT-3.5</Radio>
           <Radio value={Model.GPT4}>GPT-4</Radio>
           <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
-
-          <Radio value={Model.SKYLARK}>skylark pro</Radio>
+          <Radio value={Model.SKYLARK2_v1_2}>skylark2 pro-v1.2</Radio>
           <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
         </RadioGroup>
       </div>

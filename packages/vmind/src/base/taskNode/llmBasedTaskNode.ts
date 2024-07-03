@@ -70,9 +70,9 @@ export default class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions 
     }
   }
 
-  parseLLMResponse(llmResponse: any): Partial<DSL> | TaskError {
+  async parseLLMResponse(llmResponse: any): Promise<Partial<DSL> | TaskError> {
     try {
-      return this.parser(llmResponse);
+      return await this.parser(llmResponse);
     } catch (e: any) {
       console.error(`${this.name} error!`);
       console.error(e);
@@ -106,7 +106,7 @@ export default class LLMBasedTaskNode<Context extends { llmOptions: ILLMOptions 
   async executeTask(context: Context): Promise<TaskError | DSL> {
     this.updateContext({ ...this.context, ...context });
     const llmResponse = await this.requestLLM(context);
-    const parsedResponse = this.parseLLMResponse(llmResponse) as DSL;
+    const parsedResponse = (await this.parseLLMResponse(llmResponse)) as DSL;
     const patchedResponse = this.patchLLMResponse({ ...context, ...parsedResponse });
     return patchedResponse;
   }

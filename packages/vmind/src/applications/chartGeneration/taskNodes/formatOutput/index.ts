@@ -5,8 +5,8 @@ import type { Transformer } from '../../../../base/tools/transformer';
 import { ChartType } from '../../../../common/typings';
 import { estimateVideoTime } from '../../../../common/utils/utils';
 
-const chartTypeMap = Object.keys(ChartType).reduce((prev, cur) => {
-  const value = ChartType[cur];
+const chartTypeMap: Record<string, ChartType> = Object.keys(ChartType).reduce((prev: any, cur: string) => {
+  const value = (ChartType as Record<string, string>)[cur];
   prev[value.toUpperCase()] = value;
   return prev;
 }, {});

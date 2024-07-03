@@ -509,6 +509,6 @@ const dataset = [
 ...
 ]
 
-const spec = vmind.fillSpecWithData(spec, dataset, cell, fieldInfo)
+const spec = vmind.fillSpecWithData(spec, dataset)
 ```
 The final generated spec can be used for rendering VChart charts.

@@ -507,6 +507,6 @@ const dataset=[
     ...
 ]
 
-const spec = vmind.fillSpecWithData(spec, dataset, cell, fieldInfo)
+const spec = vmind.fillSpecWithData(spec, dataset)
 ```
 最终生成的spec可以用于渲染VChart图表。

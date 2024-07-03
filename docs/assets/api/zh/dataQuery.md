@@ -7,6 +7,7 @@ dataQuery函数是一个强大的数据聚合工具，它接收三个参数：�
 - GPT-3.5
 - GPT-4
 - [skylark2-pro](https://www.volcengine.com/product/yunque)
+- Custom
 
 ## 接口参数：
 
@@ -76,6 +77,7 @@ const { fieldInfo, dataset } = vmind.dataQuery(userPrompt, sourceFieldInfo, sour
 
 - dataQuery方法会将userPrompt和fieldInfo传递给大模型用于生成SQL，dataset中的明细数据并不会被传递。
 - dataQuery执行过程中，目前支持的SQL关键词有：SELECT, GROUP BY, WHERE, HAVING, ORDER BY, LIMIT。目前支持的聚合函数有：MAX(), MIN(), SUM(), COUNT(), AVG()，但不支持子查询、JOIN、条件语句等复杂的SQL操作。
+- 在使用 `Custom` 自定义模型时，会调用 `skylark` 模型的流程。
 
 ## 相关教程
 [数据聚合](../guide/Basic_Tutorial/Data_Aggregation)

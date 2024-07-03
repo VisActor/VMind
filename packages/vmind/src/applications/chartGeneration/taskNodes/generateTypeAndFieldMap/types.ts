@@ -1,6 +1,6 @@
-import { GenerateChartTypeOutput } from '../generateChartType/types';
-import { GenerateFieldMapOutput } from '../generateFieldMap/types';
-import { GetVizSchemaContext, GetVizSchemaOutput } from '../getVizSchema/types';
+import type { GenerateChartTypeOutput } from '../generateChartType/types';
+import type { GenerateFieldMapOutput } from '../generateFieldMap/types';
+import type { GetVizSchemaContext, GetVizSchemaOutput } from '../getVizSchema/types';
 
 export type GenerateChartAndFieldMapContext = GetVizSchemaContext & GetVizSchemaOutput;
 

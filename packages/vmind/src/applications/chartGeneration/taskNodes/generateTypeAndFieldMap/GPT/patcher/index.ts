@@ -1,5 +1,5 @@
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
-import { isArray, isNil } from 'lodash';
+import { isArray, isNil } from '@visactor/vutils';
 
 import type { Transformer } from '../../../../../../base/tools/transformer';
 import {

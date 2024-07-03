@@ -5,15 +5,21 @@ import {
   DEFAULT_PIE_VIDEO_LENGTH,
   DEFAULT_VIDEO_LENGTH,
   DEFAULT_VIDEO_LENGTH_LONG,
+  DIMENSION_AXIS_ID,
   LINEAR_COLOR_THEMES,
+  MAIN_SERIES_ID,
+  MEASURE_AXIS_LEFT_ID,
+  MEASURE_AXIS_RIGHT_ID,
+  SUB_SERIES_ID,
   WORDCLOUD_NUM_LIMIT,
   animationDuration,
   oneByOneGroupSize
 } from './constants';
 import { getFieldByDataType } from '../../../../../common/utils/utils';
-import { array } from '@visactor/vutils';
+import { array, isArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
 import { DataType } from '../../../../../common/typings';
+import { COLOR_FIELD } from '@visactor/chart-advisor';
 
 type Context = GetChartSpecContext & GetChartSpecOutput;
 
@@ -78,10 +84,17 @@ export const sequenceData: Transformer<Context & { totalTime: number }, GetChart
   const timeField = cell.time as string;
   const latestData = isValidDataset(dataset) ? dataset : [];
 
+  //add the time field into spec, although it has no use for chart rendering.
+  //it can be used in getCellFromSpec.
+  spec.timeField = timeField;
+
   // group the data by time field
   const timeArray: any[] = [];
   const contentMap = {} as any;
   latestData.forEach((element: any) => {
+    if (!element[timeField]) {
+      return;
+    }
     const time = element[timeField].toString();
     if (!timeArray.includes(time)) {
       timeArray.push(time);
@@ -451,47 +464,49 @@ export const waterfallStackLabel: Transformer<Context, GetChartSpecOutput> = (co
 export const dualAxisSeries: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign series in dual-axis chart
   const { cell, spec } = context;
+  const { color } = cell;
+  const dataValues = spec.data.values;
+
   spec.series = [
     {
       type: 'bar',
-      id: cell.y[0],
+      id: MAIN_SERIES_ID,
       data: {
         id: spec.data.id + '_bar',
-        values: spec.data.values
+        values: color ? dataValues : dataValues.map((d: any) => ({ ...d, [COLOR_FIELD]: cell.y[0] }))
       },
       dataIndex: 0,
       label: { visible: true },
       xField: cell.x,
       yField: cell.y[0],
+      seriesField: color ? (isArray(color) ? color[0] : color) : COLOR_FIELD,
       bar: {
-        style: {
-          fill: spec.color[0]
-        }
+        style: {}
       }
     },
     {
       type: 'line',
-      id: cell.y[cell.y?.length - 1],
+      id: SUB_SERIES_ID,
       dataIndex: 0,
       data: {
         id: spec.data.id + '_line',
-        values: spec.data.values
+        values: color ? dataValues : dataValues.map((d: any) => ({ ...d, [COLOR_FIELD]: cell.y[1] }))
       },
       label: { visible: true },
       xField: cell.x,
       yField: cell.y[cell.y?.length - 1],
+      seriesField: color ? (isArray(color) ? color[0] : color) : COLOR_FIELD,
+
       line: {
-        style: {
-          stroke: spec.color[1]
-        }
+        style: {}
       },
       point: {
-        style: {
-          fill: spec.color[1]
-        }
+        style: {}
       }
     }
   ];
+  spec.data = undefined;
+  spec.labelLayout = 'region';
   return { spec };
 };
 
@@ -500,16 +515,29 @@ export const dualAxisAxes: Transformer<Context, GetChartSpecOutput> = (context: 
   const { spec } = context;
   spec.axes = [
     {
+      id: DIMENSION_AXIS_ID,
       type: 'band',
       orient: 'bottom'
     },
     {
+      id: MEASURE_AXIS_LEFT_ID,
+      seriesId: MAIN_SERIES_ID,
       type: 'linear',
-      orient: 'left'
+      orient: 'left',
+      label: {
+        style: {}
+      }
     },
     {
+      id: MEASURE_AXIS_RIGHT_ID,
+      seriesId: SUB_SERIES_ID,
       type: 'linear',
-      orient: 'right'
+      orient: 'right',
+      tick: { visible: false },
+      grid: { visible: false },
+      label: {
+        style: {}
+      }
     }
   ];
   return { spec };
@@ -873,6 +901,7 @@ export const legend: Transformer<Context, GetChartSpecOutput> = (context: Contex
       }
     }
   ];
+
   return { spec };
 };
 
