@@ -14,11 +14,11 @@ type IPropsType = {
   spec: any;
   specList?: any;
   time:
-  | {
-    totalTime: number;
-    frameArr: any[];
-  }
-  | undefined;
+    | {
+        totalTime: number;
+        frameArr: any[];
+      }
+    | undefined;
   costTime: number;
 };
 
@@ -109,7 +109,7 @@ export function ChartPreview(props: IPropsType) {
       vchartRef.current = null;
       return;
     }
-    spec.animation = false;
+    //spec.animation = false;
     if (isNil(vchartRef.current)) {
       const cs = new VChart(spec, {
         dom: 'chart',

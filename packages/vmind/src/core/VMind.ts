@@ -6,9 +6,10 @@ import type {
   DataItem,
   OuterPackages,
   VMindDataset,
-  ChartType
+  ChartType,
+  ChartTheme
 } from '../common/typings';
-import { Model, ModelType, ChartTheme } from '../common/typings';
+import { Model, ModelType } from '../common/typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
 import type { VMindApplicationMap } from './types';
 import type {
@@ -22,11 +23,9 @@ import type {
 import applicationMetaList, { ApplicationType } from '../applications';
 import { calculateTokenUsage } from '../common/utils/utils';
 import { isNil } from '@visactor/vutils';
-import type { Cell } from '../applications/chartGeneration/types';
 import { SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
 import { fillSpecTemplateWithData } from '../common/specUtils';
-import type { InsightAlgorithm } from '../applications/IngelligentInsight/types';
 import type { ApplicationMeta, TaskNode } from '../base/metaTypes';
 import type { DataExtractionContext, DataExtractionOutput } from '../applications/types';
 
@@ -268,8 +267,8 @@ class VMind {
    * @param dataset
    * @returns
    */
-  fillSpecWithData(spec: any, dataset: VMindDataset, totalTime?: number) {
-    return fillSpecTemplateWithData(spec, dataset, totalTime);
+  fillSpecWithData(spec: any, dataset: VMindDataset, cell?: any) {
+    return fillSpecTemplateWithData(spec, dataset, cell);
   }
 
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {
