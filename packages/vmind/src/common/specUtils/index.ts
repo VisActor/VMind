@@ -8,10 +8,18 @@ import {
   sequenceData,
   wordCloudData
 } from '../../applications/chartGeneration/taskNodes/getChartSpec/VChart/transformers';
-import { isArray, uniqArray } from '@visactor/vutils';
+import { isArray, isString, uniqArray } from '@visactor/vutils';
 import { getFieldInfoFromDataset } from '../dataProcess';
 import { foldDatasetByYField } from '../utils/utils';
-import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
+import {
+  FOLD_NAME,
+  FOLD_VALUE,
+  COLOR_FIELD,
+  FOLD_VALUE_MAIN,
+  FOLD_VALUE_SUB,
+  GROUP_FIELD
+} from '@visactor/chart-advisor';
+import type { DataItem } from '../typings';
 import { ChartType, type SimpleFieldInfo, type VMindDataset } from '../typings';
 import type { Cell } from '../../applications/chartGeneration/types';
 
@@ -22,8 +30,17 @@ import type { Cell } from '../../applications/chartGeneration/types';
  * @returns
  */
 const removeInvalidFieldFromCell = (cell: Cell, fieldInfo: SimpleFieldInfo[]) => {
-  const fieldList = fieldInfo.map(f => f.fieldName);
-  const cellNew = {
+  const fieldList = fieldInfo
+    .map(f => f.fieldName)
+    .concat([
+      FOLD_NAME.toString(),
+      FOLD_VALUE.toString(),
+      FOLD_VALUE_MAIN.toString(),
+      FOLD_VALUE_SUB.toString(),
+      COLOR_FIELD.toString(),
+      GROUP_FIELD.toString()
+    ]);
+  const cellNew: any = {
     ...cell
   };
   Object.keys(cellNew).forEach(key => {
@@ -31,7 +48,7 @@ const removeInvalidFieldFromCell = (cell: Cell, fieldInfo: SimpleFieldInfo[]) =>
     if (isArray(fields)) {
       const filteredFields = fields.filter(field => fieldList.includes(field));
       cellNew[key] = filteredFields.length === 0 ? undefined : filteredFields;
-    } else {
+    } else if (isString(fields)) {
       cellNew[key] = fieldList.includes(fields) ? fields : undefined;
     }
   });
@@ -132,17 +149,30 @@ export const getCellFromSpec = (spec: Spec) => {
  * @param totalTime
  * @returns
  */
-export const fillSpecTemplateWithData = (template: Spec, dataset: VMindDataset, totalTime?: number) => {
+export const fillSpecTemplateWithData = (
+  template: Spec,
+  dataset: VMindDataset,
+  propsCell?: any,
+  totalTime?: number
+) => {
   const { type } = template;
   const fieldInfo = getFieldInfoFromDataset(dataset);
-  const tempCell = getCellFromSpec(template);
+  const tempCell = propsCell ?? getCellFromSpec(template);
 
-  const cell = removeInvalidFieldFromCell(tempCell, fieldInfo);
-  const cellNew = { ...cell };
+  let cellNew = { ...tempCell };
+  let datasetNew = dataset;
+
+  //check if the spec is generated using fold dataset
+  const hasFold = isArray(cellNew.y)
+    ? cellNew.y[0] === FOLD_VALUE.toString() ||
+      (cellNew.y[0] === FOLD_VALUE_MAIN.toString() && cellNew.y[1] === FOLD_VALUE_SUB.toString())
+    : cellNew.y === FOLD_VALUE.toString();
+
+  cellNew = removeInvalidFieldFromCell(cellNew, fieldInfo);
 
   const context: any = {
     spec: template,
-    dataset,
+    dataset: datasetNew,
     cell: cellNew,
     totalTime
   };
@@ -153,18 +183,23 @@ export const fillSpecTemplateWithData = (template: Spec, dataset: VMindDataset, 
     return spec;
   }
   if (['bar', 'line'].includes(type)) {
-    let datasetNew = dataset;
-
-    if (isArray(cellNew.y) && cellNew.y.length > 1) {
+    if (hasFold) {
       //bar chart and line chart can visualize multiple y fields
-      datasetNew = foldDatasetByYField(datasetNew, cellNew.y, fieldInfo);
-      cellNew.y = FOLD_VALUE.toString();
-      cellNew.color = FOLD_NAME.toString();
-      template.yField = cellNew.y;
-      template.seriesField = cellNew.color;
-      template.xField = isArray(template.xField)
-        ? [...template.xField, cellNew.color]
-        : [template.xField, cellNew.color];
+      const { foldInfo } = cellNew;
+      const { foldMap } = foldInfo;
+      datasetNew = foldDatasetByYField(datasetNew, Object.keys(foldMap), fieldInfo);
+    }
+
+    if (cellNew.color === COLOR_FIELD.toString()) {
+      const { cartesianInfo } = cellNew;
+      const colorFields = cartesianInfo.fieldList;
+      datasetNew = datasetNew.map((data: DataItem) => {
+        const colorItem = colorFields.map((field: string) => data[field]).join('-');
+        return {
+          ...data,
+          [COLOR_FIELD]: colorItem
+        };
+      });
     }
 
     const contextNew: any = {
@@ -175,20 +210,84 @@ export const fillSpecTemplateWithData = (template: Spec, dataset: VMindDataset, 
     };
     const { spec: spec1 } = data(contextNew);
     const { spec } = legend({ ...contextNew, spec: spec1 });
-
     return spec;
   }
   if (['pie', 'scatter', 'rose', 'radar', 'waterfall', 'boxPlot'].includes(type)) {
-    const { spec } = data(context);
+    if (hasFold) {
+      const { foldInfo } = cellNew;
+      const { foldMap } = foldInfo;
+      datasetNew = foldDatasetByYField(datasetNew, Object.keys(foldMap), fieldInfo);
+    }
+    if (cellNew.color === COLOR_FIELD.toString()) {
+      const { cartesianInfo } = cellNew;
+      const colorFields = cartesianInfo.fieldList;
+      datasetNew = datasetNew.map((data: DataItem) => {
+        const colorItem = colorFields.map((field: string) => data[field]).join('-');
+        return {
+          ...data,
+          [COLOR_FIELD]: colorItem
+        };
+      });
+    }
+
+    const contextNew: any = {
+      spec: template,
+      dataset: datasetNew,
+      cell: cellNew,
+      totalTime
+    };
+    const { spec } = data(contextNew);
     return spec;
   }
   if ('common' === type) {
     //dual-axis chart
-    const { spec: spec1 } = data(context);
-    const { spec: spec2 } = legend({ ...context, spec: spec1 });
+    let mainSeriesData = datasetNew;
+    let subSeriesData = datasetNew;
 
-    const { spec } = dualAxisSeries({ ...context, spec: spec2 });
-    return spec;
+    if (hasFold) {
+      //bar chart and line chart can visualize multiple y fields
+      const { foldInfo } = cellNew;
+      const { foldMap } = foldInfo;
+      mainSeriesData = foldDatasetByYField(
+        datasetNew,
+        [Object.keys(foldMap)[0]],
+        fieldInfo,
+        FOLD_NAME,
+        FOLD_VALUE_MAIN
+      );
+      subSeriesData = foldDatasetByYField(datasetNew, [Object.keys(foldMap)[1]], fieldInfo, FOLD_NAME, FOLD_VALUE_SUB);
+    }
+
+    const { spec: spec1 } = data(context);
+    const { spec: finalSpec } = legend({ ...context, spec: spec1 });
+
+    //const { spec } = dualAxisSeries({ ...context, spec: spec2 });
+    const { cartesianInfo, y } = cellNew;
+    if (finalSpec.series && finalSpec.series[0]) {
+      finalSpec.series[0].seriesField = COLOR_FIELD;
+
+      const colorFields = cartesianInfo ? cartesianInfo.fieldList : undefined;
+      finalSpec.series[0].data = {
+        id: finalSpec.data.id + '_bar',
+        values: mainSeriesData.map((d: any) => {
+          const colorItem = isArray(colorFields) ? colorFields.map((field: string) => d[field]).join('-') : y[0];
+          return { ...d, [COLOR_FIELD]: colorItem };
+        })
+      };
+    }
+    if (finalSpec.series && finalSpec.series[1]) {
+      finalSpec.series[1].seriesField = COLOR_FIELD;
+
+      const colorFields = cartesianInfo ? cartesianInfo.fieldList : undefined;
+      finalSpec.series[1].data = {
+        id: finalSpec.data.id + '_line',
+        values: subSeriesData.map((d: any) => {
+          const colorItem = isArray(colorFields) ? colorFields.map((field: string) => d[field]).join('-') : y[1];
+          return { ...d, [COLOR_FIELD]: colorItem };
+        })
+      };
+    }
+    return finalSpec;
   }
   if (type === 'wordCloud') {
     const { spec } = wordCloudData(context);

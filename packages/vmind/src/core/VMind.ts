@@ -6,9 +6,10 @@ import type {
   DataItem,
   OuterPackages,
   VMindDataset,
-  ChartType
+  ChartType,
+  ChartTheme
 } from '../common/typings';
-import { Model, ModelType, ChartTheme } from '../common/typings';
+import { Model, ModelType } from '../common/typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
 import type { VMindApplicationMap } from './types';
 import type {
@@ -266,8 +267,8 @@ class VMind {
    * @param dataset
    * @returns
    */
-  fillSpecWithData(spec: any, dataset: VMindDataset, totalTime?: number) {
-    return fillSpecTemplateWithData(spec, dataset, totalTime);
+  fillSpecWithData(spec: any, dataset: VMindDataset, cell?: any) {
+    return fillSpecTemplateWithData(spec, dataset, cell);
   }
 
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {

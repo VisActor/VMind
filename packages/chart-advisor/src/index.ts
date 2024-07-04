@@ -14,7 +14,7 @@ import { isNil } from '@visactor/vutils';
 import { isNaN } from './dataUtil';
 
 export { fold, omit } from './fieldUtils';
-export { FOLD_NAME, FOLD_VALUE, COLOR_FIELD } from './constant';
+export { FOLD_NAME, FOLD_VALUE, COLOR_FIELD, FOLD_VALUE_MAIN, FOLD_VALUE_SUB, GROUP_FIELD } from './constant';
 
 export function chartAdvisor(params: AdviserParams): AdviseResult {
   const {
