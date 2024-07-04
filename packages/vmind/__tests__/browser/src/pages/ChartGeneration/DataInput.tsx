@@ -148,7 +148,7 @@ export function DataInput(props: IPropsType) {
       //enableDataQuery: false,
       //chartTypeList: [ChartType.BarChart, ChartType.LineChart],
       // colorPalette: ArcoTheme.colorScheme,
-      theme: builtinThemeMap[BuiltinThemeType.VeOThemeAutomobileDark]
+      theme: 'light'
     });
     const endTime = new Date().getTime();
     console.log(chartGenerationRes);
