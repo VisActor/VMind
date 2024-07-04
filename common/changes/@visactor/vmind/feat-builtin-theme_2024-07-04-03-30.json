@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vmind",
+      "comment": "add more built-in theme",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vmind"
+}
