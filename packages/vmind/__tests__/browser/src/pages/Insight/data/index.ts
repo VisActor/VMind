@@ -469,7 +469,6 @@ export const SalesLineChart = {
           text: '订单日期',
           style: {
             fontSize: 12,
-            fill: '#E2E5EC',
             fontWeight: 'normal'
           }
         },
@@ -545,7 +544,6 @@ export const SalesLineChart = {
           space: 8,
           style: {
             fontSize: 12,
-            fill: '#E2E5EC',
             fontWeight: 'normal'
           }
         },
@@ -606,8 +604,7 @@ export const SalesLineChart = {
         maxRow: 1,
         title: {
           textStyle: {
-            fontSize: 12,
-            fill: '#E2E5EC'
+            fontSize: 12
           }
         },
         layoutLevel: 30,
@@ -633,8 +630,7 @@ export const SalesLineChart = {
           },
           label: {
             style: {
-              fontSize: 12,
-              fill: '#E2E5EC'
+              fontSize: 12
             }
           },
           shape: {

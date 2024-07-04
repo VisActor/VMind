@@ -22,11 +22,9 @@ import type {
 import applicationMetaList, { ApplicationType } from '../applications';
 import { calculateTokenUsage } from '../common/utils/utils';
 import { isNil } from '@visactor/vutils';
-import type { Cell } from '../applications/chartGeneration/types';
 import { SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
 import { fillSpecTemplateWithData } from '../common/specUtils';
-import type { InsightAlgorithm } from '../applications/IngelligentInsight/types';
 import type { ApplicationMeta, TaskNode } from '../base/metaTypes';
 import type { DataExtractionContext, DataExtractionOutput } from '../applications/types';
 
