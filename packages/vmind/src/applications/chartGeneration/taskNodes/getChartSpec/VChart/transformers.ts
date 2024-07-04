@@ -18,7 +18,8 @@ import {
 import { getFieldByDataType } from '../../../../../common/utils/utils';
 import { array, isArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
-import { DataType } from '../../../../../common/typings';
+import { DataType, ChartTheme } from '../../../../../common/typings';
+import { builtinThemeMap } from '../../../../../common/builtinTheme';
 import { COLOR_FIELD } from '@visactor/chart-advisor';
 
 type Context = GetChartSpecContext & GetChartSpecOutput;
@@ -1195,6 +1196,25 @@ export const displayConfLine: Transformer<Context, GetChartSpecOutput> = (contex
       lineCap: 'round'
     }
   };
+
+  return { spec };
+};
+
+export const theme: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { chartTheme, spec } = context;
+
+  if (typeof chartTheme === 'string') {
+    Object.keys(builtinThemeMap).forEach(key => {
+      if (key === chartTheme) {
+        spec.theme = builtinThemeMap[chartTheme];
+      }
+    });
+  } else if (typeof chartTheme === 'object') {
+    spec.theme = chartTheme;
+  }
+  if (spec.theme && spec.theme.colorScheme) {
+    spec.color = spec.theme.colorScheme.default.dataScheme.scheme;
+  }
 
   return { spec };
 };
