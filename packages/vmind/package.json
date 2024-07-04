@@ -98,7 +98,7 @@
     "js-yaml": "~4.1.0",
     "@visactor/calculator": "workspace:1.2.12",
     "alasql": "~4.3.2",
-    "@visactor/vchart-theme": "^1.11.2"
+    "@visactor/vchart-theme": "^1.11.2",
     "jstat": "~1.9.6",
     "@stdlib/stats-base-dists-t-quantile": "0.2.1",
     "array-normalize": "~2.0.0",

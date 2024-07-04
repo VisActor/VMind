@@ -79,10 +79,16 @@ export const getFieldByDataType = (fields: SimpleFieldInfo[], dataTypeList: Data
   return fields.find(f => dataTypeList.includes(f.type));
 };
 
-export const foldDatasetByYField = (dataset: DataItem[], yFieldList: string[], fieldInfo: SimpleFieldInfo[]) => {
+export const foldDatasetByYField = (
+  dataset: DataItem[],
+  yFieldList: string[],
+  fieldInfo: SimpleFieldInfo[],
+  foldName: any = FOLD_NAME,
+  foldValue: any = FOLD_VALUE
+) => {
   const aliasMap = Object.fromEntries(fieldInfo.map(d => [d.fieldName, d.fieldName]));
 
-  return fold(dataset as any, yFieldList, FOLD_NAME, FOLD_VALUE, aliasMap, false);
+  return fold(dataset as any, yFieldList, foldName, foldValue, aliasMap, false);
 };
 
 export function getObjectProperties(e: Error): {} {

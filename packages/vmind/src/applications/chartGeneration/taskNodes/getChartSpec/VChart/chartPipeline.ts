@@ -57,7 +57,7 @@ const pipelineBar = [
   axis,
   legend,
   displayConfBar,
-  animationCartesianBar,
+  //animationCartesianBar,
   theme
 ];
 const pipelineLine = [
@@ -68,10 +68,18 @@ const pipelineLine = [
   axis,
   legend,
   displayConfLine,
-  animationCartisianLine,
+  //animationCartisianLine,
   theme
 ];
-const pipelinePie = [chartType, data, color, pieField, legend, animationCartesianPie, theme];
+const pipelinePie = [
+  chartType,
+  data,
+  color,
+  pieField,
+  legend,
+  // animationCartesianPie,
+  theme
+];
 const pipelineRankingBar = [
   chartType,
   sequenceData,
@@ -89,17 +97,35 @@ const pipelineWordCloud = [
   color,
   wordCloudField,
   wordCloudDisplayConf,
-  animationOneByOne,
+  //animationOneByOne,
   theme
 ];
 
-const pipelineScatterPlot = [chartType, data, color, scatterField, scatterAxis, legend, animationOneByOne, theme];
+const pipelineScatterPlot = [
+  chartType,
+  data,
+  color,
+  scatterField,
+  scatterAxis,
+  legend,
+  //animationOneByOne,
+  theme
+];
 
 const pipelineFunnel = [chartType, funnelData, color, funnelField, legend, theme];
 
 const pipelineDualAxis = [chartType, data, color, dualAxisSeries, dualAxisAxes, legend, theme];
 
-const pipelineRose = [chartType, data, color, roseField, roseAxis, legend, animationCartesianPie, theme];
+const pipelineRose = [
+  chartType,
+  data,
+  color,
+  roseField,
+  roseAxis,
+  legend,
+  //animationCartesianPie,
+  theme
+];
 
 const pipelineRadar = [
   chartType,
@@ -109,7 +135,7 @@ const pipelineRadar = [
   radarDisplayConf,
   radarAxis,
   legend,
-  animationCartisianLine,
+  //animationCartisianLine,
   theme
 ];
 

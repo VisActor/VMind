@@ -1,6 +1,6 @@
-import { ApplicationMeta } from '../metaTypes';
-import { BaseTaskNode } from '../taskNode/baseTaskNode';
-import { ChatManager } from '../tools/chatManager';
+import type { ApplicationMeta } from '../metaTypes';
+import type { BaseTaskNode } from '../taskNode/baseTaskNode';
+import type { ChatManager } from '../tools/chatManager';
 
 export interface IApplication<Context, Spec> {
   name: string;
