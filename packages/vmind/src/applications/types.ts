@@ -1,4 +1,4 @@
-import type { ChartType, ILLMOptions, SimpleFieldInfo, VMindDataset } from '../common/typings';
+import type { ChartType, ILLMOptions, SimpleFieldInfo, VMindDataset, ChartTheme } from '../common/typings';
 import type { Cell } from './chartGeneration/types';
 import type { InsightAlgorithm, VMindInsight } from './IngelligentInsight/types';
 
@@ -41,6 +41,7 @@ export type ChartGenerationContext = {
 } & {
   totalTime?: number;
   colors?: string[];
+  chartTheme?: ChartTheme | string;
 };
 
 export type ChartGenerationOutput = {
