@@ -22,7 +22,7 @@ const pearsonAlgo = (context: any) => {
 
   const seriesNames = Object.keys(seriesDataMap);
   seriesNames.forEach(series => {
-    let seriesDataset: VMindDataset = seriesDataMap[series];
+    let seriesDataset: VMindDataset = seriesDataMap[series].map((d: any) => d.dataItem);
     const outlierData: DataItem[] = insights
       .filter(
         (insight: any) =>

@@ -17,7 +17,7 @@ const volatilityAlgo = (context: any) => {
   const threshold = volatilityThreshold ?? 0.8;
   const seriesNames = Object.keys(seriesDataMap);
   seriesNames.forEach(series => {
-    const seriesDataset: VMindDataset = seriesDataMap[series];
+    const seriesDataset: VMindDataset = seriesDataMap[series].map((d: any) => d.dataItem);
     yField.forEach(measureId => {
       const measureSet = seriesDataset.map(d => d[measureId]) as unknown as number[];
 

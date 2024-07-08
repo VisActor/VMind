@@ -18,7 +18,7 @@ const overallTrendingAlgo = (context: any) => {
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
   yField.forEach(measureId => {
     const overallDataset = Object.keys(dimensionDataMap).map(dimension => {
-      const dimensionDataset = dimensionDataMap[dimension];
+      const dimensionDataset = dimensionDataMap[dimension].map((d: any) => d.dataItem);
       return sumDimensionValues(dimensionDataset, measureId);
     });
     const { trend, pValue, zScore, slope, intercept } = originalMKTest(overallDataset, 0.05, calcScope);

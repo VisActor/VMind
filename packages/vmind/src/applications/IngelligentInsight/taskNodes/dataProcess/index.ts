@@ -44,9 +44,9 @@ const extractDataFromContext: Transformer<InsightContext, DataProcessOutput> = (
   const { color, x: cellx } = cell;
 
   const seriesField: string = isArray(color) ? color[0] : color;
-  const seriesDataMap: Record<string | number, DataItem[]> = {};
+  const seriesDataMap: Record<string | number, { index: number; dataItem: DataItem }[]> = {};
   if (seriesField) {
-    dataset.forEach(dataItem => {
+    dataset.forEach((dataItem, index) => {
       const groupBy = dataItem[seriesField];
       if (!groupBy) {
         return;
@@ -54,15 +54,15 @@ const extractDataFromContext: Transformer<InsightContext, DataProcessOutput> = (
       if (!seriesDataMap[groupBy]) {
         seriesDataMap[groupBy] = [];
       }
-      seriesDataMap[groupBy].push(dataItem);
+      seriesDataMap[groupBy].push({ index, dataItem });
     });
   } else {
-    seriesDataMap[DEFAULT_SERIES_NAME] = dataset;
+    seriesDataMap[DEFAULT_SERIES_NAME] = dataset.map((dataItem, index) => ({ index, dataItem }));
   }
   const xField: string = isArray(cellx) ? cellx[0] : cellx;
   //group the data by xField
-  const dimensionDataMap: Record<string | number, DataItem[]> = {};
-  dataset.forEach(dataItem => {
+  const dimensionDataMap: Record<string | number, { index: number; dataItem: DataItem }[]> = {};
+  dataset.forEach((dataItem, index) => {
     const groupBy = dataItem[xField];
     if (!groupBy) {
       return;
@@ -70,7 +70,7 @@ const extractDataFromContext: Transformer<InsightContext, DataProcessOutput> = (
     if (!dimensionDataMap[groupBy]) {
       dimensionDataMap[groupBy] = [];
     }
-    dimensionDataMap[groupBy].push(dataItem);
+    dimensionDataMap[groupBy].push({ index, dataItem });
   });
   return { dataset, cell, fieldInfo, chartType, seriesDataMap, dimensionDataMap };
 };

@@ -6,7 +6,7 @@ import { InsightType } from '../../../../types';
 import { DEFAULT_SERIES_NAME } from '../../../dataProcess/constants';
 
 const getMajorityInGroup = (
-  dataset: DataItem[],
+  dataset: { index: number; dataItem: DataItem }[],
   measureId: string | number,
   seriesId: string | number,
   dimensionId: string | number,
@@ -15,23 +15,25 @@ const getMajorityInGroup = (
   const result: VMindInsight[] = [];
   const threshold = propsThreshold ?? 0.8;
   const sum = dataset.reduce((prev, cur) => {
-    const value = isNumber(cur[measureId] as number) ? Math.abs(cur[measureId] as number) : 0;
+    const dataValue = parseFloat(cur.dataItem[measureId] as string);
+    const value = isNumber(dataValue) ? Math.abs(dataValue) : 0;
     return prev + value;
   }, 0);
   if (sum - Number.EPSILON < 0) {
     return [];
   }
-  dataset.forEach(dataItem => {
-    const seriesName = dataItem[seriesId];
-    const dimensionName = dataItem[dimensionId];
-    const seriesValue: number = isNumber(dataItem[measureId] as number) ? Math.abs(dataItem[measureId] as number) : 0;
+  dataset.forEach(d => {
+    const seriesName = d.dataItem[seriesId];
+    const dimensionName = d.dataItem[dimensionId];
+    const dataValue = parseFloat(d.dataItem[measureId] as string);
+    const seriesValue: number = isNumber(dataValue) ? Math.abs(dataValue) : 0;
     const ratio = seriesValue / sum;
     if (ratio > threshold) {
       result.push({
         type: InsightType.MajorityValue,
-        data: [dataItem as any],
+        data: [d],
         fieldId: measureId,
-        value: dataItem[measureId] as unknown as number,
+        value: d.dataItem[measureId] as unknown as number,
         significant: ratio,
         seriesName: seriesName === DEFAULT_SERIES_NAME ? undefined : seriesName,
         info: {
@@ -62,7 +64,7 @@ const calcMajorityValue = (context: any) => {
 
   Object.keys(dimensionDataMap).forEach(dimension => {
     const dimensionDataset = dimensionDataMap[dimension];
-    const dimensionInsights = getMajorityInGroup(dimensionDataset, yField[0], xField, groupField);
+    const dimensionInsights = getMajorityInGroup(dimensionDataset, yField[0], groupField, xField);
     result.push(...dimensionInsights);
   });
   return result;
