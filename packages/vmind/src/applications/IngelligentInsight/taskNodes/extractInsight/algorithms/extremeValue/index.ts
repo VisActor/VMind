@@ -84,7 +84,7 @@ const calcExtremeValue = (context: any): VMindInsight[] => {
 
 const ExtremeValue: InsightAlgorithm = {
   name: 'extremeValue',
-  chartType: [ChartType.BarChart, ChartType.LineChart],
+  chartType: [ChartType.BarChart, ChartType.LineChart, ChartType.RadarChart, ChartType.DualAxisChart],
   insightType: InsightType.ExtremeValue,
   algorithmFunction: calcExtremeValue
 };

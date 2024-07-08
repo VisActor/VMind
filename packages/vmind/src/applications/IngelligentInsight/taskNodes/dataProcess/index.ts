@@ -10,12 +10,22 @@ import type { DataItem } from '../../../../common/typings';
 import { DEFAULT_SERIES_NAME } from './constants';
 
 const extractDataFromContext: Transformer<InsightContext, DataProcessOutput> = (context: InsightContext) => {
-  const { spec, fieldInfo: inputFieldInfo, cell: inputCell, dataset: inputDataset } = context;
+  const {
+    spec,
+    fieldInfo: inputFieldInfo,
+    cell: inputCell,
+    dataset: inputDataset,
+    chartType: inputChartType
+  } = context;
 
-  const chartType = getChartTypeFromSpec(spec);
+  let chartType = inputChartType;
   if (!chartType) {
-    throw new Error('unsupported spec type');
+    chartType = getChartTypeFromSpec(spec);
+    if (!chartType) {
+      throw new Error('unsupported spec type');
+    }
   }
+
   let dataset = inputDataset;
   if (!dataset) {
     //no dataset in the input, extract from spec

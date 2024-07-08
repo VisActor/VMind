@@ -59,6 +59,7 @@ export enum InsightLanguage {
 }
 export type InsightContext = {
   spec?: any;
+  chartType: ChartType;
   dataset?: VMindDataset;
   fieldInfo?: SimpleFieldInfo[];
   cell?: Cell;
