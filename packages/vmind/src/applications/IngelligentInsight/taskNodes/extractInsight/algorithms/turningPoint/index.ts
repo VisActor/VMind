@@ -39,16 +39,19 @@ const turningPointAlgo = (context: any): VMindInsight[] => {
   Object.keys(seriesDataMap).forEach(series => {
     const seriesDataset = seriesDataMap[series];
     yField.forEach(measureId => {
-      const bayesianResult = bayesianDetection(seriesDataset, measureId);
+      const bayesianResult = bayesianDetection(
+        seriesDataset.map((d: any) => d.dataItem),
+        measureId
+      );
       bayesianResult.forEach(res => {
         const { index } = res;
-        const dataItem = seriesDataset[index];
+        const d = seriesDataset[index];
         result.push({
           type: InsightType.TurningPoint,
-          data: [dataItem as any],
+          data: [d as any],
           fieldId: measureId,
           seriesName: series === DEFAULT_SERIES_NAME ? undefined : series,
-          value: dataItem[measureId] as unknown as number
+          value: d.dataItem[measureId] as unknown as number
         } as unknown as VMindInsight);
       });
     });

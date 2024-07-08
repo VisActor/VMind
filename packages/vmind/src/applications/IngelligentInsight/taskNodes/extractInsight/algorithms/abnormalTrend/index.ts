@@ -27,7 +27,7 @@ const abnormalTrendAlgo = (context: any) => {
   const seriesTrendInfo: TrendInfo[] = [];
   Object.keys(seriesDataMap).forEach(series => {
     yField.forEach(measureId => {
-      const seriesDataset = seriesDataMap[series].map((d: { [x: string]: any }) => d[measureId]);
+      const seriesDataset = seriesDataMap[series].map((d: { [x: string]: any }) => d.dataItem[measureId]);
       const { trend, pValue, zScore } = originalMKTest(seriesDataset, 0.05, false);
       if (trend !== TrendType.NO_TREND) {
         seriesTrendInfo.push({

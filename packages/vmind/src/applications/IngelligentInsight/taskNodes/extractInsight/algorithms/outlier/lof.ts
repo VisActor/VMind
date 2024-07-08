@@ -75,7 +75,13 @@ const autoK = (dataset: DataItem[]) => {
   return 2;
 };
 
-const LOF = (dataset: DataItem[], measureId: string, propsThreshold?: number, propsK?: number) => {
+const LOF = (
+  propsDataset: { index: number; dataItem: DataItem }[],
+  measureId: string,
+  propsThreshold?: number,
+  propsK?: number
+) => {
+  const dataset = propsDataset.map(d => d.dataItem);
   const k = propsK ?? 8;
   const threshold = propsThreshold ?? 2;
   const distanceMap = new Array(dataset.length).fill(0).map(d => []);
@@ -117,7 +123,7 @@ const lofAlgoFunc = (context: any) => {
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
 
   Object.keys(seriesDataMap).forEach(group => {
-    const dataset = seriesDataMap[group];
+    const dataset: { index: number; dataItem: DataItem }[] = seriesDataMap[group];
     yField.forEach(field => {
       const lofArray = LOF(dataset, field);
       lofArray.forEach(insight => {
@@ -127,7 +133,7 @@ const lofAlgoFunc = (context: any) => {
           type: InsightType.Outlier,
           data: [insightDataItem],
           fieldId: field,
-          value: insightDataItem[field],
+          value: insightDataItem.dataItem[field],
           significant: score - 1,
           seriesName: group === DEFAULT_SERIES_NAME ? undefined : group
         } as unknown as VMindInsight;

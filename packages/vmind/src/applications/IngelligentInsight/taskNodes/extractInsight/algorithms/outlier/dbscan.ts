@@ -4,6 +4,7 @@ import clustering from 'density-clustering';
 import normalize from 'array-normalize';
 import type { InsightAlgorithm } from '../../../../types';
 import { InsightType, type VMindInsight } from '../../../../types';
+import type { DataItem } from '../../../../../../common/typings';
 import { ChartType } from '../../../../../../common/typings';
 import { DEFAULT_SERIES_NAME } from '../../../dataProcess/constants';
 
@@ -20,12 +21,12 @@ const dbscanAlgo = (context: any) => {
 
   const result: VMindInsight[] = [];
   Object.keys(seriesDataMap).forEach(series => {
-    const seriesDataset = seriesDataMap[series];
+    const seriesDataset: { index: number; dataItem: DataItem }[] = seriesDataMap[series];
     if (seriesDataset.length <= pts || seriesDataset.length < 5) {
       return;
     }
     const flatDataset = seriesDataset.reduce(
-      (prev: any, cur: any) => [...prev, cur[xField] ?? 0, cur[yField[0]] ?? 0],
+      (prev: any, cur: any) => [...prev, cur.dataItem[xField] ?? 0, cur.dataItem[yField[0]] ?? 0],
       []
     );
 
@@ -43,12 +44,12 @@ const dbscanAlgo = (context: any) => {
     const noises = dbscan.noise;
 
     const insights = noises.map((noiseIndex: number) => {
-      const dataItem = seriesDataset[noiseIndex];
+      const d = seriesDataset[noiseIndex];
       return {
         type: InsightType.Outlier,
-        data: [dataItem],
+        data: [d],
         fieldId: [xField, yField[0]],
-        value: [dataItem[xField], dataItem[yField[0]]],
+        value: [d.dataItem[xField], d.dataItem[yField[0]]],
         seriesName: series === DEFAULT_SERIES_NAME ? undefined : series
       } as unknown as VMindInsight;
     });

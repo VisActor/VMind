@@ -44,7 +44,7 @@ export type DataProcessOutput = {
   cell: Cell;
   fieldInfo: SimpleFieldInfo[];
   dataset: VMindDataset;
-  seriesDataMap: Record<string | number, DataItem[]>;
+  seriesDataMap: Record<string | number, { index: number; dataItem: DataItem }[]>;
 };
 
 export type ExtractInsightOutput = {

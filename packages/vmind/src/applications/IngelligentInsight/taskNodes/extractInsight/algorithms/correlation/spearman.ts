@@ -13,14 +13,14 @@ const spearmanAlgo = (context: any) => {
 
   const result: VMindInsight[] = [];
 
-  const threshold = spearmanThreshold ?? 0.8;
+  const threshold = spearmanThreshold ?? 0.95;
   const seriesNames = Object.keys(seriesDataMap);
   yField.forEach(measureId => {
     for (let i = 0; i < seriesNames.length; i++) {
-      const iDataset: VMindDataset = seriesDataMap[seriesNames[i]];
+      const iDataset: VMindDataset = seriesDataMap[seriesNames[i]].map((d: any) => d.dataItem);
       const iMeasureset = iDataset.map(d => d[measureId]) as number[];
       for (let j = i + 1; j < seriesNames.length; j++) {
-        const jDataset: VMindDataset = seriesDataMap[seriesNames[j]];
+        const jDataset: VMindDataset = seriesDataMap[seriesNames[j]].map((d: any) => d.dataItem);
         const jMeasureset = jDataset.map(d => d[measureId]) as number[];
 
         if (iMeasureset.length !== jMeasureset.length) {
@@ -32,7 +32,10 @@ const spearmanAlgo = (context: any) => {
             type: InsightType.Correlation,
             fieldId: measureId,
             seriesName: [seriesNames[i], seriesNames[j]],
-            significant: Math.abs(spearmanCoff)
+            significant: Math.abs(spearmanCoff),
+            info: {
+              correlationType: spearmanCoff > 0 ? 'positive' : 'negative'
+            }
           } as unknown as VMindInsight);
         }
       }
