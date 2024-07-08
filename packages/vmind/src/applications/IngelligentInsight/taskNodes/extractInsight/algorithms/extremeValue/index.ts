@@ -6,7 +6,7 @@ import { InsightType } from '../../../../types';
 import { DEFAULT_SERIES_NAME } from '../../../dataProcess/constants';
 
 const getExtremeValue = (
-  dataset: DataItem[],
+  dataset: { index: number; dataItem: DataItem }[],
   measureId: string | number,
   seriesName: string,
   propsLowerThreshold?: number,
@@ -15,27 +15,33 @@ const getExtremeValue = (
   if (!dataset || dataset.length === 0) {
     return [];
   }
+
   const lowerThreshold = propsLowerThreshold ?? 0.2;
   const upperThreshold = propsUpperThreshold ?? 5;
 
   const result: VMindInsight[] = [];
-  const sum = dataset.reduce((prev, cur) => {
-    const value = isNumber(cur[measureId] as number) ? Math.abs(cur[measureId] as number) : 0;
-    return prev + value;
-  }, 0);
+  const sum = dataset
+    .map(d => d.dataItem)
+    .reduce((prev, cur) => {
+      const numValue = parseFloat(cur[measureId] as string);
+      const value = isNumber(numValue as number) ? Math.abs(numValue) : 0;
+      return prev + value;
+    }, 0);
   const avg = sum / dataset.length;
   if (avg - 0 <= Number.EPSILON) {
     return [];
   }
-  dataset.forEach(dataItem => {
-    const value = isNumber(dataItem[measureId] as number) ? Math.abs(dataItem[measureId] as number) : 0;
+  dataset.forEach(d => {
+    const numValue = parseFloat(d.dataItem[measureId] as string);
+
+    const value = isNumber(numValue as number) ? Math.abs(numValue as number) : 0;
 
     const percent = value / avg;
     if (percent > upperThreshold) {
       result.push({
         type: InsightType.ExtremeValue,
-        data: [dataItem] as any,
-        value: dataItem[measureId] as unknown as number,
+        data: [d] as any,
+        value: d.dataItem[measureId] as unknown as number,
         significant: percent / upperThreshold,
         fieldId: measureId,
         seriesName: seriesName === DEFAULT_SERIES_NAME ? undefined : seriesName,
@@ -49,8 +55,8 @@ const getExtremeValue = (
     if (percent - 0 > Number.EPSILON && percent < lowerThreshold) {
       result.push({
         type: InsightType.ExtremeValue,
-        data: [dataItem] as any,
-        value: dataItem[measureId] as unknown as number,
+        data: [d] as any,
+        value: d.dataItem[measureId] as unknown as number,
         significant: lowerThreshold / percent,
         fieldId: measureId,
         seriesName: seriesName === DEFAULT_SERIES_NAME ? undefined : seriesName,
@@ -84,7 +90,7 @@ const calcExtremeValue = (context: any): VMindInsight[] => {
 
 const ExtremeValue: InsightAlgorithm = {
   name: 'extremeValue',
-  chartType: [ChartType.BarChart, ChartType.LineChart],
+  chartType: [ChartType.BarChart, ChartType.LineChart, ChartType.RadarChart, ChartType.DualAxisChart],
   insightType: InsightType.ExtremeValue,
   algorithmFunction: calcExtremeValue
 };
