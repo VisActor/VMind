@@ -9,6 +9,7 @@ const getMajorityInGroup = (
   dataset: DataItem[],
   measureId: string | number,
   seriesId: string | number,
+  dimensionId: string | number,
   propsThreshold?: number
 ) => {
   const result: VMindInsight[] = [];
@@ -22,6 +23,7 @@ const getMajorityInGroup = (
   }
   dataset.forEach(dataItem => {
     const seriesName = dataItem[seriesId];
+    const dimensionName = dataItem[dimensionId];
     const seriesValue: number = isNumber(dataItem[measureId] as number) ? Math.abs(dataItem[measureId] as number) : 0;
     const ratio = seriesValue / sum;
     if (ratio > threshold) {
@@ -33,7 +35,8 @@ const getMajorityInGroup = (
         significant: ratio,
         seriesName: seriesName === DEFAULT_SERIES_NAME ? undefined : seriesName,
         info: {
-          ratio
+          ratio,
+          dimensionName
         }
       } as unknown as VMindInsight);
     }
@@ -59,7 +62,7 @@ const calcMajorityValue = (context: any) => {
 
   Object.keys(dimensionDataMap).forEach(dimension => {
     const dimensionDataset = dimensionDataMap[dimension];
-    const dimensionInsights = getMajorityInGroup(dimensionDataset, yField[0], groupField);
+    const dimensionInsights = getMajorityInGroup(dimensionDataset, yField[0], xField, groupField);
     result.push(...dimensionInsights);
   });
   return result;
@@ -67,7 +70,7 @@ const calcMajorityValue = (context: any) => {
 
 const LineChartMajorityValue: InsightAlgorithm = {
   name: 'majorityValue',
-  chartType: [ChartType.LineChart, ChartType.DualAxisChart],
+  chartType: [ChartType.BarChart, ChartType.RadarChart, ChartType.LineChart, ChartType.DualAxisChart],
   insightType: InsightType.MajorityValue,
   algorithmFunction: calcMajorityValue
 };
