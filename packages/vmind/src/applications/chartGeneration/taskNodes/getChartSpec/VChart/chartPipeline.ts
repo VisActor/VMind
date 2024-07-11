@@ -1,3 +1,4 @@
+import { ChartType } from '../../../../../common/typings';
 import type { Transformer } from '../../../../../base/tools/transformer';
 import type { GetChartSpecContext, GetChartSpecOutput } from '../types';
 import {
@@ -25,10 +26,6 @@ import {
   rankingBarField,
   customMark,
   scatterAxis,
-  animationOneByOne,
-  animationCartesianBar,
-  animationCartisianLine,
-  animationCartesianPie,
   wordCloudData,
   displayConfBar,
   displayConfLine,
@@ -46,7 +43,15 @@ import {
   waterfallStackLabel,
   boxPlotField,
   boxPlotStyle,
-  theme
+  theme,
+  liquidField,
+  liquidStyle,
+  linearProgressField,
+  circularProgressField,
+  circularProgressStyle,
+  linearProgressStyle,
+  linearProgressAxes,
+  indicator
 } from './transformers';
 
 const pipelineBar = [
@@ -145,6 +150,28 @@ const pipelineWaterfall = [chartType, data, color, waterfallField, waterfallAxes
 
 const pipelineBoxPlot = [chartType, data, color, boxPlotField, boxPlotStyle, legend, theme];
 
+const pipelineLiquid = [chartType, data, color, liquidField, liquidStyle, indicator, theme];
+
+const pipelineLinearProgress = [
+  chartType,
+  data,
+  color,
+  linearProgressField,
+  linearProgressAxes,
+  linearProgressStyle,
+  theme
+];
+
+const pipelineCircularProgress = [
+  chartType,
+  data,
+  color,
+  circularProgressField,
+  circularProgressStyle,
+  indicator,
+  theme
+];
+
 const pipelineMap: { [chartType: string]: any } = {
   'BAR CHART': pipelineBar,
   'LINE CHART': pipelineLine,
@@ -158,7 +185,10 @@ const pipelineMap: { [chartType: string]: any } = {
   'RADAR CHART': pipelineRadar,
   'SANKEY CHART': pipelineSankey,
   'WATERFALL CHART': pipelineWaterfall,
-  'BOX PLOT': pipelineBoxPlot
+  'BOX PLOT': pipelineBoxPlot,
+  [ChartType.LiquidChart.toUpperCase()]: pipelineLiquid,
+  [ChartType.LinearProgress.toUpperCase()]: pipelineLinearProgress,
+  [ChartType.CircularProgress.toUpperCase()]: pipelineCircularProgress
 };
 
 export const beforePipe: Transformer<GetChartSpecContext & GetChartSpecOutput, GetChartSpecOutput> = (

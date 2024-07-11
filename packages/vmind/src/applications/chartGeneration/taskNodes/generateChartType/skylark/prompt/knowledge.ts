@@ -60,5 +60,18 @@ export const chartKnowledgeBase: ChartKnowledgeBase = {
       'Dynamic Bar Chart can only be used when data has a field that is date type.'
     ],
     constraints: ['Use Dynamic Bar Chart if user want to show changes of rankings in data.']
+  },
+
+  [ChartType.LinearProgress]: {
+    knowledge: ['Linear progress chart shows progress value of one or more categories ']
+  },
+
+  [ChartType.CircularProgress]: {
+    knowledge: ['Circular progress chart shows progress value of one or more categories']
+  },
+
+  [ChartType.LiquidChart]: {
+    knowledge: ['Liquid chart show a percent value'],
+    constraints: ['Use Liquid Chart if user want to show a percent value']
   }
 };

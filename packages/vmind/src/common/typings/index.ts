@@ -72,7 +72,10 @@ export enum ChartType {
   FunnelChart = 'Funnel Chart',
   DualAxisChart = 'Dual Axis Chart',
   WaterFallChart = 'Waterfall Chart',
-  BoxPlot = 'Box Plot'
+  BoxPlot = 'Box Plot',
+  LinearProgress = 'Linear Progress chart',
+  CircularProgress = 'Circular Progress chart',
+  LiquidChart = 'Liquid Chart'
 }
 
 export type GPTChartAdvisorResult = {
