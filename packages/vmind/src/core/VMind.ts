@@ -247,7 +247,7 @@ class VMind {
 
   async intelligentInsight(spec: any, options?: Partial<InsightContext>): Promise<InsightOutput> {
     const modelType = this.getModelType();
-    const context: InsightContext = {
+    const context = {
       spec,
       llmOptions: this._options,
       ...options
