@@ -38,7 +38,9 @@ import {
   mockUserInput17,
   mockUserInput18,
   SalesRecordsData,
-  gmvData
+  gmvData,
+  mockProgressData,
+  liquidData
 } from '../../constants/mockData';
 import VMind, { ArcoTheme, builtinThemeMap, BuiltinThemeType } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
@@ -83,7 +85,9 @@ const demoDataList: { [key: string]: any } = {
   'Sales of different drinkings': mockUserInput3Eng,
   'Multi measure': mockUserInput17,
   DataQuery: mockUserInput18,
-  salesData: SalesRecordsData
+  salesData: SalesRecordsData,
+  progress: mockProgressData,
+  liquid: liquidData
 };
 
 const globalVariables = (import.meta as any).env;
