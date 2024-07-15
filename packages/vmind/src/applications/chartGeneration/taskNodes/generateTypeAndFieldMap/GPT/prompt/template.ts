@@ -2,6 +2,7 @@
 export const ChartAdvisorPromptEnglish = (
   showThoughts: boolean,
   supportedChartList: string[],
+  supportedUncommonChartList: string[],
   knowledge: string,
   visualChannels: string,
   constraints: string,
@@ -10,9 +11,9 @@ export const ChartAdvisorPromptEnglish = (
 User want to create an visualization chart for data video using data from a csv file. Ignore the duration in User Input.
 Your task is:
 1. Based on the user's input, infer the user's intention, such as comparison, ranking, trend display, proportion, distribution, etc. If user did not show their intention, just ignore and do the next steps.
-2. Select the single chart type that best suites the data from the list of supported charts. Supported chart types: ${JSON.stringify(
+2. Select the single chart type that best suites the data from the list of supported charts. If the user's input does not specify a chart type, do not use uncommon chart types. Supported chart types: ${JSON.stringify(
   supportedChartList
-)}.
+)}. Uncommon chart types: ${JSON.stringify(supportedUncommonChartList)}.
 3. Map all the fields in the data to the visual channels according to user input and the chart type you choose. Don't use non-existent fields. Only use existing fields without further processing. If the existing fields can't meet user's intention, just use the most related fields.
 ${knowledge.length > 0 ? '\nKnowledge' : ''}
 ${knowledge}

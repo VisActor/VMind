@@ -51,7 +51,33 @@ import {
   circularProgressStyle,
   linearProgressStyle,
   linearProgressAxes,
-  indicator
+  indicator,
+  bubbleCirclePackingField,
+  bubbleCirclePackingDisplayConf,
+  bubbleCirclePackingData,
+  rangeColumnField,
+  rangeColumnDisplayConf,
+  sunburstData,
+  sunburstDisplayConf,
+  treemapData,
+  sunburstOrTreemapField,
+  treemapDisplayConf,
+  gaugeField,
+  gaugeDisplayConf,
+  // linearProgressField,
+  // linearProgressDisplayConf,
+  arrayData,
+  vennData,
+  vennField,
+  basicHeatMapSeries,
+  basicHeatMapRegion,
+  basicHeatMapColor,
+  basicHeatMapAxes,
+  basicHeatMapLegend,
+  basemap,
+  mapField,
+  mapDisplayConf,
+  registerChart
 } from './transformers';
 
 const pipelineBar = [
@@ -153,24 +179,52 @@ const pipelineBoxPlot = [chartType, data, color, boxPlotField, boxPlotStyle, leg
 const pipelineLiquid = [chartType, data, color, liquidField, liquidStyle, indicator, theme];
 
 const pipelineLinearProgress = [
-  chartType,
-  data,
-  color,
-  linearProgressField,
-  linearProgressAxes,
-  linearProgressStyle,
-  theme
+    chartType,
+    data,
+    color,
+    linearProgressField,
+    linearProgressAxes,
+    linearProgressStyle,
+    theme
 ];
 
 const pipelineCircularProgress = [
+    chartType,
+    data,
+    color,
+    circularProgressField,
+    circularProgressStyle,
+    indicator,
+    theme
+];
+
+const pipelineBubbleCirclePacking = [
   chartType,
+  bubbleCirclePackingData,
   data,
   color,
-  circularProgressField,
-  circularProgressStyle,
-  indicator,
+  bubbleCirclePackingField,
+  bubbleCirclePackingDisplayConf,
   theme
 ];
+
+const pipelineMapChart = [chartType, basemap, arrayData, mapField, mapDisplayConf, theme];
+const pipelineRangeColumn = [chartType, data, rangeColumnField, rangeColumnDisplayConf, theme];
+const pipelineSunburst = [chartType, sunburstData, sunburstOrTreemapField, sunburstDisplayConf, theme];
+const pipelineTreemap = [chartType, treemapData, sunburstOrTreemapField, treemapDisplayConf, theme];
+const pipelineGauge = [chartType, arrayData, gaugeField, gaugeDisplayConf, theme];
+// const pipelineLinearProgress = [chartType, arrayData, linearProgressField, linearProgressDisplayConf, theme];
+const pipelineBasicHeatMap = [
+  chartType,
+  arrayData,
+  basicHeatMapSeries,
+  basicHeatMapRegion,
+  basicHeatMapColor,
+  basicHeatMapAxes,
+  basicHeatMapLegend,
+  theme
+];
+const pipelineVenn = [chartType, registerChart, vennData, vennField, legend, theme];
 
 const pipelineMap: { [chartType: string]: any } = {
   'BAR CHART': pipelineBar,
@@ -188,7 +242,17 @@ const pipelineMap: { [chartType: string]: any } = {
   'BOX PLOT': pipelineBoxPlot,
   [ChartType.LiquidChart.toUpperCase()]: pipelineLiquid,
   [ChartType.LinearProgress.toUpperCase()]: pipelineLinearProgress,
-  [ChartType.CircularProgress.toUpperCase()]: pipelineCircularProgress
+  [ChartType.CircularProgress.toUpperCase()]: pipelineCircularProgress,
+  'BOX PLOT': pipelineBoxPlot,
+  'BUBBLE CIRCLE PACKING': pipelineBubbleCirclePacking,
+  'MAP CHART': pipelineMapChart,
+  'RANGE COLUMN CHART': pipelineRangeColumn,
+  'SUNBURST CHART': pipelineSunburst,
+  'TREEMAP CHART': pipelineTreemap,
+  'GAUGE CHART': pipelineGauge,
+  // 'LINEAR PROGRESS CHART': pipelineLinearProgress,
+  'BASIC HEAT MAP': pipelineBasicHeatMap,
+  'VENN CHART': pipelineVenn
 };
 
 export const beforePipe: Transformer<GetChartSpecContext & GetChartSpecOutput, GetChartSpecOutput> = (

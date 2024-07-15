@@ -6,12 +6,13 @@ import {
   foldDatasetByYField,
   getFieldByDataType,
   getFieldByRole,
+  getFieldsByDataType,
   getRemainedFields
 } from '../../../../../../common/utils/utils';
-import { ChartType } from '../../../../../../common/typings';
-import { DataType, ROLE } from '../../../../../../common/typings';
+import { ChartType, DataType, ROLE } from '../../../../../../common/typings';
 import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
 import { isValidDataset } from '../../../../../../common/dataProcess';
+import { needSizeFieldChartList, needColorFieldChartList } from '../prompt/knowledges';
 
 const CARTESIAN_CHART_LIST = [
   'Dynamic Bar Chart',
@@ -21,7 +22,9 @@ const CARTESIAN_CHART_LIST = [
   'Funnel Chart',
   'Dual Axis Chart',
   'Waterfall Chart',
-  'Box Plot'
+  'Box Plot',
+  'Range Column Chart',
+  'linear Progress Chart'
 ];
 
 export const patchAxisField: Transformer<
@@ -96,7 +99,8 @@ export const patchYField: Transformer<
   if (y && isArray(y) && y.length > 1) {
     if (
       chartTypeNew === ('BOX PLOT' as ChartType) ||
-      (chartTypeNew === ('DUAL AXIS CHART' as ChartType) && y.length === 2)
+      (chartTypeNew === ('DUAL AXIS CHART' as ChartType) && y.length === 2) ||
+      (chartTypeNew === ('RANGE COLUMN CHART' as ChartType) && y.length === 2)
     ) {
       return {
         ...context
@@ -364,6 +368,163 @@ export const patchCartesianXField: Transformer<
   }
   return {
     //...context,
+    cell: cellNew
+  };
+};
+
+export const patchNeedColor: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell, fieldInfo } = context;
+  const cellNew: any = { ...cell };
+  if (needColorFieldChartList.some(needColorFieldChartType => needColorFieldChartType.toUpperCase() === chartType)) {
+    const colorField = [cellNew.color, cellNew.x, cellNew.label, (cellNew as any).sets].filter(Boolean).flat();
+    if (colorField.length !== 0) {
+      cellNew.color = colorField[0];
+    } else {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const colorField = getFieldByRole(remainedFields, ROLE.DIMENSION);
+      if (colorField) {
+        cellNew.color = colorField.fieldName;
+      } else {
+        cellNew.color = remainedFields[0].fieldName;
+      }
+    }
+  }
+  return {
+    cell: cellNew
+  };
+};
+
+export const patchNeedSize: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell, fieldInfo } = context;
+  const cellNew: any = { ...cell };
+  if (needSizeFieldChartList.some(needSizeFieldChartType => needSizeFieldChartType.toUpperCase() === chartType)) {
+    const sizeField = [cellNew.size, cellNew.value, cellNew.y, cellNew.radius, cellNew.angle].filter(Boolean).flat();
+    if (sizeField.length !== 0) {
+      cellNew.size = sizeField[0];
+    } else {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const sizeField = getFieldByRole(remainedFields, ROLE.MEASURE);
+      if (sizeField) {
+        cellNew.size = sizeField.fieldName;
+      } else {
+        cellNew.size = remainedFields[0].fieldName;
+      }
+    }
+  }
+  return {
+    cell: cellNew
+  };
+};
+
+export const patchRangeColumnChart: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  // Range Column Chart's y field must length == 2
+  const { chartType, cell, fieldInfo } = context;
+  const cellNew = { ...cell };
+  const remainedFields = getRemainedFields(cellNew, fieldInfo);
+  const numericFields = getFieldsByDataType(remainedFields, [DataType.FLOAT, DataType.INT]);
+  if (chartType === ('RANGE COLUMN CHART' as ChartType)) {
+    if (cellNew.y && cellNew.y instanceof Array && cellNew.y.length === 2) {
+      return { cell: cellNew };
+    }
+    if (numericFields.length >= 2) {
+      cellNew.y = [numericFields[0].fieldName, numericFields[1].fieldName];
+    } else {
+      throw Error(
+        'The y-axis of the range column chart requires two numeric fields, ' +
+          'but the result of data aggregation does not have two numeric fields'
+      );
+    }
+  }
+  return {
+    //...context,
+    cell: cellNew
+  };
+};
+
+export const patchLinearProgressChart: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell, fieldInfo } = context;
+  const cellNew = { ...cell };
+  if (chartType === ('Linear Progress Chart' as ChartType)) {
+    const yField = [cellNew.y, cellNew.size, cellNew.value, cellNew.radius, cellNew.angle].filter(Boolean).flat();
+    if (yField.length !== 0) {
+      cellNew.y = yField[0];
+    } else {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const yField = getFieldByRole(remainedFields, ROLE.MEASURE);
+      if (yField) {
+        cellNew.y = yField.fieldName;
+      } else {
+        cellNew.y = remainedFields[0].fieldName;
+      }
+    }
+  }
+  return {
+    //...context,
+    cell: cellNew
+  };
+};
+
+export const patchSunburstAndTreemapChart: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell } = context;
+  const cellNew: any = { ...cell };
+
+  if (chartType === ('SUNBURST CHART' as ChartType) || chartType === ('TREEMAP CHART' as ChartType)) {
+    cellNew.y = [cellNew.y, cellNew.value, cellNew.radius, cellNew.size, cellNew.angle].filter(Boolean).flat();
+    if (cellNew.y.length !== 0) {
+      cellNew.y = cellNew.y[0];
+    } else {
+      throw Error(
+        'The y-axis of the sunburst chart and the treemap chart requires a numeric field,' +
+          'but the result of data aggregation does not have a numeric field'
+      );
+    }
+  }
+
+  return {
+    //...context,
+    cell: cellNew
+  };
+};
+
+export const patchBasicHeatMapChart: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell, fieldInfo } = context;
+  const cellNew: any = { ...cell };
+  if (chartType === ('BASIC HEAT MAP' as ChartType)) {
+    const colorField = [cellNew.x, cellNew.y, cellNew.label, cellNew.color].filter(Boolean).flat();
+    if (colorField.length >= 2) {
+      cellNew.x = colorField[0];
+      cellNew.y = colorField[1];
+    } else {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const colorField = getFieldsByDataType(remainedFields, [DataType.STRING]);
+      if (colorField.length >= 2) {
+        cellNew.x = colorField[0];
+        cellNew.y = colorField[1];
+      } else {
+        cellNew.x = remainedFields[0].fieldName;
+        cellNew.y = remainedFields[1].fieldName;
+      }
+    }
+  }
+  return {
     cell: cellNew
   };
 };

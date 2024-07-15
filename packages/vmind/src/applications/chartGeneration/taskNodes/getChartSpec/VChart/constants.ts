@@ -12,6 +12,8 @@ export const LINEAR_COLOR_THEMES = [
   ['#1DD0F3', '#CB2BC6']
 ];
 
+export const BASIC_HEAT_MAP_COLOR_THEMES = ['#feedde', '#fdbe85', '#fd8d3c', '#e6550d', '#a63603'];
+
 export const animationDuration = 500;
 export const oneByOneGroupSize = 10;
 export const DEFAULT_VIDEO_LENGTH = 2000;

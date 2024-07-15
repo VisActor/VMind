@@ -6,13 +6,19 @@ import { chartGenerationRequestLLM, parseChartGenerationResponse } from './utils
 import { GPTChartGenerationPrompt } from './prompt';
 import {
   patchAxisField,
+  patchBasicHeatMapChart,
   patchBoxPlot,
   patchCartesianXField,
   patchColorField,
   patchDualAxis,
   patchDynamicBarChart,
   patchLabelField,
+  patchLinearProgressChart,
+  patchNeedColor,
+  patchNeedSize,
   patchPieChart,
+  patchRangeColumnChart,
+  patchSunburstAndTreemapChart,
   patchWordCloud,
   patchYField
 } from './patcher';
@@ -34,11 +40,17 @@ const ChartGenerationTaskNodeGPTMeta: LLMBasedTaskNodeMeta<
     patchColorField,
     patchLabelField,
     patchYField,
+    patchNeedColor,
+    patchNeedSize,
     patchBoxPlot,
     patchDualAxis,
     patchPieChart,
     patchWordCloud,
     patchDynamicBarChart,
+    patchRangeColumnChart,
+    patchLinearProgressChart,
+    patchSunburstAndTreemapChart,
+    patchBasicHeatMapChart,
     patchCartesianXField
   ],
   requester: chartGenerationRequestLLM,
