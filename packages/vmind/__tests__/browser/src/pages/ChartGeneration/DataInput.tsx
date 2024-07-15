@@ -40,7 +40,16 @@ import {
   SalesRecordsData,
   gmvData,
   mockProgressData,
-  liquidData
+  liquidData,
+  bubbleCirclePackingData,
+  rangeColumnChartData,
+  sunburstChartData,
+  treemapChartData,
+  gaugeChartData,
+  linearProgressChartData,
+  basicHeatMapChartData,
+  vennChartData,
+  mapChartData
 } from '../../constants/mockData';
 import VMind, { ArcoTheme, builtinThemeMap, BuiltinThemeType } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
@@ -87,7 +96,16 @@ const demoDataList: { [key: string]: any } = {
   DataQuery: mockUserInput18,
   salesData: SalesRecordsData,
   progress: mockProgressData,
-  liquid: liquidData
+  liquid: liquidData,
+  BubbleCirclePacking: bubbleCirclePackingData,
+  Map: mapChartData,
+  RangeColumn: rangeColumnChartData,
+  Sunburst: sunburstChartData,
+  TreeMap: treemapChartData,
+  Gauge: gaugeChartData,
+  LinearProgress: linearProgressChartData,
+  BasicHeatMap: basicHeatMapChartData,
+  Venn: vennChartData
 };
 
 const globalVariables = (import.meta as any).env;

@@ -3,24 +3,40 @@ import { ChartType } from '../../../../../../common/typings';
 import { barChartExample1, dynamicBarChart1, lineChartExample1, lineChartExample2, pieChartExample1 } from './examples';
 import type { ChartKnowledge } from './types';
 
+export const needColorFieldChartList = [
+  ChartType.WordCloud,
+  ChartType.PieChart,
+  ChartType.RoseChart,
+  ChartType.MapChart,
+  ChartType.BubbleCirclePacking,
+  ChartType.VennChart,
+  ChartType.Gauge
+];
+
+export const needSizeFieldChartList = [
+  ChartType.ScatterPlot,
+  ChartType.WordCloud,
+  ChartType.MapChart,
+  ChartType.BubbleCirclePacking,
+  ChartType.VennChart,
+  ChartType.Gauge,
+  ChartType.BasicHeatMap
+];
+
 const getColorKnowledge = (chartTypeList: ChartType[]) => {
-  if (
-    chartTypeList.includes(ChartType.WordCloud) ||
-    chartTypeList.includes(ChartType.PieChart) ||
-    chartTypeList.includes(ChartType.RoseChart)
-  ) {
-    const validChartList = [ChartType.WordCloud, ChartType.PieChart, ChartType.RoseChart];
-    const includedCharts = chartTypeList.filter(chart => validChartList.includes(chart));
+  const validSet = new Set(chartTypeList);
+  if (needColorFieldChartList.some(chartType => validSet.has(chartType))) {
+    const includedCharts = chartTypeList.filter(chart => needColorFieldChartList.includes(chart));
     return ", can't be empty in " + includedCharts.join(', ') + '.';
   }
   return '.';
 };
 
 const getSizeKnowledge = (chartTypeList: ChartType[]) => {
-  if (chartTypeList.includes(ChartType.ScatterPlot) || chartTypeList.includes(ChartType.WordCloud)) {
-    const validChartList = [ChartType.ScatterPlot, ChartType.WordCloud];
-    const includedCharts = chartTypeList.filter(chart => validChartList.includes(chart));
-    return ' Only used in ' + includedCharts.join(' and ') + '.';
+  const validSet = new Set(chartTypeList);
+  if (needSizeFieldChartList.some(chartType => validSet.has(chartType))) {
+    const includedCharts = chartTypeList.filter(chart => needSizeFieldChartList.includes(chart));
+    return ' Only used in ' + includedCharts.join(' , ') + '.';
   }
   return '.';
 };
@@ -32,7 +48,7 @@ export const visualChannelInfoMap = {
   color: (chartTypeList: ChartType[]) =>
     `the field mapped to the color channel. Must use a string field${getColorKnowledge(chartTypeList)}`,
   size: (chartTypeList: ChartType[]) =>
-    `the field mapped to the size channel. Must use a number field.${getSizeKnowledge(chartTypeList)}`,
+    `the field mapped to the size channel. Must use a number field${getSizeKnowledge(chartTypeList)}`,
   angle: (chartTypeList: ChartType[]) =>
     "the field mapped to the angle channel of the pie chart. Can't be empty in Pie Chart.",
   radius: (chartTypeList: ChartType[]) =>
@@ -44,7 +60,9 @@ export const visualChannelInfoMap = {
   target: (chartTypeList: ChartType[]) =>
     "the field mapped to the target channel. Only used in Sankey Chart. Can't be empty in Sankey Chart.",
   value: (chartTypeList: ChartType[]) =>
-    "the field mapped to the value channel. Only used in Sankey Chart. Can't be empty in Sankey Chart."
+    "the field mapped to the value channel. Only used in Sankey Chart. Can't be empty in Sankey Chart.",
+  group: (chartTypeList: ChartType[]) =>
+    "the field mapped to the value channel. Only used in Venn Chart. Can't be empty in Venn Chart. Digital IDs are often used to distinguish whether data is in the same group."
 };
 export const chartKnowledgeDict: ChartKnowledge = {
   [ChartType.BarChart]: {
@@ -141,6 +159,64 @@ export const chartKnowledgeDict: ChartKnowledge = {
     knowledge: [
       'Circular progress chart is also used to display progress data, presented in a circular form, with the values on the numerical axis typically ranging from 0 to 1.'
     ]
+  },
+  [ChartType.BubbleCirclePacking]: {
+    index: 17,
+    visualChannels: ['color', 'size'],
+    examples: [],
+    knowledge: []
+  },
+  [ChartType.MapChart]: {
+    index: 18,
+    visualChannels: ['color', 'size'],
+    examples: [],
+    knowledge: []
+  },
+  [ChartType.RangeColumnChart]: {
+    index: 19,
+    visualChannels: ['y', 'x'],
+    examples: [],
+    knowledge: []
+  },
+  [ChartType.SunburstChart]: {
+    index: 20,
+    visualChannels: ['x', 'y'],
+    examples: [],
+    knowledge: [
+      'The x field of a sunburst chart can be an array. The order of the elements in the array needs to be sorted from large to small according to the coverage described by the data field.'
+    ]
+  },
+  [ChartType.TreemapChart]: {
+    index: 21,
+    visualChannels: ['x', 'y'],
+    examples: [],
+    knowledge: [
+      'The x field of a treemap chart can be an array. The order of the elements in the array needs to be sorted from large to small according to the coverage described by the data field.'
+    ]
+  },
+  [ChartType.Gauge]: {
+    index: 22,
+    visualChannels: ['color', 'size'],
+    examples: [],
+    knowledge: ['The gauge chart must contain two fields: size and color.']
+  },
+  // [ChartType.LinearProgressChart]: {
+  //   index: 23,
+  //   visualChannels: ['y', 'x'],
+  //   examples: [],
+  //   knowledge: []
+  // },
+  [ChartType.BasicHeatMap]: {
+    index: 24,
+    visualChannels: ['y', 'x', 'size'],
+    examples: [],
+    knowledge: []
+  },
+  [ChartType.VennChart]: {
+    index: 25,
+    visualChannels: ['size', 'color', 'group'],
+    examples: [],
+    knowledge: ['The venn chart must contain three fields: group, size and color.']
   }
 };
 

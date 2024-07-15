@@ -78,6 +78,9 @@ export const getFieldByRole = (fields: SimpleFieldInfo[], role: ROLE) => {
 export const getFieldByDataType = (fields: SimpleFieldInfo[], dataTypeList: DataType[]) => {
   return fields.find(f => dataTypeList.includes(f.type));
 };
+export const getFieldsByDataType = (fields: SimpleFieldInfo[], dataTypeList: DataType[]) => {
+  return fields.filter(f => dataTypeList.includes(f.type));
+};
 
 export const foldDatasetByYField = (
   dataset: DataItem[],

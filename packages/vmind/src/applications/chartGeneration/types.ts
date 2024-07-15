@@ -1,6 +1,6 @@
 export type Cell = {
   //字段映射，可用的视觉通道：["x","y","color","size","angle","time"]
-  x?: string;
+  x?: string | string[];
   y?: string | string[];
   color?: string;
   size?: string;
@@ -11,4 +11,5 @@ export type Cell = {
   target?: string;
   value?: string;
   category?: string;
+  group?: string;
 };

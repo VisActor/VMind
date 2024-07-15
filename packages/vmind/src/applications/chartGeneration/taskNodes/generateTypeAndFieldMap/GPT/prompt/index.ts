@@ -39,7 +39,7 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
     super('');
   }
   getSystemPrompt(context: GenerateChartAndFieldMapContext) {
-    const { llmOptions, chartTypeList } = context;
+    const { llmOptions, chartTypeList, uncommonChartTypeList } = context;
     const showThoughts = llmOptions.showThoughts ?? true;
 
     const sortedChartTypeList = chartTypeList.sort((a, b) => chartKnowledgeDict[a].index - chartKnowledgeDict[b].index);
@@ -75,6 +75,7 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
     const QueryDatasetPrompt = ChartAdvisorPromptEnglish(
       showThoughts,
       chartTypeList,
+      uncommonChartTypeList,
       knowledgeStr,
       visualChannelsStr,
       constraintsStr,
