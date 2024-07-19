@@ -18,7 +18,7 @@ import {
 import { getFieldByDataType } from '../../../../../common/utils/utils';
 import { array, isArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
-import { DataType, ChartTheme } from '../../../../../common/typings';
+import { DataType, ChartType } from '../../../../../common/typings';
 import { builtinThemeMap } from '../../../../../common/builtinTheme';
 import { COLOR_FIELD } from '@visactor/chart-advisor';
 
@@ -37,7 +37,10 @@ const chartTypeMap: { [chartName: string]: string } = {
   'RADAR CHART': 'radar',
   'SANKEY CHART': 'sankey',
   'WATERFALL CHART': 'waterfall',
-  'BOX PLOT': 'boxPlot'
+  'BOX PLOT': 'boxPlot',
+  [ChartType.LiquidChart.toUpperCase()]: 'liquid',
+  [ChartType.LinearProgress.toUpperCase()]: 'linearProgress',
+  [ChartType.CircularProgress.toUpperCase()]: 'circularProgress'
 };
 
 export const chartType: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
@@ -1237,5 +1240,148 @@ export const theme: Transformer<Context, GetChartSpecOutput> = (context: Context
     spec.color = undefined;
   }
 
+  return { spec };
+};
+
+export const liquidField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { cell, dataset, spec } = context;
+
+  spec.valueField = cell.value;
+  spec.indicatorSmartInvert = true;
+
+  return { spec };
+};
+
+export const liquidStyle: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.liquid = {
+    ...spec.liquid,
+    style: {}
+  };
+  return { spec };
+};
+
+export const linearProgressField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  //assign field in spec according to cell
+  const { cell, spec } = context;
+
+  spec.xField = cell.y;
+  spec.yField = cell.x;
+  if (cell.color) {
+    spec.seriesField = cell.color;
+  }
+  spec.cornerRadius = 20;
+
+  return { spec };
+};
+
+export const linearProgressAxes: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  //assign field in spec according to cell
+  const { cell, spec } = context;
+  const hasSingleData = spec.data.values && spec.data.values.length === 1;
+
+  spec.axes = [
+    {
+      orient: 'left',
+      type: 'band',
+      domainLine: { visible: false },
+      tick: { visible: false },
+      label: {
+        formatMethod: hasSingleData ? val => `${cell.x}: ${val}` : null,
+        style: {
+          fontSize: 16
+        }
+      }
+    },
+    {
+      orient: 'bottom',
+      type: 'linear',
+      visible: true,
+      grid: {
+        visible: false
+      },
+      label: {
+        formatMethod: (val: number) => {
+          return val >= 0 && val <= 1 ? `${val * 100}%` : val;
+        },
+        flush: true
+      }
+    }
+  ];
+
+  return { spec };
+};
+
+export const linearProgressStyle: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.progress = {
+    ...spec.progress,
+    style: {}
+  };
+  return { spec };
+};
+
+export const circularProgressField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  //assign field in spec according to cell
+  const { cell, spec } = context;
+
+  spec.categoryField = cell.radius;
+  spec.valueField = cell.value;
+  if (cell.color) {
+    spec.seriesField = cell.color;
+  }
+
+  spec.radius = 0.8;
+  spec.innerRadius = 0.7;
+  spec.roundCap = true;
+  spec.cornerRadius = 20;
+
+  return { spec };
+};
+
+export const circularProgressStyle: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.progress = {
+    ...spec.progress,
+    style: {}
+  };
+  return { spec };
+};
+
+export const indicator: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cell } = context;
+  const firstEntry = spec.data.values[0];
+  if (!firstEntry) {
+    return { spec };
+  }
+  const valueField = (cell.value ?? cell.y) as string;
+  const value = firstEntry[valueField];
+  const cat = firstEntry[cell.radius ?? cell.x];
+
+  spec.indicator = {
+    visible: true,
+    fixed: true,
+    trigger: 'none',
+    title: {
+      visible: true,
+      autoLimit: true,
+      space: 12,
+      style: {
+        fontSize: 16,
+        fill: 'gray',
+        text: cat ?? valueField
+      }
+    },
+    content: [
+      {
+        visible: true,
+        style: {
+          fontSize: 20,
+          fill: '#000',
+          text: value >= 0 && value <= 1 ? `${(value * 100).toFixed(2)}%` : `${value}`
+        }
+      }
+    ]
+  };
   return { spec };
 };

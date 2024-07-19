@@ -4855,3 +4855,15 @@ export const mockUserTextInput10 = {
 
 如果你需要了解更多股市指数波动信息，可以访问财经新闻网站或咨询专业的投资顾问。`
 };
+
+export const mockProgressData = {
+  csv: `年份,进度
+ 2024,0.56`,
+  input: '帮我展示今年的进度数据'
+};
+
+export const liquidData = {
+  csv: `进度
+ 0.56`,
+  input: '展示进度数据'
+};
