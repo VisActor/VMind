@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import './index.scss';
 import { Button, Input, Card, Space, Modal, Spin } from '@arco-design/web-react';
-import VChart from '@visactor/vchart';
+import VChart, { registerLiquidChart } from '@visactor/vchart';
 import { ManualTicker, defaultTimeline } from '@visactor/vrender-core';
 import VMind from '../../../../../src';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
@@ -35,6 +35,8 @@ function downloadVideo(link: string, filename = 'out') {
   a.download = `${filename}.mp4`;
   a.dispatchEvent(new MouseEvent('click'));
 }
+
+registerLiquidChart();
 
 export function ChartPreview(props: IPropsType) {
   const [generating, setGenerating] = useState<boolean>(false);

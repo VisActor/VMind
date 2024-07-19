@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+import { ChartType } from '../../../../../../common/typings';
 import type { ChannelInfo } from './types';
 
 export const ChartFieldInfo: ChannelInfo = {
@@ -203,6 +204,57 @@ export const ChartFieldInfo: ChannelInfo = {
       'Only use categorical field can be used in x channel',
       "time channel can't be empty",
       'Only date fields can be used in time channel.'
+    ]
+  },
+
+  [ChartType.LinearProgress.toUpperCase()]: {
+    visualChannels: {
+      x: "x-axis of bar chart. Can't be empty. Can only use categorical field.",
+      y: "y-axis of bar chart. Can't be empty. Only number fields",
+      color:
+        'color channel of bar. Used to distinguish different bars. Only categorical fields. Can be empty if no suitable field.'
+    },
+    responseDescription: {
+      x: 'field assigned to x channel',
+      y: 'field assigned to y channel',
+      color: 'field assigned to color channel'
+    },
+    knowledge: [
+      "x-axis in linear progress chart can only be a categorical field. Don't use time field",
+      'Only use categorical field can be used in x channel',
+      'y field can not be empty'
+    ]
+  },
+
+  [ChartType.CircularProgress.toUpperCase()]: {
+    visualChannels: {
+      x: "x-axis of bar chart. Can't be empty. Can only use categorical field.",
+      y: "y-axis of bar chart. Can't be empty. Only number fields",
+      color:
+        'color channel of bar. Used to distinguish different bars. Only categorical fields. Can be empty if no suitable field.'
+    },
+    responseDescription: {
+      x: 'field assigned to x channel',
+      y: 'field assigned to y channel',
+      color: 'field assigned to color channel'
+    },
+    knowledge: [
+      "x-axis in linear progress chart can only be a categorical field. Don't use time field",
+      'Only use categorical field can be used in x channel',
+      'y field can not be empty'
+    ]
+  },
+
+  [ChartType.LiquidChart.toUpperCase()]: {
+    visualChannels: {
+      value: "value field of liquid chart. Can't be empty. Only number fields"
+    },
+    responseDescription: {
+      value: 'field assigned to value channel'
+    },
+    knowledge: [
+      'Liquid chart is used to display a single value, with the value range typically from 0 to 1.',
+      'The value usually represents progress, completion, or percentage, and is associated with only one field'
     ]
   }
 };

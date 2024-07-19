@@ -117,6 +117,30 @@ export const chartKnowledgeDict: ChartKnowledge = {
     knowledge: [
       'Dynamic Bar Chart is a dynamic chart that is suitable for displaying changing data and can be used to show ranking, comparisons or data changes over time. It usually has a time field. It updates the data dynamically according to the time field.'
     ]
+  },
+  [ChartType.LiquidChart]: {
+    index: 14,
+    visualChannels: ['x', 'y'],
+    examples: [],
+    knowledge: [
+      'Liquid chart is used to display a single value, with the value range typically from 0 to 1. The value usually represents progress, completion, or percentage, and is associated with only one field'
+    ]
+  },
+  [ChartType.LinearProgress]: {
+    index: 15,
+    visualChannels: ['x', 'y'],
+    examples: [],
+    knowledge: [
+      'Linear Progress chart is typically used to display progress data, which is usually a value between 0 and 1. Linear progress bars can show single progress values as well as multiple progress values. By default, the left Y-axis of the linear progress bar is the categorical field, and the bottom X-axis is the numerical field.'
+    ]
+  },
+  [ChartType.CircularProgress]: {
+    index: 16,
+    visualChannels: ['x', 'y'],
+    examples: [],
+    knowledge: [
+      'Circular progress chart is also used to display progress data, presented in a circular form, with the values on the numerical axis typically ranging from 0 to 1.'
+    ]
   }
 };
 
