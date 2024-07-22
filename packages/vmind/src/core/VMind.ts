@@ -8,7 +8,6 @@ import type {
   VMindDataset,
   ChartType,
   ChartTheme,
-  UncommonChartType,
   BasemapOption
 } from '../common/typings';
 import { Model, ModelType } from '../common/typings';
@@ -25,11 +24,7 @@ import type {
 import applicationMetaList, { ApplicationType } from '../applications';
 import { calculateTokenUsage } from '../common/utils/utils';
 import { isNil } from '@visactor/vutils';
-import {
-  DEFAULT_MAP_OPTION,
-  SUPPORTED_CHART_LIST,
-  SUPPORTED_UNCOMMON_CHART_LIST
-} from '../applications/chartGeneration/constants';
+import { DEFAULT_MAP_OPTION, SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
 import { fillSpecTemplateWithData } from '../common/specUtils';
 import type { ApplicationMeta, TaskNode } from '../base/metaTypes';
@@ -176,7 +171,6 @@ class VMind {
    * @param colorPalette color palette of the chart
    * @param animationDuration duration of chart animation.
    * @param chartTypeList supported chart list. VMind will generate a chart among this list.
-   * @param uncommonChartTypeList uncommon chart types. If the user does not specify a type, uncommon types are not considered.
    * @param basemapOption map chart's base map. Only use in map chart.
    * @returns spec and time duration of the chart.
    */
@@ -190,7 +184,6 @@ class VMind {
       animationDuration?: number;
       enableDataQuery?: boolean;
       theme?: ChartTheme | string;
-      uncommonChartTypeList?: UncommonChartType[];
       basemapOption?: BasemapOption;
     }
   ): Promise<ChartGenerationOutput> {
@@ -199,15 +192,7 @@ class VMind {
     let finalFieldInfo = fieldInfo;
 
     let queryDatasetUsage;
-    const {
-      enableDataQuery,
-      colorPalette,
-      animationDuration,
-      theme,
-      chartTypeList,
-      uncommonChartTypeList,
-      basemapOption
-    } = options ?? {};
+    const { enableDataQuery, colorPalette, animationDuration, theme, chartTypeList, basemapOption } = options ?? {};
     try {
       if (!isNil(dataset) && (isNil(enableDataQuery) || enableDataQuery) && modelType !== ModelType.CHART_ADVISOR) {
         //run data aggregation first
@@ -242,7 +227,6 @@ class VMind {
       totalTime: animationDuration,
       chartTheme: theme,
       chartTypeList: chartTypeList ?? SUPPORTED_CHART_LIST,
-      uncommonChartTypeList: uncommonChartTypeList ?? SUPPORTED_UNCOMMON_CHART_LIST,
       basemapOption: basemapOption ?? DEFAULT_MAP_OPTION
     };
 

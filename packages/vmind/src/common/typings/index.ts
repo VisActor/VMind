@@ -87,18 +87,6 @@ export enum ChartType {
   VennChart = 'Venn Chart'
 }
 
-export enum UncommonChartType {
-  BubbleCirclePacking = 'Bubble Circle Packing',
-  MapChart = 'Map Chart',
-  RangeColumnChart = 'Range Column Chart',
-  SunburstChart = 'Sunburst Chart',
-  TreemapChart = 'Treemap Chart',
-  Gauge = 'Gauge Chart',
-  LinearProgressChart = 'Linear Progress Chart',
-  BasicHeatMap = 'Basic Heat Map',
-  VennChart = 'Venn Chart'
-}
-
 export type GPTChartAdvisorResult = {
   CHART_TYPE: ChartType;
   DOUBLE_CHECK: string;
