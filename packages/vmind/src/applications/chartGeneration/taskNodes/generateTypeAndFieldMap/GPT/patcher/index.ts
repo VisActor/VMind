@@ -12,7 +12,7 @@ import {
 import { ChartType, DataType, ROLE } from '../../../../../../common/typings';
 import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
 import { isValidDataset } from '../../../../../../common/dataProcess';
-import { needSizeFieldChartList, needColorFieldChartList } from '../prompt/knowledges';
+import { NEED_SIZE_FIELD_CHART_LIST, NEED_COLOR_FIELD_CHART_LIST } from '../../../../constants';
 
 const CARTESIAN_CHART_LIST = [
   'Dynamic Bar Chart',
@@ -378,7 +378,9 @@ export const patchNeedColor: Transformer<
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
   const { chartType, cell, fieldInfo } = context;
   const cellNew: any = { ...cell };
-  if (needColorFieldChartList.some(needColorFieldChartType => needColorFieldChartType.toUpperCase() === chartType)) {
+  if (
+    NEED_COLOR_FIELD_CHART_LIST.some(needColorFieldChartType => needColorFieldChartType.toUpperCase() === chartType)
+  ) {
     const colorField = [cellNew.color, cellNew.x, cellNew.label, (cellNew as any).sets].filter(Boolean).flat();
     if (colorField.length !== 0) {
       cellNew.color = colorField[0];
@@ -403,7 +405,7 @@ export const patchNeedSize: Transformer<
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
   const { chartType, cell, fieldInfo } = context;
   const cellNew: any = { ...cell };
-  if (needSizeFieldChartList.some(needSizeFieldChartType => needSizeFieldChartType.toUpperCase() === chartType)) {
+  if (NEED_SIZE_FIELD_CHART_LIST.some(needSizeFieldChartType => needSizeFieldChartType.toUpperCase() === chartType)) {
     const sizeField = [cellNew.size, cellNew.value, cellNew.y, cellNew.radius, cellNew.angle].filter(Boolean).flat();
     if (sizeField.length !== 0) {
       cellNew.size = sizeField[0];
