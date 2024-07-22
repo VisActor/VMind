@@ -2,31 +2,12 @@
 import { ChartType } from '../../../../../../common/typings';
 import { barChartExample1, dynamicBarChart1, lineChartExample1, lineChartExample2, pieChartExample1 } from './examples';
 import type { ChartKnowledge } from './types';
-
-export const needColorFieldChartList = [
-  ChartType.WordCloud,
-  ChartType.PieChart,
-  ChartType.RoseChart,
-  ChartType.MapChart,
-  ChartType.BubbleCirclePacking,
-  ChartType.VennChart,
-  ChartType.Gauge
-];
-
-export const needSizeFieldChartList = [
-  ChartType.ScatterPlot,
-  ChartType.WordCloud,
-  ChartType.MapChart,
-  ChartType.BubbleCirclePacking,
-  ChartType.VennChart,
-  ChartType.Gauge,
-  ChartType.BasicHeatMap
-];
+import { NEED_SIZE_FIELD_CHART_LIST, NEED_COLOR_FIELD_CHART_LIST } from '../../../../constants';
 
 const getColorKnowledge = (chartTypeList: ChartType[]) => {
   const validSet = new Set(chartTypeList);
-  if (needColorFieldChartList.some(chartType => validSet.has(chartType))) {
-    const includedCharts = chartTypeList.filter(chart => needColorFieldChartList.includes(chart));
+  if (NEED_COLOR_FIELD_CHART_LIST.some(chartType => validSet.has(chartType))) {
+    const includedCharts = chartTypeList.filter(chart => NEED_COLOR_FIELD_CHART_LIST.includes(chart));
     return ", can't be empty in " + includedCharts.join(', ') + '.';
   }
   return '.';
@@ -34,8 +15,8 @@ const getColorKnowledge = (chartTypeList: ChartType[]) => {
 
 const getSizeKnowledge = (chartTypeList: ChartType[]) => {
   const validSet = new Set(chartTypeList);
-  if (needSizeFieldChartList.some(chartType => validSet.has(chartType))) {
-    const includedCharts = chartTypeList.filter(chart => needSizeFieldChartList.includes(chart));
+  if (NEED_SIZE_FIELD_CHART_LIST.some(chartType => validSet.has(chartType))) {
+    const includedCharts = chartTypeList.filter(chart => NEED_SIZE_FIELD_CHART_LIST.includes(chart));
     return ' Only used in ' + includedCharts.join(' , ') + '.';
   }
   return '.';
