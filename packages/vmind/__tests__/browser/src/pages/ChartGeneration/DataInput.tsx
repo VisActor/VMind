@@ -126,6 +126,8 @@ export function DataInput(props: IPropsType) {
       cache,
       showThoughts: showThoughts,
       headers: {
+        //must has Authorization: `Bearer ${openAIKey}` if use openai api
+        Authorization: `Bearer ${apiKey}`,
         'api-key': apiKey
       }
     });

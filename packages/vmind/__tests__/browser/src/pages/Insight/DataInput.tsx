@@ -90,6 +90,7 @@ export function DataInput(props: IPropsType) {
       cache,
       showThoughts: showThoughts,
       headers: {
+        Authorization: `Bearer ${apiKey}`,
         'api-key': apiKey
       }
     });

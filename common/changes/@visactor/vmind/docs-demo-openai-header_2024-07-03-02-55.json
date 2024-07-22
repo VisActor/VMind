@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vmind",
+      "comment": "set all headers in all cases",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vmind"
+}
