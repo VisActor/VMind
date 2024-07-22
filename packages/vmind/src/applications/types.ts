@@ -8,7 +8,6 @@ import type {
 } from '../common/typings';
 import type { Cell } from './chartGeneration/types';
 import type { InsightAlgorithm, VMindInsight } from './IngelligentInsight/types';
-import type { UncommonChartType } from '../common/typings';
 
 //context of the DataExtraction Application
 export type DataExtractionContext = {
@@ -46,7 +45,6 @@ export type ChartGenerationContext = {
   fieldInfo: SimpleFieldInfo[];
   dataset?: VMindDataset;
   chartTypeList: ChartType[]; //supported chart list
-  uncommonChartTypeList: UncommonChartType[]; //supported uncommon chart list
   basemapOption: BasemapOption; // only use in map chart
 } & {
   totalTime?: number;
