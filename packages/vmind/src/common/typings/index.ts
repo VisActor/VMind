@@ -216,7 +216,6 @@ export enum MapRegionCoordinate {
 }
 
 export type BasemapOption = {
-  jsonUrl: string;
   regionProjectType: mapRegionProjectionType;
   regionCoordinate: MapRegionCoordinate;
   zoom: number;

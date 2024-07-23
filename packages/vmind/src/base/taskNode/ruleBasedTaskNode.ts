@@ -32,7 +32,7 @@ export class RuleBasedTaskNode<Context, Result> extends BaseTaskNode<Context, Re
    * @param context initial context
    * @returns
    */
-  async executeTask(context: Context): Promise<Result | TaskError> {
+  executeTask(context: Context): Result | TaskError {
     this.updateContext({ ...this.context, ...context });
     let pipelines = this.pipelines;
     if (isFunction(this.pipelines)) {
@@ -40,10 +40,13 @@ export class RuleBasedTaskNode<Context, Result> extends BaseTaskNode<Context, Re
     }
 
     try {
-      let result: any = context;
-      for (const transformer of pipelines as Transformer<Context, Result>[]) {
-        result = { ...result, ...(await transformer(result)) };
-      }
+      const result: Result = (pipelines as Transformer<Context, Result>[]).reduce(
+        (pre: any, transformer: Transformer<Context, Result>) => {
+          const res = transformer(pre);
+          return { ...pre, ...res };
+        },
+        context
+      );
       return result;
     } catch (e: any) {
       console.error(`${this.name} error!`);
