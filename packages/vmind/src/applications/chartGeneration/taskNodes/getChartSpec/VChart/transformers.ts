@@ -753,7 +753,7 @@ export const cartesianBar: Transformer<Context, GetChartSpecOutput> = (context: 
   const cellNew = { ...cell };
   const flattenedXField = Array.isArray(cell.x) ? cell.x : [cell.x];
   if (cell.color && cell.color.length > 0 && cell.color !== cell.x) {
-    flattenedXField.push(cell.color);
+    flattenedXField.push(cell.color as string);
   }
   spec.xField = flattenedXField;
   spec.yField = cell.y;
@@ -1155,7 +1155,7 @@ export const animationCartesianPie: Transformer<Context, GetChartSpecOutput> = (
   const { spec } = context;
 
   const totalTime = context.totalTime ?? DEFAULT_PIE_VIDEO_LENGTH;
-  const groupKey = context.cell.color;
+  const groupKey = context.cell.color as string;
   const dataValues = spec.data.values as any[];
   const groupNum = dataValues.map(d => d[groupKey!]).filter(onlyUnique).length;
   //const delay = totalTime / groupNum - 1000;
@@ -1470,21 +1470,21 @@ export const rangeColumnDisplayConf: Transformer<Context, GetChartSpecOutput> = 
 
 export const sunburstData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   const { dataset, cell, spec } = context;
-  spec.data = { id: 'data', values: getSunburstData(dataset, cell.x, 0, cell.y) };
+  spec.data = { id: 'data', values: getSunburstData(dataset, cell.color, 0, cell.size) };
   return { spec };
 };
 
 export const getSunburstData: any = (
   dataset: VMindDataset,
-  xField: string[] | string,
+  colorField: string[] | string,
   index: number,
-  yField: string
+  sizeField: string
 ) => {
-  if (xField.length - 1 === index) {
+  if (colorField.length - 1 === index) {
     return Array.from(
       new Set(
         dataset.map(data => {
-          return { name: data[xField[index]], value: data[yField] };
+          return { name: data[colorField[index]], value: data[sizeField] };
         })
       )
     );
@@ -1493,15 +1493,15 @@ export const getSunburstData: any = (
   const values = Array.from(
     new Set(
       dataset.map(data => {
-        return data[xField[index]];
+        return data[colorField[index]];
       })
     )
   );
   return values.map(value => {
     const currentDataset = dataset.filter(data => {
-      return data[xField[index]] === value;
+      return data[colorField[index]] === value;
     });
-    return { name: value, children: getSunburstData(currentDataset, xField, index + 1, yField) };
+    return { name: value, children: getSunburstData(currentDataset, colorField, index + 1, sizeField) };
   });
 };
 
@@ -1566,21 +1566,21 @@ export const sunburstDisplayConf: Transformer<Context, GetChartSpecOutput> = (co
 
 export const treemapData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   const { dataset, cell, spec } = context;
-  spec.data = { id: 'data', values: getTreemapData(dataset, cell.x, 0, cell.y) };
+  spec.data = { id: 'data', values: getTreemapData(dataset, cell.color, 0, cell.size) };
   return { spec };
 };
 
 export const getTreemapData: any = (
   dataset: VMindDataset,
-  xField: string[] | string,
+  colorField: string[] | string,
   index: number,
-  yField: string
+  sizeField: string
 ) => {
-  if (xField.length - 1 === index) {
+  if (colorField.length - 1 === index) {
     return Array.from(
       new Set(
         dataset.map(data => {
-          return { name: data[xField[index]], value: data[yField] };
+          return { name: data[colorField[index]], value: data[sizeField] };
         })
       )
     );
@@ -1589,18 +1589,18 @@ export const getTreemapData: any = (
   const values = Array.from(
     new Set(
       dataset.map(data => {
-        return data[xField[index]];
+        return data[colorField[index]];
       })
     )
   );
   return values.map(value => {
     const currentDataset = dataset.filter(data => {
-      return data[xField[index]] === value;
+      return data[colorField[index]] === value;
     });
-    if (currentDataset[0] && currentDataset[0][xField[index + 1]] === '') {
-      return { name: value, value: currentDataset[0][yField] };
+    if (currentDataset[0] && currentDataset[0][colorField[index + 1]] === '') {
+      return { name: value, value: currentDataset[0][sizeField] };
     }
-    return { name: value, children: getTreemapData(currentDataset, xField, index + 1, yField) };
+    return { name: value, children: getTreemapData(currentDataset, colorField, index + 1, sizeField) };
   });
 };
 
@@ -1662,11 +1662,13 @@ export const linearProgressDisplayConf: Transformer<Context, GetChartSpecOutput>
 export const vennData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   const { dataset, spec, cell } = context;
   const id2dataMap = {};
+  const setsField = cell.color[0];
+  const nameField = cell.color[1];
   dataset.forEach(data => {
-    if (id2dataMap[data[cell.group]]) {
-      id2dataMap[data[cell.group]].sets.push(data[cell.color]);
+    if (id2dataMap[data[setsField]]) {
+      id2dataMap[data[setsField]].sets.push(data[nameField]);
     } else {
-      id2dataMap[data[cell.group]] = { sets: [data[cell.color]], value: data[cell.size] };
+      id2dataMap[data[setsField]] = { sets: [data[nameField]], value: data[cell.size] };
     }
   });
   spec.data = {

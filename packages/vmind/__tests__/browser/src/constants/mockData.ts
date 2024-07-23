@@ -4795,7 +4795,7 @@ Category Eight,18,34
 };
 
 export const sunburstChartData = {
-  csv: `Country,Region,Category,Value
+  csv: `Category0,Category1,Category2,Value
 Country A,Region1,Office Supplies,824
 Country A,Region1,Furniture,920
 Country A,Region1,Electronic equipment,936

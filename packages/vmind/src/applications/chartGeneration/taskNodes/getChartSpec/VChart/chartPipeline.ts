@@ -208,15 +208,16 @@ const pipelineBubbleCirclePacking = [
   theme
 ];
 
-const pipelineMapChart = [chartType, basemap, arrayData, mapField, mapDisplayConf, theme];
-const pipelineRangeColumn = [chartType, data, rangeColumnField, rangeColumnDisplayConf, theme];
-const pipelineSunburst = [chartType, sunburstData, sunburstOrTreemapField, sunburstDisplayConf, theme];
-const pipelineTreemap = [chartType, treemapData, sunburstOrTreemapField, treemapDisplayConf, theme];
-const pipelineGauge = [chartType, arrayData, gaugeField, gaugeDisplayConf, theme];
-// const pipelineLinearProgress = [chartType, arrayData, linearProgressField, linearProgressDisplayConf, theme];
+const pipelineMapChart = [chartType, basemap, color, arrayData, mapField, mapDisplayConf, theme];
+const pipelineRangeColumn = [chartType, data, color, rangeColumnField, rangeColumnDisplayConf, theme];
+const pipelineSunburst = [chartType, sunburstData, color, sunburstOrTreemapField, sunburstDisplayConf, theme];
+const pipelineTreemap = [chartType, treemapData, color, sunburstOrTreemapField, treemapDisplayConf, theme];
+const pipelineGauge = [chartType, arrayData, color, gaugeField, gaugeDisplayConf, theme];
+// const pipelineLinearProgress = [chartType, arrayData, color, linearProgressField, linearProgressDisplayConf, theme];
 const pipelineBasicHeatMap = [
   chartType,
   arrayData,
+  color,
   basicHeatMapSeries,
   basicHeatMapRegion,
   basicHeatMapColor,
@@ -224,7 +225,7 @@ const pipelineBasicHeatMap = [
   basicHeatMapLegend,
   theme
 ];
-const pipelineVenn = [chartType, registerChart, vennData, vennField, legend, theme];
+const pipelineVenn = [chartType, registerChart, vennData, color, vennField, legend, theme];
 
 const pipelineMap: { [chartType: string]: any } = {
   'BAR CHART': pipelineBar,

@@ -3,7 +3,14 @@ import { ChartAdvisorPromptEnglish } from './template';
 import type { GenerateChartAndFieldMapContext } from '../../types';
 import { pick } from '@visactor/vutils';
 import { getStrFromArray } from '../../../../../../common/utils/utils';
-import { chartGenerationConstraints, chartKnowledgeDict, defaultExamples, visualChannelInfoMap } from './knowledges';
+import {
+  chartGenerationConstraints,
+  chartKnowledgeDict,
+  defaultExamples,
+  getCartesianCoordinateSystemKnowledge,
+  getNeedColorAndSizeKnowledge,
+  visualChannelInfoMap
+} from './knowledges';
 import { uniqArray } from '@visactor/vutils';
 
 const patchUserInput = (userInput: string) => {
@@ -44,10 +51,13 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
 
     const sortedChartTypeList = chartTypeList.sort((a, b) => chartKnowledgeDict[a].index - chartKnowledgeDict[b].index);
 
-    const chartKnowledge = sortedChartTypeList.reduce((res, chartType) => {
-      const { knowledge } = chartKnowledgeDict[chartType];
-      return [...res, ...(knowledge ?? [])];
-    }, []);
+    const chartKnowledge = sortedChartTypeList.reduce(
+      (res, chartType) => {
+        const { knowledge } = chartKnowledgeDict[chartType];
+        return [...res, ...(knowledge ?? [])];
+      },
+      [getNeedColorAndSizeKnowledge(chartTypeList), getCartesianCoordinateSystemKnowledge(chartTypeList)]
+    );
 
     const knowledgeStr = getStrFromArray(chartKnowledge);
 
