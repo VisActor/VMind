@@ -5324,11 +5324,11 @@ export const mockUserTextInput10 = {
 export const mockProgressData = {
   csv: `年份,进度
  2024,0.56`,
-  input: '帮我展示今年的进度数据'
+  input: '请使用环形进度图帮我展示今年的进度数据'
 };
 
 export const liquidData = {
   csv: `进度
  0.56`,
-  input: '展示进度数据'
+  input: '请使用水波图展示进度数据'
 };

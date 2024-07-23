@@ -90,9 +90,9 @@ export const patchYField: Transformer<
 
   if (y && isArray(y) && y.length > 1) {
     if (
-      chartTypeNew === ('BOX PLOT' as ChartType) ||
-      (chartTypeNew === ('DUAL AXIS CHART' as ChartType) && y.length === 2) ||
-      (chartTypeNew === ('RANGE COLUMN CHART' as ChartType) && y.length === 2)
+      chartTypeNew === ChartType.BoxPlot.toUpperCase() ||
+      (chartTypeNew === ChartType.DualAxisChart.toUpperCase() && y.length === 2) ||
+      (chartTypeNew === ChartType.RangeColumnChart.toUpperCase() && y.length === 2)
     ) {
       return {
         ...context
@@ -112,7 +112,7 @@ export const patchYField: Transformer<
         cellNew.color = FOLD_NAME.toString();
       }
     } else {
-      chartTypeNew = 'SCATTER PLOT' as ChartType;
+      chartTypeNew = <ChartType>ChartType.ScatterPlot.toUpperCase();
       cellNew = {
         ...cell,
         x: y[0],
@@ -139,7 +139,7 @@ export const patchBoxPlot: Transformer<
     ...cell
   };
   const { y } = cellNew;
-  if (chartType === ('BOX PLOT' as ChartType)) {
+  if (chartType === ChartType.BoxPlot.toUpperCase()) {
     if (typeof y === 'string' && y.split(',').length > 1) {
       cellNew.y = y.split(',').map(str => str.trim());
     } else if (isNil(y) || y.length === 0) {
@@ -205,7 +205,7 @@ export const patchDualAxis: Transformer<
   const cellNew: any = { ...cell };
   //Dual-axis drawing yLeft and yRight
 
-  if (chartType === ('DUAL AXIS CHART' as ChartType)) {
+  if (chartType === ChartType.DualAxisChart.toUpperCase()) {
     cellNew.y = [cellNew.y, cellNew.yLeft, cellNew.yRight, cellNew.y1, cellNew.y2].filter(Boolean).flat();
   }
 
@@ -222,12 +222,12 @@ export const patchPieChart: Transformer<
   const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
 
-  if (chartType === ('ROSE CHART' as ChartType)) {
+  if (chartType === ChartType.RoseChart.toUpperCase()) {
     cellNew.angle = cellNew.radius ?? cellNew.size ?? cellNew.angle;
   }
 
   //Pie chart must have color field and the angle field
-  if (chartType === ('PIE CHART' as ChartType) || chartType === ('ROSE CHART' as ChartType)) {
+  if (chartType === ChartType.PieChart.toUpperCase() || chartType === ChartType.RoseChart.toUpperCase()) {
     if (!cellNew.color || !cellNew.angle) {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
 
@@ -265,7 +265,7 @@ export const patchWordCloud: Transformer<
   const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
 
-  if (chartType === ('WORD CLOUD' as ChartType)) {
+  if (chartType === ChartType.WordCloud.toUpperCase()) {
     if (!cellNew.size || !cellNew.color || cellNew.color === cellNew.size) {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
 
@@ -311,7 +311,7 @@ export const patchDynamicBarChart: Transformer<
   const cellNew = { ...cell };
   let chartTypeNew = chartType;
 
-  if (chartType === ('DYNAMIC BAR CHART' as ChartType)) {
+  if (chartType === ChartType.DynamicBarChart.toUpperCase()) {
     if (!cell.time || cell.time === '' || cell.time.length === 0) {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
 
@@ -325,7 +325,7 @@ export const patchDynamicBarChart: Transformer<
           cellNew.time = stringField.fieldName;
         } else {
           //no available field, set chart type to bar chart
-          chartTypeNew = 'BAR CHART' as ChartType;
+          chartTypeNew = <ChartType>ChartType.BarChart.toUpperCase();
         }
       }
     }
@@ -454,7 +454,7 @@ export const patchLinearProgressChart: Transformer<
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
   const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
-  if (chartType === ChartType.LinearProgressChart.toUpperCase()) {
+  if (chartType === ChartType.LinearProgress.toUpperCase()) {
     const xField = [cellNew.x, cellNew.color].filter(Boolean).flat();
     if (xField.length !== 0) {
       cellNew.x = xField[0];

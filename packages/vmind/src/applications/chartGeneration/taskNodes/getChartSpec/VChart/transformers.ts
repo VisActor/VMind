@@ -28,31 +28,30 @@ import { COLOR_FIELD } from '@visactor/chart-advisor';
 type Context = GetChartSpecContext & GetChartSpecOutput;
 
 const chartTypeMap: { [chartName: string]: string } = {
-  'BAR CHART': 'bar',
-  'LINE CHART': 'line',
-  'PIE CHART': 'pie',
-  'WORD CLOUD': 'wordCloud',
-  'SCATTER PLOT': 'scatter',
-  'DYNAMIC BAR CHART': 'bar',
-  'FUNNEL CHART': 'funnel',
-  'DUAL AXIS CHART': 'common',
-  'ROSE CHART': 'rose',
-  'RADAR CHART': 'radar',
-  'SANKEY CHART': 'sankey',
-  'WATERFALL CHART': 'waterfall',
-  'BOX PLOT': 'boxPlot',
+  [ChartType.BarChart.toUpperCase()]: 'bar',
+  [ChartType.LineChart.toUpperCase()]: 'line',
+  [ChartType.PieChart.toUpperCase()]: 'pie',
+  [ChartType.WordCloud.toUpperCase()]: 'wordCloud',
+  [ChartType.ScatterPlot.toUpperCase()]: 'scatter',
+  [ChartType.DynamicBarChart.toUpperCase()]: 'bar',
+  [ChartType.FunnelChart.toUpperCase()]: 'funnel',
+  [ChartType.DualAxisChart.toUpperCase()]: 'common',
+  [ChartType.RoseChart.toUpperCase()]: 'rose',
+  [ChartType.RadarChart.toUpperCase()]: 'radar',
+  [ChartType.SankeyChart.toUpperCase()]: 'sankey',
+  [ChartType.WaterFallChart.toUpperCase()]: 'waterfall',
+  [ChartType.BoxPlot.toUpperCase()]: 'boxPlot',
   [ChartType.LiquidChart.toUpperCase()]: 'liquid',
   [ChartType.LinearProgress.toUpperCase()]: 'linearProgress',
-  [ChartType.CircularProgress.toUpperCase()]: 'circularProgress'
-  'BUBBLE CIRCLE PACKING': 'circlePacking',
-  'MAP CHART': 'map',
-  'RANGE COLUMN CHART': 'rangeColumn',
-  'SUNBURST CHART': 'sunburst',
-  'TREEMAP CHART': 'treemap',
-  'GAUGE CHART': 'gauge',
-  // 'LINEAR PROGRESS CHART': 'linearProgress',
-  'BASIC HEAT MAP': 'common',
-  'VENN CHART': 'venn'
+  [ChartType.CircularProgress.toUpperCase()]: 'circularProgress',
+  [ChartType.BubbleCirclePacking.toUpperCase()]: 'circlePacking',
+  [ChartType.MapChart.toUpperCase()]: 'map',
+  [ChartType.RangeColumnChart.toUpperCase()]: 'rangeColumn',
+  [ChartType.SunburstChart.toUpperCase()]: 'sunburst',
+  [ChartType.TreemapChart.toUpperCase()]: 'treemap',
+  [ChartType.Gauge.toUpperCase()]: 'gauge',
+  [ChartType.BasicHeatMap.toUpperCase()]: 'common',
+  [ChartType.VennChart.toUpperCase()]: 'venn'
 };
 
 export const chartType: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
@@ -1348,11 +1347,9 @@ export const circularProgressField: Transformer<Context, GetChartSpecOutput> = (
   //assign field in spec according to cell
   const { cell, spec } = context;
 
-  spec.categoryField = cell.radius;
+  spec.categoryField = cell.color;
   spec.valueField = cell.value;
-  if (cell.color) {
-    spec.seriesField = cell.color;
-  }
+  spec.seriesField = cell.color;
 
   spec.radius = 0.8;
   spec.innerRadius = 0.7;
@@ -1627,34 +1624,6 @@ export const gaugeDisplayConf: Transformer<Context, GetChartSpecOutput> = (conte
   spec.innerRadius = 0.5;
   spec.startAngle = -180;
   spec.endAngle = 0;
-  return { spec };
-};
-
-export const linearProgressField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec, cell } = context;
-  spec.yField = cell.x;
-  spec.xField = cell.y;
-
-  spec.seriesField = cell.x;
-  return { spec };
-};
-
-export const linearProgressDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec } = context;
-  spec.direction = 'horizontal';
-
-  spec.cornerRadius = 20;
-  spec.bandWidth = 30;
-  spec.axes = [
-    {
-      orient: 'left',
-      label: { visible: true },
-      type: 'band',
-      domainLine: { visible: false },
-      tick: { visible: false }
-    },
-    { orient: 'bottom', label: { visible: true }, type: 'linear', visible: false }
-  ];
   return { spec };
 };
 
