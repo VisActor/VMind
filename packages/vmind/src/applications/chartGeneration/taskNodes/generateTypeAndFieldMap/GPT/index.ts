@@ -18,7 +18,6 @@ import {
   patchNeedSize,
   patchPieChart,
   patchRangeColumnChart,
-  patchSunburstAndTreemapChart,
   patchWordCloud,
   patchYField
 } from './patcher';
@@ -49,7 +48,6 @@ const ChartGenerationTaskNodeGPTMeta: LLMBasedTaskNodeMeta<
     patchDynamicBarChart,
     patchRangeColumnChart,
     patchLinearProgressChart,
-    patchSunburstAndTreemapChart,
     patchBasicHeatMapChart,
     patchCartesianXField
   ],

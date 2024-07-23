@@ -2,7 +2,12 @@
 import { ChartType } from '../../../../../../common/typings';
 import { barChartExample1, dynamicBarChart1, lineChartExample1, lineChartExample2, pieChartExample1 } from './examples';
 import type { ChartKnowledge } from './types';
-import { NEED_SIZE_FIELD_CHART_LIST, NEED_COLOR_FIELD_CHART_LIST } from '../../../../constants';
+import {
+  CARTESIAN_CHART_LIST,
+  NEED_COLOR_FIELD_CHART_LIST,
+  NEED_SIZE_FIELD_CHART_LIST,
+  NEED_COLOR_AND_SIZE_CHART_LIST
+} from '../../../../constants';
 
 const getColorKnowledge = (chartTypeList: ChartType[]) => {
   const validSet = new Set(chartTypeList);
@@ -17,7 +22,31 @@ const getSizeKnowledge = (chartTypeList: ChartType[]) => {
   const validSet = new Set(chartTypeList);
   if (NEED_SIZE_FIELD_CHART_LIST.some(chartType => validSet.has(chartType))) {
     const includedCharts = chartTypeList.filter(chart => NEED_SIZE_FIELD_CHART_LIST.includes(chart));
-    return ' Only used in ' + includedCharts.join(' , ') + '.';
+    return ", can't be empty in " + includedCharts.join(' , ') + '.';
+  }
+  return '.';
+};
+
+export const getNeedColorAndSizeKnowledge = (chartTypeList: ChartType[]) => {
+  const validSet = new Set(chartTypeList);
+  if (NEED_COLOR_AND_SIZE_CHART_LIST.some(chartType => validSet.has(chartType))) {
+    const includedCharts = chartTypeList.filter(chart => NEED_COLOR_AND_SIZE_CHART_LIST.includes(chart));
+    return (
+      includedCharts.join(', ') +
+      ' all commonly use color to represent different categories and size to represent the magnitude of the values. Map your data fields to the color (representing the category) and size (representing the value) visual channels instead of using the x-axis of the Cartesian coordinate system.'
+    );
+  }
+  return '.';
+};
+
+export const getCartesianCoordinateSystemKnowledge = (chartTypeList: ChartType[]) => {
+  const validSet = new Set(chartTypeList);
+  if (CARTESIAN_CHART_LIST.some(chartType => validSet.has(chartType))) {
+    const includedCharts = chartTypeList.filter(chart => CARTESIAN_CHART_LIST.includes(chart));
+    return (
+      includedCharts.join(', ') +
+      ' are visualizations based on the Cartesian coordinate system. The Cartesian coordinate system is usually used to show linear relationships and numerical changes. Please map the data fields to the x-axis (independent variable) and the y-axis (dependent variable).'
+    );
   }
   return '.';
 };
@@ -41,9 +70,7 @@ export const visualChannelInfoMap = {
   target: (chartTypeList: ChartType[]) =>
     "the field mapped to the target channel. Only used in Sankey Chart. Can't be empty in Sankey Chart.",
   value: (chartTypeList: ChartType[]) =>
-    "the field mapped to the value channel. Only used in Sankey Chart. Can't be empty in Sankey Chart.",
-  group: (chartTypeList: ChartType[]) =>
-    "the field mapped to the value channel. Only used in Venn Chart. Can't be empty in Venn Chart. Digital IDs are often used to distinguish whether data is in the same group."
+    "the field mapped to the value channel. Only used in Sankey Chart. Can't be empty in Sankey Chart."
 };
 export const chartKnowledgeDict: ChartKnowledge = {
   [ChartType.BarChart]: {
@@ -69,7 +96,10 @@ export const chartKnowledgeDict: ChartKnowledge = {
   [ChartType.WordCloud]: {
     index: 6,
     visualChannels: ['color', 'size'],
-    examples: []
+    examples: [],
+    knowledge: [
+      'Word cloud is an effective visualization tool that can intuitively display the frequency of keywords. The size of a keyword is proportional to its popularity, which is suitable for displaying the importance and trends in text data.'
+    ]
   },
   [ChartType.RoseChart]: {
     index: 7,
@@ -161,19 +191,17 @@ export const chartKnowledgeDict: ChartKnowledge = {
   },
   [ChartType.SunburstChart]: {
     index: 20,
-    visualChannels: ['x', 'y'],
+    visualChannels: ['color', 'size'],
     examples: [],
     knowledge: [
-      'The x field of a sunburst chart can be an array. The order of the elements in the array needs to be sorted from large to small according to the coverage described by the data field.'
+      'The colors field for sunburst chart and treemap chart must be an array. The order of the elements in the array needs to be sorted from large to small according to the coverage described by the data field.'
     ]
   },
   [ChartType.TreemapChart]: {
     index: 21,
-    visualChannels: ['x', 'y'],
+    visualChannels: ['color', 'size'],
     examples: [],
-    knowledge: [
-      'The x field of a treemap chart can be an array. The order of the elements in the array needs to be sorted from large to small according to the coverage described by the data field.'
-    ]
+    knowledge: []
   },
   [ChartType.Gauge]: {
     index: 22,
@@ -195,9 +223,11 @@ export const chartKnowledgeDict: ChartKnowledge = {
   },
   [ChartType.VennChart]: {
     index: 25,
-    visualChannels: ['size', 'color', 'group'],
+    visualChannels: ['size', 'color'],
     examples: [],
-    knowledge: ['The venn chart must contain three fields: group, size and color.']
+    knowledge: [
+      'The color field of the Venn diagram requires an array of length 2. The field with subscript 0 maps to the sets, and the field with subscript 1 maps to the name.'
+    ]
   }
 };
 
