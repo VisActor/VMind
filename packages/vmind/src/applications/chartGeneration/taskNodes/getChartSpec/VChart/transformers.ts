@@ -1,6 +1,5 @@
 import type { Transformer } from '../../../../../base/tools/transformer';
 import { registerVennChart } from '@visactor/vchart';
-import VChart from '@visactor/vchart';
 import type { GetChartSpecContext, GetChartSpecOutput } from '../types';
 import {
   COLOR_THEMES,
@@ -1802,12 +1801,8 @@ export const basicHeatMapLegend: Transformer<Context, GetChartSpecOutput> = (con
   return { spec };
 };
 
-export const basemap: Transformer<Context, GetChartSpecOutput | Promise<any>> = async (context: Context) => {
+export const basemap: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   const { basemapOption, spec } = context;
-  const jsonUrl = basemapOption.jsonUrl;
-  const response = await fetch(jsonUrl);
-  const geoJson = await response.json();
-  VChart.registerMap('map', geoJson);
   if (basemapOption.regionProjectType) {
     spec.region = [
       {
@@ -1839,15 +1834,24 @@ export const mapField: Transformer<Context, GetChartSpecOutput> = (context: Cont
 };
 
 export const mapDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec } = context;
+  const { spec, cell } = context;
   spec.legends = [
     {
       visible: true,
       type: 'color',
-      field: 'value',
+      field: cell.size,
       orient: 'bottom',
       position: 'start'
     }
   ];
+  spec.area = {
+    style: {
+      fill: {
+        field: cell.size,
+        scale: 'color',
+        changeDomain: 'replace'
+      }
+    }
+  };
   return { spec };
 };

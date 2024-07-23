@@ -54,6 +54,7 @@ import {
 import VMind, { ArcoTheme, builtinThemeMap, BuiltinThemeType } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
 import { isArray } from '@visactor/vutils';
+import VChart from '@visactor/vchart';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -117,6 +118,7 @@ const ModelConfigMap: any = {
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
+const MAP_CHART_BASEMAP = 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/geojson/world.json';
 const specTemplateTest = false;
 export function DataInput(props: IPropsType) {
   const defaultDataKey = Object.keys(demoDataList)[3];
@@ -168,6 +170,13 @@ export function DataInput(props: IPropsType) {
     const finalDataset = specTemplateTest && model !== Model.CHART_ADVISOR ? undefined : dataset;
 
     const startTime = new Date().getTime();
+
+    // The map chart requires the user to register a base map named map in advance using VChart.registerMap
+    if (csv === demoDataList.Map.csv) {
+      const response = await fetch(MAP_CHART_BASEMAP);
+      const geoJson = await response.json();
+      VChart.registerMap('map', geoJson);
+    }
     const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
       //enableDataQuery: false,
       //chartTypeList: [ChartType.BarChart, ChartType.LineChart],
