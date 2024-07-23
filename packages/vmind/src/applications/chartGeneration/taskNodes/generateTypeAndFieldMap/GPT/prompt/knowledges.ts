@@ -159,9 +159,7 @@ export const chartKnowledgeDict: ChartKnowledge = {
     index: 15,
     visualChannels: ['x', 'y'],
     examples: [],
-    knowledge: [
-      'Linear Progress chart is typically used to display progress data, which is usually a value between 0 and 1. Linear progress bars can show single progress values as well as multiple progress values. By default, the left Y-axis of the linear progress bar is the categorical field, and the bottom X-axis is the numerical field.'
-    ]
+    knowledge: []
   },
   [ChartType.CircularProgress]: {
     index: 16,
@@ -209,20 +207,14 @@ export const chartKnowledgeDict: ChartKnowledge = {
     examples: [],
     knowledge: ['The gauge chart must contain two fields: size and color.']
   },
-  // [ChartType.LinearProgressChart]: {
-  //   index: 23,
-  //   visualChannels: ['y', 'x'],
-  //   examples: [],
-  //   knowledge: []
-  // },
   [ChartType.BasicHeatMap]: {
-    index: 24,
+    index: 23,
     visualChannels: ['y', 'x', 'size'],
     examples: [],
     knowledge: []
   },
   [ChartType.VennChart]: {
-    index: 25,
+    index: 24,
     visualChannels: ['size', 'color'],
     examples: [],
     knowledge: [

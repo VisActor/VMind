@@ -3,7 +3,7 @@ import { ChartType, MapRegionCoordinate } from '../../common/typings';
 
 export const SUPPORTED_CHART_LIST = Object.values(ChartType);
 
-export const NEED_COLOR_FIELD_CHART_LIST = [ChartType.PieChart, ChartType.RoseChart];
+export const NEED_COLOR_FIELD_CHART_LIST = [ChartType.PieChart, ChartType.RoseChart, ChartType.LinearProgress];
 
 export const NEED_SIZE_FIELD_CHART_LIST = [ChartType.ScatterPlot, ChartType.BasicHeatMap];
 
@@ -14,7 +14,9 @@ export const NEED_COLOR_AND_SIZE_CHART_LIST = [
   ChartType.VennChart,
   ChartType.Gauge,
   ChartType.SunburstChart,
-  ChartType.TreemapChart
+  ChartType.TreemapChart,
+  ChartType.CircularProgress,
+  ChartType.LiquidChart
 ];
 
 export const CARTESIAN_CHART_LIST = [
@@ -27,7 +29,7 @@ export const CARTESIAN_CHART_LIST = [
   ChartType.WaterFallChart,
   ChartType.BoxPlot,
   ChartType.RangeColumnChart,
-  ChartType.LinearProgressChart
+  ChartType.LinearProgress
 ];
 
 export const DEFAULT_MAP_OPTION: BasemapOption = {
