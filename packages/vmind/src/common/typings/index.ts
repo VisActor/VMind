@@ -75,7 +75,16 @@ export enum ChartType {
   BoxPlot = 'Box Plot',
   LinearProgress = 'Linear Progress chart',
   CircularProgress = 'Circular Progress chart',
-  LiquidChart = 'Liquid Chart'
+  LiquidChart = 'Liquid Chart',
+  BubbleCirclePacking = 'Bubble Circle Packing',
+  MapChart = 'Map Chart',
+  RangeColumnChart = 'Range Column Chart',
+  SunburstChart = 'Sunburst Chart',
+  TreemapChart = 'Treemap Chart',
+  Gauge = 'Gauge Chart',
+  // LinearProgressChart = 'Linear Progress Chart',
+  BasicHeatMap = 'Basic Heat Map',
+  VennChart = 'Venn Chart'
 }
 
 export type GPTChartAdvisorResult = {
@@ -181,3 +190,34 @@ export type VMindTheme = {
 };
 
 export type { ITheme as ChartTheme } from '@visactor/vchart';
+
+export enum mapRegionProjectionType {
+  ALBERS = 'albers',
+  ALBERS_USA = 'albersUsa',
+  AZIMUTHAL_EQUAL_AREA = 'azimuthalEqualArea',
+  AZIMUTHAL_EQUIDISTANT = 'azimuthalEquidistant',
+  CONIC_CONFORMAL = 'conicConformal',
+  CONIC_EQUAL_AREA = 'conicEqualArea',
+  CONIC_EQUIDISTANT = 'conicEquidistant',
+  EQUAL_EARTH = 'equalEarth',
+  EQUIRECTANGULAR = 'equirectangular',
+  GNOMONIC = 'gnomonic',
+  MERCATOR = 'mercator',
+  NATURAL_EARTH1 = 'naturalEarth1',
+  ORTHOGRAPHIC = 'orthographic',
+  STEREOGRAPHIC = 'stereographic',
+  TRANSVERSE_MERCATOR = 'transverseMercator'
+}
+
+export enum MapRegionCoordinate {
+  CARTESIAN = 'cartesian',
+  POLAR = 'polar',
+  GEO = 'geo'
+}
+
+export type BasemapOption = {
+  regionProjectType: mapRegionProjectionType;
+  regionCoordinate: MapRegionCoordinate;
+  zoom: number;
+  center: number[];
+};

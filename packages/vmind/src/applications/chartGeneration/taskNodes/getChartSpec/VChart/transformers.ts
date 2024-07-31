@@ -1,4 +1,5 @@
 import type { Transformer } from '../../../../../base/tools/transformer';
+import { registerVennChart } from '@visactor/vchart';
 import type { GetChartSpecContext, GetChartSpecOutput } from '../types';
 import {
   COLOR_THEMES,
@@ -13,34 +14,44 @@ import {
   SUB_SERIES_ID,
   WORDCLOUD_NUM_LIMIT,
   animationDuration,
-  oneByOneGroupSize
+  oneByOneGroupSize,
+  BASIC_HEAT_MAP_COLOR_THEMES
 } from './constants';
 import { getFieldByDataType } from '../../../../../common/utils/utils';
 import { array, isArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
 import { DataType, ChartType } from '../../../../../common/typings';
 import { builtinThemeMap } from '../../../../../common/builtinTheme';
+import type { VMindDataset } from '../../../../../common/typings';
 import { COLOR_FIELD } from '@visactor/chart-advisor';
 
 type Context = GetChartSpecContext & GetChartSpecOutput;
 
 const chartTypeMap: { [chartName: string]: string } = {
-  'BAR CHART': 'bar',
-  'LINE CHART': 'line',
-  'PIE CHART': 'pie',
-  'WORD CLOUD': 'wordCloud',
-  'SCATTER PLOT': 'scatter',
-  'DYNAMIC BAR CHART': 'bar',
-  'FUNNEL CHART': 'funnel',
-  'DUAL AXIS CHART': 'common',
-  'ROSE CHART': 'rose',
-  'RADAR CHART': 'radar',
-  'SANKEY CHART': 'sankey',
-  'WATERFALL CHART': 'waterfall',
-  'BOX PLOT': 'boxPlot',
+  [ChartType.BarChart.toUpperCase()]: 'bar',
+  [ChartType.LineChart.toUpperCase()]: 'line',
+  [ChartType.PieChart.toUpperCase()]: 'pie',
+  [ChartType.WordCloud.toUpperCase()]: 'wordCloud',
+  [ChartType.ScatterPlot.toUpperCase()]: 'scatter',
+  [ChartType.DynamicBarChart.toUpperCase()]: 'bar',
+  [ChartType.FunnelChart.toUpperCase()]: 'funnel',
+  [ChartType.DualAxisChart.toUpperCase()]: 'common',
+  [ChartType.RoseChart.toUpperCase()]: 'rose',
+  [ChartType.RadarChart.toUpperCase()]: 'radar',
+  [ChartType.SankeyChart.toUpperCase()]: 'sankey',
+  [ChartType.WaterFallChart.toUpperCase()]: 'waterfall',
+  [ChartType.BoxPlot.toUpperCase()]: 'boxPlot',
   [ChartType.LiquidChart.toUpperCase()]: 'liquid',
   [ChartType.LinearProgress.toUpperCase()]: 'linearProgress',
-  [ChartType.CircularProgress.toUpperCase()]: 'circularProgress'
+  [ChartType.CircularProgress.toUpperCase()]: 'circularProgress',
+  [ChartType.BubbleCirclePacking.toUpperCase()]: 'circlePacking',
+  [ChartType.MapChart.toUpperCase()]: 'map',
+  [ChartType.RangeColumnChart.toUpperCase()]: 'rangeColumn',
+  [ChartType.SunburstChart.toUpperCase()]: 'sunburst',
+  [ChartType.TreemapChart.toUpperCase()]: 'treemap',
+  [ChartType.Gauge.toUpperCase()]: 'gauge',
+  [ChartType.BasicHeatMap.toUpperCase()]: 'common',
+  [ChartType.VennChart.toUpperCase()]: 'venn'
 };
 
 export const chartType: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
@@ -57,6 +68,17 @@ export const data: Transformer<Context, GetChartSpecOutput> = (context: Context)
     values: isValidDataset(dataset) ? dataset.flat(4) : []
   };
 
+  return { spec };
+};
+
+export const arrayData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { dataset, spec } = context;
+  spec.data = [
+    {
+      id: 'data',
+      values: isValidDataset(dataset) ? dataset.flat(4) : []
+    }
+  ];
   return { spec };
 };
 
@@ -729,7 +751,7 @@ export const cartesianBar: Transformer<Context, GetChartSpecOutput> = (context: 
   const cellNew = { ...cell };
   const flattenedXField = Array.isArray(cell.x) ? cell.x : [cell.x];
   if (cell.color && cell.color.length > 0 && cell.color !== cell.x) {
-    flattenedXField.push(cell.color);
+    flattenedXField.push(cell.color as string);
   }
   spec.xField = flattenedXField;
   spec.yField = cell.y;
@@ -1131,7 +1153,7 @@ export const animationCartesianPie: Transformer<Context, GetChartSpecOutput> = (
   const { spec } = context;
 
   const totalTime = context.totalTime ?? DEFAULT_PIE_VIDEO_LENGTH;
-  const groupKey = context.cell.color;
+  const groupKey = context.cell.color as string;
   const dataValues = spec.data.values as any[];
   const groupNum = dataValues.map(d => d[groupKey!]).filter(onlyUnique).length;
   //const delay = totalTime / groupNum - 1000;
@@ -1325,11 +1347,9 @@ export const circularProgressField: Transformer<Context, GetChartSpecOutput> = (
   //assign field in spec according to cell
   const { cell, spec } = context;
 
-  spec.categoryField = cell.radius;
+  spec.categoryField = cell.color;
   spec.valueField = cell.value;
-  if (cell.color) {
-    spec.seriesField = cell.color;
-  }
+  spec.seriesField = cell.color;
 
   spec.radius = 0.8;
   spec.innerRadius = 0.7;
@@ -1382,6 +1402,425 @@ export const indicator: Transformer<Context, GetChartSpecOutput> = (context: Con
         }
       }
     ]
+  };
+  return { spec };
+};
+
+export const bubbleCirclePackingData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { dataset, spec, cell } = context;
+  if (cell.size) {
+    dataset.forEach(data => {
+      data.value = data[cell.size];
+      delete data[cell.size];
+    });
+  }
+  return { spec };
+};
+
+export const bubbleCirclePackingField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  //assign field in spec according to cell
+  const { cell, spec } = context;
+  spec.categoryField = cell.color || cell.x;
+
+  if (cell.size) {
+    spec.valueField = cell.size;
+  }
+
+  return { spec };
+};
+
+export const bubbleCirclePackingDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.drill = true;
+  spec.layoutPadding = 5;
+  spec.animationEnter = {
+    easing: 'cubicInOut'
+  };
+  spec.animationExit = {
+    easing: 'cubicInOut'
+  };
+  spec.animationUpdate = {
+    easing: 'cubicInOut'
+  };
+  return { spec };
+};
+
+export const rangeColumnField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  //assign field in spec according to cell
+  const { cell, spec } = context;
+  spec.yField = cell.x;
+
+  spec.xField = [cell.y[0], cell.y[1]];
+
+  return { spec };
+};
+
+export const rangeColumnDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.direction = 'horizontal';
+  spec.label = {
+    visible: true
+  };
+  return { spec };
+};
+
+export const sunburstData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { dataset, cell, spec } = context;
+  spec.data = { id: 'data', values: getSunburstData(dataset, cell.color, 0, cell.size) };
+  return { spec };
+};
+
+export const getSunburstData: any = (
+  dataset: VMindDataset,
+  colorField: string[] | string,
+  index: number,
+  sizeField: string
+) => {
+  if (colorField.length - 1 === index) {
+    return Array.from(
+      new Set(
+        dataset.map(data => {
+          return { name: data[colorField[index]], value: data[sizeField] };
+        })
+      )
+    );
+  }
+  // Get the value range of this layer
+  const values = Array.from(
+    new Set(
+      dataset.map(data => {
+        return data[colorField[index]];
+      })
+    )
+  );
+  return values.map(value => {
+    const currentDataset = dataset.filter(data => {
+      return data[colorField[index]] === value;
+    });
+    return { name: value, children: getSunburstData(currentDataset, colorField, index + 1, sizeField) };
+  });
+};
+
+export const sunburstOrTreemapField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  //assign field in spec according to cell
+  const { spec } = context;
+  spec.categoryField = 'name';
+
+  spec.valueField = 'value';
+
+  return { spec };
+};
+
+export const sunburstDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.offsetX = 0;
+  spec.offsetY = 0;
+  spec.outerRadius = 1;
+  spec.innerRadius = 0;
+  spec.gap = 5;
+  spec.drill = true;
+  spec.sunburst = {
+    visible: true,
+    style: {
+      fillOpacity: (datum: { isLeaf: any }) => {
+        return datum.isLeaf ? 0.4 : 0.8;
+      }
+    }
+  };
+  spec.label = {
+    visible: true,
+    style: {
+      fontSize: 12,
+      fillOpacity: (datum: { isLeaf: any }) => {
+        return datum.isLeaf ? 0.4 : 0.8;
+      }
+    }
+  };
+  spec.tooltip = {
+    mark: {
+      title: {
+        value: (val: { datum: any[] }) => {
+          return val?.datum?.map(data => data.name).join(' / ');
+        }
+      }
+    }
+  };
+  spec.animationEnter = {
+    easing: 'cubicInOut',
+    duration: 1000
+  };
+  spec.animationExit = {
+    easing: 'cubicInOut',
+    duration: 1000
+  };
+  spec.animationUpdate = {
+    easing: 'cubicInOut',
+    duration: 1000
+  };
+  return { spec };
+};
+
+export const treemapData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { dataset, cell, spec } = context;
+  spec.data = { id: 'data', values: getTreemapData(dataset, cell.color, 0, cell.size) };
+  return { spec };
+};
+
+export const getTreemapData: any = (
+  dataset: VMindDataset,
+  colorField: string[] | string,
+  index: number,
+  sizeField: string
+) => {
+  if (colorField.length - 1 === index) {
+    return Array.from(
+      new Set(
+        dataset.map(data => {
+          return { name: data[colorField[index]], value: data[sizeField] };
+        })
+      )
+    );
+  }
+  // Get the value range of this layer
+  const values = Array.from(
+    new Set(
+      dataset.map(data => {
+        return data[colorField[index]];
+      })
+    )
+  );
+  return values.map(value => {
+    const currentDataset = dataset.filter(data => {
+      return data[colorField[index]] === value;
+    });
+    if (currentDataset[0] && currentDataset[0][colorField[index + 1]] === '') {
+      return { name: value, value: currentDataset[0][sizeField] };
+    }
+    return { name: value, children: getTreemapData(currentDataset, colorField, index + 1, sizeField) };
+  });
+};
+
+export const treemapDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.label = {
+    visible: true,
+    style: {
+      fontSize: 12
+    }
+  };
+  return { spec };
+};
+
+export const gaugeField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cell } = context;
+  spec.valueField = cell.size;
+  spec.categoryField = cell.color;
+  return { spec };
+};
+
+export const gaugeDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.outerRadius = 0.8;
+  spec.innerRadius = 0.5;
+  spec.startAngle = -180;
+  spec.endAngle = 0;
+  return { spec };
+};
+
+export const vennData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { dataset, spec, cell } = context;
+  const id2dataMap = {};
+  const setsField = cell.color[0];
+  const nameField = cell.color[1];
+  dataset.forEach(data => {
+    if (id2dataMap[data[setsField]]) {
+      id2dataMap[data[setsField]].sets.push(data[nameField]);
+    } else {
+      id2dataMap[data[setsField]] = { sets: [data[nameField]], value: data[cell.size] };
+    }
+  });
+  spec.data = {
+    values: Object.values(id2dataMap)
+  };
+
+  return { spec };
+};
+
+export const vennField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.valueField = 'value';
+  spec.categoryField = 'sets';
+  spec.seriesField = 'sets';
+  return { spec };
+};
+export const registerChart: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  if (spec.type === 'venn') {
+    registerVennChart();
+  }
+  return { spec };
+};
+
+export const basicHeatMapSeries: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cell } = context;
+  spec.series = [
+    {
+      type: 'heatmap',
+      regionId: 'region0',
+      xField: cell.x,
+      yField: cell.y,
+      valueField: cell.size,
+      cell: {
+        style: {
+          fill: {
+            field: cell.size,
+            scale: 'color'
+          }
+        }
+      }
+    }
+  ];
+  return { spec };
+};
+export const basicHeatMapRegion: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.region = [
+    {
+      id: 'region0',
+      width: 200, // limit the width of the region
+      height: 200, // limit the height of the region
+      padding: {
+        top: 40
+      }
+    }
+  ];
+  return { spec };
+};
+export const basicHeatMapColor: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cell } = context;
+  spec.color = {
+    type: 'linear',
+    domain: [
+      {
+        dataId: 'data',
+        fields: [cell.size]
+      }
+    ],
+    range: BASIC_HEAT_MAP_COLOR_THEMES
+  };
+  return { spec };
+};
+export const basicHeatMapAxes: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.axes = [
+    {
+      orient: 'bottom',
+      type: 'band',
+      grid: {
+        visible: false
+      },
+      domainLine: {
+        visible: false
+      },
+      label: {
+        space: 10,
+        style: {
+          textAlign: 'left',
+          textBaseline: 'middle',
+          angle: 90,
+          fontSize: 8
+        }
+      },
+      bandPadding: 0,
+      height: (layoutRect: any) => {
+        // canvas height - region height - paddingTop - paddingBottom
+        return layoutRect.height - 314;
+      }
+    },
+    {
+      orient: 'left',
+      type: 'band',
+      grid: {
+        visible: false
+      },
+      domainLine: {
+        visible: false
+      },
+      label: {
+        space: 10,
+        style: {
+          fontSize: 8
+        }
+      },
+      bandPadding: 0
+    }
+  ];
+  return { spec };
+};
+
+export const basicHeatMapLegend: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.legends = {
+    visible: true,
+    orient: 'right',
+    position: 'start',
+    type: 'color',
+    field: 'value'
+  };
+  return { spec };
+};
+
+export const basemap: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { basemapOption, spec } = context;
+  if (basemapOption.regionProjectType) {
+    spec.region = [
+      {
+        roam: true,
+        projection: { type: basemapOption.regionProjectType },
+        coordinate: basemapOption.regionCoordinate
+      }
+    ];
+  } else {
+    spec.region = [
+      {
+        roam: true,
+        coordinate: basemapOption.regionCoordinate
+      }
+    ];
+  }
+
+  spec.map = 'map';
+  return { spec };
+};
+
+export const mapField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cell } = context;
+
+  spec.nameField = cell.color;
+  spec.valueField = cell.size;
+  spec.nameProperty = cell.color;
+  return { spec };
+};
+
+export const mapDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cell } = context;
+  spec.legends = [
+    {
+      visible: true,
+      type: 'color',
+      field: cell.size,
+      orient: 'bottom',
+      position: 'start'
+    }
+  ];
+  spec.area = {
+    style: {
+      fill: {
+        field: cell.size,
+        scale: 'color',
+        changeDomain: 'replace'
+      }
+    }
   };
   return { spec };
 };
