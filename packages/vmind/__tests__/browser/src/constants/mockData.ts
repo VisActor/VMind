@@ -4751,6 +4751,471 @@ export const gmvData = {
   input: '帮我绘制按城市的gmv和增长率，使用双轴图'
 };
 
+export const bubbleCirclePackingData = {
+  csv: `industry,gross product
+第一产业,88345.1
+第二产业,483164.5
+第三产业,638697.6
+农林牧渔业,92582.4
+工业,401644.3
+建筑业,83383.1
+批发和零售业,114517.7
+交通运输、仓储和邮政业,49673.7
+住宿和餐饮业,17855.3
+金融业,96811.0
+房地产业,73821.3
+其他,279918.4
+`,
+  input: '请使用气泡图帮我绘制'
+};
+
+export const mapChartData = {
+  csv: `name,value
+Russia,17234034
+Canada,9984670
+China,9596960
+United States of America,9525067
+Brazil,8515167
+`,
+  input: '请将数据渲染到地图图表中'
+};
+
+export const rangeColumnChartData = {
+  csv: `categories,min,max
+Category One,76,100
+Category Two,56,108
+Category Three,38,129
+Category Four,58,155
+Category Five,45,120
+Category Six,23,99
+Category Seven,18,56
+Category Eight,18,34
+`,
+  input: '请使用区间柱图渲染数据'
+};
+
+export const sunburstChartData = {
+  csv: `Category0,Category1,Category2,Value
+Country A,Region1,Office Supplies,824
+Country A,Region1,Furniture,920
+Country A,Region1,Electronic equipment,936
+Country A,Region2,Office Supplies,1270
+Country A,Region2,Furniture,1399
+Country A,Region2,Electronic equipment,1466
+Country A,Region3,Office Supplies,1408
+Country A,Region3,Furniture,1676
+Country A,Region3,Electronic equipment,1559
+Country A,Region4,Office Supplies,745
+Country A,Region4,Furniture,919
+Country A,Region4,Electronic equipment,781
+Country A,Region5,Office Supplies,267
+Country A,Region5,Furniture,316
+Country A,Region5,Electronic equipment,230
+Country A,Region6,Office Supplies,347
+Country A,Region6,Furniture,501
+Country A,Region6,Electronic equipment,453
+Country B,Region1,Office Supplies,824
+Country B,Region1,Furniture,920
+Country B,Region1,Electronic equipment,936
+Country B,Region2,Office Supplies,1270
+Country B,Region2,Furniture,1399
+Country B,Region2,Electronic equipment,1466
+Country B,Region3,Office Supplies,1408
+Country B,Region3,Furniture,1676
+Country B,Region3,Electronic equipment,1559
+Country B,Region4,Office Supplies,745
+Country B,Region4,Furniture,919
+Country B,Region4,Electronic equipment,781
+Country B,Region5,Office Supplies,267
+Country B,Region5,Furniture,316
+Country B,Region5,Electronic equipment,230
+Country B,Region6,Office Supplies,347
+Country B,Region6,Furniture,501
+Country B,Region6,Electronic equipment,453
+Country C,Region1,Office Supplies,824
+Country C,Region1,Furniture,920
+Country C,Region1,Electronic equipment,936
+Country C,Region2,Office Supplies,1270
+Country C,Region2,Furniture,1399
+Country C,Region2,Electronic equipment,1466
+Country C,Region3,Office Supplies,1408
+Country C,Region3,Furniture,1676
+Country C,Region3,Electronic equipment,1559
+Country C,Region4,Office Supplies,745
+Country C,Region4,Furniture,919
+Country C,Region4,Electronic equipment,781
+Country C,Region5,Office Supplies,267
+Country C,Region5,Furniture,316
+Country C,Region5,Electronic equipment,230
+Country C,Region6,Office Supplies,347
+Country C,Region6,Furniture,501
+Country C,Region6,Electronic equipment,453
+`,
+  input: '请使用旭日图来渲染数据'
+};
+
+export const treemapChartData = {
+  csv: `Category-0,Category-1,Category-2,Category-3,value
+query,methods,add,,593
+query,methods,and,,330
+query,methods,average,,287
+query,methods,count,,277
+query,methods,distinct,,292
+query,methods,div,,595
+query,methods,eq,,594
+query,methods,fn,,460
+query,methods,gt,,603
+query,methods,gte,,625
+query,methods,iff,,748
+query,methods,isa,,461
+query,methods,lt,,597
+query,methods,lte,,619
+query,methods,max,,283
+query,methods,min,,283
+query,methods,mod,,591
+query,methods,mul,,603
+query,methods,neq,,599
+query,methods,not,,386
+query,methods,or,,323
+query,methods,orderby,,307
+query,methods,range,,772
+query,methods,select,,296
+query,methods,stddev,,363
+query,methods,sub,,600
+query,methods,sum,,280
+query,methods,update,,307
+query,methods,variance,,335
+query,methods,where,,299
+query,methods,xor,,354
+query,methods,_,,264
+query,AggregateExpression,,,1616
+query,And,,,1027
+query,Arithmetic,,,3891
+query,Average,,,891
+query,BinaryExpression,,,2893
+query,Comparison,,,5103
+query,CompositeExpression,,,3677
+query,Count,,,781
+query,DateUtil,,,4141
+query,Distinct,,,933
+query,Expression,,,5130
+query,ExpressionIterator,,,3617
+query,Fn,,,3240
+query,If,,,2732
+query,IsA,,,2039
+query,Literal,,,1214
+query,Match,,,3748
+query,Maximum,,,843
+query,Minimum,,,843
+query,Not,,,1554
+query,Or,,,970
+query,Query,,,13896
+query,Range,,,1594
+query,StringUtil,,,4130
+query,Sum,,,791
+query,Variable,,,1124
+query,Variance,,,1876
+query,Xor,,,1101
+util,palette,ColorPalette,,6367
+util,palette,Palette,,1229
+util,palette,ShapePalette,,2059
+util,palette,valuePalette,,2291
+util,math,DenseMatrix,,3165
+util,math,IMatrix,,2815
+util,math,SparseMatrix,,3366
+util,heap,FibonacciHeap,,9354
+util,heap,HeapNode,,1233
+util,Arrays,,,8258
+util,Colors,,,10001
+util,Dates,,,8217
+util,Displays,,,12555
+util,Filter,,,2324
+util,Geometry,,,10993
+util,IEvaluable,,,335
+util,IPredicate,,,383
+util,IValueProxy,,,874
+util,Maths,,,17705
+util,Orientation,,,1486
+util,Property,,,5559
+util,Shapes,,,19118
+util,Sort,,,6887
+util,Stats,,,6557
+util,Strings,,,22026
+animate,interpolate,ArrayInterpolator,,1983
+animate,interpolate,ColorInterpolator,,2047
+animate,interpolate,DateInterpolator,,1375
+animate,interpolate,Interpolator,,8746
+animate,interpolate,MatrixInterpolator,,2202
+animate,interpolate,NumberInterpolator,,1382
+animate,interpolate,ObjectInterpolator,,1629
+animate,interpolate,PointInterpolator,,1675
+animate,interpolate,RectangleInterpolator,,2042
+animate,Easing,,,17010
+animate,FunctionSequence,,,5842
+animate,ISchedulable,,,1041
+animate,Parallel,,,5176
+animate,Pause,,,449
+animate,Scheduler,,,5593
+animate,Sequence,,,5534
+animate,Transition,,,9201
+animate,Transitioner,,,19975
+animate,TransitionEvent,,,1116
+animate,Tween,,,6006
+scale,IScaleMap,,,2105
+scale,LinearScale,,,1316
+scale,LogScale,,,3151
+scale,OrdinalScale,,,3770
+scale,QuantileScale,,,2435
+scale,QuantitativeScale,,,4839
+scale,RootScale,,,1756
+scale,Scale,,,4268
+scale,ScaleType,,,1821
+scale,TimeScale,,,5833
+physics,DragForce,,,1082
+physics,GravityForce,,,1336
+physics,IForce,,,319
+physics,NBodyForce,,,10498
+physics,Particle,,,2822
+physics,Simulation,,,9983
+physics,Spring,,,2213
+physics,SpringForce,,,1681
+data,converters,Converters,,721
+data,converters,DelimitedTextConverter,,4294
+data,converters,GraphMLConverter,,9800
+data,converters,IDataConverter,,1314
+data,converters,JSONConverter,,2220
+data,DataField,,,1759
+data,DataSchema,,,2165
+data,DataSet,,,586
+data,DataSource,,,3331
+data,DataTable,,,772
+data,DataUtil,,,3322
+vis,controls,AnchorControl,,2138
+vis,controls,ClickControl,,3824
+vis,controls,Control,,1353
+vis,controls,ControlList,,4665
+vis,controls,DragControl,,2649
+vis,controls,ExpandControl,,2832
+vis,controls,HoverControl,,4896
+vis,controls,IControl,,763
+vis,controls,PanZoomControl,,5222
+vis,controls,SelectionControl,,7862
+vis,controls,TooltipControl,,8435
+vis,operator,layout,AxisLayout,6725
+vis,operator,layout,BundledEdgeRouter,3727
+vis,operator,layout,CircleLayout,9317
+vis,operator,layout,CirclePackingLayout,12003
+vis,operator,layout,DendrogramLayout,4853
+vis,operator,layout,ForceDirectedLayout,8411
+vis,operator,layout,IcicleTreeLayout,4864
+vis,operator,layout,IndentedTreeLayout,3174
+vis,operator,layout,Layout,7881
+vis,operator,layout,NodeLinkTreeLayout,12870
+vis,operator,layout,PieLayout,2728
+vis,operator,layout,RadialTreeLayout,12348
+vis,operator,layout,RandomLayout,870
+vis,operator,layout,StackedAreaLayout,9121
+vis,operator,layout,TreeMapLayout,9191
+vis,operator,encoder,ColorEncoder,3179
+vis,operator,encoder,Encoder,4060
+vis,operator,encoder,PropertyEncoder,4138
+vis,operator,encoder,ShapeEncoder,1690
+vis,operator,encoder,valueEncoder,1830
+vis,operator,distortion,BifocalDistortion,4461
+vis,operator,distortion,Distortion,6314
+vis,operator,distortion,FisheyeDistortion,3444
+vis,operator,filter,FisheyeTreeFilter,5219
+vis,operator,filter,GraphDistanceFilter,3165
+vis,operator,filter,VisibilityFilter,3509
+vis,operator,label,Labeler,9956
+vis,operator,label,RadialLabeler,3899
+vis,operator,label,StackedAreaLabeler,3202
+vis,operator,IOperator,,1286
+vis,operator,Operator,,2490
+vis,operator,OperatorList,,5248
+vis,operator,OperatorSequence,,4190
+vis,operator,OperatorSwitch,,2581
+vis,operator,SortOperator,,2023
+vis,data,render,ArrowType,698
+vis,data,render,EdgeRenderer,5569
+vis,data,render,IRenderer,353
+vis,data,render,ShapeRenderer,2247
+vis,data,Data,,20544
+vis,data,DataList,,19788
+vis,data,DataSprite,,10349
+vis,data,EdgeSprite,,3301
+vis,data,NodeSprite,,19382
+vis,data,ScaleBinding,,11275
+vis,data,Tree,,7147
+vis,data,TreeBuilder,,9930
+vis,axis,Axes,,1302
+vis,axis,Axis,,24593
+vis,axis,AxisGridLine,,652
+vis,axis,AxisLabel,,636
+vis,axis,CartesianAxes,,6703
+vis,events,DataEvent,,2313
+vis,events,SelectionEvent,,1880
+vis,events,TooltipEvent,,1701
+vis,events,VisualizationEvent,,1117
+vis,legend,Legend,,20859
+vis,legend,LegendItem,,4614
+vis,legend,LegendRange,,10530
+vis,Visualization,,,16540
+display,DirtySprite,,,8833
+display,LineSprite,,,1732
+display,RectSprite,,,3623
+display,TextSprite,,,10066
+analytics,graph,BetweennessCentrality,,3534
+analytics,graph,LinkDistance,,5731
+analytics,graph,MaxFlowMinCut,,7840
+analytics,graph,ShortestPaths,,5914
+analytics,graph,SpanningTree,,3416
+analytics,cluster,AgglomerativeCluster,,3938
+analytics,cluster,CommunityStructure,,3812
+analytics,cluster,HierarchicalCluster,,6714
+analytics,cluster,MergeEdge,,743
+analytics,optimization,AspectRatioBanker,,7074
+flex,FlareVis,,,4116`,
+  input: '请使用矩形树图渲染数据'
+};
+
+export const gaugeChartData = {
+  csv: `name,value,description
+ 目标A,0.6,目标A的描述`,
+  input: '请使用仪表盘来完成数据渲染'
+};
+
+export const linearProgressChartData = {
+  csv: `type,value,text
+Tradition Industries,0.795,79.5%
+Business Companies,0.25,25%
+Customer-facing Companies,0.065,6.5%`,
+  input: '请使用线形进度图来完成数据渲染'
+};
+
+export const basicHeatMapChartData = {
+  csv: `val1,val2,value
+Asset Liability Ratio,Asset Liability Ratio,1
+Asset Liability Ratio,Asset Liability Ratio (Deducting Advance Payments),0.594527
+Asset Liability Ratio,Debt-to-long Capital Ratio,0.492963
+Asset Liability Ratio,Long Term Asset Suitability Ratio,-0.160995
+Asset Liability Ratio,Equity Multiplier,0.723664
+Asset Liability Ratio,Equity Ratio of Current Liability,0.658646
+Asset Liability Ratio,Interest Bearing Debt / Fully Invested Capital,-0.857474
+Asset Liability Ratio,Current Liability / Total Liabilities,0.320706
+Asset Liability Ratio,Capital Fixation Ratio,-0.284634
+Asset Liability Ratio,Expected Default Frequency,-0.091423
+Asset Liability Ratio (Deducting Advance Payments),Asset Liability Ratio,0.594527
+Asset Liability Ratio (Deducting Advance Payments),Asset Liability Ratio (Deducting Advance Payments),1
+Asset Liability Ratio (Deducting Advance Payments),Debt-to-long Capital Ratio,0.724546
+Asset Liability Ratio (Deducting Advance Payments),Long Term Asset Suitability Ratio,-0.099318
+Asset Liability Ratio (Deducting Advance Payments),Equity Multiplier,0.540639
+Asset Liability Ratio (Deducting Advance Payments),Equity Ratio of Current Liability,0.49214
+Asset Liability Ratio (Deducting Advance Payments),Interest Bearing Debt / Fully Invested Capital,-0.554039
+Asset Liability Ratio (Deducting Advance Payments),Current Liability / Total Liabilities,0.17127
+Asset Liability Ratio (Deducting Advance Payments),Capital Fixation Ratio,-0.265259
+Asset Liability Ratio (Deducting Advance Payments),Expected Default Frequency,0.068577
+Debt-to-long Capital Ratio,Asset Liability Ratio,0.492963
+Debt-to-long Capital Ratio,Asset Liability Ratio (Deducting Advance Payments),0.724546
+Debt-to-long Capital Ratio,Debt-to-long Capital Ratio,1
+Debt-to-long Capital Ratio,Long Term Asset Suitability Ratio,-0.091338
+Debt-to-long Capital Ratio,Equity Multiplier,0.450542
+Debt-to-long Capital Ratio,Equity Ratio of Current Liability,0.375839
+Debt-to-long Capital Ratio,Interest Bearing Debt / Fully Invested Capital,-0.524955
+Debt-to-long Capital Ratio,Current Liability / Total Liabilities,0.300627
+Debt-to-long Capital Ratio,Capital Fixation Ratio,-0.198362
+Debt-to-long Capital Ratio,Expected Default Frequency,0.033209
+Long Term Asset Suitability Ratio,Asset Liability Ratio,-0.160995
+Long Term Asset Suitability Ratio,Asset Liability Ratio (Deducting Advance Payments),-0.099318
+Long Term Asset Suitability Ratio,Debt-to-long Capital Ratio,-0.091338
+Long Term Asset Suitability Ratio,Long Term Asset Suitability Ratio,1
+Long Term Asset Suitability Ratio,Equity Multiplier,-0.049872
+Long Term Asset Suitability Ratio,Equity Ratio of Current Liability,-0.028452
+Long Term Asset Suitability Ratio,Interest Bearing Debt / Fully Invested Capital,0.157157
+Long Term Asset Suitability Ratio,Current Liability / Total Liabilities,0.009742
+Long Term Asset Suitability Ratio,Capital Fixation Ratio,-0.162374
+Long Term Asset Suitability Ratio,Expected Default Frequency,0.155095
+Equity Multiplier,Asset Liability Ratio,0.723664
+Equity Multiplier,Asset Liability Ratio (Deducting Advance Payments),0.540639
+Equity Multiplier,Debt-to-long Capital Ratio,0.450542
+Equity Multiplier,Long Term Asset Suitability Ratio,-0.049872
+Equity Multiplier,Equity Multiplier,1
+Equity Multiplier,Equity Ratio of Current Liability,0.951933
+Equity Multiplier,Interest Bearing Debt / Fully Invested Capital,-0.651767
+Equity Multiplier,Current Liability / Total Liabilities,0.079052
+Equity Multiplier,Capital Fixation Ratio,-0.535984
+Equity Multiplier,Expected Default Frequency,0.00798
+Equity Ratio of Current Liability,Asset Liability Ratio,0.658646
+Equity Ratio of Current Liability,Asset Liability Ratio (Deducting Advance Payments),0.49214
+Equity Ratio of Current Liability,Debt-to-long Capital Ratio,0.375839
+Equity Ratio of Current Liability,Long Term Asset Suitability Ratio,-0.028452
+Equity Ratio of Current Liability,Equity Multiplier,0.951933
+Equity Ratio of Current Liability,Equity Ratio of Current Liability,1
+Equity Ratio of Current Liability,Interest Bearing Debt / Fully Invested Capital,-0.543147
+Equity Ratio of Current Liability,Current Liability / Total Liabilities,-0.106139
+Equity Ratio of Current Liability,Capital Fixation Ratio,-0.52232
+Equity Ratio of Current Liability,Expected Default Frequency,0.011466
+Interest Bearing Debt / Fully Invested Capital,Asset Liability Ratio,-0.857474
+Interest Bearing Debt / Fully Invested Capital,Asset Liability Ratio (Deducting Advance Payments),-0.554039
+Interest Bearing Debt / Fully Invested Capital,Debt-to-long Capital Ratio,-0.524955
+Interest Bearing Debt / Fully Invested Capital,Long Term Asset Suitability Ratio,0.157157
+Interest Bearing Debt / Fully Invested Capital,Equity Multiplier,-0.651767
+Interest Bearing Debt / Fully Invested Capital,Equity Ratio of Current Liability,-0.543147
+Interest Bearing Debt / Fully Invested Capital,Interest Bearing Debt / Fully Invested Capital,1
+Interest Bearing Debt / Fully Invested Capital,Current Liability / Total Liabilities,-0.595016
+Interest Bearing Debt / Fully Invested Capital,Capital Fixation Ratio,0.310521
+Interest Bearing Debt / Fully Invested Capital,Expected Default Frequency,0.066397
+Current Liability / Total Liabilities,Asset Liability Ratio,0.320706
+Current Liability / Total Liabilities,Asset Liability Ratio (Deducting Advance Payments),0.17127
+Current Liability / Total Liabilities,Debt-to-long Capital Ratio,0.300627
+Current Liability / Total Liabilities,Long Term Asset Suitability Ratio,0.009742
+Current Liability / Total Liabilities,Equity Multiplier,0.079052
+Current Liability / Total Liabilities,Equity Ratio of Current Liability,-0.106139
+Current Liability / Total Liabilities,Interest Bearing Debt / Fully Invested Capital,-0.595016
+Current Liability / Total Liabilities,Current Liability / Total Liabilities,1
+Current Liability / Total Liabilities,Capital Fixation Ratio,-0.105199
+Current Liability / Total Liabilities,Expected Default Frequency,-0.064886
+Capital Fixation Ratio,Asset Liability Ratio,-0.284634
+Capital Fixation Ratio,Asset Liability Ratio (Deducting Advance Payments),-0.265259
+Capital Fixation Ratio,Debt-to-long Capital Ratio,-0.198362
+Capital Fixation Ratio,Long Term Asset Suitability Ratio,-0.162374
+Capital Fixation Ratio,Equity Multiplier,-0.535984
+Capital Fixation Ratio,Equity Ratio of Current Liability,-0.52232
+Capital Fixation Ratio,Interest Bearing Debt / Fully Invested Capital,0.310521
+Capital Fixation Ratio,Current Liability / Total Liabilities,-0.105199
+Capital Fixation Ratio,Capital Fixation Ratio,1
+Capital Fixation Ratio,Expected Default Frequency,-0.080153
+Expected Default Frequency,Asset Liability Ratio,-0.091423
+Expected Default Frequency,Asset Liability Ratio (Deducting Advance Payments),0.068577
+Expected Default Frequency,Debt-to-long Capital Ratio,0.033209
+Expected Default Frequency,Long Term Asset Suitability Ratio,0.155095
+Expected Default Frequency,Equity Multiplier,0.00798
+Expected Default Frequency,Equity Ratio of Current Liability,0.011466
+Expected Default Frequency,Interest Bearing Debt / Fully Invested Capital,0.066397
+Expected Default Frequency,Current Liability / Total Liabilities,-0.064886
+Expected Default Frequency,Capital Fixation Ratio,-0.080153
+Expected Default Frequency,Expected Default Frequency,1`,
+  input: '请使用热图完成数据渲染'
+};
+
+export const vennChartData = {
+  csv: `sets,name,value
+0,A,8
+1,D,8
+2,B,10
+3,C,12
+4,A,4
+4,B,4
+5,A,4
+5,C,4
+6,B,4
+6,C,4
+7,A,2
+7,B,2
+7,C,2`,
+  input: '请使用韦恩图渲染数据'
+};
+
 export const mockUserTextInput0 = {
   text: `快手消失了。快手上市后，市值一度超过2000亿美元，现在只剩200多亿美元。去年快手的营收破了千亿，公司也赚钱了，但市场不买账了。
 滴滴也不见了。滴滴去年营收接近2000亿元，并首次实现年度盈利，不过滴滴从美股退市后，一直没在港股上市，所以没有市值参考。`,
@@ -4859,11 +5324,11 @@ export const mockUserTextInput10 = {
 export const mockProgressData = {
   csv: `年份,进度
  2024,0.56`,
-  input: '帮我展示今年的进度数据'
+  input: '请使用环形进度图帮我展示今年的进度数据'
 };
 
 export const liquidData = {
   csv: `进度
  0.56`,
-  input: '展示进度数据'
+  input: '请使用水波图展示进度数据'
 };

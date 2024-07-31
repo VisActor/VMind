@@ -51,7 +51,31 @@ import {
   circularProgressStyle,
   linearProgressStyle,
   linearProgressAxes,
-  indicator
+  indicator,
+  bubbleCirclePackingField,
+  bubbleCirclePackingDisplayConf,
+  bubbleCirclePackingData,
+  rangeColumnField,
+  rangeColumnDisplayConf,
+  sunburstData,
+  sunburstDisplayConf,
+  treemapData,
+  sunburstOrTreemapField,
+  treemapDisplayConf,
+  gaugeField,
+  gaugeDisplayConf,
+  arrayData,
+  vennData,
+  vennField,
+  basicHeatMapSeries,
+  basicHeatMapRegion,
+  basicHeatMapColor,
+  basicHeatMapAxes,
+  basicHeatMapLegend,
+  basemap,
+  mapField,
+  mapDisplayConf,
+  registerChart
 } from './transformers';
 
 const pipelineBar = [
@@ -172,23 +196,59 @@ const pipelineCircularProgress = [
   theme
 ];
 
+const pipelineBubbleCirclePacking = [
+  chartType,
+  bubbleCirclePackingData,
+  data,
+  color,
+  bubbleCirclePackingField,
+  bubbleCirclePackingDisplayConf,
+  theme
+];
+
+const pipelineMapChart = [chartType, basemap, color, arrayData, mapField, mapDisplayConf, theme];
+const pipelineRangeColumn = [chartType, data, color, rangeColumnField, rangeColumnDisplayConf, theme];
+const pipelineSunburst = [chartType, sunburstData, color, sunburstOrTreemapField, sunburstDisplayConf, theme];
+const pipelineTreemap = [chartType, treemapData, color, sunburstOrTreemapField, treemapDisplayConf, theme];
+const pipelineGauge = [chartType, arrayData, color, gaugeField, gaugeDisplayConf, theme];
+const pipelineBasicHeatMap = [
+  chartType,
+  arrayData,
+  color,
+  basicHeatMapSeries,
+  basicHeatMapRegion,
+  basicHeatMapColor,
+  basicHeatMapAxes,
+  basicHeatMapLegend,
+  theme
+];
+const pipelineVenn = [chartType, registerChart, vennData, color, vennField, legend, theme];
+
 const pipelineMap: { [chartType: string]: any } = {
-  'BAR CHART': pipelineBar,
-  'LINE CHART': pipelineLine,
-  'PIE CHART': pipelinePie,
-  'WORD CLOUD': pipelineWordCloud,
-  'SCATTER PLOT': pipelineScatterPlot,
-  'DYNAMIC BAR CHART': pipelineRankingBar,
-  'FUNNEL CHART': pipelineFunnel,
-  'DUAL AXIS CHART': pipelineDualAxis,
-  'ROSE CHART': pipelineRose,
-  'RADAR CHART': pipelineRadar,
-  'SANKEY CHART': pipelineSankey,
-  'WATERFALL CHART': pipelineWaterfall,
-  'BOX PLOT': pipelineBoxPlot,
+  [ChartType.BarChart.toUpperCase()]: pipelineBar,
+  [ChartType.LineChart.toUpperCase()]: pipelineLine,
+  [ChartType.PieChart.toUpperCase()]: pipelinePie,
+  [ChartType.WordCloud.toUpperCase()]: pipelineWordCloud,
+  [ChartType.ScatterPlot.toUpperCase()]: pipelineScatterPlot,
+  [ChartType.DynamicBarChart.toUpperCase()]: pipelineRankingBar,
+  [ChartType.FunnelChart.toUpperCase()]: pipelineFunnel,
+  [ChartType.DualAxisChart.toUpperCase()]: pipelineDualAxis,
+  [ChartType.RoseChart.toUpperCase()]: pipelineRose,
+  [ChartType.RadarChart.toUpperCase()]: pipelineRadar,
+  [ChartType.SankeyChart.toUpperCase()]: pipelineSankey,
+  [ChartType.WaterFallChart.toUpperCase()]: pipelineWaterfall,
+  [ChartType.BoxPlot.toUpperCase()]: pipelineBoxPlot,
   [ChartType.LiquidChart.toUpperCase()]: pipelineLiquid,
   [ChartType.LinearProgress.toUpperCase()]: pipelineLinearProgress,
-  [ChartType.CircularProgress.toUpperCase()]: pipelineCircularProgress
+  [ChartType.CircularProgress.toUpperCase()]: pipelineCircularProgress,
+  [ChartType.BubbleCirclePacking.toUpperCase()]: pipelineBubbleCirclePacking,
+  [ChartType.MapChart.toUpperCase()]: pipelineMapChart,
+  [ChartType.RangeColumnChart.toUpperCase()]: pipelineRangeColumn,
+  [ChartType.SunburstChart.toUpperCase()]: pipelineSunburst,
+  [ChartType.TreemapChart.toUpperCase()]: pipelineTreemap,
+  [ChartType.Gauge.toUpperCase()]: pipelineGauge,
+  [ChartType.BasicHeatMap.toUpperCase()]: pipelineBasicHeatMap,
+  [ChartType.VennChart.toUpperCase()]: pipelineVenn
 };
 
 export const beforePipe: Transformer<GetChartSpecContext & GetChartSpecOutput, GetChartSpecOutput> = (

@@ -77,7 +77,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "6.9.0",
-    "@visactor/vchart": "^1.10.4",
+    "@visactor/vchart": "^1.11.4",
     "@rollup/plugin-dynamic-import-vars": "~2.1.0",
     "@types/node": "*",
     "dotenv": "~16.3.1",

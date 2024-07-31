@@ -6,23 +6,18 @@ import {
   foldDatasetByYField,
   getFieldByDataType,
   getFieldByRole,
+  getFieldsByDataType,
   getRemainedFields
 } from '../../../../../../common/utils/utils';
-import { ChartType } from '../../../../../../common/typings';
-import { DataType, ROLE } from '../../../../../../common/typings';
+import { ChartType, DataType, ROLE } from '../../../../../../common/typings';
 import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
 import { isValidDataset } from '../../../../../../common/dataProcess';
-
-const CARTESIAN_CHART_LIST = [
-  'Dynamic Bar Chart',
-  'Bar Chart',
-  'Line Chart',
-  'Scatter Plot',
-  'Funnel Chart',
-  'Dual Axis Chart',
-  'Waterfall Chart',
-  'Box Plot'
-];
+import {
+  NEED_COLOR_FIELD_CHART_LIST,
+  NEED_SIZE_FIELD_CHART_LIST,
+  CARTESIAN_CHART_LIST,
+  NEED_COLOR_AND_SIZE_CHART_LIST
+} from '../../../../constants';
 
 export const patchAxisField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
@@ -95,8 +90,9 @@ export const patchYField: Transformer<
 
   if (y && isArray(y) && y.length > 1) {
     if (
-      chartTypeNew === ('BOX PLOT' as ChartType) ||
-      (chartTypeNew === ('DUAL AXIS CHART' as ChartType) && y.length === 2)
+      chartTypeNew === ChartType.BoxPlot.toUpperCase() ||
+      (chartTypeNew === ChartType.DualAxisChart.toUpperCase() && y.length === 2) ||
+      (chartTypeNew === ChartType.RangeColumnChart.toUpperCase() && y.length === 2)
     ) {
       return {
         ...context
@@ -116,7 +112,7 @@ export const patchYField: Transformer<
         cellNew.color = FOLD_NAME.toString();
       }
     } else {
-      chartTypeNew = 'SCATTER PLOT' as ChartType;
+      chartTypeNew = <ChartType>ChartType.ScatterPlot.toUpperCase();
       cellNew = {
         ...cell,
         x: y[0],
@@ -143,7 +139,7 @@ export const patchBoxPlot: Transformer<
     ...cell
   };
   const { y } = cellNew;
-  if (chartType === ('BOX PLOT' as ChartType)) {
+  if (chartType === ChartType.BoxPlot.toUpperCase()) {
     if (typeof y === 'string' && y.split(',').length > 1) {
       cellNew.y = y.split(',').map(str => str.trim());
     } else if (isNil(y) || y.length === 0) {
@@ -209,7 +205,7 @@ export const patchDualAxis: Transformer<
   const cellNew: any = { ...cell };
   //Dual-axis drawing yLeft and yRight
 
-  if (chartType === ('DUAL AXIS CHART' as ChartType)) {
+  if (chartType === ChartType.DualAxisChart.toUpperCase()) {
     cellNew.y = [cellNew.y, cellNew.yLeft, cellNew.yRight, cellNew.y1, cellNew.y2].filter(Boolean).flat();
   }
 
@@ -226,12 +222,12 @@ export const patchPieChart: Transformer<
   const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
 
-  if (chartType === ('ROSE CHART' as ChartType)) {
+  if (chartType === ChartType.RoseChart.toUpperCase()) {
     cellNew.angle = cellNew.radius ?? cellNew.size ?? cellNew.angle;
   }
 
   //Pie chart must have color field and the angle field
-  if (chartType === ('PIE CHART' as ChartType) || chartType === ('ROSE CHART' as ChartType)) {
+  if (chartType === ChartType.PieChart.toUpperCase() || chartType === ChartType.RoseChart.toUpperCase()) {
     if (!cellNew.color || !cellNew.angle) {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
 
@@ -269,7 +265,7 @@ export const patchWordCloud: Transformer<
   const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
 
-  if (chartType === ('WORD CLOUD' as ChartType)) {
+  if (chartType === ChartType.WordCloud.toUpperCase()) {
     if (!cellNew.size || !cellNew.color || cellNew.color === cellNew.size) {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
 
@@ -315,7 +311,7 @@ export const patchDynamicBarChart: Transformer<
   const cellNew = { ...cell };
   let chartTypeNew = chartType;
 
-  if (chartType === ('DYNAMIC BAR CHART' as ChartType)) {
+  if (chartType === ChartType.DynamicBarChart.toUpperCase()) {
     if (!cell.time || cell.time === '' || cell.time.length === 0) {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
 
@@ -329,7 +325,7 @@ export const patchDynamicBarChart: Transformer<
           cellNew.time = stringField.fieldName;
         } else {
           //no available field, set chart type to bar chart
-          chartTypeNew = 'BAR CHART' as ChartType;
+          chartTypeNew = <ChartType>ChartType.BarChart.toUpperCase();
         }
       }
     }
@@ -364,6 +360,157 @@ export const patchCartesianXField: Transformer<
   }
   return {
     //...context,
+    cell: cellNew
+  };
+};
+
+export const patchNeedColor: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell, fieldInfo } = context;
+  const cellNew: any = { ...cell };
+  if (
+    NEED_COLOR_FIELD_CHART_LIST.some(needColorFieldChartType => needColorFieldChartType.toUpperCase() === chartType) ||
+    NEED_COLOR_AND_SIZE_CHART_LIST.some(needColorFieldChartType => needColorFieldChartType.toUpperCase() === chartType)
+  ) {
+    const colorField = [cellNew.color, cellNew.x, cellNew.label, (cellNew as any).sets].filter(Boolean);
+    if (colorField.length !== 0) {
+      cellNew.color = colorField[0];
+    } else {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const colorField = getFieldByRole(remainedFields, ROLE.DIMENSION);
+      if (colorField) {
+        cellNew.color = colorField.fieldName;
+      } else {
+        cellNew.color = remainedFields[0].fieldName;
+      }
+    }
+  }
+  return {
+    cell: cellNew
+  };
+};
+
+export const patchNeedSize: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell, fieldInfo } = context;
+  const cellNew: any = { ...cell };
+  if (
+    NEED_SIZE_FIELD_CHART_LIST.some(needSizeFieldChartType => needSizeFieldChartType.toUpperCase() === chartType) ||
+    NEED_COLOR_AND_SIZE_CHART_LIST.some(needSizeFieldChartType => needSizeFieldChartType.toUpperCase() === chartType)
+  ) {
+    const sizeField = [cellNew.size, cellNew.value, cellNew.y, cellNew.radius, cellNew.angle].filter(Boolean).flat();
+    if (sizeField.length !== 0) {
+      cellNew.size = sizeField[0];
+    } else {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const sizeField = getFieldByRole(remainedFields, ROLE.MEASURE);
+      if (sizeField) {
+        cellNew.size = sizeField.fieldName;
+      } else {
+        cellNew.size = remainedFields[0].fieldName;
+      }
+    }
+  }
+  return {
+    cell: cellNew
+  };
+};
+
+export const patchRangeColumnChart: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  // Range Column Chart's y field must length == 2
+  const { chartType, cell, fieldInfo } = context;
+  const cellNew = { ...cell };
+  const remainedFields = getRemainedFields(cellNew, fieldInfo);
+  const numericFields = getFieldsByDataType(remainedFields, [DataType.FLOAT, DataType.INT]);
+  if (chartType === ChartType.RangeColumnChart.toUpperCase()) {
+    if (cellNew.y && cellNew.y instanceof Array && cellNew.y.length === 2) {
+      return { cell: cellNew };
+    }
+    if (numericFields.length >= 2) {
+      cellNew.y = [numericFields[0].fieldName, numericFields[1].fieldName];
+    } else {
+      throw Error(
+        'The y-axis of the range column chart requires two numeric fields, ' +
+          'but the result of data aggregation does not have two numeric fields'
+      );
+    }
+  }
+  return {
+    //...context,
+    cell: cellNew
+  };
+};
+
+export const patchLinearProgressChart: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell, fieldInfo } = context;
+  const cellNew = { ...cell };
+  if (chartType === ChartType.LinearProgress.toUpperCase()) {
+    const xField = [cellNew.x, cellNew.color].filter(Boolean).flat();
+    if (xField.length !== 0) {
+      cellNew.x = xField[0];
+    } else {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const xField = getFieldByRole(remainedFields, ROLE.DIMENSION);
+      if (xField) {
+        cellNew.x = xField.fieldName;
+      } else {
+        cellNew.x = remainedFields[0].fieldName;
+      }
+    }
+
+    const yField = [cellNew.y, cellNew.size, cellNew.value, cellNew.radius, cellNew.angle].filter(Boolean).flat();
+    if (yField.length !== 0) {
+      cellNew.y = yField[0];
+    } else {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const yField = getFieldByRole(remainedFields, ROLE.MEASURE);
+      if (yField) {
+        cellNew.y = yField.fieldName;
+      } else {
+        cellNew.y = remainedFields[0].fieldName;
+      }
+    }
+  }
+  return {
+    //...context,
+    cell: cellNew
+  };
+};
+
+export const patchBasicHeatMapChart: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cell, fieldInfo } = context;
+  const cellNew: any = { ...cell };
+  if (chartType === ChartType.BasicHeatMap.toUpperCase()) {
+    const colorField = [cellNew.x, cellNew.y, cellNew.label, cellNew.color].filter(Boolean).flat();
+    if (colorField.length >= 2) {
+      cellNew.x = colorField[0];
+      cellNew.y = colorField[1];
+    } else {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const colorField = getFieldsByDataType(remainedFields, [DataType.STRING]);
+      if (colorField.length >= 2) {
+        cellNew.x = colorField[0];
+        cellNew.y = colorField[1];
+      } else {
+        cellNew.x = remainedFields[0].fieldName;
+        cellNew.y = remainedFields[1].fieldName;
+      }
+    }
+  }
+  return {
     cell: cellNew
   };
 };

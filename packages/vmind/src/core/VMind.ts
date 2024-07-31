@@ -7,7 +7,8 @@ import type {
   OuterPackages,
   VMindDataset,
   ChartType,
-  ChartTheme
+  ChartTheme,
+  BasemapOption
 } from '../common/typings';
 import { Model, ModelType } from '../common/typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
@@ -23,7 +24,7 @@ import type {
 import applicationMetaList, { ApplicationType } from '../applications';
 import { calculateTokenUsage } from '../common/utils/utils';
 import { isNil } from '@visactor/vutils';
-import { SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
+import { DEFAULT_MAP_OPTION, SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
 import { fillSpecTemplateWithData } from '../common/specUtils';
 import type { ApplicationMeta, TaskNode } from '../base/metaTypes';
@@ -170,6 +171,7 @@ class VMind {
    * @param colorPalette color palette of the chart
    * @param animationDuration duration of chart animation.
    * @param chartTypeList supported chart list. VMind will generate a chart among this list.
+   * @param basemapOption map chart's base map. Only use in map chart.
    * @returns spec and time duration of the chart.
    */
   async generateChart(
@@ -182,6 +184,7 @@ class VMind {
       animationDuration?: number;
       enableDataQuery?: boolean;
       theme?: ChartTheme | string;
+      basemapOption?: BasemapOption;
     }
   ): Promise<ChartGenerationOutput> {
     const modelType = this.getModelType();
@@ -189,7 +192,7 @@ class VMind {
     let finalFieldInfo = fieldInfo;
 
     let queryDatasetUsage;
-    const { enableDataQuery, colorPalette, animationDuration, theme, chartTypeList } = options ?? {};
+    const { enableDataQuery, colorPalette, animationDuration, theme, chartTypeList, basemapOption } = options ?? {};
     try {
       if (!isNil(dataset) && (isNil(enableDataQuery) || enableDataQuery) && modelType !== ModelType.CHART_ADVISOR) {
         //run data aggregation first
@@ -223,7 +226,8 @@ class VMind {
       colors: colorPalette,
       totalTime: animationDuration,
       chartTheme: theme,
-      chartTypeList: chartTypeList ?? SUPPORTED_CHART_LIST
+      chartTypeList: chartTypeList ?? SUPPORTED_CHART_LIST,
+      basemapOption: basemapOption ?? DEFAULT_MAP_OPTION
     };
 
     const chartGenerationResult = await this.runApplication(ApplicationType.ChartGeneration, modelType, context);

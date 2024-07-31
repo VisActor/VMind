@@ -1,4 +1,11 @@
-import type { ChartType, ILLMOptions, SimpleFieldInfo, VMindDataset, ChartTheme } from '../common/typings';
+import type {
+  BasemapOption,
+  ChartType,
+  ILLMOptions,
+  SimpleFieldInfo,
+  VMindDataset,
+  ChartTheme
+} from '../common/typings';
 import type { Cell } from './chartGeneration/types';
 import type { InsightAlgorithm, VMindInsight } from './IngelligentInsight/types';
 
@@ -38,6 +45,7 @@ export type ChartGenerationContext = {
   fieldInfo: SimpleFieldInfo[];
   dataset?: VMindDataset;
   chartTypeList: ChartType[]; //supported chart list
+  basemapOption: BasemapOption; // only use in map chart
 } & {
   totalTime?: number;
   colors?: string[];

@@ -2,25 +2,51 @@
 import { ChartType } from '../../../../../../common/typings';
 import { barChartExample1, dynamicBarChart1, lineChartExample1, lineChartExample2, pieChartExample1 } from './examples';
 import type { ChartKnowledge } from './types';
+import {
+  CARTESIAN_CHART_LIST,
+  NEED_COLOR_FIELD_CHART_LIST,
+  NEED_SIZE_FIELD_CHART_LIST,
+  NEED_COLOR_AND_SIZE_CHART_LIST
+} from '../../../../constants';
 
 const getColorKnowledge = (chartTypeList: ChartType[]) => {
-  if (
-    chartTypeList.includes(ChartType.WordCloud) ||
-    chartTypeList.includes(ChartType.PieChart) ||
-    chartTypeList.includes(ChartType.RoseChart)
-  ) {
-    const validChartList = [ChartType.WordCloud, ChartType.PieChart, ChartType.RoseChart];
-    const includedCharts = chartTypeList.filter(chart => validChartList.includes(chart));
+  const validSet = new Set(chartTypeList);
+  if (NEED_COLOR_FIELD_CHART_LIST.some(chartType => validSet.has(chartType))) {
+    const includedCharts = chartTypeList.filter(chart => NEED_COLOR_FIELD_CHART_LIST.includes(chart));
     return ", can't be empty in " + includedCharts.join(', ') + '.';
   }
   return '.';
 };
 
 const getSizeKnowledge = (chartTypeList: ChartType[]) => {
-  if (chartTypeList.includes(ChartType.ScatterPlot) || chartTypeList.includes(ChartType.WordCloud)) {
-    const validChartList = [ChartType.ScatterPlot, ChartType.WordCloud];
-    const includedCharts = chartTypeList.filter(chart => validChartList.includes(chart));
-    return ' Only used in ' + includedCharts.join(' and ') + '.';
+  const validSet = new Set(chartTypeList);
+  if (NEED_SIZE_FIELD_CHART_LIST.some(chartType => validSet.has(chartType))) {
+    const includedCharts = chartTypeList.filter(chart => NEED_SIZE_FIELD_CHART_LIST.includes(chart));
+    return ", can't be empty in " + includedCharts.join(' , ') + '.';
+  }
+  return '.';
+};
+
+export const getNeedColorAndSizeKnowledge = (chartTypeList: ChartType[]) => {
+  const validSet = new Set(chartTypeList);
+  if (NEED_COLOR_AND_SIZE_CHART_LIST.some(chartType => validSet.has(chartType))) {
+    const includedCharts = chartTypeList.filter(chart => NEED_COLOR_AND_SIZE_CHART_LIST.includes(chart));
+    return (
+      includedCharts.join(', ') +
+      ' all commonly use color to represent different categories and size to represent the magnitude of the values. Map your data fields to the color (representing the category) and size (representing the value) visual channels instead of using the x-axis of the Cartesian coordinate system.'
+    );
+  }
+  return '.';
+};
+
+export const getCartesianCoordinateSystemKnowledge = (chartTypeList: ChartType[]) => {
+  const validSet = new Set(chartTypeList);
+  if (CARTESIAN_CHART_LIST.some(chartType => validSet.has(chartType))) {
+    const includedCharts = chartTypeList.filter(chart => CARTESIAN_CHART_LIST.includes(chart));
+    return (
+      includedCharts.join(', ') +
+      ' are visualizations based on the Cartesian coordinate system. The Cartesian coordinate system is usually used to show linear relationships and numerical changes. Please map the data fields to the x-axis (independent variable) and the y-axis (dependent variable).'
+    );
   }
   return '.';
 };
@@ -32,7 +58,7 @@ export const visualChannelInfoMap = {
   color: (chartTypeList: ChartType[]) =>
     `the field mapped to the color channel. Must use a string field${getColorKnowledge(chartTypeList)}`,
   size: (chartTypeList: ChartType[]) =>
-    `the field mapped to the size channel. Must use a number field.${getSizeKnowledge(chartTypeList)}`,
+    `the field mapped to the size channel. Must use a number field${getSizeKnowledge(chartTypeList)}`,
   angle: (chartTypeList: ChartType[]) =>
     "the field mapped to the angle channel of the pie chart. Can't be empty in Pie Chart.",
   radius: (chartTypeList: ChartType[]) =>
@@ -70,7 +96,10 @@ export const chartKnowledgeDict: ChartKnowledge = {
   [ChartType.WordCloud]: {
     index: 6,
     visualChannels: ['color', 'size'],
-    examples: []
+    examples: [],
+    knowledge: [
+      'Word cloud is an effective visualization tool that can intuitively display the frequency of keywords. The size of a keyword is proportional to its popularity, which is suitable for displaying the importance and trends in text data.'
+    ]
   },
   [ChartType.RoseChart]: {
     index: 7,
@@ -130,9 +159,7 @@ export const chartKnowledgeDict: ChartKnowledge = {
     index: 15,
     visualChannels: ['x', 'y'],
     examples: [],
-    knowledge: [
-      'Linear Progress chart is typically used to display progress data, which is usually a value between 0 and 1. Linear progress bars can show single progress values as well as multiple progress values. By default, the left Y-axis of the linear progress bar is the categorical field, and the bottom X-axis is the numerical field.'
-    ]
+    knowledge: []
   },
   [ChartType.CircularProgress]: {
     index: 16,
@@ -140,6 +167,58 @@ export const chartKnowledgeDict: ChartKnowledge = {
     examples: [],
     knowledge: [
       'Circular progress chart is also used to display progress data, presented in a circular form, with the values on the numerical axis typically ranging from 0 to 1.'
+    ]
+  },
+  [ChartType.BubbleCirclePacking]: {
+    index: 17,
+    visualChannels: ['color', 'size'],
+    examples: [],
+    knowledge: []
+  },
+  [ChartType.MapChart]: {
+    index: 18,
+    visualChannels: ['color', 'size'],
+    examples: [],
+    knowledge: []
+  },
+  [ChartType.RangeColumnChart]: {
+    index: 19,
+    visualChannels: ['y', 'x'],
+    examples: [],
+    knowledge: []
+  },
+  [ChartType.SunburstChart]: {
+    index: 20,
+    visualChannels: ['color', 'size'],
+    examples: [],
+    knowledge: [
+      'The colors field for sunburst chart and treemap chart must be an array. The order of the elements in the array needs to be sorted from large to small according to the coverage described by the data field.'
+    ]
+  },
+  [ChartType.TreemapChart]: {
+    index: 21,
+    visualChannels: ['color', 'size'],
+    examples: [],
+    knowledge: []
+  },
+  [ChartType.Gauge]: {
+    index: 22,
+    visualChannels: ['color', 'size'],
+    examples: [],
+    knowledge: ['The gauge chart must contain two fields: size and color.']
+  },
+  [ChartType.BasicHeatMap]: {
+    index: 23,
+    visualChannels: ['y', 'x', 'size'],
+    examples: [],
+    knowledge: []
+  },
+  [ChartType.VennChart]: {
+    index: 24,
+    visualChannels: ['size', 'color'],
+    examples: [],
+    knowledge: [
+      'The color field of the Venn diagram requires an array of length 2. The field with subscript 0 maps to the sets, and the field with subscript 1 maps to the name.'
     ]
   }
 };
