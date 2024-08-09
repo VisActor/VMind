@@ -1,18 +1,17 @@
 import { Prompt } from '../../../../../../base/tools/prompt';
 import { getInsightTextPrompt } from './template';
-import type { GetQuerySQLContext } from '../../../../../../applications/dataAggregation/types';
-import type { DataAggregationContext } from '../../../../../../applications/types';
+import type { InsightContext } from '../../../../../../applications/types';
 
-export class GPTInsightTextPrompt extends Prompt<GetQuerySQLContext> {
+export class GPTInsightTextPrompt extends Prompt<InsightContext> {
   constructor() {
     super('');
   }
-  getSystemPrompt(context: GetQuerySQLContext) {
-    const { llmOptions } = context;
-    const InsightTextPrompt = getInsightTextPrompt(llmOptions.insightTextContext);
+  getSystemPrompt(context: InsightContext) {
+    const { llmOptions, language } = context;
+    const InsightTextPrompt = getInsightTextPrompt(llmOptions.insightTextContext, language);
     return InsightTextPrompt;
   }
-  getUserPrompt(context: DataAggregationContext): string {
+  getUserPrompt(context: InsightContext): string {
     return '';
   }
 }

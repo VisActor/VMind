@@ -13,7 +13,7 @@ export enum InsightType {
 }
 
 export type VMindInsight = {
-  type: string; // Insight type
+  type: InsightType; // Insight type
   data: {
     // Abnormal data points
     index: number; // The index of the data point in the dataset
@@ -44,7 +44,7 @@ export type DataProcessOutput = {
   cell: Cell;
   fieldInfo: SimpleFieldInfo[];
   dataset: VMindDataset;
-  seriesDataMap: Record<string | number, DataItem[]>;
+  seriesDataMap: Record<string | number, { index: number; dataItem: DataItem }[]>;
 };
 
 export type ExtractInsightOutput = {

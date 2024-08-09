@@ -6,7 +6,8 @@ import type {
   DataItem,
   OuterPackages,
   VMindDataset,
-  ChartType
+  ChartType,
+  ChartTheme
 } from '../common/typings';
 import { Model, ModelType } from '../common/typings';
 import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
@@ -22,11 +23,9 @@ import type {
 import applicationMetaList, { ApplicationType } from '../applications';
 import { calculateTokenUsage } from '../common/utils/utils';
 import { isNil } from '@visactor/vutils';
-import type { Cell } from '../applications/chartGeneration/types';
 import { SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
 import { fillSpecTemplateWithData } from '../common/specUtils';
-import type { InsightAlgorithm } from '../applications/IngelligentInsight/types';
 import type { ApplicationMeta, TaskNode } from '../base/metaTypes';
 import type { DataExtractionContext, DataExtractionOutput } from '../applications/types';
 
@@ -182,6 +181,7 @@ class VMind {
       colorPalette?: string[];
       animationDuration?: number;
       enableDataQuery?: boolean;
+      theme?: ChartTheme | string;
     }
   ): Promise<ChartGenerationOutput> {
     const modelType = this.getModelType();
@@ -189,7 +189,7 @@ class VMind {
     let finalFieldInfo = fieldInfo;
 
     let queryDatasetUsage;
-    const { enableDataQuery, colorPalette, animationDuration, chartTypeList } = options ?? {};
+    const { enableDataQuery, colorPalette, animationDuration, theme, chartTypeList } = options ?? {};
     try {
       if (!isNil(dataset) && (isNil(enableDataQuery) || enableDataQuery) && modelType !== ModelType.CHART_ADVISOR) {
         //run data aggregation first
@@ -222,6 +222,7 @@ class VMind {
       llmOptions: this._options,
       colors: colorPalette,
       totalTime: animationDuration,
+      chartTheme: theme,
       chartTypeList: chartTypeList ?? SUPPORTED_CHART_LIST
     };
 
@@ -244,17 +245,9 @@ class VMind {
     };
   }
 
-  async intelligentInsight(
-    spec: any,
-    options: {
-      dataset?: VMindDataset;
-      fieldInfo?: SimpleFieldInfo[];
-      cell?: Cell;
-      insightAlgorithms?: InsightAlgorithm[];
-    }
-  ): Promise<InsightOutput> {
+  async intelligentInsight(spec: any, options?: Partial<InsightContext>): Promise<InsightOutput> {
     const modelType = this.getModelType();
-    const context: InsightContext = {
+    const context = {
       spec,
       llmOptions: this._options,
       ...options
@@ -274,8 +267,8 @@ class VMind {
    * @param dataset
    * @returns
    */
-  fillSpecWithData(spec: any, dataset: VMindDataset, totalTime?: number) {
-    return fillSpecTemplateWithData(spec, dataset, totalTime);
+  fillSpecWithData(spec: any, dataset: VMindDataset, cell?: any) {
+    return fillSpecTemplateWithData(spec, dataset, cell);
   }
 
   async exportVideo(spec: any, time: TimeType, outerPackages: OuterPackages, mode?: 'node' | 'desktop-browser') {

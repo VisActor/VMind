@@ -18,7 +18,8 @@ import {
 import { getFieldByDataType } from '../../../../../common/utils/utils';
 import { array, isArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
-import { DataType } from '../../../../../common/typings';
+import { DataType, ChartTheme } from '../../../../../common/typings';
+import { builtinThemeMap } from '../../../../../common/builtinTheme';
 import { COLOR_FIELD } from '@visactor/chart-advisor';
 
 type Context = GetChartSpecContext & GetChartSpecOutput;
@@ -234,7 +235,10 @@ export const sankeyData: Transformer<Context, GetChartSpecOutput> = (context: Co
 };
 
 export const color: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { colors, spec } = context;
+  const { colors, spec, chartTheme } = context;
+  if (chartTheme) {
+    return { spec };
+  }
   // spec.data = [dataset]
   if (colors && colors.length > 0) {
     spec.color = colors;
@@ -246,10 +250,12 @@ export const color: Transformer<Context, GetChartSpecOutput> = (context: Context
 };
 
 export const colorBar: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { colors, spec } = context;
+  const { colors, spec, chartTheme } = context;
   // spec.data = [dataset]
   const colorThemes = COLOR_THEMES.default;
-
+  if (chartTheme) {
+    return { spec };
+  }
   if (colors && colors.length > 0) {
     spec.color = colors;
   } else {
@@ -307,8 +313,11 @@ export const colorDynamicBar: Transformer<Context, GetChartSpecOutput> = (contex
 };
 
 export const colorLine: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { colors, spec } = context;
+  const { colors, spec, chartTheme } = context;
   // spec.data = [dataset]
+  if (chartTheme) {
+    return { spec };
+  }
   if (colors && colors.length > 0) {
     spec.color = colors;
   } else {
@@ -332,7 +341,7 @@ export const colorLine: Transformer<Context, GetChartSpecOutput> = (context: Con
     }));
     spec.point = {
       style: {
-        visible: false
+        //visible: false
       }
     };
   }
@@ -506,6 +515,7 @@ export const dualAxisSeries: Transformer<Context, GetChartSpecOutput> = (context
     }
   ];
   spec.data = undefined;
+  spec.labelLayout = 'region';
   return { spec };
 };
 
@@ -543,7 +553,11 @@ export const dualAxisAxes: Transformer<Context, GetChartSpecOutput> = (context: 
 };
 
 export const wordCloudDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec } = context;
+  const { spec, chartTheme } = context;
+
+  if (chartTheme) {
+    return { spec };
+  }
   spec.fontSizeRange = [20, 50];
   spec.fontWeightRange = [800, 800];
   //spec.wordCloudConfig = {
@@ -569,8 +583,10 @@ export const radarField: Transformer<Context, GetChartSpecOutput> = (context: Co
 };
 
 export const radarDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec } = context;
-
+  const { spec, chartTheme } = context;
+  if (chartTheme) {
+    return { spec };
+  }
   spec.area = {
     visible: true // show area
   };
@@ -592,15 +608,15 @@ export const radarAxis: Transformer<Context, GetChartSpecOutput> = (context: Con
         visible: true,
         space: 0,
         style: {
-          textAlign: 'center',
-          stroke: '#fff',
-          lineWidth: 4
+          //textAlign: 'center',
+          //stroke: '#fff',
+          //lineWidth: 4
         }
       },
       grid: {
         smooth: false,
         style: {
-          lineDash: [0]
+          //lineDash: [0]
         }
       }
     },
@@ -618,7 +634,7 @@ export const radarAxis: Transformer<Context, GetChartSpecOutput> = (context: Con
       },
       grid: {
         style: {
-          lineDash: [0]
+          //lineDash: [0]
         }
       }
     }
@@ -662,11 +678,11 @@ export const boxPlotStyle: Transformer<Context, GetChartSpecOutput> = (context: 
   spec.boxPlot = {
     ...spec.boxPlot,
     style: {
-      boxWidth: 50,
-      shaftWidth: 30,
-      shaftShape: 'bar',
-      lineWidth: 2,
-      shaftOpacity: 0.3
+      //boxWidth: 50,
+      //shaftWidth: 30,
+      //shaftShape: 'bar',
+      //lineWidth: 2,
+      //shaftOpacity: 0.3
     }
   };
   return { spec };
@@ -678,8 +694,8 @@ export const sankeyLabel: Transformer<Context, GetChartSpecOutput> = (context: C
   spec.label = {
     visible: true,
     style: {
-      fontSize: 12,
-      fill: '#000000'
+      //fontSize: 12
+      //fill: '#000000'
     }
   };
   return { spec };
@@ -690,14 +706,14 @@ export const sankeyLink: Transformer<Context, GetChartSpecOutput> = (context: Co
 
   spec.link = {
     style: {
-      fillOpacity: 0.1
+      //fillOpacity: 0.1
     },
     state: {
       hover: {
-        fillOpacity: 0.4
+        //fillOpacity: 0.4
       },
       blur: {
-        fill: '#e8e8e8'
+        //fill: '#e8e8e8'
       }
     }
   };
@@ -798,12 +814,12 @@ export const rankingBarAxis: Transformer<Context, GetChartSpecOutput> = (context
       title: {
         visible: false,
         style: {
-          fill: '#FFFFFF'
+          //fill: '#FFFFFF'
         }
       },
       label: {
         style: {
-          fill: '#FFFFFF'
+          //fill: '#FFFFFF'
         }
       },
       grid: {
@@ -818,12 +834,12 @@ export const rankingBarAxis: Transformer<Context, GetChartSpecOutput> = (context
       title: {
         visible: false,
         style: {
-          fill: '#FFFFFF'
+          //fill: '#FFFFFF'
         }
       },
       label: {
         style: {
-          fill: '#FFFFFF'
+          //fill: '#FFFFFF'
         }
       },
       type: 'band'
@@ -842,13 +858,13 @@ export const axis: Transformer<Context, GetChartSpecOutput> = (context: Context)
       type: 'band',
       label: {
         style: {
-          fill: '#FFFFFF'
+          //fill: '#FFFFFF'
         }
       },
       title: {
         visible: false,
         style: {
-          fill: '#FFFFFF'
+          //fill: '#FFFFFF'
         }
       }
     },
@@ -857,13 +873,13 @@ export const axis: Transformer<Context, GetChartSpecOutput> = (context: Context)
       type: 'linear',
       label: {
         style: {
-          fill: '#FFFFFF'
+          //fill: '#FFFFFF'
         }
       },
       title: {
         visible: false,
         style: {
-          fill: '#FFFFFF'
+          //fill: '#FFFFFF'
         }
       }
     }
@@ -884,17 +900,17 @@ export const legend: Transformer<Context, GetChartSpecOutput> = (context: Contex
         visible: true,
         background: {
           style: {
-            fillOpacity: 0
+            //fillOpacity: 0
           }
         },
         label: {
           style: {
-            fill: '#FFFFFF'
+            //fill: '#FFFFFF'
           }
         },
         shape: {
           style: {
-            symbolType: 'rect'
+            //symbolType: 'rect'
           }
         }
       }
@@ -958,13 +974,13 @@ export const scatterAxis: Transformer<Context, GetChartSpecOutput> = (context: C
       type: [DataType.DATE, DataType.STRING].includes(xFieldInfo.type) ? 'band' : 'linear',
       label: {
         style: {
-          fill: '#FFFFFF'
+          //fill: '#FFFFFF'
         }
       },
       title: {
         visible: false,
         style: {
-          fill: '#FFFFFF'
+          //fill: '#FFFFFF'
         }
       }
     },
@@ -973,13 +989,13 @@ export const scatterAxis: Transformer<Context, GetChartSpecOutput> = (context: C
       type: [DataType.DATE, DataType.STRING].includes(yFieldInfo.type) ? 'band' : 'linear',
       label: {
         style: {
-          fill: '#FFFFFF'
+          //fill: '#FFFFFF'
         }
       },
       title: {
         visible: false,
         style: {
-          fill: '#FFFFFF'
+          //fill: '#FFFFFF'
         }
       }
     }
@@ -1173,11 +1189,14 @@ export const animationCartesianPie: Transformer<Context, GetChartSpecOutput> = (
 };
 
 export const displayConfBar: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec } = context;
+  const { spec, chartTheme } = context;
 
+  if (chartTheme) {
+    return { spec };
+  }
   spec.bar = {
     style: {
-      cornerRadius: [8, 8, 0, 0]
+      //cornerRadius: [8, 8, 0, 0]
     }
   };
 
@@ -1185,15 +1204,38 @@ export const displayConfBar: Transformer<Context, GetChartSpecOutput> = (context
 };
 
 export const displayConfLine: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec } = context;
-
+  const { spec, chartTheme } = context;
+  if (chartTheme) {
+    return { spec };
+  }
   spec.line = {
     style: {
-      curveType: 'monotone',
-      lineWidth: 6,
-      lineCap: 'round'
+      //curveType: 'monotone',
+      //lineWidth: 6,
+      //lineCap: 'round'
     }
   };
+
+  return { spec };
+};
+
+export const theme: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { chartTheme, spec } = context;
+
+  if (typeof chartTheme === 'string') {
+    Object.keys(builtinThemeMap).some(key => {
+      if (key === chartTheme) {
+        spec.theme = builtinThemeMap[chartTheme];
+        return true;
+      }
+      return false;
+    });
+  } else if (typeof chartTheme === 'object') {
+    spec.theme = chartTheme;
+  }
+  if (spec.theme && spec.theme.colorScheme) {
+    spec.color = undefined;
+  }
 
   return { spec };
 };

@@ -176,3 +176,5 @@ export type VMindTheme = {
   colorScheme: string[];
   background: string;
 };
+
+export type { ITheme as ChartTheme } from '@visactor/vchart';

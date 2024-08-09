@@ -1,3 +1,16 @@
+# v1.2.12
+
+2024-06-17
+
+
+**🔖 New featureure**
+
+- **@visactor/vmind**: intelligent insight module
+- **@visactor/vmind**: add custom model type support
+- **@visactor/vmind**: take skylark model when no model type match
+
+[more detail about v1.2.12](https://github.com/VisActor/VMind/releases/tag/v1.2.12)
+
 # v1.2.11
 
 2024-04-24
