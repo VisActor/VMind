@@ -40,7 +40,7 @@ import {
   SalesRecordsData,
   gmvData
 } from '../../constants/mockData';
-import VMind, { ArcoTheme } from '../../../../../src/index';
+import VMind, { ArcoTheme, builtinThemeMap, BuiltinThemeType } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
 import { isArray } from '@visactor/vutils';
 
@@ -141,31 +141,36 @@ export function DataInput(props: IPropsType) {
       ? fieldInfo.map(info => ({ fieldName: info.fieldName, role: info.role, type: info.type }))
       : fieldInfo;
 
-    const finalDataset = specTemplateTest ? undefined : dataset;
+    const finalDataset = specTemplateTest && model !== Model.CHART_ADVISOR ? undefined : dataset;
 
     const startTime = new Date().getTime();
     const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
       //enableDataQuery: false,
       //chartTypeList: [ChartType.BarChart, ChartType.LineChart],
-      colorPalette: ArcoTheme.colorScheme
+      // colorPalette: ArcoTheme.colorScheme,
+      theme: 'light'
     });
     const endTime = new Date().getTime();
     console.log(chartGenerationRes);
     if (isArray(chartGenerationRes)) {
-      props.onSpecListGenerate(chartGenerationRes.map(res => res.spec));
+      const resNew = chartGenerationRes.map(res => {
+        const { spec, cell } = res;
+        specTemplateTest && (spec.data = undefined);
+        const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset, cell) : spec;
+        return finalSpec;
+      });
+      props.onSpecListGenerate(resNew);
     } else {
       const { spec, time, cell } = chartGenerationRes;
 
-      const finalSpec = specTemplateTest
-        ? vmind.fillSpecWithData(spec, dataset, cell, finalFieldInfo, time.totalTime)
-        : spec;
+      const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset) : spec;
 
       const costTime = endTime - startTime;
       props.onSpecGenerate(finalSpec, time as any, costTime);
     }
 
     setLoading(false);
-  }, [vmind, csv, describe, props]);
+  }, [vmind, csv, model, describe, props]);
 
   return (
     <div className="left-sider">

@@ -45,12 +45,41 @@ import {
   waterfallAxes,
   waterfallStackLabel,
   boxPlotField,
-  boxPlotStyle
+  boxPlotStyle,
+  theme
 } from './transformers';
 
-const pipelineBar = [chartType, data, colorBar, cartesianBar, axis, legend, displayConfBar, animationCartesianBar];
-const pipelineLine = [chartType, data, colorLine, cartesianLine, axis, legend, displayConfLine, animationCartisianLine];
-const pipelinePie = [chartType, data, color, pieField, legend, animationCartesianPie];
+const pipelineBar = [
+  chartType,
+  data,
+  colorBar,
+  cartesianBar,
+  axis,
+  legend,
+  displayConfBar,
+  //animationCartesianBar,
+  theme
+];
+const pipelineLine = [
+  chartType,
+  data,
+  colorLine,
+  cartesianLine,
+  axis,
+  legend,
+  displayConfLine,
+  //animationCartisianLine,
+  theme
+];
+const pipelinePie = [
+  chartType,
+  data,
+  color,
+  pieField,
+  legend,
+  // animationCartesianPie,
+  theme
+];
 const pipelineRankingBar = [
   chartType,
   sequenceData,
@@ -58,25 +87,63 @@ const pipelineRankingBar = [
   rankingBarField,
   rankingBarAxis,
   customMark,
-  rankingBarLabel
+  rankingBarLabel,
+  theme
 ];
 
-const pipelineWordCloud = [chartType, wordCloudData, color, wordCloudField, wordCloudDisplayConf, animationOneByOne];
+const pipelineWordCloud = [
+  chartType,
+  wordCloudData,
+  color,
+  wordCloudField,
+  wordCloudDisplayConf,
+  //animationOneByOne,
+  theme
+];
 
-const pipelineScatterPlot = [chartType, data, color, scatterField, scatterAxis, legend, animationOneByOne];
+const pipelineScatterPlot = [
+  chartType,
+  data,
+  color,
+  scatterField,
+  scatterAxis,
+  legend,
+  //animationOneByOne,
+  theme
+];
 
-const pipelineFunnel = [chartType, funnelData, color, funnelField, legend];
+const pipelineFunnel = [chartType, funnelData, color, funnelField, legend, theme];
 
-const pipelineDualAxis = [chartType, data, color, dualAxisSeries, dualAxisAxes, legend];
+const pipelineDualAxis = [chartType, data, color, dualAxisSeries, dualAxisAxes, legend, theme];
 
-const pipelineRose = [chartType, data, color, roseField, roseAxis, legend, animationCartesianPie];
+const pipelineRose = [
+  chartType,
+  data,
+  color,
+  roseField,
+  roseAxis,
+  legend,
+  //animationCartesianPie,
+  theme
+];
 
-const pipelineRadar = [chartType, data, color, radarField, radarDisplayConf, radarAxis, legend, animationCartisianLine];
+const pipelineRadar = [
+  chartType,
+  data,
+  color,
+  radarField,
+  radarDisplayConf,
+  radarAxis,
+  legend,
+  //animationCartisianLine,
+  theme
+];
 
-const pipelineSankey = [chartType, sankeyData, color, sankeyField, sankeyLink, sankeyLabel, legend];
+const pipelineSankey = [chartType, sankeyData, color, sankeyField, sankeyLink, sankeyLabel, legend, theme];
 
-const pipelineWaterfall = [chartType, data, color, waterfallField, waterfallAxes, waterfallStackLabel, legend];
-const pipelineBoxPlot = [chartType, data, color, boxPlotField, boxPlotStyle, legend];
+const pipelineWaterfall = [chartType, data, color, waterfallField, waterfallAxes, waterfallStackLabel, legend, theme];
+
+const pipelineBoxPlot = [chartType, data, color, boxPlotField, boxPlotStyle, legend, theme];
 
 const pipelineMap: { [chartType: string]: any } = {
   'BAR CHART': pipelineBar,
@@ -104,7 +171,7 @@ export const afterPipe: Transformer<GetChartSpecContext & GetChartSpecOutput, Ge
   context: GetChartSpecContext & GetChartSpecOutput
 ) => {
   const { spec } = context;
-  spec.background = '#00000033';
+  // spec.background = '#00000033';
   return { spec };
 };
 
