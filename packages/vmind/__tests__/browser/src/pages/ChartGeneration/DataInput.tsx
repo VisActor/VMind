@@ -49,7 +49,13 @@ import {
   linearProgressChartData,
   basicHeatMapChartData,
   vennChartData,
-  mapChartData
+  mapChartData,
+  singleColumnLineCombinationChartData,
+  singleColumnLineCombinationChartData1,
+  singleColumnPieCombinationChartData,
+  singleColumnPieAndLineCombinationChartData,
+  singleColumnBarCombinationChartData1,
+  singleColumnBarCombinationChartData
 } from '../../constants/mockData';
 import VMind, { ArcoTheme, builtinThemeMap, BuiltinThemeType } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
@@ -106,7 +112,13 @@ const demoDataList: { [key: string]: any } = {
   Gauge: gaugeChartData,
   LinearProgress: linearProgressChartData,
   BasicHeatMap: basicHeatMapChartData,
-  Venn: vennChartData
+  Venn: vennChartData,
+  SingleColumnLineCommon: singleColumnLineCombinationChartData,
+  SingleColumnLineCommon1: singleColumnLineCombinationChartData1,
+  SingleColumnPieCommon: singleColumnPieCombinationChartData,
+  SingleColumnBarCommon: singleColumnBarCombinationChartData,
+  SingleColumnBarCommon1: singleColumnBarCombinationChartData1,
+  SingleColumnPieAndLineCommon: singleColumnPieAndLineCombinationChartData
 };
 
 const globalVariables = (import.meta as any).env;

@@ -52,25 +52,68 @@ export const getCartesianCoordinateSystemKnowledge = (chartTypeList: ChartType[]
 };
 
 export const visualChannelInfoMap = {
-  x: (chartTypeList: ChartType[]) => 'the field mapped to the x-axis, can be empty. Can Only has one field.',
-  y: (chartTypeList: ChartType[]) =>
-    'the field mapped to the y-axis. Only number fields, can be empty. Use array if there are more than one fields.',
-  color: (chartTypeList: ChartType[]) =>
-    `the field mapped to the color channel. Must use a string field${getColorKnowledge(chartTypeList)}`,
-  size: (chartTypeList: ChartType[]) =>
-    `the field mapped to the size channel. Must use a number field${getSizeKnowledge(chartTypeList)}`,
-  angle: (chartTypeList: ChartType[]) =>
-    "the field mapped to the angle channel of the pie chart. Can't be empty in Pie Chart.",
-  radius: (chartTypeList: ChartType[]) =>
-    "the field mapped to the radius channel of the rose chart. Only used in Rose Chart. Can't be empty in Rose Chart.",
-  time: (chartTypeList: ChartType[]) =>
-    "This is usually a date field and can be used only in Dynamic Bar Chart. Can't be empty in Dynamic Bar Chart.",
-  source: (chartTypeList: ChartType[]) =>
-    "the field mapped to the source channel. Only used in Sankey Chart. Can't be empty in Sankey Chart.",
-  target: (chartTypeList: ChartType[]) =>
-    "the field mapped to the target channel. Only used in Sankey Chart. Can't be empty in Sankey Chart.",
-  value: (chartTypeList: ChartType[]) =>
-    "the field mapped to the value channel. Only used in Sankey Chart. Can't be empty in Sankey Chart."
+  x: (chartTypeList: ChartType[]) => {
+    return {
+      singleFieldInfo: 'the field mapped to the x-axis, can be empty. Can Only has one field.'
+    };
+  },
+  y: (chartTypeList: ChartType[]) => {
+    return {
+      singleFieldInfo: 'the field mapped to the y-axis. Only number fields, can be empty.',
+      multipleFieldsInfo:
+        'the field mapped to the y-axis. Only number fields, can be empty. Use array if there are more than one fields.'
+    };
+  },
+  color: (chartTypeList: ChartType[]) => {
+    return {
+      singleFieldInfo: `the field mapped to the color channel. Must use a string field${getColorKnowledge(
+        chartTypeList
+      )}`,
+      multipleFieldsInfo: `the field mapped to the color channel. Must use a string field${getColorKnowledge(
+        chartTypeList
+      )} Use array if there are more than one fields.`
+    };
+  },
+  size: (chartTypeList: ChartType[]) => {
+    return {
+      singleFieldInfo: `the field mapped to the size channel. Must use a number field${getSizeKnowledge(chartTypeList)}`
+    };
+  },
+  angle: (chartTypeList: ChartType[]) => {
+    return {
+      singleFieldInfo: "the field mapped to the angle channel of the pie chart. Can't be empty in Pie Chart."
+    };
+  },
+  radius: (chartTypeList: ChartType[]) => {
+    return {
+      singleFieldInfo:
+        "the field mapped to the radius channel of the rose chart. Only used in Rose Chart. Can't be empty in Rose Chart."
+    };
+  },
+  time: (chartTypeList: ChartType[]) => {
+    return {
+      singleFieldInfo:
+        "This is usually a date field and can be used only in Dynamic Bar Chart. Can't be empty in Dynamic Bar Chart."
+    };
+  },
+  source: (chartTypeList: ChartType[]) => {
+    return {
+      singleFieldInfo:
+        "the field mapped to the source channel. Only used in Sankey Chart. Can't be empty in Sankey Chart."
+    };
+  },
+  target: (chartTypeList: ChartType[]) => {
+    return {
+      singleFieldInfo:
+        "the field mapped to the target channel. Only used in Sankey Chart. Can't be empty in Sankey Chart."
+    };
+  },
+  value: (chartTypeList: ChartType[]) => {
+    return {
+      singleFieldInfo:
+        "the field mapped to the value channel. Only used in Sankey Chart. Can't be empty in Sankey Chart."
+    };
+  }
 };
 export const chartKnowledgeDict: ChartKnowledge = {
   [ChartType.BarChart]: {
@@ -159,7 +202,9 @@ export const chartKnowledgeDict: ChartKnowledge = {
     index: 15,
     visualChannels: ['x', 'y'],
     examples: [],
-    knowledge: []
+    knowledge: [
+      'Linear Progress chart is typically used to display progress data, which is usually a value between 0 and 1. Linear progress bars can show single progress values as well as multiple progress values. By default, the left Y-axis of the linear progress bar is the categorical field, and the bottom X-axis is the numerical field.'
+    ]
   },
   [ChartType.CircularProgress]: {
     index: 16,
@@ -220,6 +265,12 @@ export const chartKnowledgeDict: ChartKnowledge = {
     knowledge: [
       'The color field of the Venn diagram requires an array of length 2. The field with subscript 0 maps to the sets, and the field with subscript 1 maps to the name.'
     ]
+  },
+  [ChartType.SingleColumnCombinationChart]: {
+    index: 27,
+    visualChannels: [],
+    examples: [],
+    knowledge: ['Single column combination charts can be combined with a variety of different basic chart types']
   }
 };
 
@@ -233,5 +284,6 @@ export const chartGenerationConstraints = [
   'A number field can not be used as a color field. A string field can not be used as y-axis',
   "Ignore requests unrelated to chart visualization in the user's request.",
   `The keys in FIELD_MAP must be selected from the list of available visual channels. Don't use visual channels that do not exist.`,
+  `The response must pass the JSONSchema validation.`,
   `Wrap the reply content using \`\`\`, and the returned content must be directly parsed by JSON.parse() in JavaScript.`
 ];

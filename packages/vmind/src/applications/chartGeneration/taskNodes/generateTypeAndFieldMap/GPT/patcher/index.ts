@@ -1,5 +1,7 @@
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
 import { isArray, isNil } from '@visactor/vutils';
+import ChartGenerationTaskNodeGPTMeta from '../index';
+import type { Cell } from '../../../../types';
 
 import type { Transformer } from '../../../../../../base/tools/transformer';
 import {
@@ -9,6 +11,7 @@ import {
   getFieldsByDataType,
   getRemainedFields
 } from '../../../../../../common/utils/utils';
+import type { BasicChartType, VMindDataset } from '../../../../../../common/typings';
 import { ChartType, DataType, ROLE } from '../../../../../../common/typings';
 import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
 import { isValidDataset } from '../../../../../../common/dataProcess';
@@ -16,7 +19,8 @@ import {
   NEED_COLOR_FIELD_CHART_LIST,
   NEED_SIZE_FIELD_CHART_LIST,
   CARTESIAN_CHART_LIST,
-  NEED_COLOR_AND_SIZE_CHART_LIST
+  NEED_COLOR_AND_SIZE_CHART_LIST,
+  COMBINATION_CHART_LIST
 } from '../../../../constants';
 
 export const patchAxisField: Transformer<
@@ -374,7 +378,12 @@ export const patchNeedColor: Transformer<
     NEED_COLOR_FIELD_CHART_LIST.some(needColorFieldChartType => needColorFieldChartType.toUpperCase() === chartType) ||
     NEED_COLOR_AND_SIZE_CHART_LIST.some(needColorFieldChartType => needColorFieldChartType.toUpperCase() === chartType)
   ) {
-    const colorField = [cellNew.color, cellNew.x, cellNew.label, (cellNew as any).sets].filter(Boolean);
+    let colorField;
+    if (CARTESIAN_CHART_LIST.every(cartesianChartType => cartesianChartType.toUpperCase() !== chartType)) {
+      colorField = [cellNew.color, cellNew.x, cellNew.label, (cellNew as any).sets].filter(Boolean);
+    } else {
+      colorField = [cellNew.color];
+    }
     if (colorField.length !== 0) {
       cellNew.color = colorField[0];
     } else {
@@ -513,4 +522,60 @@ export const patchBasicHeatMapChart: Transformer<
   return {
     cell: cellNew
   };
+};
+
+export const patchSingleColumnCombinationChart: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cells, subChartType } = context;
+  if (
+    COMBINATION_CHART_LIST.some(combinationChartType => {
+      return chartType.toUpperCase() === combinationChartType.toUpperCase();
+    })
+  ) {
+    const cellsNew: Cell[] = [...cells];
+    const subChartTypeNew: BasicChartType[] = [...subChartType];
+    const datasetNew: VMindDataset[] = [];
+
+    // Sort by subChartType so that the Cartesian chart is placed under the combined chart
+    const combined = cellsNew.map((cell, index) => ({
+      cell,
+      subChartType: subChartTypeNew[index]
+    }));
+    combined.sort((a, b) => {
+      if (
+        CARTESIAN_CHART_LIST.some(cartesianChartType => {
+          return cartesianChartType.toUpperCase() === a.subChartType.toUpperCase();
+        })
+      ) {
+        return 1;
+      }
+      return -1;
+    });
+    const sortedCellsNew = combined.map(item => item.cell);
+    const sortedSubChartTypeNew = combined.map(item => item.subChartType);
+
+    const patchers = ChartGenerationTaskNodeGPTMeta.patcher.filter(patch => {
+      return patch.name !== 'patchSingleColumnCombinationChart';
+    });
+
+    sortedSubChartTypeNew.forEach((chartType, index) => {
+      const input = { ...context, chartType, cell: sortedCellsNew[index] };
+      const result = patchers.reduce((pre, pipeline) => {
+        const res = pipeline(pre);
+        return { ...pre, ...res } as any;
+      }, input);
+      subChartTypeNew[index] = result.chartType;
+      cellsNew[index] = result.cell;
+      datasetNew[index] = result.dataset;
+    });
+
+    return {
+      subChartType: subChartTypeNew,
+      cells: cellsNew,
+      datasets: datasetNew
+    };
+  }
+  return {};
 };

@@ -1,4 +1,4 @@
-import { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../generateTypeAndFieldMap/types';
+import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../generateTypeAndFieldMap/types';
 
 export type GetChartSpecContext = GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput;
 export type Spec = any;
