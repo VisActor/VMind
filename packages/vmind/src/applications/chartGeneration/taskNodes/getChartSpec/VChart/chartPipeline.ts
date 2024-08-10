@@ -75,7 +75,12 @@ import {
   basemap,
   mapField,
   mapDisplayConf,
-  registerChart
+  registerChart,
+  commonSingleColumnRegion,
+  commonSingleColumnSeries,
+  commonSingleColumnLegend,
+  commonSingleColumnAxes,
+  commonSingleColumnLayout
 } from './transformers';
 
 const pipelineBar = [
@@ -223,6 +228,15 @@ const pipelineBasicHeatMap = [
   theme
 ];
 const pipelineVenn = [chartType, registerChart, vennData, color, vennField, legend, theme];
+const pipelineSingleColumnCombinationChart = [
+  chartType,
+  commonSingleColumnRegion,
+  commonSingleColumnSeries,
+  commonSingleColumnLegend,
+  commonSingleColumnAxes,
+  commonSingleColumnLayout,
+  theme
+];
 
 const pipelineMap: { [chartType: string]: any } = {
   [ChartType.BarChart.toUpperCase()]: pipelineBar,
@@ -248,7 +262,8 @@ const pipelineMap: { [chartType: string]: any } = {
   [ChartType.TreemapChart.toUpperCase()]: pipelineTreemap,
   [ChartType.Gauge.toUpperCase()]: pipelineGauge,
   [ChartType.BasicHeatMap.toUpperCase()]: pipelineBasicHeatMap,
-  [ChartType.VennChart.toUpperCase()]: pipelineVenn
+  [ChartType.VennChart.toUpperCase()]: pipelineVenn,
+  [ChartType.SingleColumnCombinationChart.toUpperCase()]: pipelineSingleColumnCombinationChart
 };
 
 export const beforePipe: Transformer<GetChartSpecContext & GetChartSpecOutput, GetChartSpecOutput> = (

@@ -12,6 +12,7 @@ import {
   visualChannelInfoMap
 } from './knowledges';
 import { uniqArray } from '@visactor/vutils';
+import { BASIC_CHART_LIST, COMBINATION_CHART_LIST } from '../../../../constants';
 
 const patchUserInput = (userInput: string) => {
   const FULL_WIDTH_SYMBOLS = ['，', '。'];
@@ -67,8 +68,25 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
     }, []);
 
     const visualChannelsStr = uniqArray(visualChannels)
-      .map((channel: string) => `"${channel}": ${visualChannelInfoMap[channel](sortedChartTypeList)}`)
-      .join('\n');
+      .map((channel: string) => {
+        const visualChannelInfo = visualChannelInfoMap[channel](sortedChartTypeList);
+        if (visualChannelInfo.multipleFieldsInfo) {
+          return `"${channel}": {
+            "oneOf": [
+              {"type": "string", "description": "${visualChannelInfo.singleFieldInfo}"},
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "description": "${visualChannelInfo.multipleFieldsInfo}"
+                }
+              }
+            ]
+          }`;
+        }
+        return `"${channel}": {"type": "string", "description": "${visualChannelInfo.singleFieldInfo}"}`;
+      })
+      .join(',\n          ');
 
     const constraintsStr = getStrFromArray(chartGenerationConstraints);
 
@@ -85,6 +103,8 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
     const QueryDatasetPrompt = ChartAdvisorPromptEnglish(
       showThoughts,
       chartTypeList,
+      BASIC_CHART_LIST,
+      COMBINATION_CHART_LIST,
       knowledgeStr,
       visualChannelsStr,
       constraintsStr,

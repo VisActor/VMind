@@ -19,10 +19,10 @@ Response:
 \`\`\`
 {${showThoughts ? '\n"thought": "Your thoughts",' : ''}
 "CHART_TYPE": "Line Chart",
-"FIELD_MAP": {
+"FIELD_MAP": [{
 "x": "日期",
 "y": "降雨量"
-}${
+}]${
   showThoughts
     ? ',\n"REASON": "User wants to show the trend of the rainfall, which is suitable for displaying with a line chart. The \'日期\' is used as the x-axis because it\'s a date, and the 降雨量 is used as the y-axis because it\'s a number. This chart can show the trend of rainfall."'
     : ''
@@ -49,10 +49,10 @@ Data field description: [
 Response:
 \`\`\`
 {${showThoughts ? '\n"thought": "Your thoughts",' : ''}"CHART_TYPE": "Line Chart",
-"FIELD_MAP": {
+"FIELD_MAP": [{
 "x": "日期",
 "y": "降雨量"
-}${
+}]${
   showThoughts
     ? ',\n"REASON": "User did not show their intention about the data in their input. The data has two fields and it contains a date field, so Line Chart is best suitable to show the data. The field \'日期\' is used as the x-axis because it\'s a date, and the 降雨量 is used as the y-axis because it\'s a number. The duration is 20s but we just ignore it."'
     : ''
@@ -82,10 +82,10 @@ Response:
 \`\`\`
 {${showThoughts ? '\n"thought": "Your thoughts",' : ''}
 "CHART_TYPE": "Pie Chart",
-"FIELD_MAP": {
+"FIELD_MAP": [{
 "angle": "市场份额",
 "color": "品牌名称"
-}${
+}]${
   showThoughts
     ? ',\n"REASON": "The data contains the market share, and the user wants to show percentage data, which is suitable for displaying with a pie chart. The 市场份额 is used as the angle of the pie chart to show the market share of each brand. The 品牌名称 is used as the color to distinguish different brands. The duration is 5s but we just ignore it."'
     : ''
@@ -119,11 +119,11 @@ Response:
 \`\`\`
 {${showThoughts ? '\n"thought": "Your thoughts",' : ''}
 "CHART_TYPE": "Dynamic Bar Chart",
-"FIELD_MAP": {
+"FIELD_MAP": [{
 "x": "country",
 "y": "金牌数量",
 "time": "year"
-}${
+}]${
   showThoughts
     ? ",\n\"REASON\": \"The data contains the year, country, and medal count, and the user's intention contains 'comparison', which is suitable for drawing a dynamic bar chart that changes over time to show the comparison of gold medal counts of various countries in each Olympic Games.The 'country' field is used as the x-axis of the bar chart, and '金牌数量' is used as the y-axis to show the comparison of gold medal counts of various countries in the current year.The 'year' field is used as the time field of the dynamic bar chart to show the comparison of gold medal counts of various countries at different years.\""
     : ''
@@ -154,10 +154,10 @@ Response:
 \`\`\`
 {${showThoughts ? '\n"thought": "Your thoughts",' : ''}
 "CHART_TYPE": "Bar Chart",
-"FIELD_MAP": {
+"FIELD_MAP": [{
 "x": "商品名称",
 "y": "销售额"
-}${
+}]${
   showThoughts
     ? ",\n\"REASON\": \"User wants to show the sales of different products in different regions, which is suitable for displaying with a bar chart. The '商品名称' is used as the x-axis because it's a string field, and the '销售额' is used as the y - axis because it's a number field. The 'region' field can be used to distinguish different regions, but since the user did not specify the color channel, we will not use it.\""
     : ''

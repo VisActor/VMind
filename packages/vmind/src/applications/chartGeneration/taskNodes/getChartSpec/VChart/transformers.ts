@@ -20,10 +20,13 @@ import {
 import { getFieldByDataType } from '../../../../../common/utils/utils';
 import { array, isArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
-import { DataType, ChartType } from '../../../../../common/typings';
-import { builtinThemeMap } from '../../../../../common/builtinTheme';
 import type { VMindDataset } from '../../../../../common/typings';
-import { COLOR_FIELD } from '@visactor/chart-advisor';
+import { BasicChartType, ChartType, DataType } from '../../../../../common/typings';
+import { builtinThemeMap } from '../../../../../common/builtinTheme';
+import { FOLD_NAME, FOLD_VALUE, COLOR_FIELD } from '@visactor/chart-advisor';
+import { CARTESIAN_CHART_LIST } from '../../../constants';
+
+const CARTESIAN_CHART_LIST_UPPER = CARTESIAN_CHART_LIST.map(chartType => chartType.toUpperCase() as ChartType);
 
 type Context = GetChartSpecContext & GetChartSpecOutput;
 
@@ -51,7 +54,8 @@ const chartTypeMap: { [chartName: string]: string } = {
   [ChartType.TreemapChart.toUpperCase()]: 'treemap',
   [ChartType.Gauge.toUpperCase()]: 'gauge',
   [ChartType.BasicHeatMap.toUpperCase()]: 'common',
-  [ChartType.VennChart.toUpperCase()]: 'venn'
+  [ChartType.VennChart.toUpperCase()]: 'venn',
+  [ChartType.SingleColumnCombinationChart.toUpperCase()]: 'common'
 };
 
 export const chartType: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
@@ -1822,5 +1826,233 @@ export const mapDisplayConf: Transformer<Context, GetChartSpecOutput> = (context
       }
     }
   };
+  return { spec };
+};
+
+export const commonSingleColumnRegion: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { cells, spec, datasets, subChartType } = context;
+
+  const regionList: string[] = [];
+
+  cells.forEach((cell, index) => {
+    const sizeField = [cell.y, cell.size, cell.angle, cell.radius, cell.value].filter(Boolean).flat();
+    const dataset = datasets[index];
+    if (sizeField.length !== 0) {
+      if (sizeField[0] === FOLD_VALUE.toString()) {
+        const sizeFieldName = [...new Set(dataset.map(data => data[FOLD_NAME.toString()]))];
+        regionList.push(sizeFieldName.join(' & ') + '-' + subChartType[index]);
+      } else {
+        regionList.push(sizeField[0] + '-' + subChartType[index]);
+      }
+    }
+  });
+
+  spec.region = regionList.map((region, index) => {
+    return { id: region };
+  });
+  spec.regionList = regionList;
+  return { spec };
+};
+
+export const commonSingleColumnSeries: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { cells, spec, datasets, subChartType } = context;
+  const commonData = {};
+  spec.seriesField = 'type';
+  spec.region.forEach((region: { [id: string]: string }) => {
+    commonData[region.id] = [];
+  });
+  cells.forEach((cell, index) => {
+    const regionId = spec.regionList[index];
+    const dataset = datasets[index];
+
+    dataset.forEach(data => {
+      const subData = {
+        type: regionId
+      };
+      for (const visualChannel in cell) {
+        subData[cell[visualChannel]] = data[cell[visualChannel]];
+      }
+      commonData[regionId].push(subData);
+    });
+  });
+
+  spec.series = spec.region.map((region: { [id: string]: string }, index: number) => {
+    const regionId = region.id;
+    const serie = {
+      id: regionId,
+      regionId: regionId,
+      type: chartTypeMap[subChartType[index].toUpperCase()],
+      data: { id: regionId, values: commonData[regionId] }
+    };
+    switch (subChartType[index].toUpperCase()) {
+      case BasicChartType.BarChart.toUpperCase():
+        if (cells[index].color) {
+          return {
+            ...serie,
+            barMinWidth: 20,
+            xField: cells[index].x,
+            yField: cells[index].y,
+            seriesField: cells[index].color
+          };
+        }
+        return {
+          ...serie,
+          barMinWidth: 20,
+          xField: cells[index].x,
+          yField: cells[index].y
+        };
+      case BasicChartType.PieChart.toUpperCase():
+        return {
+          ...serie,
+          valueField: [cells[index].angle, cells[index].value, cells[index].radius, cells[index].size].filter(
+            Boolean
+          )[0],
+          categoryField: cells[index].color,
+          seriesField: cells[index].color
+        };
+      case BasicChartType.LineChart.toUpperCase():
+        if (cells[index].color) {
+          return {
+            ...serie,
+            xField: cells[index].x,
+            yField: cells[index].y,
+            seriesField: cells[index].color
+          };
+        }
+        return {
+          ...serie,
+          xField: cells[index].x,
+          yField: cells[index].y
+        };
+      default:
+        return {
+          ...serie,
+          xField: cells[index].x,
+          yField: cells[index].y
+        };
+    }
+  });
+
+  return { spec };
+};
+
+export const commonSingleColumnLegend: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.legends = {
+    padding: {
+      top: 10
+    },
+    visible: true,
+    orient: 'bottom',
+    id: 'legend',
+    regionId: spec.region.map((region: { [id: string]: string }) => {
+      return region.id;
+    })
+  };
+  return { spec };
+};
+export const commonSingleColumnAxes: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, subChartType } = context;
+
+  const cartesianRegion: string[] = spec.legends.regionId.filter((item: string, index: number) => {
+    return CARTESIAN_CHART_LIST_UPPER.includes(subChartType[index].toUpperCase() as ChartType);
+  });
+
+  const leftAxesCommonSpec = {
+    expand: { max: 0.2 },
+    label: { flush: true, visible: true },
+    tick: { visible: false },
+    forceTickCount: 3
+  };
+  if (cartesianRegion.length !== 0) {
+    // Y-axes
+    spec.axes = cartesianRegion.map((region: string) => {
+      return {
+        id: region + '-left',
+        regionId: region,
+        orient: 'left',
+        title: { visible: true, text: region },
+        ...leftAxesCommonSpec
+      };
+    });
+
+    // X-axes
+    spec.axes.push({
+      id: 'bottom',
+      regionId: cartesianRegion,
+      orient: 'bottom',
+      label: {
+        firstVisible: true,
+        lastVisible: true,
+        visible: true
+      },
+      tick: { visible: false },
+      paddingInner: 0.99,
+      paddingOuter: 0
+    });
+  }
+  return { spec };
+};
+export const commonSingleColumnLayout: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, subChartType } = context;
+  const regionLength = spec.legends.regionId.length;
+  const elements = [];
+
+  const existCartesianChart = subChartType.some(chartType =>
+    CARTESIAN_CHART_LIST_UPPER.includes(chartType.toUpperCase() as ChartType)
+  );
+
+  spec.region.forEach((region: { [id: string]: string }, index: number) => {
+    if (CARTESIAN_CHART_LIST_UPPER.includes(subChartType[index].toUpperCase() as ChartType)) {
+      elements.push({
+        modelId: region.id + '-left',
+        col: 0,
+        row: index
+      });
+      elements.push({
+        modelId: region.id,
+        col: 1,
+        row: index
+      });
+    } else if (!existCartesianChart) {
+      elements.push({
+        modelId: region.id,
+        col: 0,
+        row: index
+      });
+    } else {
+      elements.push({
+        modelId: region.id,
+        col: 0,
+        colSpan: 2,
+        row: index
+      });
+    }
+  });
+  if (
+    subChartType.some(item => {
+      return CARTESIAN_CHART_LIST_UPPER.includes(item.toUpperCase() as ChartType);
+    })
+  ) {
+    elements.push({
+      modelId: 'legend',
+      col: 0,
+      colSpan: 2,
+      row: regionLength + 1
+    });
+    elements.push({
+      modelId: 'bottom',
+      col: 1,
+      row: regionLength
+    });
+    spec.layout = { type: 'grid', col: 2, row: regionLength + 2, elements: elements };
+  } else {
+    elements.push({
+      modelId: 'legend',
+      col: 0,
+      row: regionLength
+    });
+    spec.layout = { type: 'grid', col: 1, row: regionLength + 1, elements: elements };
+  }
   return { spec };
 };

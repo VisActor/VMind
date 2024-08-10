@@ -82,9 +82,19 @@ export enum ChartType {
   SunburstChart = 'Sunburst Chart',
   TreemapChart = 'Treemap Chart',
   Gauge = 'Gauge Chart',
-  // LinearProgressChart = 'Linear Progress Chart',
   BasicHeatMap = 'Basic Heat Map',
-  VennChart = 'Venn Chart'
+  VennChart = 'Venn Chart',
+  SingleColumnCombinationChart = 'Single Column Combination Chart'
+}
+
+export enum CombinationChartType {
+  SingleColumnCombinationChart = 'Single Column Combination Chart'
+}
+
+export enum BasicChartType {
+  BarChart = 'Bar Chart',
+  LineChart = 'Line Chart',
+  PieChart = 'Pie Chart'
 }
 
 export type GPTChartAdvisorResult = {
