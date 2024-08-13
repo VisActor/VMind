@@ -1855,7 +1855,7 @@ export const commonSingleColumnRegion: Transformer<Context, GetChartSpecOutput> 
 };
 
 export const commonSingleColumnSeries: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { cells, spec, datasets, subChartType } = context;
+  const { cells, spec, datasets, subChartType, fieldInfo } = context;
   const commonData = {};
   spec.seriesField = 'type';
   spec.region.forEach((region: { [id: string]: string }) => {
@@ -1878,55 +1878,39 @@ export const commonSingleColumnSeries: Transformer<Context, GetChartSpecOutput> 
 
   spec.series = spec.region.map((region: { [id: string]: string }, index: number) => {
     const regionId = region.id;
-    const serie = {
+    const seriesSubset = {
       id: regionId,
       regionId: regionId,
       type: chartTypeMap[subChartType[index].toUpperCase()],
       data: { id: regionId, values: commonData[regionId] }
     };
+    let specNew: { spec: any };
+
     switch (subChartType[index].toUpperCase()) {
       case BasicChartType.BarChart.toUpperCase():
-        if (cells[index].color) {
-          return {
-            ...serie,
-            barMinWidth: 20,
-            xField: cells[index].x,
-            yField: cells[index].y,
-            seriesField: cells[index].color
-          };
-        }
+        specNew = cartesianBar({ ...context, cell: cells[index], spec: {}, fieldInfo: fieldInfo });
+
         return {
-          ...serie,
+          ...seriesSubset,
           barMinWidth: 20,
-          xField: cells[index].x,
-          yField: cells[index].y
+          ...specNew.spec
         };
       case BasicChartType.PieChart.toUpperCase():
+        specNew = pieField({ ...context, cell: cells[index], spec: {}, fieldInfo: fieldInfo });
         return {
-          ...serie,
-          valueField: [cells[index].angle, cells[index].value, cells[index].radius, cells[index].size].filter(
-            Boolean
-          )[0],
-          categoryField: cells[index].color,
-          seriesField: cells[index].color
+          ...seriesSubset,
+          ...specNew.spec,
+          seriesField: specNew.spec.categoryField
         };
       case BasicChartType.LineChart.toUpperCase():
-        if (cells[index].color) {
-          return {
-            ...serie,
-            xField: cells[index].x,
-            yField: cells[index].y,
-            seriesField: cells[index].color
-          };
-        }
+        specNew = cartesianLine({ ...context, cell: cells[index], spec: {}, fieldInfo: fieldInfo });
         return {
-          ...serie,
-          xField: cells[index].x,
-          yField: cells[index].y
+          ...seriesSubset,
+          ...specNew.spec
         };
       default:
         return {
-          ...serie,
+          ...seriesSubset,
           xField: cells[index].x,
           yField: cells[index].y
         };
