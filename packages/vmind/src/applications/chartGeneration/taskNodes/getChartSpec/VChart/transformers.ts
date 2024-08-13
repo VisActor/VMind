@@ -1892,7 +1892,6 @@ export const commonSingleColumnSeries: Transformer<Context, GetChartSpecOutput> 
 
         return {
           ...seriesSubset,
-          barMinWidth: 20,
           ...specNew.spec
         };
       case BasicChartType.PieChart.toUpperCase():
@@ -1970,9 +1969,7 @@ export const commonSingleColumnAxes: Transformer<Context, GetChartSpecOutput> = 
         lastVisible: true,
         visible: true
       },
-      tick: { visible: false },
-      paddingInner: 0.99,
-      paddingOuter: 0
+      tick: { visible: false }
     });
   }
   return { spec };
