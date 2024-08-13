@@ -5597,10 +5597,10 @@ export const singleColumnPieCombinationChartData = {
 };
 
 export const singleColumnPieAndLineCombinationChartData = {
-  csv: `性别,数量,平均分
-男,10,93,
-女,20,89`,
-  input: '使用饼图和柱图的组合图分别展示班级内男生女生的人数占比率，以及班级男生和女生各自的平均分'
+  csv: `性别,数量,期中平均分,期末平均分
+男,10,93,86
+女,20,89,87`,
+  input: '使用饼图和柱图的组合图分别展示班级内男生女生的人数占比率，以及班级男生和女生各自的期中和期末的平均分'
 };
 
 export const singleColumnBarCombinationChartData = {
