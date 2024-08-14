@@ -39,7 +39,7 @@ Please return the response according to the following JsonSchema:
       "items": {
         "enum": ${JSON.stringify(basicChartList)}
       },
-      "description": "The default is an empty array, and only relevant results are returned when there are multiple indicators. For example, combination charts, dual-axis charts, etc."
+      "description": "The default is an empty array, and only relevant results are returned when there are multiple indicators. For example, combination charts, etc. The length of SUB_CHART_TYPE must be the same as the length of FIELD_MAP"
     },
     "FIELD_MAP": {
       "type": "array",
@@ -49,7 +49,7 @@ Please return the response according to the following JsonSchema:
           ${visualChannels}
         }
       },
-      "description": "By default, the array length is 1, and only one unique visual channel field mapping is returned. Multiple visual channel field mappings are returned only when a combined chart is needed, and the order needs to correspond to the order of the CHART_TYPE array."
+      "description": "By default, the array length is 1, and only one unique visual channel field mapping is returned; Multiple visual channel field mappings are returned only when a combined chart is needed. The length needs to be consistent with the length of SUB_CHART_TYPE and the order needs to correspond to the order of the SUB_CHART_TYPE array."
     }
     ${
       showThoughts
