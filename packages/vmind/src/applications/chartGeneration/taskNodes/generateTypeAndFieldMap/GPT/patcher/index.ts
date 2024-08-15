@@ -11,7 +11,7 @@ import {
   getFieldsByDataType,
   getRemainedFields
 } from '../../../../../../common/utils/utils';
-import type { BasicChartType, VMindDataset } from '../../../../../../common/typings';
+import type { CombinationBasicChartType, VMindDataset } from '../../../../../../common/typings';
 import { ChartType, DataType, ROLE } from '../../../../../../common/typings';
 import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
 import { isValidDataset } from '../../../../../../common/dataProcess';
@@ -535,33 +535,15 @@ export const patchSingleColumnCombinationChart: Transformer<
     })
   ) {
     const cellsNew: Cell[] = [...cells];
-    const subChartTypeNew: BasicChartType[] = [...subChartType];
+    const subChartTypeNew: CombinationBasicChartType[] = [...subChartType];
     const datasetNew: VMindDataset[] = [];
-
-    // Sort by subChartType so that the Cartesian chart is placed under the combined chart
-    const combined = cellsNew.map((cell, index) => ({
-      cell,
-      subChartType: subChartTypeNew[index]
-    }));
-    combined.sort((a, b) => {
-      if (
-        CARTESIAN_CHART_LIST.some(cartesianChartType => {
-          return cartesianChartType.toUpperCase() === a.subChartType.toUpperCase();
-        })
-      ) {
-        return 1;
-      }
-      return -1;
-    });
-    const sortedCellsNew = combined.map(item => item.cell);
-    const sortedSubChartTypeNew = combined.map(item => item.subChartType);
 
     const patchers = ChartGenerationTaskNodeGPTMeta.patcher.filter(patch => {
       return patch.name !== 'patchSingleColumnCombinationChart';
     });
 
-    sortedSubChartTypeNew.forEach((chartType, index) => {
-      const input = { ...context, chartType, cell: sortedCellsNew[index] };
+    subChartType.forEach((chartType, index) => {
+      const input = { ...context, chartType, cell: cells[index] };
       const result = patchers.reduce((pre, pipeline) => {
         const res = pipeline(pre);
         return { ...pre, ...res } as any;

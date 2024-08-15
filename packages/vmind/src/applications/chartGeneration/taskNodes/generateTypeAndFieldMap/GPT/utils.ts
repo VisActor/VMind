@@ -5,11 +5,11 @@ import { parseGPTResponse, requestGPT } from '../../../../../common/utils/gpt';
 import type { ChartType } from '../../../../../common/typings';
 import { COMBINATION_CHART_LIST } from '../../../constants';
 import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../types';
-import type { BasicChartType } from '../../../../../common/typings';
+import type { CombinationBasicChartType } from '../../../../../common/typings';
 
 type GPTChartAdvisorResult = {
   CHART_TYPE: ChartType;
-  SUB_CHART_TYPE: BasicChartType[];
+  SUB_CHART_TYPE: CombinationBasicChartType[];
   DOUBLE_CHECK: string;
   FIELD_MAP: Cell[];
   THOUGHT: string;

@@ -21,7 +21,7 @@ import { getFieldByDataType } from '../../../../../common/utils/utils';
 import { array, isArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
 import type { VMindDataset } from '../../../../../common/typings';
-import { BasicChartType, ChartType, DataType } from '../../../../../common/typings';
+import { CombinationBasicChartType, ChartType, DataType } from '../../../../../common/typings';
 import { builtinThemeMap } from '../../../../../common/builtinTheme';
 import { FOLD_NAME, FOLD_VALUE, COLOR_FIELD } from '@visactor/chart-advisor';
 import { CARTESIAN_CHART_LIST } from '../../../constants';
@@ -1887,21 +1887,14 @@ export const commonSingleColumnSeries: Transformer<Context, GetChartSpecOutput> 
     let specNew: { spec: any };
 
     switch (subChartType[index].toUpperCase()) {
-      case BasicChartType.BarChart.toUpperCase():
+      case CombinationBasicChartType.BarChart.toUpperCase():
         specNew = cartesianBar({ ...context, cell: cells[index], spec: {}, fieldInfo: fieldInfo });
 
         return {
           ...seriesSubset,
           ...specNew.spec
         };
-      case BasicChartType.PieChart.toUpperCase():
-        specNew = pieField({ ...context, cell: cells[index], spec: {}, fieldInfo: fieldInfo });
-        return {
-          ...seriesSubset,
-          ...specNew.spec,
-          seriesField: specNew.spec.categoryField
-        };
-      case BasicChartType.LineChart.toUpperCase():
+      case CombinationBasicChartType.LineChart.toUpperCase():
         specNew = cartesianLine({ ...context, cell: cells[index], spec: {}, fieldInfo: fieldInfo });
         return {
           ...seriesSubset,

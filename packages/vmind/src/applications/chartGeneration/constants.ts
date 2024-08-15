@@ -1,8 +1,8 @@
 import type { BasemapOption } from '../../common/typings';
-import { ChartType, BasicChartType, CombinationChartType, MapRegionCoordinate } from '../../common/typings';
+import { ChartType, CombinationBasicChartType, CombinationChartType, MapRegionCoordinate } from '../../common/typings';
 
 export const SUPPORTED_CHART_LIST = Object.values(ChartType);
-export const BASIC_CHART_LIST = Object.values(BasicChartType);
+export const BASIC_CHART_LIST = Object.values(CombinationBasicChartType);
 export const COMBINATION_CHART_LIST = Object.values(CombinationChartType);
 
 export const NEED_COLOR_FIELD_CHART_LIST = [

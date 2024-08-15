@@ -8,7 +8,7 @@ import type {
 } from '../common/typings';
 import type { Cell } from './chartGeneration/types';
 import type { InsightAlgorithm, VMindInsight } from './IngelligentInsight/types';
-import type { BasicChartType } from '../common/typings';
+import type { CombinationBasicChartType } from '../common/typings';
 
 //context of the DataExtraction Application
 export type DataExtractionContext = {
@@ -55,7 +55,7 @@ export type ChartGenerationContext = {
 
 export type ChartGenerationOutput = {
   chartType: ChartType;
-  subChartType?: BasicChartType[];
+  subChartType?: CombinationBasicChartType[];
   cell?: Cell;
   cells?: Cell[];
   datasets?: VMindDataset[];
