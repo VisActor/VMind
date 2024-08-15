@@ -91,10 +91,9 @@ export enum CombinationChartType {
   SingleColumnCombinationChart = 'Single Column Combination Chart'
 }
 
-export enum BasicChartType {
+export enum CombinationBasicChartType {
   BarChart = 'Bar Chart',
-  LineChart = 'Line Chart',
-  PieChart = 'Pie Chart'
+  LineChart = 'Line Chart'
 }
 
 export type GPTChartAdvisorResult = {

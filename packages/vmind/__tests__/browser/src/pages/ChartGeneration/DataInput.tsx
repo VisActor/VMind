@@ -52,8 +52,6 @@ import {
   mapChartData,
   singleColumnLineCombinationChartData,
   singleColumnLineCombinationChartData1,
-  singleColumnPieCombinationChartData,
-  singleColumnPieAndLineCombinationChartData,
   singleColumnBarCombinationChartData1,
   singleColumnBarCombinationChartData
 } from '../../constants/mockData';
@@ -115,10 +113,8 @@ const demoDataList: { [key: string]: any } = {
   Venn: vennChartData,
   SingleColumnLineCommon: singleColumnLineCombinationChartData,
   SingleColumnLineCommon1: singleColumnLineCombinationChartData1,
-  SingleColumnPieCommon: singleColumnPieCombinationChartData,
   SingleColumnBarCommon: singleColumnBarCombinationChartData,
-  SingleColumnBarCommon1: singleColumnBarCombinationChartData1,
-  SingleColumnPieAndLineCommon: singleColumnPieAndLineCombinationChartData
+  SingleColumnBarCommon1: singleColumnBarCombinationChartData1
 };
 
 const globalVariables = (import.meta as any).env;

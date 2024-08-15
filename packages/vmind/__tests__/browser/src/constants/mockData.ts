@@ -5587,22 +5587,6 @@ export const singleColumnLineCombinationChartData1 = {
     '请使用组合图分别展示Social Penetration和Engagement - Socialization类别的权重随着时间的变化，以及Penetration of Private Messages和Number of Private Messages per User类别的权重随着时间的变化'
 };
 
-export const singleColumnPieCombinationChartData = {
-  csv: `姓名,时间投入量,资金投入量,劳动投入量
-小明,120,80,123,10
-小李,200,20,456,8
-小呆,100,400,789,1
-`,
-  input: '分开展示每位同学在各时间、资金、劳动投入中的占比情况。使用饼图组合绘制图表。'
-};
-
-export const singleColumnPieAndLineCombinationChartData = {
-  csv: `性别,数量,期中平均分,期末平均分
-男,10,93,86
-女,20,89,87`,
-  input: '使用饼图和柱图的组合图分别展示班级内男生女生的人数占比率，以及班级男生和女生各自的期中和期末的平均分'
-};
-
 export const singleColumnBarCombinationChartData = {
   csv: `region,可乐销售额,雪碧销售额,芬达销售额,醒目销售额
 south,2350,215,345,1476
@@ -5610,7 +5594,7 @@ east,1027,654,654,830
 west,1027,159,2100,532
 north,1027,28,1679,498
 `,
-  input: '帮我使用柱状组合图展示不同区域各商品销售额'
+  input: '帮我使用四个柱图的组合展示不同区域各商品销售额'
 };
 
 export const singleColumnBarCombinationChartData1 = {
