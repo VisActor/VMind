@@ -236,13 +236,12 @@ class VMind {
       return chartGenerationResult.advisedList;
     }
 
-    const { chartType, subChartType, spec, cell, cells, chartSource, time } = chartGenerationResult;
+    const { chartType, subChartType, spec, cells, chartSource, time } = chartGenerationResult;
     const usage = calculateTokenUsage([queryDatasetUsage, chartGenerationResult.usage]);
     return {
       //...chartGenerationResult,
       spec,
       usage,
-      cell,
       chartSource,
       chartType,
       subChartType,

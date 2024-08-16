@@ -92,7 +92,7 @@ const getTop1AdvisedChart: Transformer<getAdvisedListOutput, ChartAdvisorOutput>
   if (advisedList.length === 0) {
     return {
       chartType: VMindChartType.BarChart.toUpperCase() as VMindChartType,
-      cell: {},
+      cells: [{}],
       dataset: undefined,
       chartSource,
       usage
@@ -101,7 +101,7 @@ const getTop1AdvisedChart: Transformer<getAdvisedListOutput, ChartAdvisorOutput>
   const result = advisedList[0];
   return {
     chartType: result.chartType as VMindChartType,
-    cell: getCell(result.cell),
+    cells: [getCell(result.cell)],
     dataset: result.dataset,
     chartSource,
     usage
@@ -116,8 +116,8 @@ const chartAdvisorHandler = (context: ChartAdvisorContext & ChartAdvisorOutput) 
 export const chartGenerationErrorWrapper: Transformer<ChartAdvisorContext & ChartAdvisorOutput, ChartAdvisorOutput> = (
   context: ChartAdvisorContext & ChartAdvisorOutput
 ) => {
-  const { error, chartType, fieldInfo, cell } = context as any;
-  if (error || !checkChartTypeAndCell(chartType, cell, fieldInfo)) {
+  const { error, chartType, fieldInfo, cells } = context as any;
+  if (error || cells.some((cell: Cell) => !checkChartTypeAndCell(chartType, cell, fieldInfo))) {
     console.warn('LLM generation error, use rule generation.');
     return chartAdvisorHandler(context);
   }

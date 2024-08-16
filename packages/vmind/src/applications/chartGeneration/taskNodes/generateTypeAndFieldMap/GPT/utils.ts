@@ -29,13 +29,6 @@ export const parseChartGenerationResponse: Parser<
   }
 
   const { CHART_TYPE, FIELD_MAP, SUB_CHART_TYPE } = advisorResJson;
-  if (
-    COMBINATION_CHART_LIST.every(chartType => {
-      return chartType.toUpperCase() !== CHART_TYPE.toUpperCase();
-    })
-  ) {
-    return { chartType: CHART_TYPE as ChartType, cell: FIELD_MAP[0], usage: advisorRes.usage };
-  }
   return {
     chartType: CHART_TYPE as ChartType,
     cells: FIELD_MAP,

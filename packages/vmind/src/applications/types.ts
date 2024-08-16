@@ -56,7 +56,6 @@ export type ChartGenerationContext = {
 export type ChartGenerationOutput = {
   chartType: ChartType;
   subChartType?: CombinationBasicChartType[];
-  cell?: Cell;
   cells?: Cell[];
   datasets?: VMindDataset[];
   spec: any;
