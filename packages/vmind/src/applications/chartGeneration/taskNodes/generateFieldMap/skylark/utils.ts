@@ -25,7 +25,7 @@ export const parseFieldMapResponse: Parser<GenerateFieldMapContext, Partial<Gene
   }
 
   return {
-    cell: omit(fieldMapResJson, ['thoughts', 'usage']),
+    cells: Object.values(omit(fieldMapResJson, ['thoughts', 'usage'])),
     fieldMapTokenUsage: fieldMapRes.usage
   };
 };

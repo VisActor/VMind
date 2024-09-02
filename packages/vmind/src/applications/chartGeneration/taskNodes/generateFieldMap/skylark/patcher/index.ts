@@ -2,19 +2,34 @@ import type { Transformer } from '../../../../../../base/tools/transformer';
 import type { GenerateFieldMapContext, GenerateFieldMapOutput } from '../../types';
 import { isArray, isString } from '@visactor/vutils';
 import { matchFieldWithoutPunctuation } from './utils';
+import type { CombinationBasicChartType, VMindDataset } from '../../../../../../common/typings';
 import { ChartType } from '../../../../../../common/typings';
 import { DataType, ROLE } from '../../../../../../common/typings';
 import { calculateTokenUsage, foldDatasetByYField } from '../../../../../../common/utils/utils';
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
-import { addChartSource } from '../../../utils';
+import { addChartSource, getCell, isCombinationChartType } from '../../../utils';
 import { isValidDataset } from '../../../../../../common/dataProcess';
 import { dataUtils } from '@visactor/chart-advisor';
+import { COMBINATION_CHART_LIST } from '../../../../constants';
+import type { Cell } from '../../../../types';
+import {
+  patchBasicHeatMapChart,
+  patchCartesianXField,
+  patchLinearProgressChart,
+  patchNeedColor,
+  patchNeedSize,
+  patchRangeColumnChart
+} from '../../../generateTypeAndFieldMap/GPT/patcher';
+import GenerateFieldMapTaskNodeMeta from '../index';
 
 type PatchContext = GenerateFieldMapContext & GenerateFieldMapOutput;
 
 const patchNullField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
-  const { fieldInfo, cell } = context;
-  const cellNew = { ...cell };
+  const { fieldInfo, cells, chartType } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew = { ...getCell(cells) };
 
   const columns = fieldInfo.map(field => field.fieldName);
 
@@ -31,14 +46,17 @@ const patchNullField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>>
   });
 
   return {
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
 const patchField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
-  const { fieldInfo, cell } = context;
+  const { fieldInfo, cells, chartType } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
   const fieldNames = fieldInfo.map(field => field.fieldName);
-  const cellNew = { ...cell };
+  const cellNew = { ...getCell(cells) };
   Object.keys(cellNew).forEach(key => {
     const value = cellNew[key];
     if (isString(value) && (value ?? '').includes(',')) {
@@ -49,13 +67,16 @@ const patchField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (
     }
   });
   return {
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
 const patchColorField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
-  const { chartType, fieldInfo, cell } = context;
-  const cellNew = { ...cell };
+  const { chartType, fieldInfo, cells } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew = { ...getCell(cells) };
   const { color } = cellNew;
   let chartTypeNew = chartType;
   if (color) {
@@ -72,38 +93,45 @@ const patchColorField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>
   }
 
   return {
-    cell: cellNew
+    cells: [cellNew],
+    chartType: chartTypeNew
   };
 };
 
 const patchRadarChart: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
-  const { chartType, cell } = context;
+  const { chartType, cells } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
 
   if (chartType === ChartType.RadarChart.toUpperCase()) {
     const cellNew = {
-      x: cell.angle,
-      y: cell.value,
-      color: cell.color
+      x: getCell(cells).angle,
+      y: getCell(cells).value,
+      color: getCell(cells).color
     };
 
     return {
-      cell: cellNew
+      cells: [cellNew]
     };
   }
   return context;
 };
 
 const patchBoxPlot: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
-  const { chartType, cell } = context;
+  const { chartType, cells } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
 
   if (chartType === ChartType.BoxPlot.toUpperCase()) {
-    const { x, min, q1, median, q3, max } = cell as any;
+    const { x, min, q1, median, q3, max } = getCell(cells) as any;
     const cellNew = {
       x,
       y: [min, q1, median, q3, max].filter(Boolean)
     };
     return {
-      cell: cellNew
+      cells: [cellNew]
     };
   }
   return context;
@@ -111,9 +139,12 @@ const patchBoxPlot: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> =
 
 const patchDifferentMeasureLevel: Transformer<PatchContext, any> = (context: PatchContext) => {
   //if the difference in the level of two measures in cartesian chart is enormous, use Dual-axis chart
-  const { chartType, cell, dataset } = context;
+  const { chartType, cells, dataset } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
   const chartTypeNew = chartType;
-  const cellNew = { ...cell };
+  const cellNew = { ...getCell(cells) };
   const datasetNew = dataset;
   if (chartTypeNew === ChartType.BarChart.toUpperCase()) {
     if (isValidDataset(datasetNew) && isArray(cellNew.y) && cellNew.y.length === 2) {
@@ -147,9 +178,12 @@ const patchDifferentMeasureLevel: Transformer<PatchContext, any> = (context: Pat
 };
 
 const patchFoldField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
-  const { chartType, cell, fieldInfo, dataset } = context;
-  const chartTypeNew = chartType;
-  const cellNew = { ...cell };
+  const { chartType, cells, fieldInfo, dataset } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const chartTypeNew = chartType.toUpperCase();
+  const cellNew = { ...getCell(cells) };
   let datasetNew = dataset;
   if (
     chartTypeNew === ChartType.BarChart.toUpperCase() ||
@@ -164,14 +198,17 @@ const patchFoldField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>>
   }
   return {
     chartType: chartTypeNew,
-    cell: cellNew,
+    cells: [cellNew],
     dataset: datasetNew
   };
 };
 
 const patchDualAxisChart: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
-  const { chartType, cell } = context;
-  const cellNew: any = { ...cell };
+  const { chartType, cells } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew: any = { ...getCell(cells) };
   //Dual-axis drawing yLeft and yRight
 
   if (chartType === ChartType.DualAxisChart.toUpperCase()) {
@@ -184,13 +221,16 @@ const patchDualAxisChart: Transformer<PatchContext, Partial<GenerateFieldMapOutp
     ].filter(Boolean);
   }
 
-  return { cell: cellNew };
+  return { cells: [cellNew] };
 };
 
 const patchDynamicBarChart: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
-  const { chartType, cell, fieldInfo } = context;
+  const { chartType, cells, fieldInfo } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
   const cellNew = {
-    ...cell
+    ...getCell(cells)
   };
   let chartTypeNew = chartType;
 
@@ -221,25 +261,28 @@ const patchDynamicBarChart: Transformer<PatchContext, Partial<GenerateFieldMapOu
     }
   }
   return {
-    cell: cellNew,
+    cells: [cellNew],
     chartType: chartTypeNew
   };
 };
 
 const patchArrayField: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (context: PatchContext) => {
-  const { cell } = context;
+  const { cells, chartType } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
   const cellNew = {
-    ...cell
+    ...getCell(cells)
   };
-  //only x and y field can be array
+  //only x, y and color field can be array
   Object.keys(cellNew).forEach(key => {
-    if (key !== 'x' && key !== 'y' && isArray(cellNew[key])) {
+    if (key !== 'x' && key !== 'y' && key !== 'color' && isArray(cellNew[key])) {
       cellNew[key] = cellNew[key][0];
     }
   });
 
   return {
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -252,10 +295,53 @@ const calculateUsage: Transformer<PatchContext, any> = (context: PatchContext) =
   };
 };
 
+const patchSingleColumnCombinationChart: Transformer<PatchContext, Partial<GenerateFieldMapOutput>> = (
+  context: PatchContext
+) => {
+  const { chartType, cells, subChartType } = context;
+  if (
+    COMBINATION_CHART_LIST.some(combinationChartType => {
+      return chartType.toUpperCase() === combinationChartType.toUpperCase();
+    })
+  ) {
+    const cellsNew: Cell[] = [...cells];
+    const subChartTypeNew: CombinationBasicChartType[] = [...subChartType];
+    const datasetNew: VMindDataset[] = [];
+
+    const patchers = GenerateFieldMapTaskNodeMeta.patcher.filter(patch => {
+      return patch.name !== 'patchSingleColumnCombinationChart';
+    });
+    const minLength = Math.min(cells.length, subChartType.length);
+    for (let index = 0; index < minLength; index++) {
+      const input = {
+        ...context,
+        chartType: subChartType[index].toString() as ChartType,
+        cells: [getCell(cells, index)]
+      };
+      const result = patchers.reduce((pre, pipeline) => {
+        const res = pipeline(pre);
+        return { ...pre, ...res } as any;
+      }, input);
+      subChartTypeNew[index] = result.chartType.toString() as CombinationBasicChartType;
+      cellsNew[index] = getCell(result.cells);
+      datasetNew[index] = result.dataset;
+    }
+
+    return {
+      subChartType: subChartTypeNew,
+      cells: cellsNew,
+      datasetsForCombinationChart: datasetNew
+    };
+  }
+  return {};
+};
+
 export const patchPipelines: Transformer<PatchContext, Partial<GenerateFieldMapOutput>>[] = [
   addChartSource as any,
   calculateUsage,
   patchNullField,
+  patchNeedColor,
+  patchNeedSize,
   patchField,
   patchColorField,
   patchRadarChart,
@@ -264,5 +350,10 @@ export const patchPipelines: Transformer<PatchContext, Partial<GenerateFieldMapO
   patchFoldField,
   patchDualAxisChart,
   patchDynamicBarChart,
-  patchArrayField
+  patchArrayField,
+  patchRangeColumnChart,
+  patchLinearProgressChart,
+  patchBasicHeatMapChart,
+  patchCartesianXField,
+  patchSingleColumnCombinationChart
 ];

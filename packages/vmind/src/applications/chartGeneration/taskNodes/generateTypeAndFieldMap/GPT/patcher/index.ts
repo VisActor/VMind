@@ -22,7 +22,7 @@ import {
   NEED_COLOR_AND_SIZE_CHART_LIST,
   COMBINATION_CHART_LIST
 } from '../../../../constants';
-import { isCombinationChartType } from '../../../utils';
+import { getCell, isCombinationChartType } from '../../../utils';
 
 export const patchAxisField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
@@ -33,7 +33,7 @@ export const patchAxisField: Transformer<
     return {};
   }
 
-  const cellNew: any = { ...cells[0] };
+  const cellNew: any = { ...getCell(cells) };
 
   // patch the "axis" field to x
   if (cellNew.axis && (!cellNew.x || !cellNew.y)) {
@@ -58,7 +58,7 @@ export const patchColorField: Transformer<
   if (isCombinationChartType(chartType)) {
     return {};
   }
-  const cellNew = { ...cells[0], color: cells[0].color ?? cells[0].category };
+  const cellNew = { ...getCell(cells), color: getCell(cells).color ?? getCell(cells).category };
 
   return {
     //...context,
@@ -75,7 +75,7 @@ export const patchLabelField: Transformer<
     return {};
   }
 
-  const cellNew: any = { ...cells[0] };
+  const cellNew: any = { ...getCell(cells) };
   //patch the "label" fields to color
   if (cellNew.label && (!cellNew.color || cellNew.color.length === 0)) {
     cellNew.color = cellNew.label;
@@ -95,7 +95,7 @@ export const patchYField: Transformer<
   if (isCombinationChartType(chartType)) {
     return {};
   }
-  let cellNew = { ...cells[0] };
+  let cellNew = { ...getCell(cells) };
   const { x, y } = cellNew;
   let chartTypeNew = chartType;
   let datasetNew = dataset;
@@ -131,7 +131,7 @@ export const patchYField: Transformer<
     } else {
       chartTypeNew = <ChartType>ChartType.ScatterPlot.toUpperCase();
       cellNew = {
-        ...cells[0],
+        ...getCell(cells),
         x: y[0],
         y: y[1],
         color: typeof x === 'string' ? x : x[0]
@@ -156,7 +156,7 @@ export const patchBoxPlot: Transformer<
     return {};
   }
   const cellNew = {
-    ...cells[0]
+    ...getCell(cells)
   };
   const { y } = cellNew;
   if (chartType === ChartType.BoxPlot.toUpperCase()) {
@@ -225,7 +225,7 @@ export const patchDualAxis: Transformer<
   if (isCombinationChartType(chartType)) {
     return {};
   }
-  const cellNew: any = { ...cells[0] };
+  const cellNew: any = { ...getCell(cells) };
   //Dual-axis drawing yLeft and yRight
 
   if (chartType === ChartType.DualAxisChart.toUpperCase()) {
@@ -246,7 +246,7 @@ export const patchPieChart: Transformer<
   if (isCombinationChartType(chartType)) {
     return {};
   }
-  const cellNew = { ...cells[0] };
+  const cellNew = { ...getCell(cells) };
 
   if (chartType === ChartType.RoseChart.toUpperCase()) {
     cellNew.angle = cellNew.radius ?? cellNew.size ?? cellNew.angle;
@@ -292,7 +292,7 @@ export const patchWordCloud: Transformer<
   if (isCombinationChartType(chartType)) {
     return {};
   }
-  const cellNew = { ...cells[0] };
+  const cellNew = { ...getCell(cells) };
 
   if (chartType === ChartType.WordCloud.toUpperCase()) {
     if (!cellNew.size || !cellNew.color || cellNew.color === cellNew.size) {
@@ -340,7 +340,7 @@ export const patchDynamicBarChart: Transformer<
   if (isCombinationChartType(chartType)) {
     return {};
   }
-  const cellNew = { ...cells[0] };
+  const cellNew = { ...getCell(cells) };
   let chartTypeNew = chartType;
 
   if (chartType === ChartType.DynamicBarChart.toUpperCase()) {
@@ -378,7 +378,7 @@ export const patchCartesianXField: Transformer<
   if (isCombinationChartType(chartType)) {
     return {};
   }
-  const cellNew = { ...cells[0] };
+  const cellNew = { ...getCell(cells) };
 
   //Cartesian chart must have X field
   if (CARTESIAN_CHART_LIST.map(chart => chart.toUpperCase()).includes(chartType)) {
@@ -407,17 +407,12 @@ export const patchNeedColor: Transformer<
   if (isCombinationChartType(chartType)) {
     return {};
   }
-  const cellNew: any = { ...cells[0] };
+  const cellNew: any = { ...getCell(cells) };
   if (
     NEED_COLOR_FIELD_CHART_LIST.some(needColorFieldChartType => needColorFieldChartType.toUpperCase() === chartType) ||
     NEED_COLOR_AND_SIZE_CHART_LIST.some(needColorFieldChartType => needColorFieldChartType.toUpperCase() === chartType)
   ) {
-    let colorField;
-    if (CARTESIAN_CHART_LIST.every(cartesianChartType => cartesianChartType.toUpperCase() !== chartType)) {
-      colorField = [cellNew.color, cellNew.x, cellNew.label, (cellNew as any).sets].filter(Boolean);
-    } else {
-      colorField = [cellNew.color];
-    }
+    const colorField = [cellNew.color, cellNew.x, cellNew.label, (cellNew as any).sets].filter(Boolean);
     if (colorField.length !== 0) {
       cellNew.color = colorField[0];
     } else {
@@ -443,7 +438,7 @@ export const patchNeedSize: Transformer<
   if (isCombinationChartType(chartType)) {
     return {};
   }
-  const cellNew: any = { ...cells[0] };
+  const cellNew: any = { ...getCell(cells) };
   if (
     NEED_SIZE_FIELD_CHART_LIST.some(needSizeFieldChartType => needSizeFieldChartType.toUpperCase() === chartType) ||
     NEED_COLOR_AND_SIZE_CHART_LIST.some(needSizeFieldChartType => needSizeFieldChartType.toUpperCase() === chartType)
@@ -475,7 +470,7 @@ export const patchRangeColumnChart: Transformer<
   if (isCombinationChartType(chartType)) {
     return {};
   }
-  const cellNew = { ...cells[0] };
+  const cellNew = { ...getCell(cells) };
   const remainedFields = getRemainedFields(cellNew, fieldInfo);
   const numericFields = getFieldsByDataType(remainedFields, [DataType.FLOAT, DataType.INT]);
   if (chartType === ChartType.RangeColumnChart.toUpperCase()) {
@@ -505,7 +500,7 @@ export const patchLinearProgressChart: Transformer<
   if (isCombinationChartType(chartType)) {
     return {};
   }
-  const cellNew = { ...cells[0] };
+  const cellNew = { ...getCell(cells) };
   if (chartType === ChartType.LinearProgress.toUpperCase()) {
     const xField = [cellNew.x, cellNew.color].filter(Boolean).flat();
     if (xField.length !== 0) {
@@ -547,7 +542,7 @@ export const patchBasicHeatMapChart: Transformer<
   if (isCombinationChartType(chartType)) {
     return {};
   }
-  const cellNew: any = { ...cells[0] };
+  const cellNew: any = { ...getCell(cells) };
   if (chartType === ChartType.BasicHeatMap.toUpperCase()) {
     const colorField = [cellNew.x, cellNew.y, cellNew.label, cellNew.color].filter(Boolean).flat();
     if (colorField.length >= 2) {
@@ -588,21 +583,26 @@ export const patchSingleColumnCombinationChart: Transformer<
       return patch.name !== 'patchSingleColumnCombinationChart';
     });
 
-    subChartType.forEach((chartType, index) => {
-      const input = { ...context, chartType, cells: [cells[index]] };
+    const minLength = Math.min(cells.length, subChartType.length);
+    for (let index = 0; index < minLength; index++) {
+      const input = {
+        ...context,
+        chartType: subChartType[index].toString() as ChartType,
+        cells: [getCell(cells, index)]
+      };
       const result = patchers.reduce((pre, pipeline) => {
         const res = pipeline(pre);
         return { ...pre, ...res } as any;
       }, input);
-      subChartTypeNew[index] = result.chartType;
-      cellsNew[index] = result.cells[0];
+      subChartTypeNew[index] = result.chartType.toString() as CombinationBasicChartType;
+      cellsNew[index] = getCell(result.cells);
       datasetNew[index] = result.dataset;
-    });
+    }
 
     return {
       subChartType: subChartTypeNew,
       cells: cellsNew,
-      datasets: datasetNew
+      datasetsForCombinationChart: datasetNew
     };
   }
   return {};
