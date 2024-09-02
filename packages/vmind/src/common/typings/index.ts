@@ -181,7 +181,7 @@ export type VMindDataset = DataItem[];
 
 export type PatchContext = {
   chartType: string;
-  cell: Cell;
+  cells: Cell[];
   dataset: DataItem[];
   fieldInfo: SimpleFieldInfo[];
 };
@@ -189,7 +189,7 @@ export type PatchContext = {
 export type PatchPipeline = (
   context: PatchContext,
   _originalContext: PatchContext
-) => { chartType: string; cell: Cell; dataset: DataItem[]; fieldInfo: SimpleFieldInfo[] };
+) => { chartType: string; cells: Cell[]; dataset: DataItem[]; fieldInfo: SimpleFieldInfo[] };
 
 export type TaskError = { error: boolean };
 

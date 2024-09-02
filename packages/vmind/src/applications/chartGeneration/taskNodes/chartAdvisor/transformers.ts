@@ -36,7 +36,7 @@ type getAdvisedListOutput = {
   chartSource: string;
   advisedList: {
     chartType: string;
-    cell: Cell;
+    cells: Cell[];
     dataset: VMindDataset;
     score: number;
   }[];
@@ -70,7 +70,7 @@ export const getAdvisedListTransformer: Transformer<ChartAdvisorContext, getAdvi
     .filter((d: any) => availableChartTypeList.includes(d.chartType) && d.score - 0 >= 0.00000001)
     .map((result: any) => ({
       chartType: chartTypeMap(result.chartType as unknown as ChartType).toUpperCase(),
-      cell: getCell(result.cell),
+      cells: [getCell(result.cell)],
       dataset: result.dataset,
       score: result.score
     }));
@@ -101,7 +101,7 @@ const getTop1AdvisedChart: Transformer<getAdvisedListOutput, ChartAdvisorOutput>
   const result = advisedList[0];
   return {
     chartType: result.chartType as VMindChartType,
-    cells: [getCell(result.cell)],
+    cells: [getCell(result.cells[0])],
     dataset: result.dataset,
     chartSource,
     usage

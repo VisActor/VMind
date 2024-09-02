@@ -6,6 +6,6 @@ export type GenerateFieldMapContext = GenerateChartTypeContext & GenerateChartTy
 
 export type GenerateFieldMapOutput = {
   cells?: Cell[];
-  datasets?: VMindDataset[];
+  datasetsForCombinationChart?: VMindDataset[];
   fieldMapTokenUsage: any;
 };

@@ -5213,7 +5213,7 @@ export const vennChartData = {
 7,A,2
 7,B,2
 7,C,2`,
-  input: '帮我展示各元素集合重叠区域，以及分布情况。请使用sets字段来区分不同区域。'
+  input: '帮我展示各元素集合重叠区域，以及分布情况。请使用数据中的sets字段来划分不同集合。'
 };
 
 export const singleColumnLineCombinationChartData = {
@@ -5398,7 +5398,7 @@ export const singleColumnLineCombinationChartData = {
 2022-09-01,0.259653267575217,2.040817156148029,2.19857288799284,2.229208371156883
 2022-09-02,1.398428414171018,0.071469482611002,0.9048807067534731,0.0022491420541680004
 2022-09-03,1.7166677805176591,1.903668070163285,1.866568462888393,1.8648831840830011`,
-  input: '请使用组合图展示不同类别的权重随着时间的变化'
+  input: '请使用四个折线的组合图展示不同类别的权重随着时间的变化'
 };
 
 export const singleColumnLineCombinationChartData1 = {
@@ -5889,7 +5889,7 @@ export const mockUserTextInput10 = {
 
 export const mockProgressData = {
   csv: `年份,进度
- 2024,0.56`,
+ 2024年,0.56`,
   input: '请使用环形进度图帮我展示今年的进度数据'
 };
 

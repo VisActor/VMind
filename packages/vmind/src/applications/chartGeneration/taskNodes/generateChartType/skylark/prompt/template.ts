@@ -3,6 +3,7 @@ import type { ChartType } from '../../../../../../common/typings';
 
 export const getChartRecommendPrompt = (
   chartTypeList: ChartType[],
+  combinationChartList: string[],
   knowledgeStr: string,
   constraintsStr: string,
   showThoughts: boolean
@@ -25,4 +26,5 @@ Response in the following format:
 ${
   showThoughts ? 'thoughts: //Your thoughts\n' : ''
 }chartType: //chart type you choose based on data and user's command. Only one chart type can be used.
+subChartType: //The default value is an empty array. It is assigned only when chartType is in ${combinationChartList}.
 `;

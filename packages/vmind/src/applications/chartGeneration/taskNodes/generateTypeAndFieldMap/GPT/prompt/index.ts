@@ -12,7 +12,7 @@ import {
   visualChannelInfoMap
 } from './knowledges';
 import { uniqArray } from '@visactor/vutils';
-import { BASIC_CHART_LIST, COMBINATION_CHART_LIST } from '../../../../constants';
+import { COMBINATION_BASIC_CHART_LIST, COMBINATION_CHART_LIST } from '../../../../constants';
 
 const patchUserInput = (userInput: string) => {
   const FULL_WIDTH_SYMBOLS = ['，', '。'];
@@ -103,7 +103,7 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
     const QueryDatasetPrompt = ChartAdvisorPromptEnglish(
       showThoughts,
       chartTypeList,
-      BASIC_CHART_LIST,
+      COMBINATION_BASIC_CHART_LIST,
       COMBINATION_CHART_LIST,
       knowledgeStr,
       visualChannelsStr,

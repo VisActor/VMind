@@ -2,7 +2,7 @@
 export const ChartAdvisorPromptEnglish = (
   showThoughts: boolean,
   supportedChartList: string[],
-  basicChartList: string[],
+  combinationBasicChartList: string[],
   combinationChartList: string[],
   knowledge: string,
   visualChannels: string,
@@ -37,7 +37,7 @@ Please return the response according to the following JsonSchema:
     "SUB_CHART_TYPE": {
       "type": "array",
       "items": {
-        "enum": ${JSON.stringify(basicChartList)}
+        "enum": ${JSON.stringify(combinationBasicChartList)}
       },
       "description": "The default is an empty array, and only relevant results are returned when there are multiple indicators. For example, combination charts, etc. The length of SUB_CHART_TYPE must be the same as the length of FIELD_MAP"
     },

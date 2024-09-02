@@ -195,14 +195,14 @@ export function DataInput(props: IPropsType) {
     console.log(chartGenerationRes);
     if (isArray(chartGenerationRes)) {
       const resNew = chartGenerationRes.map(res => {
-        const { spec, cell } = res;
+        const { spec, cells } = res;
         specTemplateTest && (spec.data = undefined);
-        const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset, cell) : spec;
+        const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset, cells) : spec;
         return finalSpec;
       });
       props.onSpecListGenerate(resNew);
     } else {
-      const { spec, time, cell } = chartGenerationRes;
+      const { spec, time, cells } = chartGenerationRes;
 
       const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset) : spec;
 
