@@ -18,6 +18,7 @@ import {
   patchNeedSize,
   patchPieChart,
   patchRangeColumnChart,
+  patchSingleColumnCombinationChart,
   patchWordCloud,
   patchYField
 } from './patcher';
@@ -49,7 +50,8 @@ const ChartGenerationTaskNodeGPTMeta: LLMBasedTaskNodeMeta<
     patchRangeColumnChart,
     patchLinearProgressChart,
     patchBasicHeatMapChart,
-    patchCartesianXField
+    patchCartesianXField,
+    patchSingleColumnCombinationChart
   ],
   requester: chartGenerationRequestLLM,
   prompt: new GPTChartGenerationPrompt()

@@ -49,7 +49,11 @@ import {
   linearProgressChartData,
   basicHeatMapChartData,
   vennChartData,
-  mapChartData
+  mapChartData,
+  singleColumnLineCombinationChartData,
+  singleColumnLineCombinationChartData1,
+  singleColumnBarCombinationChartData1,
+  singleColumnBarCombinationChartData
 } from '../../constants/mockData';
 import VMind, { ArcoTheme, builtinThemeMap, BuiltinThemeType } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
@@ -106,7 +110,11 @@ const demoDataList: { [key: string]: any } = {
   Gauge: gaugeChartData,
   LinearProgress: linearProgressChartData,
   BasicHeatMap: basicHeatMapChartData,
-  Venn: vennChartData
+  Venn: vennChartData,
+  SingleColumnLineCommon: singleColumnLineCombinationChartData,
+  SingleColumnLineCommon1: singleColumnLineCombinationChartData1,
+  SingleColumnBarCommon: singleColumnBarCombinationChartData,
+  SingleColumnBarCommon1: singleColumnBarCombinationChartData1
 };
 
 const globalVariables = (import.meta as any).env;
@@ -187,14 +195,14 @@ export function DataInput(props: IPropsType) {
     console.log(chartGenerationRes);
     if (isArray(chartGenerationRes)) {
       const resNew = chartGenerationRes.map(res => {
-        const { spec, cell } = res;
+        const { spec, cells } = res;
         specTemplateTest && (spec.data = undefined);
-        const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset, cell) : spec;
+        const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset, cells) : spec;
         return finalSpec;
       });
       props.onSpecListGenerate(resNew);
     } else {
-      const { spec, time, cell } = chartGenerationRes;
+      const { spec, time, cells } = chartGenerationRes;
 
       const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset) : spec;
 

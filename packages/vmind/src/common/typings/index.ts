@@ -82,9 +82,18 @@ export enum ChartType {
   SunburstChart = 'Sunburst Chart',
   TreemapChart = 'Treemap Chart',
   Gauge = 'Gauge Chart',
-  // LinearProgressChart = 'Linear Progress Chart',
   BasicHeatMap = 'Basic Heat Map',
-  VennChart = 'Venn Chart'
+  VennChart = 'Venn Chart',
+  SingleColumnCombinationChart = 'Single Column Combination Chart'
+}
+
+export enum CombinationChartType {
+  SingleColumnCombinationChart = 'Single Column Combination Chart'
+}
+
+export enum CombinationBasicChartType {
+  BarChart = 'Bar Chart',
+  LineChart = 'Line Chart'
 }
 
 export type GPTChartAdvisorResult = {
@@ -172,7 +181,7 @@ export type VMindDataset = DataItem[];
 
 export type PatchContext = {
   chartType: string;
-  cell: Cell;
+  cells: Cell[];
   dataset: DataItem[];
   fieldInfo: SimpleFieldInfo[];
 };
@@ -180,7 +189,7 @@ export type PatchContext = {
 export type PatchPipeline = (
   context: PatchContext,
   _originalContext: PatchContext
-) => { chartType: string; cell: Cell; dataset: DataItem[]; fieldInfo: SimpleFieldInfo[] };
+) => { chartType: string; cells: Cell[]; dataset: DataItem[]; fieldInfo: SimpleFieldInfo[] };
 
 export type TaskError = { error: boolean };
 

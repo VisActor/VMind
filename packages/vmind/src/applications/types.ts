@@ -8,6 +8,7 @@ import type {
 } from '../common/typings';
 import type { Cell } from './chartGeneration/types';
 import type { InsightAlgorithm, VMindInsight } from './IngelligentInsight/types';
+import type { CombinationBasicChartType } from '../common/typings';
 
 //context of the DataExtraction Application
 export type DataExtractionContext = {
@@ -54,7 +55,9 @@ export type ChartGenerationContext = {
 
 export type ChartGenerationOutput = {
   chartType: ChartType;
-  cell: Cell;
+  subChartType?: CombinationBasicChartType[];
+  cells?: Cell[];
+  datasets?: VMindDataset[];
   spec: any;
   chartSource: string;
   usage: any; //token usage of the LLM
