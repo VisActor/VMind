@@ -1,15 +1,24 @@
 /* eslint-disable max-len */
 export const getFieldMapPrompt = (
   chartType: string,
+  subChartType: string[],
   availableChannels: string,
   channelsInResponse: string,
   channelKnowledge: string,
   showThoughts: boolean
-) => `You are an export in data visualization. User wants to generate a ${chartType.toLocaleLowerCase()} using the fields provided.
+) => `You are an expert in data visualization. User wants to generate a ${
+  subChartType && subChartType.length !== 0
+    ? 'combination of ' +
+      subChartType.slice(0, subChartType.length - 1).join() +
+      'and' +
+      subChartType[subChartType.length - 1]
+    : chartType.toLocaleLowerCase()
+} using the fields provided.
 Your task is:
 1. Filter out useful fields related to user's command.
 2. Assign the useful fields to the available visual channels according to field name and type.
-3. Response in YAML format without any additional descriptions
+3. If the chart type is a combination chart, the above two steps need to be repeated for each sub-chart generation task of the combination chart. The number of mapping relationships of visual channels in the response needs to be consistent with the number of sub-charts generated.
+4. The response is an array in YAML format without any additional descriptions.
 
 Available visual channels:
 ${availableChannels}

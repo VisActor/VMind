@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 
 import { ChartType } from '../../../../../../common/typings';
+import { COMBINATION_BASIC_CHART_LIST } from '../../../../constants';
 
 type ChartKnowledgeBase = {
   [chartType: string]: {
@@ -73,5 +74,53 @@ export const chartKnowledgeBase: ChartKnowledgeBase = {
   [ChartType.LiquidChart]: {
     knowledge: ['Liquid chart show a percent value'],
     constraints: ['Use Liquid Chart if user want to show a percent value']
+  },
+  [ChartType.BubbleCirclePacking]: {
+    knowledge: [
+      'Bubble Circle Packing is useful for visualizing hierarchical data with circles representing nodes, where the size and color can convey additional information about the data points.'
+    ]
+  },
+  [ChartType.MapChart]: {
+    knowledge: [
+      'Map Charts are used to visualize geographical data, allowing for the identification of spatial patterns and trends.'
+    ]
+  },
+  [ChartType.RangeColumnChart]: {
+    knowledge: [
+      'Range Column Charts are designed to show data that has a minimum and a maximum value, making them effective for displaying variability or uncertainty within data sets.'
+    ]
+  },
+  [ChartType.SunburstChart]: {
+    knowledge: [
+      'Sunburst Charts are excellent for visualizing hierarchical data, allowing users to see relationships between categories and subcategories at varying levels of detail.',
+      'The colors field for sunburst chart and treemap chart must be an array. The order of the elements in the array needs to be sorted from large to small according to the coverage described by the data field.'
+    ]
+  },
+  [ChartType.TreemapChart]: {
+    knowledge: [
+      'Treemap Charts are effective for displaying large amounts of hierarchical data in a compact space, where areas represent the size of each category.',
+      'The colors field for sunburst chart and treemap chart must be an array. The order of the elements in the array needs to be sorted from large to small according to the coverage described by the data field.'
+    ]
+  },
+  [ChartType.Gauge]: {
+    knowledge: [
+      'Gauge Charts are useful for displaying performance metrics against a target, providing a quick visual summary at a glance.',
+      'The gauge chart must contain two fields: size and color.'
+    ]
+  },
+  [ChartType.BasicHeatMap]: {
+    knowledge: [
+      'Basic Heat Maps are great for visualizing data intensity over two dimensions, helping to identify patterns through color coding.'
+    ]
+  },
+  [ChartType.VennChart]: {
+    knowledge: [
+      'Venn Charts are useful for displaying the relationships between different groups, emphasizing similarities and differences visually.',
+      'The color field of the Venn diagram requires an array of length 2. The field with subscript 0 maps to the sets, and the field with subscript 1 maps to the name.'
+    ]
+  },
+  [ChartType.SingleColumnCombinationChart]: {
+    knowledge: ['Single column combination charts can be combined with a variety of different basic chart types'],
+    constraints: [`subChartType cannot be empty, it is an array of values in ${COMBINATION_BASIC_CHART_LIST}.`]
   }
 };
