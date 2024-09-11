@@ -368,5 +368,43 @@ export const ChartFieldInfo: ChannelInfo = {
         ','
       )}.`
     ]
+  },
+  [ChartType.DynamicScatterPlotChart.toUpperCase()]: {
+    visualChannels: {
+      x: "x-axis of dynamic scatter plot. Represents a quantitative variable along the horizontal axis. Can't be empty.",
+      y: "y-axis of dynamic scatter plot. Represents a quantitative variable along the vertical axis. Can't be empty.",
+      color:
+        'color channel of dynamic scatter plot. Represents different categories or groups. Can be empty if no suitable field.',
+      size: 'size channel of dynamic scatter plot. Represents the magnitude or importance of each data point. Can be empty if no suitable field.',
+      time: "time channel of dynamic scatter plot. Represents the temporal dimension that drives the dynamic behavior of the plot. Can't be empty."
+    },
+    responseDescription: {
+      x: 'field assigned to x channel',
+      y: 'field assigned to y channel',
+      color: 'field assigned to color channel',
+      size: 'field assigned to size channel',
+      time: 'field assigned to time channel'
+    },
+    knowledge: [
+      'All visual channels must reflect the structure of the data presented.',
+      'Dynamic Scatter Plot shows relationships between variables over time, where x and y represent quantitative variables, color represents categories, and size indicates magnitude.'
+    ]
+  },
+  [ChartType.DynamicRoseChart.toUpperCase()]: {
+    visualChannels: {
+      radius:
+        "radius channel of dynamic rose chart. Represents the magnitude of values in a radial format. Can't be empty.",
+      color: "color channel of dynamic rose chart. Represents different categories or groups. Can't be empty.",
+      time: "time channel of dynamic rose chart. Represents the temporal dimension that drives the dynamic behavior of the chart. Can't be empty."
+    },
+    responseDescription: {
+      radius: 'field assigned to radius channel',
+      color: 'field assigned to color channel',
+      time: 'field assigned to time channel'
+    },
+    knowledge: [
+      'All visual channels must reflect the structure of the data presented.',
+      'Dynamic Rose Chart is useful for visualizing cyclical patterns, where radius represents the magnitude, color distinguishes categories, and time drives the dynamic updates.'
+    ]
   }
 };

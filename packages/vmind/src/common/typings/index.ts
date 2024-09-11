@@ -84,7 +84,9 @@ export enum ChartType {
   Gauge = 'Gauge Chart',
   BasicHeatMap = 'Basic Heat Map',
   VennChart = 'Venn Chart',
-  SingleColumnCombinationChart = 'Single Column Combination Chart'
+  SingleColumnCombinationChart = 'Single Column Combination Chart',
+  DynamicScatterPlotChart = 'Dynamic Scatter Plot Chart',
+  DynamicRoseChart = 'Dynamic Rose Chart'
 }
 
 export enum CombinationChartType {

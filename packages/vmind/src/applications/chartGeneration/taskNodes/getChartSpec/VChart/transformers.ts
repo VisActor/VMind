@@ -26,6 +26,7 @@ import { builtinThemeMap } from '../../../../../common/builtinTheme';
 import { FOLD_NAME, FOLD_VALUE, COLOR_FIELD } from '@visactor/chart-advisor';
 import { CARTESIAN_CHART_LIST } from '../../../constants';
 import { getCell } from '../../utils';
+import { fillColorForData, sortArray, SortOrder } from './utils';
 
 const CARTESIAN_CHART_LIST_UPPER = CARTESIAN_CHART_LIST.map(chartType => chartType.toUpperCase() as ChartType);
 
@@ -56,7 +57,9 @@ const chartTypeMap: { [chartName: string]: string } = {
   [ChartType.Gauge.toUpperCase()]: 'gauge',
   [ChartType.BasicHeatMap.toUpperCase()]: 'common',
   [ChartType.VennChart.toUpperCase()]: 'venn',
-  [ChartType.SingleColumnCombinationChart.toUpperCase()]: 'common'
+  [ChartType.SingleColumnCombinationChart.toUpperCase()]: 'common',
+  [ChartType.DynamicScatterPlotChart.toUpperCase()]: 'common',
+  [ChartType.DynamicRoseChart.toUpperCase()]: 'rose'
 };
 
 export const chartType: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
@@ -112,10 +115,19 @@ export const wordCloudData: Transformer<Context, GetChartSpecOutput> = (context:
 export const sequenceData: Transformer<Context & { totalTime: number }, GetChartSpecOutput> = (
   context: Context & { totalTime: number }
 ) => {
-  const { dataset, cells, totalTime, spec } = context;
+  const { dataset, cells, totalTime, spec, chartType } = context;
   const cell = getCell(cells);
   const timeField = cell.time as string;
-  const latestData = isValidDataset(dataset) ? dataset : [];
+  let latestData = isValidDataset(dataset) ? dataset : [];
+  if (chartType.toUpperCase() === ChartType.DynamicRoseChart.toUpperCase()) {
+    latestData = fillColorForData(
+      sortArray(latestData, [
+        { field: timeField, order: SortOrder.ASC },
+        { field: cell.radius, order: SortOrder.DESC }
+      ]),
+      cell.color as string
+    );
+  }
 
   //add the time field into spec, although it has no use for chart rendering.
   //it can be used in getCellFromSpec.
@@ -2067,5 +2079,227 @@ export const commonSingleColumnLayout: Transformer<Context, GetChartSpecOutput> 
     });
     spec.layout = { type: 'grid', col: 1, row: regionLength + 1, elements: elements };
   }
+  return { spec };
+};
+
+export const colorDynamicScatterPlot: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { colors, spec, cells, fieldInfo } = context;
+  const cell = getCell(cells);
+  const colorThemes = COLOR_THEMES.default;
+  if (colors && colors.length > 0) {
+    spec.color = colors;
+  } else {
+    spec.color = {
+      type: 'ordinal',
+      domain: fieldInfo.filter(fieldInfo => {
+        return fieldInfo.fieldName === cell.color;
+      })?.[0].domain,
+      range: colorThemes
+    };
+  }
+
+  return { spec };
+};
+
+export const dynamicScatterPlotAxes: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cells, fieldInfo } = context;
+  const cell = getCell(cells);
+  const xFieldInfo = fieldInfo.filter(fieldInfo => {
+    return fieldInfo.fieldName === cell.x;
+  })?.[0];
+  const yFieldInfo = fieldInfo.filter(fieldInfo => {
+    return fieldInfo.fieldName === cell.y;
+  })?.[0];
+
+  spec.axes = [
+    {
+      orient: 'left',
+      nice: true,
+      zero: false,
+      type: 'linear',
+      range: { min: yFieldInfo.domain[0], max: yFieldInfo.domain[1] },
+      tick: {
+        tickCount: 10
+      },
+      grid: {
+        visible: true,
+        style: {
+          lineDash: [0]
+        }
+      }
+    },
+    {
+      orient: 'bottom',
+      nice: true,
+      label: { visible: true },
+      type: 'linear',
+      range: { min: xFieldInfo.domain[0], max: xFieldInfo.domain[1] },
+      tick: {
+        tickCount: 10
+      },
+      grid: {
+        visible: true,
+        style: {
+          lineDash: [0]
+        }
+      }
+    }
+  ];
+  return { spec };
+};
+
+export const dynamicScatterPlotSeries: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cells } = context;
+  const cell = getCell(cells);
+  spec.series = [
+    {
+      type: 'scatter',
+      // 通过数据中的 index 进行数据匹配
+      dataKey: cell.color,
+      // 声明点半径大小
+      sizeField: cell.size,
+      size: {
+        type: 'linear',
+        range: [5, 30]
+      },
+      seriesField: cell.color,
+      point: {
+        style: {}
+      },
+      xField: cell.x,
+      yField: cell.y,
+      animationAppear: {
+        duration: 300,
+        easing: 'linear'
+      },
+      animationUpdate: {
+        duration: 300,
+        easing: 'linear'
+      }
+    }
+  ];
+  return { spec };
+};
+
+export const dynamicScatterPlotAnimation: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  const duration = spec.animationUpdate.bar[0].duration;
+  spec.animationUpdate = {
+    point: [
+      {
+        type: 'update',
+        options: {
+          excludeChannels: ['x', 'y']
+        },
+        duration: duration,
+        easing: 'cubicInOut'
+      },
+      {
+        channel: ['x', 'y'],
+        options: {
+          excludeChannels: ['width']
+        },
+        duration: duration,
+        easing: 'cubicInOut'
+      }
+    ],
+    axis: {
+      duration: duration,
+      easing: 'cubicInOut'
+    }
+  };
+  return { spec };
+};
+
+export const dynamicScatterPlotTooltip: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cells } = context;
+  const cell = getCell(cells);
+  spec.tooltip = {
+    mark: {
+      title: {
+        key: cell.color,
+        value: (datum: any) => datum[cell.color as string]
+      },
+      content: [
+        {
+          key: cell.x,
+          value: (datum: any) => datum[cell.x]
+        },
+        {
+          key: cell.y,
+          value: (datum: any) => datum[cell.y as string]
+        },
+        {
+          key: cell.size,
+          value: (datum: any) => datum[cell.size]
+        }
+      ]
+    }
+  };
+  return { spec };
+};
+
+export const dynamicRoseAnimation: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  const duration = 1000;
+  const exchangeDuration = 600;
+  spec.animationUpdate = {
+    rose: [
+      {
+        type: 'update',
+        options: { excludeChannels: ['startAngle', 'endAngle'] },
+        easing: 'linear',
+        duration
+      },
+      {
+        channel: ['startAngle', 'endAngle'],
+        easing: 'circInOut',
+        duration: exchangeDuration
+      }
+    ]
+  };
+  spec.animationEnter = {
+    easing: 'linear',
+    duration: exchangeDuration
+  };
+  spec.animationExit = {
+    easing: 'linear',
+    duration: exchangeDuration
+  };
+  return { spec };
+};
+export const dynamicRoseField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cells } = context;
+  const cell = getCell(cells);
+  spec.categoryField = cell.color;
+  spec.valueField = cell.radius;
+  spec.seriesField = cell.color;
+  return { spec };
+};
+export const dynamicRoseDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.outerRadius = 1;
+  spec.innerRadius = 0.2;
+  spec.rose = {
+    style: {
+      fill: (datum: any) => datum.fill
+    }
+  };
+  spec.axes = [
+    {
+      orient: 'angle',
+      label: {
+        visible: false
+      }
+    },
+    {
+      orient: 'radius'
+    }
+  ];
+  spec.label = {
+    visible: true,
+    position: 'outside'
+  };
+  spec.startAngle = -90;
   return { spec };
 };

@@ -12,6 +12,7 @@ import {
   patchColorField,
   patchDualAxis,
   patchDynamicBarChart,
+  patchDynamicScatterPlotChart,
   patchLabelField,
   patchLinearProgressChart,
   patchNeedColor,
@@ -51,7 +52,8 @@ const ChartGenerationTaskNodeGPTMeta: LLMBasedTaskNodeMeta<
     patchLinearProgressChart,
     patchBasicHeatMapChart,
     patchCartesianXField,
-    patchSingleColumnCombinationChart
+    patchSingleColumnCombinationChart,
+    patchDynamicScatterPlotChart
   ],
   requester: chartGenerationRequestLLM,
   prompt: new GPTChartGenerationPrompt()

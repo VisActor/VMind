@@ -19,7 +19,7 @@ const patchUserInput = (userInput: string) => {
   const HALF_WIDTH_SYMBOLS = [',', '.'];
 
   const BANNED_WORD_LIST = ['动态'];
-  const ALLOWED_WORD_LIST = ['动态条形图', '动态柱状图', '动态柱图'];
+  const ALLOWED_WORD_LIST = ['动态条形图', '动态柱状图', '动态柱图', '动态散点图', '动态玫瑰图', '动态饼图'];
   const PLACEHOLDER = '_USER_INPUT_PLACE_HOLDER';
   const tempStr1 = ALLOWED_WORD_LIST.reduce((prev, cur, index) => {
     return prev.split(cur).join(PLACEHOLDER + '_' + index);
