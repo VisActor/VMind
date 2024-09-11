@@ -53,7 +53,10 @@ import {
   singleColumnLineCombinationChartData,
   singleColumnLineCombinationChartData1,
   singleColumnBarCombinationChartData1,
-  singleColumnBarCombinationChartData
+  singleColumnBarCombinationChartData,
+  dynamicScatterPlotData,
+  dynamicRoseData,
+  dynamicRoseData1
 } from '../../constants/mockData';
 import VMind, { ArcoTheme, builtinThemeMap, BuiltinThemeType } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
@@ -114,7 +117,10 @@ const demoDataList: { [key: string]: any } = {
   SingleColumnLineCommon: singleColumnLineCombinationChartData,
   SingleColumnLineCommon1: singleColumnLineCombinationChartData1,
   SingleColumnBarCommon: singleColumnBarCombinationChartData,
-  SingleColumnBarCommon1: singleColumnBarCombinationChartData1
+  SingleColumnBarCommon1: singleColumnBarCombinationChartData1,
+  dynamicScatterPlotData: dynamicScatterPlotData,
+  dynamicRoseData: dynamicRoseData,
+  dynamicRoseData1: dynamicRoseData1
 };
 
 const globalVariables = (import.meta as any).env;

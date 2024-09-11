@@ -109,7 +109,8 @@ export const patchYField: Transformer<
     if (
       chartTypeNew === ChartType.BoxPlot.toUpperCase() ||
       (chartTypeNew === ChartType.DualAxisChart.toUpperCase() && y.length === 2) ||
-      (chartTypeNew === ChartType.RangeColumnChart.toUpperCase() && y.length === 2)
+      (chartTypeNew === ChartType.RangeColumnChart.toUpperCase() && y.length === 2) ||
+      (chartTypeNew === ChartType.DynamicScatterPlotChart.toUpperCase() && y.length >= 2)
     ) {
       return {
         ...context
@@ -421,7 +422,7 @@ export const patchNeedColor: Transformer<
       if (colorField) {
         cellNew.color = colorField.fieldName;
       } else {
-        cellNew.color = remainedFields[0].fieldName;
+        cellNew.color = remainedFields[0] ? remainedFields[0].fieldName : null;
       }
     }
   }
@@ -452,7 +453,7 @@ export const patchNeedSize: Transformer<
       if (sizeField) {
         cellNew.size = sizeField.fieldName;
       } else {
-        cellNew.size = remainedFields[0].fieldName;
+        cellNew.size = remainedFields[0] ? remainedFields[0].fieldName : null;
       }
     }
   }
@@ -606,4 +607,68 @@ export const patchSingleColumnCombinationChart: Transformer<
     };
   }
   return {};
+};
+
+export const patchDynamicScatterPlotChart: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cells, fieldInfo } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew = { ...getCell(cells) };
+  let chartTypeNew = chartType;
+
+  if (chartType === ChartType.DynamicScatterPlotChart.toUpperCase()) {
+    if (cellNew.y && isArray(cellNew.y)) {
+      cellNew.y = cellNew.y[0];
+    }
+    if (cellNew.color && isArray(cellNew.color)) {
+      cellNew.color = cellNew.color[0];
+    }
+    if (!cellNew.time || cellNew.time === '' || cellNew.time.length === 0) {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+
+      //Dynamic scatter plot chart does not have a time field, choose a discrete field as time.
+      const timeField = getFieldByDataType(remainedFields, [DataType.DATE]);
+      if (timeField) {
+        cellNew.time = timeField.fieldName;
+      } else {
+        const stringField = getFieldByDataType(remainedFields, [DataType.STRING]);
+        if (stringField) {
+          cellNew.time = stringField.fieldName;
+        } else {
+          //no available field, set chart type to scatter plot chart
+          chartTypeNew = <ChartType>ChartType.ScatterPlot.toUpperCase();
+          return {
+            //...context,
+            cells: [cellNew],
+            chartType: chartTypeNew
+          };
+        }
+      }
+    }
+    if (!cellNew.x || cellNew.x === cellNew.time) {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const xField = getFieldByDataType(remainedFields, [DataType.INT, DataType.FLOAT]);
+      if (xField) {
+        cellNew.x = xField.fieldName;
+      }
+    }
+
+    if (!cellNew.size || cellNew.size === cellNew.time) {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const sizeField = getFieldByDataType(remainedFields, [DataType.INT, DataType.FLOAT]);
+      if (sizeField) {
+        cellNew.size = sizeField.fieldName;
+      }
+    }
+  }
+
+  return {
+    //...context,
+    cells: [cellNew],
+    chartType: chartTypeNew
+  };
 };

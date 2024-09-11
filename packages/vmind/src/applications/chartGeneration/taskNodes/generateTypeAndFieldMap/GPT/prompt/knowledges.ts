@@ -6,7 +6,8 @@ import {
   CARTESIAN_CHART_LIST,
   NEED_COLOR_FIELD_CHART_LIST,
   NEED_SIZE_FIELD_CHART_LIST,
-  NEED_COLOR_AND_SIZE_CHART_LIST
+  NEED_COLOR_AND_SIZE_CHART_LIST,
+  DYNAMIC_CHART_LIST
 } from '../../../../constants';
 
 const getColorKnowledge = (chartTypeList: ChartType[]) => {
@@ -92,8 +93,9 @@ export const visualChannelInfoMap = {
   },
   time: (chartTypeList: ChartType[]) => {
     return {
-      singleFieldInfo:
-        "This is usually a date field and can be used only in Dynamic Bar Chart. Can't be empty in Dynamic Bar Chart."
+      singleFieldInfo: `This is usually a date field and cannot be empty in all dynamic chart types. For example, ${DYNAMIC_CHART_LIST.join(
+        ','
+      )}.`
     };
   },
   source: (chartTypeList: ChartType[]) => {
@@ -146,7 +148,7 @@ export const chartKnowledgeDict: ChartKnowledge = {
   },
   [ChartType.RoseChart]: {
     index: 7,
-    visualChannels: ['color', 'radius', 'angle'],
+    visualChannels: ['color', 'radius'],
     examples: []
   },
   [ChartType.RadarChart]: {
@@ -271,6 +273,20 @@ export const chartKnowledgeDict: ChartKnowledge = {
     visualChannels: [],
     examples: [],
     knowledge: ['Single column combination charts can be combined with a variety of different basic chart types']
+  },
+  [ChartType.DynamicScatterPlotChart]: {
+    index: 28,
+    visualChannels: ['x', 'y', 'color', 'size', 'time'],
+    examples: [],
+    knowledge: [
+      'The five channels that need to be mapped in the dynamic scatter plot are: x, y, color, size, and time; the x, y, and size channels require numeric data fields; the time field must be mapped.'
+    ]
+  },
+  [ChartType.DynamicRoseChart]: {
+    index: 29,
+    visualChannels: ['color', 'radius', 'time'],
+    examples: [],
+    knowledge: ['The three channels that need to be mapped in the dynamic rose chart are: color, radius, and time;']
   }
 };
 

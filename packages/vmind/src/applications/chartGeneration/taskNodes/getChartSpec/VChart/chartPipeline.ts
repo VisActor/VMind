@@ -80,7 +80,15 @@ import {
   commonSingleColumnSeries,
   commonSingleColumnLegend,
   commonSingleColumnAxes,
-  commonSingleColumnLayout
+  commonSingleColumnLayout,
+  dynamicScatterPlotAxes,
+  dynamicScatterPlotSeries,
+  dynamicScatterPlotAnimation,
+  colorDynamicScatterPlot,
+  dynamicScatterPlotTooltip,
+  dynamicRoseAnimation,
+  dynamicRoseField,
+  dynamicRoseDisplayConf
 } from './transformers';
 
 const pipelineBar = [
@@ -237,6 +245,26 @@ const pipelineSingleColumnCombinationChart = [
   commonSingleColumnLayout,
   theme
 ];
+const pipelineDynamicScatterPlotChart = [
+  chartType,
+  sequenceData,
+  colorDynamicScatterPlot,
+  dynamicScatterPlotAnimation,
+  dynamicScatterPlotAxes,
+  dynamicScatterPlotSeries,
+  customMark,
+  dynamicScatterPlotTooltip,
+  theme
+];
+const pipelineDynamicRoseChart = [
+  chartType,
+  sequenceData,
+  dynamicRoseAnimation,
+  dynamicRoseField,
+  dynamicRoseDisplayConf,
+  customMark,
+  theme
+];
 
 const pipelineMap: { [chartType: string]: any } = {
   [ChartType.BarChart.toUpperCase()]: pipelineBar,
@@ -263,7 +291,9 @@ const pipelineMap: { [chartType: string]: any } = {
   [ChartType.Gauge.toUpperCase()]: pipelineGauge,
   [ChartType.BasicHeatMap.toUpperCase()]: pipelineBasicHeatMap,
   [ChartType.VennChart.toUpperCase()]: pipelineVenn,
-  [ChartType.SingleColumnCombinationChart.toUpperCase()]: pipelineSingleColumnCombinationChart
+  [ChartType.SingleColumnCombinationChart.toUpperCase()]: pipelineSingleColumnCombinationChart,
+  [ChartType.DynamicScatterPlotChart.toUpperCase()]: pipelineDynamicScatterPlotChart,
+  [ChartType.DynamicRoseChart.toUpperCase()]: pipelineDynamicRoseChart
 };
 
 export const beforePipe: Transformer<GetChartSpecContext & GetChartSpecOutput, GetChartSpecOutput> = (

@@ -34,6 +34,12 @@ export const CARTESIAN_CHART_LIST = [
   ChartType.BasicHeatMap
 ];
 
+export const DYNAMIC_CHART_LIST = [
+  ChartType.DynamicBarChart,
+  ChartType.DynamicScatterPlotChart,
+  ChartType.DynamicRoseChart
+];
+
 export const DEFAULT_MAP_OPTION: BasemapOption = {
   regionProjectType: null,
   regionCoordinate: MapRegionCoordinate.GEO,
