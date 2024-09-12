@@ -15,6 +15,7 @@ import type { Cell } from '../../../../types';
 import {
   patchBasicHeatMapChart,
   patchCartesianXField,
+  patchDynamicScatterPlotChart,
   patchLinearProgressChart,
   patchNeedColor,
   patchNeedSize,
@@ -355,5 +356,6 @@ export const patchPipelines: Transformer<PatchContext, Partial<GenerateFieldMapO
   patchLinearProgressChart,
   patchBasicHeatMapChart,
   patchCartesianXField,
-  patchSingleColumnCombinationChart
+  patchSingleColumnCombinationChart,
+  patchDynamicScatterPlotChart
 ];

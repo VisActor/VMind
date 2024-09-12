@@ -122,5 +122,23 @@ export const chartKnowledgeBase: ChartKnowledgeBase = {
   [ChartType.SingleColumnCombinationChart]: {
     knowledge: ['Single column combination charts can be combined with a variety of different basic chart types'],
     constraints: [`subChartType cannot be empty, it is an array of values in ${COMBINATION_BASIC_CHART_LIST}.`]
+  },
+  [ChartType.DynamicScatterPlotChart]: {
+    knowledge: [
+      'Dynamic Scatter Plot Chart can highlight changes in the correlation between variables as time progresses.',
+      'It can display the distribution of data points and trends, along with movement or growth of specific categories over time.'
+    ],
+    constraints: [
+      'Use a dynamic scatter plot chart when you want to visualize the relationship between two or three quantitative variables and observe how that relationship evolves over time.'
+    ]
+  },
+  [ChartType.DynamicRoseChart]: {
+    knowledge: [
+      'Dynamic Rose Chart is used to display cyclical or seasonal data over time, with values represented by the length of radial bars.',
+      'Dynamic Rose Chart highlights changes in categorical data or periodic trends across multiple categories over time.'
+    ],
+    constraints: [
+      'Use Dynamic Rose Chart if you want to show cyclical data and observe changes in multiple categories over time.'
+    ]
   }
 };
