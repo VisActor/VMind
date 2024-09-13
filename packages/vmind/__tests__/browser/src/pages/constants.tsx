@@ -3,6 +3,7 @@ import { ChartGenerationPage } from './ChartGeneration/ChartGeneration';
 import React from 'react';
 import { InsightPage } from './Insight/Insight';
 import { DataExtractionPage } from './DataExtraction/DataExtraction';
+import { NewDataExtractionPage } from './NewDataExtraction';
 type MenuInfo = {
   menuItem: string;
   pageName: string;
@@ -14,7 +15,9 @@ type MenuInfo = {
 export enum PLAYGROUND_PAGES {
   CHART_GENERATION = 'chart_generation',
   SMART_INSIGHT = 'smart-insight',
-  DATA_EXTRACTION = 'data-extraction'
+  DATA_EXTRACTION = 'data-extraction',
+  NEW_DATA_EXTRACTION = 'new-data-extraction',
+  DATA_EXTRACTIONI_TASK = 'data-extraction-task'
 }
 
 export const PLAYGROUND_MENU_INFO: {
@@ -36,6 +39,12 @@ export const PLAYGROUND_MENU_INFO: {
     menuItem: 'Data Extraction',
     pageName: 'Data Extraction',
     component: <DataExtractionPage />,
+    icon: <IconLanguage />
+  },
+  [PLAYGROUND_PAGES.NEW_DATA_EXTRACTION]: {
+    menuItem: 'New Data Extraction',
+    pageName: 'New Data Extraction',
+    component: <NewDataExtractionPage />,
     icon: <IconLanguage />
   }
 };
