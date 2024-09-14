@@ -1,0 +1,77 @@
+.case-container {
+  display: flex;
+  padding: 16px;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  .sub-title {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .compare {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+
+    .title {
+      display: flex;
+      height: 24px;
+      width: 100%;
+      border-bottom: 1px #efefef solid;
+      text-align: center;
+    }
+
+    .result {
+      display: flex;
+      flex: 1;
+      overflow: auto;
+      padding-right: 8px;
+    }
+    .one-result {
+      overflow: visible;
+
+      .result-container {
+        padding: 4px 12px;
+        border-right: 1px #efefef solid;
+      }
+      .one-card {
+        height: 400px;
+        margin: 8px 0;
+        overflow: auto;
+      }
+      .column-title {
+        display: flex;
+        align-items: center;
+        span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        svg {
+          flex-shrink: 0;
+        }
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.dataset-selector {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  p {
+    margin-right: 12px;
+  }
+
+  .arco-select {
+    width: 200px;
+  }
+}
