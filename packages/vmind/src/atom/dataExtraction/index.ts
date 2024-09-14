@@ -43,7 +43,7 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, BaseOptions>
         },
         {
           role: 'user',
-          content: `Extracted text is bellow: ${text}`
+          content: `${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'}:${text}`
         },
         ...addtionContent
       ];
@@ -56,8 +56,7 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, BaseOptions>
 \`\`\` TypeScript
 ${fieldInfoString}
 \`\`\`
-Extracted text is bellow:
-text: ${text}
+${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'}:${text}
 `;
     return [
       {
