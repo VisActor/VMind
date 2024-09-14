@@ -38,6 +38,8 @@ export interface ILLMOptions {
   temperature?: number;
   /** show llm thoughs or not */
   showThoughts?: boolean;
+  /** repetition penalty */
+  frequency_penalty?: number;
 }
 
 /** LLM Messages api */
@@ -49,11 +51,11 @@ export interface LLMMessage {
 
 /** LLM Response API */
 export interface LLMResponse extends BaseContext {
-  choices: {
+  choices?: {
     index: number;
     message: any;
   }[];
-  usage: any;
-  error: string;
+  usage?: any;
+  error?: string;
   [key: string]: any;
 }
