@@ -31,7 +31,7 @@ export function DataInput(props: IPropsType) {
   const [userInput, setUserInput] = useState<string>(capcutMockData[defaultIndex].input);
 
   const [model, setModel] = useState<Model>(Model.GPT_4o);
-  const [useFieldInfo, setUseFieldInfo] = useState<boolean>(true);
+  const [useFieldInfo, setUseFieldInfo] = useState<boolean>(false);
   const [showThoughts, setShowThoughts] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
@@ -45,7 +45,8 @@ export function DataInput(props: IPropsType) {
         'api-key': apiKey,
         Authorization: `Bearer ${apiKey}`
       },
-      model
+      model,
+      maxTokens: 2048
     })
   );
   const schedule = React.useRef<Schedule<[AtomName.DATA_EXTRACT]>>(
@@ -154,9 +155,20 @@ export function DataInput(props: IPropsType) {
         </div>
       </div>
 
-      <Button onClick={handleQuery} style={{ marginTop: 20 }}>
-        Generate/Query
-      </Button>
+      <div>
+        <Button
+          onClick={() => {
+            schedule.current.setNewTask({ text, fieldInfo: useFieldInfo ? fieldInfo : [] });
+            handleQuery();
+          }}
+          style={{ marginTop: 20, marginRight: 12 }}
+        >
+          ReGenerate
+        </Button>
+        <Button onClick={handleQuery} style={{ marginTop: 20 }}>
+          Query
+        </Button>
+      </div>
       <Divider style={{ marginTop: 20 }} />
 
       <div style={{ width: '90%', marginBottom: 10 }}>
@@ -170,9 +182,6 @@ export function DataInput(props: IPropsType) {
         </Checkbox>
       </div>
       <Divider style={{ marginTop: 20 }} />
-      <Button onClick={handleQuery} style={{ marginTop: 20 }}>
-        Run ALL Test
-      </Button>
 
       <Modal
         title="Set API Key and URL"
