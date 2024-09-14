@@ -153,7 +153,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
             content: query
           }
         ]
-      : this.responses;
+      : [];
   }
 
   protected getLLMMessages(query?: string): LLMMessage[] {

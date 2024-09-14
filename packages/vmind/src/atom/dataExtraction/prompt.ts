@@ -25,13 +25,13 @@ text: John Smith was very tall, ranking in the 90th percentile for his age group
 
 Response:
 \`\`\`
-{"fieldInfo:":[{"fieldName":"name","description":"The name of a person","fieldType":"string",},{"fieldName":"ranking","description":"The ranking of height in age group","fieldType":"numerical"}],"dataTable":[{"name":"John Smith","ranking":0.9,},{"name":"Jane Doe","ranking":0.75}]}
+{"fieldInfo:":[{"fieldName":"name","description":"The name of a person","fieldType":"string",},{"fieldName":"ranking","description":"The ranking of height in age group","fieldType":"ratio"}],"dataTable":[{"name":"John Smith","ranking":90,},{"name":"Jane Doe","ranking":75}]}
 \`\`\``;
 
 const getFieldTypeExplanation = (language: 'chinese' | 'english') => {
-  return `field type explanation is below: 'ratio' means ratio value or percent value, such as ${
+  return `field type explanation is below: 'ratio' means ratio value or percentage(%), such as ${
     language === 'english' ? 'YoY or MoM' : '同比、环比、增长率、占比等'
-  }, 'count' means count data`;
+  }.The forms of ratio data are usually Percentage (%) such as 60%.'count' means count data`;
 };
 export const getBasePrompt = (
   language: 'chinese' | 'english',
@@ -52,12 +52,11 @@ You should think step-by-step as follow:
 0. using language answer: ${language}
 1. Determine whether the current task is related to data extraction.
 2. If not, return isDataExtraction is false in json mode; If yes, continue follow Steps
-3. Read the entire text and find the most important and most frequently occurring field with a numerical field type.
-4. Read all text again and generate field information associated  with the numerical field.The newly generated fields are all simple.
+3. Read the entire text and fields with numerical or ratio or count field type first.
+4. Read all text again and generate field information associated  with the fields found in Step3.The newly generated fields are all simple.
 5. Finally, read all text and extract all corresponding data table based on the field information.
 6. Adjust the data to ensure consistency within the same field especially time field.
-7. Convert percentage values to actual values.
-8. Assume the data is incomplete, then reconsider and execute the task again.
+7. Assume the data is incomplete, then reconsider and execute the task again.
 
 Response in the following format:
 \`\`\`
@@ -83,8 +82,7 @@ Finish your tasks in one-step.
 2. The numbers in the dataset do not carry any units.
 3. Keep the ratio value unchanged, such as '95%' --> '95'
 4. Only use numbers that appear in the text.
-5. If you do not know the value of an field, return null for the field's value.
-6. There is exactly one field of numerical type in the data table.`;
+5. If you do not know the value of an field, return null for the field's value.`;
 
 export const getFieldInfoPrompt = (
   language: 'chinese' | 'english',
@@ -109,8 +107,7 @@ You should think step-by-step as follow:
 2. If not, return isDataExtraction is false in json mode; If yes, continue follow Steps
 3. Read all text and extract all corresponding data table based on the field information.
 4. Adjust the data to ensure consistency within the same field especially time field.
-5. Convert percentage values to actual values.
-6. Assume the data is incomplete, then reconsider and execute the task again.
+5. Assume the data is incomplete, then reconsider and execute the task again.
 
 # Respones
 Response in the following format:
@@ -135,11 +132,11 @@ Response:
 
 text: John Smith was very tall, ranking in the 90th percentile for his age group. He knew Jane Doe. who ranking in the 75th percentile for her age group.
 \`\`\`
-{"fieldInfo:":[{"fieldName":"name","description":"The name of a person","fieldType":"string","dataExample":["Roy","Stepen Curry","张三","李四"]},{"fieldName":"ranking","description":"The ranking of height in age group","fieldType":"numerical","dataExample": [0.1, 0.8]]}}]}
+{"fieldInfo:":[{"fieldName":"name","description":"The name of a person","fieldType":"string","dataExample":["Roy","Stepen Curry","张三","李四"]},{"fieldName":"ranking","description":"The ranking of height in age group","fieldType":"ratio","dataExample": [10, 80]]}}]}
 \`\`\`
 Response:
 \`\`\`
-{"dataTable":[{"name":"John Smith","ranking":0.9,},{"name":"Jane Doe","ranking":0.75}]}
+{"dataTable":[{"name":"John Smith","ranking":90,},{"name":"Jane Doe","ranking":75}]}
 ----------------------------------
 
 You only need to return the JSON in your response directly to the user.
