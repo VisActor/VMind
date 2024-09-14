@@ -29,7 +29,7 @@ Response:
 \`\`\``;
 
 const getFieldTypeExplanation = (language: 'chinese' | 'english') => {
-  return `field type explanation is below: 'ratio' means ratio value or percentage(%), such as ${
+  return `field type explanation is below: Date data refers to data that can be specified down to the year, quarter, month, week, or day.'ratio' means ratio value or percentage(%), such as ${
     language === 'english' ? 'YoY or MoM' : '同比、环比、增长率、占比等'
   }.The forms of ratio data are usually Percentage (%) such as 60%.'count' means count data`;
 };
@@ -44,7 +44,6 @@ export const getBasePrompt = (
 3. ALWAYS generate a field type, chosen from 'date' | 'time' | 'string' | 'region' | 'numerical' | 'ratio' ｜ 'count';${getFieldTypeExplanation(
   language
 )}
-4. ALWASY display time fields using the same time format.Different date fields can have different formats.
 ${dataTableExplanation}
 
 You should think step-by-step as follow:
@@ -55,7 +54,7 @@ You should think step-by-step as follow:
 3. Read the entire text and fields with numerical or ratio or count field type first.
 4. Read all text again and generate field information associated  with the fields found in Step3.The newly generated fields are all simple.
 5. Finally, read all text and extract all corresponding data table based on the field information.
-6. Adjust the data to ensure consistency within the same field especially time field.
+6. When a date field contains data with multiple date granularities, convert the fieldType to string.
 7. Assume the data is incomplete, then reconsider and execute the task again.
 
 Response in the following format:
@@ -67,6 +66,7 @@ fieldInfo: {
 fieldName: string; //name of the field.
 description?: string; //description of the field. 
 fieldType?: 'date' | 'time' | 'string' | 'region' | 'numerical' | 'ratio' ｜ 'count'; // type of field
+dateGranularity?: 'year' | 'quarter' | 'month' | 'week' | 'day'; // generate when fieldType is 'date', represent the date granularity of date time
 }[],
 dataTable: Record\<string,string|number\>[]; // Extracted data set, key of dataTable is fieldName in fieldInfo
 }
@@ -82,7 +82,8 @@ Finish your tasks in one-step.
 2. The numbers in the dataset do not carry any units.
 3. Keep the ratio value unchanged, such as '95%' --> '95'
 4. Only use numbers that appear in the text.
-5. If you do not know the value of an field, return null for the field's value.`;
+5. If you do not know the value of an field, return null for the field's value.
+6. If it is a date field, standardize the data format according to the date granularity into forms such as the following: yyyy-mm-dd | mm-dd | mm | yyyy-mm | yyyy-qq.`;
 
 export const getFieldInfoPrompt = (
   language: 'chinese' | 'english',
