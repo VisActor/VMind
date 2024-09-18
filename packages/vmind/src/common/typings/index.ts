@@ -86,7 +86,8 @@ export enum ChartType {
   VennChart = 'Venn Chart',
   SingleColumnCombinationChart = 'Single Column Combination Chart',
   DynamicScatterPlotChart = 'Dynamic Scatter Plot Chart',
-  DynamicRoseChart = 'Dynamic Rose Chart'
+  DynamicRoseChart = 'Dynamic Rose Chart',
+  SequenceChart = 'Sequence Chart'
 }
 
 export enum CombinationChartType {

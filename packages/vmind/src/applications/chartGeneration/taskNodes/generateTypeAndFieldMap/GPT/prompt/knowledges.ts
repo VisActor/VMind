@@ -258,7 +258,7 @@ export const chartKnowledgeDict: ChartKnowledge = {
     index: 23,
     visualChannels: ['y', 'x', 'size'],
     examples: [],
-    knowledge: []
+    knowledge: ['The three channels that need to be mapped in the Basic Heat Map are: x, y, size;']
   },
   [ChartType.VennChart]: {
     index: 24,
@@ -287,6 +287,12 @@ export const chartKnowledgeDict: ChartKnowledge = {
     visualChannels: ['color', 'radius', 'time'],
     examples: [],
     knowledge: ['The three channels that need to be mapped in the dynamic rose chart are: color, radius, and time;']
+  },
+  [ChartType.SequenceChart]: {
+    index: 30,
+    visualChannels: ['x', 'y', 'color'],
+    examples: [],
+    knowledge: ['The three channels that need to be mapped in the sequence chart are: x, y, and color;']
   }
 };
 
