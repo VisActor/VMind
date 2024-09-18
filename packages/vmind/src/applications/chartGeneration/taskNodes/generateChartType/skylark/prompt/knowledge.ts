@@ -140,5 +140,15 @@ export const chartKnowledgeBase: ChartKnowledgeBase = {
     constraints: [
       'Use Dynamic Rose Chart if you want to show cyclical data and observe changes in multiple categories over time.'
     ]
+  },
+  [ChartType.SequenceChart]: {
+    knowledge: [
+      'Sequence Chart visualizes events in chronological order along a time axis.',
+      'Sequence Chart is ideal for showing the progression of time-based events.'
+    ],
+    constraints: [
+      'Use Sequence Chart when the data contains a sequence of events that are ordered by time.',
+      'Sequence Chart requires a continuous time field in the data for accurate rendering.'
+    ]
   }
 };

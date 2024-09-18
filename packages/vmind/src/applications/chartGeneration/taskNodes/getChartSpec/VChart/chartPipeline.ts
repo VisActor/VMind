@@ -88,7 +88,10 @@ import {
   dynamicScatterPlotTooltip,
   dynamicRoseAnimation,
   dynamicRoseField,
-  dynamicRoseDisplayConf
+  dynamicRoseDisplayConf,
+  sequenceChartData,
+  sequenceChartSeries,
+  sequenceChartAxes
 } from './transformers';
 
 const pipelineBar = [
@@ -265,6 +268,7 @@ const pipelineDynamicRoseChart = [
   customMark,
   theme
 ];
+const pipelineSequenceChart = [chartType, sequenceChartData, sequenceChartSeries, sequenceChartAxes, theme];
 
 const pipelineMap: { [chartType: string]: any } = {
   [ChartType.BarChart.toUpperCase()]: pipelineBar,
@@ -293,7 +297,8 @@ const pipelineMap: { [chartType: string]: any } = {
   [ChartType.VennChart.toUpperCase()]: pipelineVenn,
   [ChartType.SingleColumnCombinationChart.toUpperCase()]: pipelineSingleColumnCombinationChart,
   [ChartType.DynamicScatterPlotChart.toUpperCase()]: pipelineDynamicScatterPlotChart,
-  [ChartType.DynamicRoseChart.toUpperCase()]: pipelineDynamicRoseChart
+  [ChartType.DynamicRoseChart.toUpperCase()]: pipelineDynamicRoseChart,
+  [ChartType.SequenceChart.toUpperCase()]: pipelineSequenceChart
 };
 
 export const beforePipe: Transformer<GetChartSpecContext & GetChartSpecOutput, GetChartSpecOutput> = (

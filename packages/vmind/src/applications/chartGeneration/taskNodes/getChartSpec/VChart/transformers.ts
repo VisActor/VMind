@@ -20,8 +20,8 @@ import {
 import { getFieldByDataType } from '../../../../../common/utils/utils';
 import { array, isArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
-import type { VMindDataset } from '../../../../../common/typings';
-import { CombinationBasicChartType, ChartType, DataType } from '../../../../../common/typings';
+import type { DataItem, VMindDataset } from '../../../../../common/typings';
+import { ChartType, CombinationBasicChartType, DataType } from '../../../../../common/typings';
 import { builtinThemeMap } from '../../../../../common/builtinTheme';
 import { FOLD_NAME, FOLD_VALUE, COLOR_FIELD } from '@visactor/chart-advisor';
 import { CARTESIAN_CHART_LIST } from '../../../constants';
@@ -59,7 +59,8 @@ const chartTypeMap: { [chartName: string]: string } = {
   [ChartType.VennChart.toUpperCase()]: 'venn',
   [ChartType.SingleColumnCombinationChart.toUpperCase()]: 'common',
   [ChartType.DynamicScatterPlotChart.toUpperCase()]: 'common',
-  [ChartType.DynamicRoseChart.toUpperCase()]: 'rose'
+  [ChartType.DynamicRoseChart.toUpperCase()]: 'rose',
+  [ChartType.SequenceChart.toUpperCase()]: 'sequence'
 };
 
 export const chartType: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
@@ -2301,5 +2302,147 @@ export const dynamicRoseDisplayConf: Transformer<Context, GetChartSpecOutput> = 
     position: 'outside'
   };
   spec.startAngle = -90;
+  return { spec };
+};
+
+export const sequenceChartData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { cells, dataset, spec } = context;
+  const cell = getCell(cells);
+  const yField = cell.y as string;
+  const xField = cell.x;
+  const colorField = cell.color as string;
+  const dataMap: { [key: string]: DataItem[] } = {};
+  dataset.forEach(data => {
+    dataMap[data[xField]] ? dataMap[data[xField]].push(data) : (dataMap[data[xField]] = [data]);
+  });
+  const dataDot: { [key: string]: DataItem[] | string }[] = [];
+  const dataLink: { [key: string]: string }[] = [];
+  Object.keys(dataMap).forEach(key => {
+    dataDot.push({
+      [cell.x]: key,
+      dots: dataMap[key]
+    });
+    sortArray(dataMap[key], [{ field: yField, order: SortOrder.ASC }]).forEach((data, index, array) => {
+      if (index % 2 !== 0) {
+        dataLink.push({
+          from: `${data[xField]}_${Math.floor(index / 2).toString()}_${array[index - 1][colorField]}_node`,
+          to: `${data[xField]}_${Math.floor(index / 2).toString()}_${data[colorField]}_node`
+        });
+      }
+      data.node_name = `${data[xField]}_${Math.floor(index / 2).toString()}_${data[colorField]}_node`;
+      return data;
+    });
+  });
+  spec.data = [
+    { id: 'dataDotSeries', values: dataDot },
+    { id: 'dataLinkSeries', values: dataLink }
+  ];
+  return { spec };
+};
+
+export const sequenceChartSeries: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { cells, spec } = context;
+  const cell = getCell(cells);
+
+  spec.series = [
+    {
+      type: 'link',
+      dataId: 'dataLinkSeries',
+      dotSeriesIndex: 1,
+      fromField: 'from',
+      toField: 'to',
+      arrow: {
+        style: {
+          visible: false
+        }
+      }
+    },
+    {
+      type: 'dot',
+      dataId: 'dataDotSeries',
+      xField: cell.y as string,
+      yField: cell.x,
+      dotTypeField: cell.color as string,
+      titleField: cell.x,
+      highLightSeriesGroup: '',
+      height: 500,
+      clipHeight: 800,
+      title: {
+        style: {
+          fill: 'rgba(46, 47, 50)'
+        }
+      },
+      subTitle: {
+        style: {
+          fill: 'rgba(46, 47, 50)',
+          dy: 7
+        }
+      },
+      grid: {
+        style: {
+          visible: false
+        }
+      },
+      symbol: {
+        style: {
+          visible: false
+        }
+      },
+      tooltip: {
+        mark: {
+          title: {
+            key: 'event 信息',
+            value: 'event 信息'
+          },
+          content: [
+            {
+              hasShape: true,
+              shapeType: 'square',
+              key: (datum: any) => datum[cell.x]
+            },
+            {
+              hasShape: false,
+              key: 'event_time_stamp',
+              value: (datum: any) => datum[cell.color as string]
+            }
+          ]
+        }
+      }
+    }
+  ];
+  return { spec };
+};
+export const sequenceChartAxes: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { cells, spec, fieldInfo } = context;
+  const cell = getCell(cells);
+
+  spec.axes = [
+    {
+      orient: 'top',
+      type: 'time',
+      range: {
+        min: fieldInfo.filter(fieldInfo => {
+          return fieldInfo.fieldName === cell.y;
+        })[0].domain[0],
+        max: fieldInfo.filter(fieldInfo => {
+          return fieldInfo.fieldName === cell.y;
+        })[0].domain[1]
+      },
+      layers: [
+        {
+          tickStep: 28800,
+          timeFormat: '%Y%m%d'
+        },
+        {
+          tickStep: 28800,
+          timeFormat: '%H:%M'
+        }
+      ]
+    }
+  ];
+  spec.appendPadding = {
+    left: 80,
+    right: 80
+  };
   return { spec };
 };
