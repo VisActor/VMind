@@ -1,12 +1,13 @@
 import { AtomName, type DataExtractionCtx } from '../../types/atom';
-import type { BaseOptions } from '../type';
+import type { BaseOptions, DataExtractionOptions } from '../type';
 import { BaseAtom } from '../base';
 import { merge, pick } from '@visactor/vutils';
 import type { LLMMessage } from '../../types/llm';
 import { getBasePrompt, getFieldInfoPrompt } from './prompt';
 import { getLanguageOfText } from '../../utils/text';
+import { formatFieldInfo } from '../../utils/field';
 
-export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, BaseOptions> {
+export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtractionOptions> {
   name = AtomName.DATA_EXTRACT;
 
   isLLMAtom = true;
@@ -32,7 +33,7 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, BaseOptions>
 
   getLLMMessages(query?: string): LLMMessage[] {
     const { fieldInfo, text } = this.context;
-    const { showThoughts } = this.options;
+    const { showThoughts, reGenerateFieldInfo } = this.options;
     const addtionContent = this.getHistoryLLMMessages(query);
     const language = getLanguageOfText(text);
     if (!fieldInfo || !fieldInfo?.length) {
@@ -43,7 +44,7 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, BaseOptions>
         },
         {
           role: 'user',
-          content: `${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'}:${text}`
+          content: `${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'}${text}`
         },
         ...addtionContent
       ];
@@ -56,12 +57,12 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, BaseOptions>
 \`\`\` TypeScript
 ${fieldInfoString}
 \`\`\`
-${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'}:${text}
+${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'}${text}
 `;
     return [
       {
         role: 'system',
-        content: getFieldInfoPrompt(language, showThoughts)
+        content: getFieldInfoPrompt(language, showThoughts, reGenerateFieldInfo)
       },
       {
         role: 'user',
@@ -79,7 +80,9 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
     }
     return {
       ...this.context,
-      fieldInfo: fieldInfo ?? this.context?.fieldInfo ?? [],
+      fieldInfo: formatFieldInfo(
+        (this.options?.reGenerateFieldInfo ? fieldInfo : null) ?? this.context?.fieldInfo ?? []
+      ),
       dataTable
     } as DataExtractionCtx;
   }
