@@ -3,7 +3,9 @@
 import React from 'react';
 import { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
 import { capcutMockData } from '../../data/capcutData';
-import { Button, Checkbox, Divider, Message } from '@arco-design/web-react';
+import { Button, Checkbox, Divider, Message, Select } from '@arco-design/web-react';
+import { dataExtractionCommonDataset } from '../../data/dataExtractionData';
+import { pick } from '@visactor/vutils';
 
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
@@ -14,6 +16,10 @@ const datasets = [
   {
     name: 'capcut',
     data: capcutMockData
+  },
+  {
+    name: 'common',
+    data: dataExtractionCommonDataset
   }
 ];
 
@@ -34,9 +40,7 @@ function sleep(ms: number) {
 }
 
 export function DataExtractionTask() {
-  const [selectedDataset, setSelectedDataset] = React.useState<Record<string, boolean>>(
-    datasets.reduce((prev, cur) => ({ ...prev, [cur.name]: true }), {})
-  );
+  const [selectedDataset, setSelectedDataset] = React.useState<string[]>(['common']);
   const [selectedLLM, setSelectedLLm] = React.useState<Record<string, boolean>>(
     Object.keys(ModelConfigMap).reduce((prev, cur) => ({ ...prev, [cur]: true }), {})
   );
@@ -54,7 +58,7 @@ export function DataExtractionTask() {
       if (!selectedLLM[model]) {
         continue;
       }
-      const sleepTime = model === Model.DOUBAO_PRO ? 8000 : 2000;
+      const sleepTime = model === Model.DOUBAO_PRO ? 8000 : 4000;
       const apiKey = ModelConfigMap[model]?.key;
       const llm = new LLMManage({
         url: ModelConfigMap[model]?.url,
@@ -64,14 +68,19 @@ export function DataExtractionTask() {
         },
         model
       });
-      const schedule = new Schedule([AtomName.DATA_EXTRACT], { base: { llm, showThoughts: false } });
+      const schedule = new Schedule([AtomName.DATA_EXTRACT], {
+        base: { llm, showThoughts: false },
+        dataExtract: {
+          reGenerateFieldInfo: true
+        }
+      });
       (messageApi as any).info(`Begin ${model}!`);
       console.info(`---------Begin ${model}---------`);
 
       const datasetResult: any[] = [];
       for (let datasetIndex = 0; datasetIndex < datasets.length; datasetIndex++) {
         const dataset = datasets[datasetIndex];
-        if (!selectedDataset[dataset.name]) {
+        if (!selectedDataset.includes(dataset.name)) {
           continue;
         }
         (messageApi as any).info(`Begin ${dataset.name} dataset!`);
@@ -94,7 +103,7 @@ export function DataExtractionTask() {
           if (useFieldInfo) {
             schedule.setNewTask({
               text: data.text,
-              fieldInfo: data.fieldInfo
+              fieldInfo: data.fieldInfo.map((v: any) => pick(v, ['fieldName']))
             });
             const result = await schedule.run();
             fieldInfoResult.push({
@@ -147,19 +156,21 @@ export function DataExtractionTask() {
   return (
     <div style={{ padding: 20 }}>
       {contextHolder}
-      <div>
-        <p>DataSet to Test</p>
-        {datasets.map(dataset => {
-          return (
-            <Checkbox
-              checked={selectedDataset[dataset.name]}
-              key={dataset.name}
-              onChange={v => setSelectedDataset(prev => ({ ...prev, [dataset.name]: v }))}
-            >
-              {dataset.name}
-            </Checkbox>
-          );
-        })}
+      <div className="dataset-selector">
+        <p>Please select dataset to run:</p>
+        <Select
+          defaultValue={selectedDataset}
+          mode="multiple"
+          onChange={v => {
+            setSelectedDataset(v);
+          }}
+        >
+          {datasets.map((v, index) => (
+            <Select.Option key={v.name} value={v.name}>
+              {v.name}
+            </Select.Option>
+          ))}
+        </Select>
       </div>
       <div>
         <p>LLM Model To Select</p>
@@ -178,7 +189,7 @@ export function DataExtractionTask() {
       <div>
         <p>Config of Data Extraction</p>
         <Checkbox checked={useFieldInfo} onChange={v => setUseFieldInfo(v)}>
-          With FieldInfo
+          With FieldName Only
         </Checkbox>
         <Checkbox checked={useDefault} onChange={v => setUseDefault(v)}>
           Without FieldInfo
