@@ -11,21 +11,21 @@ dataTable: [{date: "Monday", class No.1: 20, class No.2: 30},{date: "Tuesday", c
 \`\`\``;
 
 const baseExamples = `# Examples1
-text:今年6月各大厂商发布了过去1个月的财报数据，其中阿里在V月份利润额达到了1000亿，经调整后的利润额为100亿，而字节跳动V月份的利润额为800亿，经调整后利润额为120亿。
+提取文本如下：:今年6月各大厂商发布了过去1个月的财报数据，其中阿里在V月份利润额达到了1000亿，经调整后的利润额为100亿，而字节跳动V月份的利润额为800亿，经调整后利润额为120亿。
 
 Response:
 \`\`\`
 {"fieldInfo:":[{"fieldName":"公司","description":"公司名称","fieldType":"string",},{"fieldName":"月份","description":"具体月份","fieldType":"string",},{"fieldName":"利润调整","description":"是否经过利润调整","fieldType":"string",},{"fieldName":"利润额","description":"利润总额","fieldType":"numerical",}],"dataTable":[{"公司":"阿里","月份":"5月","利润调整":"调整前","利润额":100000000000,},{"公司":"阿里","月份":"5月","利润调整":"调整后","利润额":10000000000,},{"公司":"字节跳动","月份":"5月","利润调整":"调整前","利润额":80000000000,},{"公司":"字节跳动","月份":"5月","利润调整":"调整后","利润额":12000000000,},]}
 \`\`\`
 # Examples2
-text: John Smith was very tall, ranking in the 90th percentile for his age group. He knew Jane Doe. who ranking in the 75th percentile for her age group.
+Extracted text is bellow:: John Smith was very tall, ranking in the 90th percentile for his age group. He knew Jane Doe. who ranking in the 75th percentile for her age group.
 
 Response:
 \`\`\`
 {"fieldInfo:":[{"fieldName":"name","description":"The name of a person","fieldType":"string",},{"fieldName":"ranking","description":"The ranking of height in age group","fieldType":"ratio"}],"dataTable":[{"name":"John Smith","ranking":90,},{"name":"Jane Doe","ranking":75}]}
 \`\`\`
 # Examples3
-text: 现在有大约60%-70%的年轻人有入睡困难，而在两年前，入睡困难的年轻人占比才只有30%。
+提取文本如下：: 现在有大约60%-70%的年轻人有入睡困难，而在两年前，入睡困难的年轻人占比才只有30%。
 
 Response:
 \`\`\`
@@ -148,7 +148,7 @@ dataTable: Record\<string,string|number\>[]; // Extracted data set, key of dataT
 \`\`\`
 
 # Examples1:
-text:今年6月各大厂商发布了过去1个月的财报数据，其中阿里在V月份利润额达到了1000亿，经调整后的利润额为100亿，而字节跳动V月份的利润额为800亿，经调整后利润额为120亿。
+提取文本如下：:今年6月各大厂商发布了过去1个月的财报数据，其中阿里在V月份利润额达到了1000亿，经调整后的利润额为100亿，而字节跳动V月份的利润额为800亿，经调整后利润额为120亿。
 \`\`\`
 {"fieldInfo:":[{"fieldName":"公司","description":"公司名称","fieldType":"string",},{"fieldName":"月份","description":"具体月份","fieldType":"string",},{"fieldName":"利润调整","description":"是否经过利润调整","fieldType":"string",},{"fieldName":"利润额","description":"利润总额","fieldType":"numerical",}]}
 \`\`\`
@@ -158,7 +158,7 @@ Response:
 \`\`\`
 # Examples2:
 
-text: John Smith was very tall, ranking in the 90th percentile for his age group. He knew Jane Doe. who ranking in the 75th percentile for her age group.
+Extracted text is bellow: John Smith was very tall, ranking in the 90th percentile for his age group. He knew Jane Doe. who ranking in the 75th percentile for her age group.
 \`\`\`
 {"fieldInfo:":[{"fieldName":"name","description":"The name of a person","fieldType":"string","dataExample":["Roy","Stepen Curry","张三","李四"]},{"fieldName":"ranking","description":"The ranking of height in age group","fieldType":"ratio","dataExample": [10, 80]]}}]}
 \`\`\`
