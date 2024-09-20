@@ -38,7 +38,7 @@ export enum DataType {
   STRING = 'string',
   REGION = 'region',
   NUMERICAL = 'numerical',
-  RATIO = 'RATIO',
+  RATIO = 'ratio',
   COUNT = 'count'
 }
 

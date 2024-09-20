@@ -2,7 +2,7 @@ import type { FieldInfo } from '../types';
 import { DataType, ROLE } from '../types';
 
 export const getRoleByFieldType = (type: DataType) => {
-  if ([DataType.DATE, DataType.TIME, DataType.STRING, DataType.RATIO].includes(type)) {
+  if ([DataType.DATE, DataType.TIME, DataType.STRING, DataType.REGION].includes(type)) {
     return ROLE.DIMENSION;
   }
   return ROLE.MEASURE;
