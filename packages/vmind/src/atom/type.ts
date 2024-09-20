@@ -7,6 +7,10 @@ export interface BaseOptions {
   showThoughts?: boolean;
 }
 
+export interface DataExtractionOptions extends BaseOptions {
+  reGenerateFieldInfo?: boolean;
+}
+
 export interface DataCleanOptions extends BaseOptions {
   needNumericalFields?: boolean;
   filterSameValueColumn?: boolean;

@@ -1,10 +1,14 @@
 import JSON5 from 'json5';
 
+export const replaceAll = (originStr: string, replaceStr: string, newStr: string) => {
+  return originStr.split(replaceStr).join(newStr);
+};
+
 export const matchJSONStr = (str: string) => {
   const first = str.indexOf('{');
   const last = str.lastIndexOf('}');
   const result = str.substring(first, last + 1);
-  return result && result.length > 0 ? result : str;
+  return result && result.length > 0 ? replaceAll(result, '\n', ' ') : str;
 };
 
 export const parseLLMJson = (JsonStr: string, prefix?: string) => {

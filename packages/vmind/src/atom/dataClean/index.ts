@@ -1,8 +1,9 @@
 import type { DataCleanCtx } from '../../types/atom';
-import { AtomName, type DataExtractionCtx } from '../../types/atom';
+import { AtomName, ROLE, type DataExtractionCtx } from '../../types/atom';
 import type { DataCleanOptions } from '../type';
 import { BaseAtom } from '../base';
 import { merge, pick } from '@visactor/vutils';
+import { getRoleByFieldType } from '../../utils/field';
 
 export class DataCleanAtom extends BaseAtom<DataCleanCtx, DataCleanOptions> {
   name = AtomName.DATA_CLEAN;
@@ -41,7 +42,7 @@ export class DataCleanAtom extends BaseAtom<DataCleanCtx, DataCleanOptions> {
     if (filterSameValueColumn && dataTable.length > 1 && fieldInfo.length) {
       const cleanFieldKey: string[] = [];
       fieldInfo.forEach(info => {
-        if (info.fieldType === 'numerical') {
+        if ((info.role ?? getRoleByFieldType(info.fieldType)) === ROLE.MEASURE) {
           return;
         }
         let shouldFilter = true;
@@ -60,7 +61,10 @@ export class DataCleanAtom extends BaseAtom<DataCleanCtx, DataCleanOptions> {
         newContext.dataTable = dataTable.map(dataItem => pick(dataItem, fieldNameList));
       }
     }
-    if (needNumericalFields && newContext.fieldInfo.findIndex(info => info?.fieldType === 'numerical') === -1) {
+    if (
+      needNumericalFields &&
+      newContext.fieldInfo.findIndex(info => (info.role ?? getRoleByFieldType(info.fieldType)) === ROLE.MEASURE) === -1
+    ) {
       newContext = {
         dataTable: [],
         fieldInfo: []
