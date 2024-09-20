@@ -11,12 +11,14 @@ export function NewDataExtractionPage() {
   const [dataset, setDataset] = useState<DataTable>([]);
   const [finalDataset, setFianlDataset] = useState<DataTable>([]);
   const [fieldInfo, setFieldInfo] = useState<FieldInfo[]>([]);
+  const [finalFieldInfo, setFinalFieldInfo] = useState<FieldInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleOk = React.useCallback(async (dataExtractCtx: any, dataCleanCtx: any) => {
     setDataset(dataExtractCtx.dataTable);
     setFieldInfo(dataExtractCtx.fieldInfo);
     setFianlDataset(dataCleanCtx.dataTable);
+    setFinalFieldInfo(dataCleanCtx.fieldInfo);
     setLoading(false);
     // eslint-disable-next-line no-console
     console.info(dataExtractCtx, dataCleanCtx);
@@ -33,7 +35,13 @@ export function NewDataExtractionPage() {
         <DataInput onOk={handleOk} setLoading={setLoading} />
       </Sider>
       <Content>
-        <DataTableComp dataset={dataset} finalDataset={finalDataset} fieldInfo={fieldInfo} loading={loading} />
+        <DataTableComp
+          dataset={dataset}
+          finalDataset={finalDataset}
+          fieldInfo={fieldInfo}
+          finalFieldInfo={finalFieldInfo}
+          loading={loading}
+        />
       </Content>
     </Layout>
   );
