@@ -74,7 +74,7 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
 
   parseLLMContent(resJson: any) {
     const { dataTable, fieldInfo, isDataExtraction } = resJson;
-    if (!isDataExtraction) {
+    if (isDataExtraction === false) {
       console.error("It's not a data extraction task");
       return this.context;
     }
