@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 const dataTableExplanation = `# Data Table Explanation
-1. ALWAYS generate flatten data table rather than unflatten data table
+1. The value type of a 'numerical', 'ratio', or 'count' field MUST be 'number' or 'number[]'.
+2. ALWAYS generate flatten data table rather than unflatten data table
 ## Flatten Data Table Example
 \`\`\`
 dataTable: [{ date: "Monday", class: "class No.1", score: 20 },{ date: "Monday", class: "class No.2", score: 30 },{ date: "Tuesday", class: "class No.1", score: 25 },{ date: "Tuesday", class: "class No.2", score: 28 }]
@@ -11,21 +12,21 @@ dataTable: [{date: "Monday", class No.1: 20, class No.2: 30},{date: "Tuesday", c
 \`\`\``;
 
 const baseExamples = `# Examples1
-提取文本如下：:今年6月各大厂商发布了过去1个月的财报数据，其中阿里在V月份利润额达到了1000亿，经调整后的利润额为100亿，而字节跳动V月份的利润额为800亿，经调整后利润额为120亿。
+text:今年6月各大厂商发布了过去1个月的财报数据，其中阿里在V月份利润额达到了1000亿，经调整后的利润额为100亿，而字节跳动V月份的利润额为800亿，经调整后利润额为120亿。
 
 Response:
 \`\`\`
 {"fieldInfo:":[{"fieldName":"公司","description":"公司名称","fieldType":"string",},{"fieldName":"月份","description":"具体月份","fieldType":"string",},{"fieldName":"利润调整","description":"是否经过利润调整","fieldType":"string",},{"fieldName":"利润额","description":"利润总额","fieldType":"numerical",}],"dataTable":[{"公司":"阿里","月份":"5月","利润调整":"调整前","利润额":100000000000,},{"公司":"阿里","月份":"5月","利润调整":"调整后","利润额":10000000000,},{"公司":"字节跳动","月份":"5月","利润调整":"调整前","利润额":80000000000,},{"公司":"字节跳动","月份":"5月","利润调整":"调整后","利润额":12000000000,},]}
 \`\`\`
 # Examples2
-Extracted text is bellow:: John Smith was very tall, ranking in the 90th percentile for his age group. He knew Jane Doe. who ranking in the 75th percentile for her age group.
+text: John Smith was very tall, ranking in the 90th percentile for his age group. He knew Jane Doe. who ranking in the 75th percentile for her age group.
 
 Response:
 \`\`\`
 {"fieldInfo:":[{"fieldName":"name","description":"The name of a person","fieldType":"string",},{"fieldName":"ranking","description":"The ranking of height in age group","fieldType":"ratio"}],"dataTable":[{"name":"John Smith","ranking":90,},{"name":"Jane Doe","ranking":75}]}
 \`\`\`
 # Examples3
-提取文本如下：: 现在有大约60%-70%的年轻人有入睡困难，而在两年前，入睡困难的年轻人占比才只有30%。
+text: 现在有大约60%-70%的年轻人有入睡困难，而在两年前，入睡困难的年轻人占比才只有30%。
 
 Response:
 \`\`\`
@@ -51,11 +52,11 @@ const getFieldTypeExplanation = (language: 'chinese' | 'english') => {
 export const getBasePrompt = (
   language: 'chinese' | 'english',
   showThoughs: boolean = true
-) => `You are an expert extraction algorithm.You are an expert extraction algorithm, especially sensitive to data, dates data, category, data comparison and similar content.Your task is to extract high-quality data tables and field information from the text for further analysis, such as visualization charts, etc.
+) => `You are an expert extraction algorithm.You are an expert extraction algorithm, especially sensitive to data, date, category, data comparison and similar content.Your task is to extract high-quality data tables and field information from the text for further analysis, such as visualization charts, etc.
 # Field Information Explanation
-1. ALWAYS generate a field information, which represents the specific information of each column field in the data table.
-2. ALWAYS generate a field description
-3. ALWAYS generate a field type, chosen from 'date' | 'time' | 'string' | 'region' | 'numerical' | 'ratio' ｜ 'count';${getFieldTypeExplanation(
+1. ALWAYS generate field information, which represents the specific information of each column field in the data table.
+2. ALWAYS generate field description
+3. ALWAYS generate field type, chosen from 'date' | 'time' | 'string' | 'region' | 'numerical' | 'ratio' ｜ 'count';${getFieldTypeExplanation(
   language
 )}
 ${dataTableExplanation}
@@ -69,9 +70,10 @@ You should think step-by-step as follow:
 3. Read the entire text and fields with numerical or ratio or count field type first.
 4. Read all text again and generate field information associated  with the fields found in Step3.The newly generated fields are all simple.
 5. Read all text and extract all corresponding data table based on the field information. The data corresponding to a field should always be concise, and a field should express only one meaning.
-6. When a date field contains data with multiple date granularities, convert the fieldType to string.
-7. Only use numbers that appear in the text, Do not perform any calculations or numerical conversion such as currency conversion calculation.
-8. Assume the data is incomplete, then reconsider and execute the task again.
+6. Format date data according to the date granularity such as the following: yyyy-mm-dd | mm-dd | mm | yyyy-mm | yyyy-qq.
+7. When a date field contains data with multiple date granularities, convert the fieldType to string.
+8. Only use numbers that appear in the text, Do not perform any calculations or numerical conversion such as currency conversion calculation.
+9. Assume the data is incomplete, then reconsider and execute the task again.
 
 Response in the following format:
 \`\`\`
@@ -95,9 +97,8 @@ You only need to return the JSON in your response directly to the user.Finish yo
 1. Strictly define the type of return format, use JSON format to reply, do not include any extra content.
 2. The numbers in the dataset do not carry any units.
 3. Only extract value in ratio type, such as '95%' --> '95'; 'reduce 30%' --> '-30'
-4. If you do not know the value of an field, return null for the field's value.
-5. If it is a date field, standardize the data format according to the date granularity into forms such as the following: yyyy-mm-dd | mm-dd | mm | yyyy-mm | yyyy-qq.
-6. The change in values should be reflected in the positive or negative nature of the data, not in the field names.`;
+4. If you do not know the value of a field, return null for the field's value.
+5. The change in values should be reflected in the positive or negative nature of the data, not in the field names.`;
 
 export const getFieldInfoPrompt = (
   language: 'chinese' | 'english',
@@ -117,14 +118,14 @@ dataExample?: (string | number)[] // data example of this field
 \`\`\`
 
 ${getCommonInfomation(language)}
-You should think step-by-step as follow:
+You should think step-by-step as follows:
 # Steps
 0. using language answer: ${language}
 1. Determine whether the current task is related to data extraction.
 2. If not, return isDataExtraction is false in json mode; If yes, continue follow Steps
 3. Read all text and extract all corresponding data table based on the field information.
 4. Adjust the data to ensure consistency within the same field especially time field.
-5. Only use numbers that appear in the text, Do not perform any calculations or numerical conversion such as currency conversion calculation.
+5. Only use numbers that appear in the text, Do not perform any calculations or numerical conversion, such as currency conversion calculation.
 6. Assume the data is incomplete, then reconsider and execute the task again.
 
 # Respones
@@ -148,7 +149,7 @@ dataTable: Record\<string,string|number\>[]; // Extracted data set, key of dataT
 \`\`\`
 
 # Examples1:
-提取文本如下：:今年6月各大厂商发布了过去1个月的财报数据，其中阿里在V月份利润额达到了1000亿，经调整后的利润额为100亿，而字节跳动V月份的利润额为800亿，经调整后利润额为120亿。
+text:今年6月各大厂商发布了过去1个月的财报数据，其中阿里在V月份利润额达到了1000亿，经调整后的利润额为100亿，而字节跳动V月份的利润额为800亿，经调整后利润额为120亿。
 \`\`\`
 {"fieldInfo:":[{"fieldName":"公司","description":"公司名称","fieldType":"string",},{"fieldName":"月份","description":"具体月份","fieldType":"string",},{"fieldName":"利润调整","description":"是否经过利润调整","fieldType":"string",},{"fieldName":"利润额","description":"利润总额","fieldType":"numerical",}]}
 \`\`\`
@@ -158,13 +159,13 @@ Response:
 \`\`\`
 # Examples2:
 
-Extracted text is bellow: John Smith was very tall, ranking in the 90th percentile for his age group. He knew Jane Doe. who ranking in the 75th percentile for her age group.
+text: John Smith was very tall, ranked in the 90th percentile for his age group. He knew Jane Doe. who ranking in the 75th percentile for her age group.
 \`\`\`
-{"fieldInfo:":[{"fieldName":"name","description":"The name of a person","fieldType":"string","dataExample":["Roy","Stepen Curry","张三","李四"]},{"fieldName":"ranking","description":"The ranking of height in age group","fieldType":"ratio","dataExample": [10, 80]]}}]}
+{"fieldInfo:":[{"fieldName":"name","description":"The name of a person","fieldType":"string","dataExample":["Roy","Stepen Curry","张三","李四"]},{"fieldName":"rank","description":"The rank of height in age group","fieldType":"ratio","dataExample": [10, 80]]}}]}
 \`\`\`
 Response:
 \`\`\`
-{"dataTable":[{"name":"John Smith","ranking":90,},{"name":"Jane Doe","ranking":75}]}
+{"dataTable":[{"name":"John Smith","rank":90,},{"name":"Jane Doe","rank":75}]}
 ----------------------------------
 
 You only need to return the JSON in your response directly to the user.
@@ -174,7 +175,7 @@ Finish your tasks in one-step.
 2. The numbers in the dataset do not carry any units.
 3. Only use numbers that appear in the text.
 4. Only extract value in ratio type, such as '95%' --> '95'; 'reduce 30%' --> '-30'
-5. If you do not know the value of an field, return null for the field's value.
+5. If you do not know the value of a field, return null for the field's value.
 6. If it is a date field, standardize the data format according to the date granularity into forms such as the following: yyyy-mm-dd | mm-dd | mm | yyyy-mm | yyyy-qq.
 7. The change in values should be reflected in the positive or negative nature of the data, not in the field names.
 `;
