@@ -7,7 +7,7 @@ const MenuItem = Menu.Item;
 
 const LOCAL_STORAGE_MENU_KEY = 'VMind_playground_menu_key';
 export const Home: React.FC = props => {
-  const [selectedPage, setSelectedPage] = React.useState(PLAYGROUND_PAGES.CHART_GENERATION);
+  const [selectedPage, setSelectedPage] = React.useState(PLAYGROUND_PAGES.NEW_DATA_EXTRACTION);
   const [collapsed, setCollapsed] = React.useState(true);
   return (
     <Layout style={CollapseCSS}>

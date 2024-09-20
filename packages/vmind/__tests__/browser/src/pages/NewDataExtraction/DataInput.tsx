@@ -1,13 +1,14 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
 import '../DataExtraction/index.scss';
-import { Avatar, Input, Divider, Button, Select, Checkbox, Modal } from '@arco-design/web-react';
+import { Avatar, Input, Divider, Button, Select, Checkbox, Modal, Radio } from '@arco-design/web-react';
 import type { FieldInfo } from '../../../../../src/index';
 import { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
 import { capcutMockData } from '../../constants/capcutData';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
+const RadioGroup = Radio.Group;
 
 type IPropsType = {
   onOk: (extractCtx: any, dataCleanCtx: any) => void;
@@ -52,7 +53,7 @@ export function DataInput(props: IPropsType) {
   const schedule = React.useRef<Schedule<[AtomName.DATA_EXTRACT]>>(
     new Schedule(
       [AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN],
-      { base: { llm: llm.current, showThoughts } },
+      { base: { llm: llm.current, showThoughts }, dataExtract: { reGenerateFieldInfo: !useFieldInfo } },
       { text, fieldInfo: useFieldInfo ? fieldInfo : [] }
     )
   );
@@ -67,8 +68,8 @@ export function DataInput(props: IPropsType) {
     });
   }, [url, model, apiKey]);
   useEffect(() => {
-    schedule.current.updateOptions({ base: { showThoughts } });
-  }, [showThoughts]);
+    schedule.current.updateOptions({ base: { showThoughts }, dataExtract: { reGenerateFieldInfo: !useFieldInfo } });
+  }, [showThoughts, useFieldInfo]);
   const handleQuery = React.useCallback(async () => {
     props.setLoading(true);
     await schedule.current.run(userInput);
@@ -172,6 +173,12 @@ export function DataInput(props: IPropsType) {
       <Divider style={{ marginTop: 20 }} />
 
       <div style={{ width: '90%', marginBottom: 10 }}>
+        <RadioGroup value={model} onChange={v => setModel(v)}>
+          <Radio value={Model.GPT_4o}>GPT-4-0613</Radio>
+          <Radio value={Model.DOUBAO_PRO}>Doubao-pro</Radio>
+        </RadioGroup>
+      </div>
+      <div style={{ width: '90%', marginBottom: 10 }}>
         <Checkbox checked={useFieldInfo} onChange={v => setUseFieldInfo(v)}>
           Use FieldInfo
         </Checkbox>
@@ -181,7 +188,6 @@ export function DataInput(props: IPropsType) {
           Show Thoughts
         </Checkbox>
       </div>
-      <Divider style={{ marginTop: 20 }} />
 
       <Modal
         title="Set API Key and URL"
