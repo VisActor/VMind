@@ -59,7 +59,7 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
 
   parseLLMContent(data: LLMResponse) {
     const resJson = this.options.llm.parseJson(data);
-    if (resJson.err) {
+    if (resJson.error) {
       return this.context;
     }
     const { sql, fieldInfo: responseFiledInfo } = resJson;
