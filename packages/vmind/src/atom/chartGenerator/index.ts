@@ -33,7 +33,7 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, BaseOptions>
 
   parseLLMContent(data: LLMResponse) {
     const resJson = this.options.llm.parseJson(data);
-    if (resJson.err) {
+    if (resJson.error) {
       return this.context;
     }
     const { dataTable, fieldInfo, cells, chartType } = resJson;

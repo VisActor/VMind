@@ -112,7 +112,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
       const messages = this.getLLMMessages();
       const data = await this.options.llm.run(this.name, messages);
       const resJson = this.options.llm.parseJson(data);
-      if (resJson.err) {
+      if (resJson.error) {
         return this.context;
       }
       this.recordLLMResponse(data);
@@ -133,7 +133,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     const messages = this.getLLMMessages(query);
     const data = await this.options.llm.run(this.name, messages);
     const resJson = this.options.llm.parseJson(data);
-    if (!resJson.err) {
+    if (!resJson.error) {
       this.recordLLMResponse(data, query);
       this.setNewContext(this.parseLLMContent(resJson));
     }
