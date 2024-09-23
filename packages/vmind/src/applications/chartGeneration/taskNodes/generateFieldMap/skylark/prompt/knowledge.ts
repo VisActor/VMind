@@ -312,17 +312,16 @@ export const ChartFieldInfo: ChannelInfo = {
       size: 'field assigned to size channel'
     },
     knowledge: [
-      'The color field for treemap chart must be an array. The order of the elements in the array needs to be sorted from large to small according to the coverage described by the data field.'
+      'The color field must be an array sorted from large to small according to the coverage described by the data field.'
     ]
   },
   [ChartType.Gauge.toUpperCase()]: {
     visualChannels: {
-      color:
-        'color channel of gauge chart. Used to represent the current value against a range. Must be a string field.',
+      color: 'color channel of gauge chart. Must be a string field.',
       size: "size channel of gauge chart. Represents a numeric value indicating the current state. Can't be empty."
     },
     responseDescription: {
-      color: 'field assigned to color channel',
+      color: 'field assigned to color channel. Often used to distinguish themes.',
       size: 'field assigned to size channel'
     },
     knowledge: [
@@ -409,19 +408,19 @@ export const ChartFieldInfo: ChannelInfo = {
   },
   [ChartType.SequenceChart.toUpperCase()]: {
     visualChannels: {
-      x: "x channel of sequence chart. Represents the initiator of the timeline or event, showing which entity or individual is involved in each sequence. Can't be empty.",
-      y: "y channel of sequence chart. Represents the timeline or time series, displaying the chronological order of events. This is essential for showing when events occur. Often a numeric value. Can't be empty.",
+      group:
+        "group channel of sequence chart. Represents the initiator of the timeline or event, showing which entity or individual is involved in each sequence. Can't be empty.",
+      time: "time channel of sequence chart. Represents the timeline or time series, displaying the chronological order of events. This is essential for showing when events occur. Often a numeric value. Can't be empty.",
       color:
         'color channel of sequence chart. Differentiates the types or categories of events within the timeline. It is useful for distinguishing between different types of events in the sequence. For example: start or end'
     },
     responseDescription: {
-      x: 'field assigned to x channel, representing the initiator of the timeline or event',
-      y: 'field assigned to y channel, typically used for time progression',
+      group: 'field assigned to group channel, representing the initiator of the timeline or event',
+      time: 'field assigned to time channel, typically used for time progression',
       color: 'field assigned to color channel, representing event types'
     },
     knowledge: [
-      'All visual channels must be aligned with the structure of the data being visualized.',
-      'Sequence charts are ideal for displaying event sequences over time, where the y-axis represents time progression, the x-axis shows the initiator of the timeline, and color helps distinguish between event types.',
+      'Sequence charts are ideal for displaying event sequences over time, where the time-axis represents time progression, the group-axis shows the initiator of the timeline, and color helps distinguish between event types.',
       'This chart is useful for visualizing workflows, event timelines, or sequences where time, initiators, and event types need to be clearly represented.'
     ]
   }
