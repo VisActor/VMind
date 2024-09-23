@@ -185,7 +185,7 @@ export const mockUserInput6 = {
 比利时,欧洲,53840,2018
 挪威,欧洲,48930,2018
 `,
-  input: '帮我展示各国GDP排名变化'
+  input: '使用动态条形图帮我展示各国GDP排名变化'
 };
 
 /*
@@ -4766,7 +4766,7 @@ export const bubbleCirclePackingData = {
 房地产业,73821.3
 其他,279918.4
 `,
-  input: '请使用气泡图帮我绘制'
+  input: '请使用气泡圈图帮我绘制'
 };
 
 export const mapChartData = {
@@ -5076,7 +5076,7 @@ analytics,cluster,HierarchicalCluster,,6714
 analytics,cluster,MergeEdge,,743
 analytics,optimization,AspectRatioBanker,,7074
 flex,FlareVis,,,4116`,
-  input: '请使用矩形树图渲染数据'
+  input: '请使用矩形树图渲染数据的层次结构'
 };
 
 export const gaugeChartData = {
@@ -5398,7 +5398,7 @@ export const singleColumnLineCombinationChartData = {
 2022-09-01,0.259653267575217,2.040817156148029,2.19857288799284,2.229208371156883
 2022-09-02,1.398428414171018,0.071469482611002,0.9048807067534731,0.0022491420541680004
 2022-09-03,1.7166677805176591,1.903668070163285,1.866568462888393,1.8648831840830011`,
-  input: '请使用四个折线的组合图展示不同类别的权重随着时间的变化'
+  input: '请使用四个独立的折线的组合图展示不同类别的权重随着时间的变化'
 };
 
 export const singleColumnLineCombinationChartData1 = {
@@ -5594,7 +5594,7 @@ east,1027,654,654,830
 west,1027,159,2100,532
 north,1027,28,1679,498
 `,
-  input: '帮我使用四个柱图的组合展示不同区域各商品销售额'
+  input: '帮我使用四个不同柱图的组合展示四个区域上不同商品销售额'
 };
 
 export const singleColumnBarCombinationChartData1 = {
@@ -5779,7 +5779,7 @@ export const singleColumnBarCombinationChartData1 = {
 2022-09-01,0.259653267575217,2.040817156148029,2.19857288799284,2.229208371156883
 2022-09-02,1.398428414171018,0.071469482611002,0.9048807067534731,0.0022491420541680004
 2022-09-03,1.7166677805176591,1.903668070163285,1.866568462888393,1.8648831840830011`,
-  input: '请使用组合图展示不同类别的权重随着时间的变化，用四个柱图。'
+  input: '请使用四个独立柱图的组合图展示前十天不同类别的权重随着时间的变化。'
 };
 
 export const dynamicScatterPlotData = {
@@ -9849,7 +9849,7 @@ Alex Len,-2209016166000,start
 Alex Len,-2209015962000,end
 DeAndre' Bembry,-2209016547000,start
 DeAndre' Bembry,-2209015783000,end`,
-  input: '帮我展示各运动员在比赛中的行动记录。'
+  input: '使用时序图帮我展示各运动员在比赛中的行动记录。'
 };
 export const mockUserTextInput0 = {
   text: `快手消失了。快手上市后，市值一度超过2000亿美元，现在只剩200多亿美元。去年快手的营收破了千亿，公司也赚钱了，但市场不买账了。

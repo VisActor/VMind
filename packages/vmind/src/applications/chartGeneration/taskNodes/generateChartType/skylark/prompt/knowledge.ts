@@ -92,20 +92,18 @@ export const chartKnowledgeBase: ChartKnowledgeBase = {
   },
   [ChartType.SunburstChart]: {
     knowledge: [
-      'Sunburst Charts are excellent for visualizing hierarchical data, allowing users to see relationships between categories and subcategories at varying levels of detail.',
-      'The colors field for sunburst chart and treemap chart must be an array. The order of the elements in the array needs to be sorted from large to small according to the coverage described by the data field.'
+      'Sunburst Charts are excellent for visualizing hierarchical data, allowing users to see relationships between categories and subcategories at varying levels of detail.'
     ]
   },
   [ChartType.TreemapChart]: {
     knowledge: [
-      'Treemap Charts are effective for displaying large amounts of hierarchical data in a compact space, where areas represent the size of each category.',
-      'The colors field for sunburst chart and treemap chart must be an array. The order of the elements in the array needs to be sorted from large to small according to the coverage described by the data field.'
+      'Treemap Charts are effective for displaying large amounts of hierarchical data in a compact space, where areas represent the size of each category.'
     ]
   },
   [ChartType.Gauge]: {
     knowledge: [
-      'Gauge Charts are useful for displaying performance metrics against a target, providing a quick visual summary at a glance.',
-      'The gauge chart must contain two fields: size and color.'
+      'Gauge Charts are useful for displaying performance metrics against a target.',
+      'If you want to display a dashboard, use a Gauge Chart.'
     ]
   },
   [ChartType.BasicHeatMap]: {
@@ -115,8 +113,7 @@ export const chartKnowledgeBase: ChartKnowledgeBase = {
   },
   [ChartType.VennChart]: {
     knowledge: [
-      'Venn Charts are useful for displaying the relationships between different groups, emphasizing similarities and differences visually.',
-      'The color field of the Venn diagram requires an array of length 2. The field with subscript 0 maps to the sets, and the field with subscript 1 maps to the name.'
+      'Venn Charts are useful for displaying the relationships between different groups, emphasizing similarities and differences visually.'
     ]
   },
   [ChartType.SingleColumnCombinationChart]: {
@@ -134,8 +131,7 @@ export const chartKnowledgeBase: ChartKnowledgeBase = {
   },
   [ChartType.DynamicRoseChart]: {
     knowledge: [
-      'Dynamic Rose Chart is used to display cyclical or seasonal data over time, with values represented by the length of radial bars.',
-      'Dynamic Rose Chart highlights changes in categorical data or periodic trends across multiple categories over time.'
+      'Dynamic Rose Chart is used to display cyclical or seasonal data over time, with values represented by the length of radial bars.'
     ],
     constraints: [
       'Use Dynamic Rose Chart if you want to show cyclical data and observe changes in multiple categories over time.'

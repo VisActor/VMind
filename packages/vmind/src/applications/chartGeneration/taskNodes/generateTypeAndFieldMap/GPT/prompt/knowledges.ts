@@ -7,7 +7,7 @@ import {
   NEED_COLOR_FIELD_CHART_LIST,
   NEED_SIZE_FIELD_CHART_LIST,
   NEED_COLOR_AND_SIZE_CHART_LIST,
-  DYNAMIC_CHART_LIST
+  TIME_SERIES_CHART_LIST
 } from '../../../../constants';
 
 const getColorKnowledge = (chartTypeList: ChartType[]) => {
@@ -93,7 +93,7 @@ export const visualChannelInfoMap = {
   },
   time: (chartTypeList: ChartType[]) => {
     return {
-      singleFieldInfo: `This is usually a date field and cannot be empty in all dynamic chart types. For example, ${DYNAMIC_CHART_LIST.join(
+      singleFieldInfo: `This is usually a date field and cannot be empty in all dynamic chart types. For example, ${TIME_SERIES_CHART_LIST.join(
         ','
       )}.`
     };
@@ -114,6 +114,12 @@ export const visualChannelInfoMap = {
     return {
       singleFieldInfo:
         "the field mapped to the value channel. Only used in Sankey Chart. Can't be empty in Sankey Chart."
+    };
+  },
+  group: (chartTypeList: ChartType[]) => {
+    return {
+      singleFieldInfo:
+        "the field mapped to the group channel. Only used in Sequence Chart. Can't be empty in Sequence Chart."
     };
   }
 };
@@ -194,7 +200,7 @@ export const chartKnowledgeDict: ChartKnowledge = {
   },
   [ChartType.LiquidChart]: {
     index: 14,
-    visualChannels: ['x', 'y'],
+    visualChannels: ['value'],
     examples: [],
     knowledge: [
       'Liquid chart is used to display a single value, with the value range typically from 0 to 1. The value usually represents progress, completion, or percentage, and is associated with only one field'
@@ -210,7 +216,7 @@ export const chartKnowledgeDict: ChartKnowledge = {
   },
   [ChartType.CircularProgress]: {
     index: 16,
-    visualChannels: ['x', 'y'],
+    visualChannels: ['color', 'value'],
     examples: [],
     knowledge: [
       'Circular progress chart is also used to display progress data, presented in a circular form, with the values on the numerical axis typically ranging from 0 to 1.'
@@ -279,7 +285,7 @@ export const chartKnowledgeDict: ChartKnowledge = {
     visualChannels: ['x', 'y', 'color', 'size', 'time'],
     examples: [],
     knowledge: [
-      'The five channels that need to be mapped in the dynamic scatter plot are: x, y, color, size, and time; the x, y, and size channels require numeric data fields; the time field must be mapped.'
+      'The five channels that need to be mapped in the dynamic scatter plot are: x, y, color, size, and time; the x, y, and size channels require numeric data fields; the color channel is needed to distinguish different categories of scatter points; the time field must be mapped.'
     ]
   },
   [ChartType.DynamicRoseChart]: {
@@ -290,9 +296,12 @@ export const chartKnowledgeDict: ChartKnowledge = {
   },
   [ChartType.SequenceChart]: {
     index: 30,
-    visualChannels: ['x', 'y', 'color'],
+    visualChannels: ['group', 'time', 'color'],
     examples: [],
-    knowledge: ['The three channels that need to be mapped in the sequence chart are: x, y, and color;']
+    knowledge: [
+      'The three channels that need to be mapped in the sequence chart are: group, time, and color;',
+      'The sequence chart is used to display information such as time nodes with a sequence.'
+    ]
   }
 };
 

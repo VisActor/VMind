@@ -18,7 +18,7 @@ Your task is:
 1. Filter out useful fields related to user's command.
 2. Assign the useful fields to the available visual channels according to field name and type.
 3. If the chart type is a combination chart, the above two steps need to be repeated for each sub-chart generation task of the combination chart. The number of mapping relationships of visual channels in the response needs to be consistent with the number of sub-charts generated.
-4. The response is an array in YAML format without any additional descriptions.
+4. The outermost structure of the response must be an array in YAML format without any additional descriptions. The YAML array must be generated strictly according to the corresponding format at the end of the prompt, and special attention should be paid to the length of the array and the meaning of the elements in the array.
 
 Available visual channels:
 ${availableChannels}

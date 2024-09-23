@@ -1304,7 +1304,7 @@ export const liquidField: Transformer<Context, GetChartSpecOutput> = (context: C
   const { cells, dataset, spec } = context;
   const cell = getCell(cells);
 
-  spec.valueField = cell.value;
+  spec.valueField = (cell.value ?? cell.y ?? cell.size) as string;
   spec.indicatorSmartInvert = true;
 
   return { spec };
@@ -1387,7 +1387,7 @@ export const circularProgressField: Transformer<Context, GetChartSpecOutput> = (
   const cell = getCell(cells);
 
   spec.categoryField = cell.color;
-  spec.valueField = cell.value;
+  spec.valueField = (cell.value ?? cell.size) as string;
   spec.seriesField = cell.color;
 
   spec.radius = 0.8;
@@ -1414,7 +1414,7 @@ export const indicator: Transformer<Context, GetChartSpecOutput> = (context: Con
   if (!firstEntry) {
     return { spec };
   }
-  const valueField = (cell.value ?? cell.y) as string;
+  const valueField = (cell.value ?? cell.y ?? cell.size) as string;
   const value = firstEntry[valueField];
   const cat = firstEntry[cell.radius ?? cell.x];
 
@@ -2308,29 +2308,34 @@ export const dynamicRoseDisplayConf: Transformer<Context, GetChartSpecOutput> = 
 export const sequenceChartData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   const { cells, dataset, spec } = context;
   const cell = getCell(cells);
-  const yField = cell.y as string;
-  const xField = cell.x;
+  const timeField = cell.time as string;
+  const groupField = cell.group;
   const colorField = cell.color as string;
   const dataMap: { [key: string]: DataItem[] } = {};
   dataset.forEach(data => {
-    dataMap[data[xField]] ? dataMap[data[xField]].push(data) : (dataMap[data[xField]] = [data]);
+    dataMap[data[groupField]]
+      ? dataMap[data[groupField]].push({ ...data })
+      : (dataMap[data[groupField]] = [{ ...data }]);
   });
   const dataDot: { [key: string]: DataItem[] | string }[] = [];
-  const dataLink: { [key: string]: string }[] = [];
+  const dataLink: { [key: string]: string | number }[] = [];
   Object.keys(dataMap).forEach(key => {
-    dataDot.push({
-      [cell.x]: key,
-      dots: dataMap[key]
+    const dotList = sortArray(dataMap[key], [{ field: timeField, order: SortOrder.ASC }]).map((data, index, array) => {
+      const newData = { ...data };
+      newData.node_name = `${data[groupField]}_${Math.floor(index / 2).toString()}_${data[colorField]}_node`;
+      return newData;
     });
-    sortArray(dataMap[key], [{ field: yField, order: SortOrder.ASC }]).forEach((data, index, array) => {
+    dataDot.push({
+      [cell.group]: key,
+      dots: dotList
+    });
+    dotList.forEach((dot, index, array) => {
       if (index % 2 !== 0) {
         dataLink.push({
-          from: `${data[xField]}_${Math.floor(index / 2).toString()}_${array[index - 1][colorField]}_node`,
-          to: `${data[xField]}_${Math.floor(index / 2).toString()}_${data[colorField]}_node`
+          from: array[index - 1].node_name,
+          to: dot.node_name
         });
       }
-      data.node_name = `${data[xField]}_${Math.floor(index / 2).toString()}_${data[colorField]}_node`;
-      return data;
     });
   });
   spec.data = [
@@ -2360,10 +2365,10 @@ export const sequenceChartSeries: Transformer<Context, GetChartSpecOutput> = (co
     {
       type: 'dot',
       dataId: 'dataDotSeries',
-      xField: cell.y as string,
-      yField: cell.x,
+      xField: cell.time as string,
+      yField: cell.group,
       dotTypeField: cell.color as string,
-      titleField: cell.x,
+      titleField: cell.group,
       highLightSeriesGroup: '',
       height: 500,
       clipHeight: 800,
@@ -2398,12 +2403,12 @@ export const sequenceChartSeries: Transformer<Context, GetChartSpecOutput> = (co
             {
               hasShape: true,
               shapeType: 'square',
-              key: (datum: any) => datum[cell.x]
+              key: (datum: any) => datum[cell.group]
             },
             {
               hasShape: false,
               key: 'event_time_stamp',
-              value: (datum: any) => datum[cell.color as string]
+              value: (datum: any) => datum[cell.group as string]
             }
           ]
         }
@@ -2422,10 +2427,10 @@ export const sequenceChartAxes: Transformer<Context, GetChartSpecOutput> = (cont
       type: 'time',
       range: {
         min: fieldInfo.filter(fieldInfo => {
-          return fieldInfo.fieldName === cell.y;
+          return fieldInfo.fieldName === cell.time;
         })[0].domain[0],
         max: fieldInfo.filter(fieldInfo => {
-          return fieldInfo.fieldName === cell.y;
+          return fieldInfo.fieldName === cell.time;
         })[0].domain[1]
       },
       layers: [
