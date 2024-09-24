@@ -2,6 +2,7 @@ import React from 'react';
 import type { DataTable, FieldInfo } from '../../../../../src/index';
 import type { TableColumnProps } from '@arco-design/web-react';
 import { Card, Input, Spin, Table } from '@arco-design/web-react';
+import { isArray } from '@visactor/vutils';
 
 const TextArea = Input.TextArea;
 
@@ -13,7 +14,10 @@ const SimpleTable = ({ data, fieldInfo }: { data: DataTable; fieldInfo: FieldInf
   const columns: TableColumnProps[] = fieldInfo.map((info: FieldInfo) => {
     return {
       title: info.fieldName,
-      dataIndex: info.fieldName
+      dataIndex: info.fieldName,
+      render: (col: any) => {
+        return isArray(col) ? col.join('-') : col;
+      }
     };
   });
   return (
@@ -24,7 +28,7 @@ const SimpleTable = ({ data, fieldInfo }: { data: DataTable; fieldInfo: FieldInf
         hideOnSinglePage: true
       }}
       scroll={{
-        x: columns.length * 100
+        x: true
       }}
     />
   );

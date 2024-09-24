@@ -15,6 +15,7 @@ export interface DataExtractionDataSetResult {
     fieldInfo: FieldInfo[];
     text: string;
   };
+  timeCost?: string;
   score?: number;
   fieldScore?: number;
   dataScore?: number;
