@@ -31,13 +31,12 @@ const getFinalScore = (fieldScore: number, dataScore: number) => fieldScore * 0.
 
 const getDataScore = (currentDataList: DataCell[], answerDataList: DataCell[], role: ROLE) => {
   let dataScore = 0;
-  const minLength = Math.min(currentDataList.length, answerDataList.length);
-  const seletedList = new Array(minLength).fill(false);
-  for (let i = 0; i < minLength; i++) {
-    let maxScore = -1;
+  const seletedList = new Array(answerDataList.length).fill(false);
+  for (let i = 0; i < currentDataList.length; i++) {
+    let maxScore = 0;
     let currentSelectedIndex = -1;
     const valueCompareFunction = getValueCompareFunction(role);
-    for (let j = 0; j < minLength; j++) {
+    for (let j = 0; j < answerDataList.length; j++) {
       if (!seletedList[j]) {
         const currentScore = valueCompareFunction(currentDataList[i], answerDataList[j]);
         if (maxScore < currentScore) {
@@ -46,14 +45,13 @@ const getDataScore = (currentDataList: DataCell[], answerDataList: DataCell[], r
         }
       }
     }
-    dataScore += maxScore;
+    dataScore = currentSelectedIndex !== -1 ? dataScore + maxScore : dataScore;
     seletedList[currentSelectedIndex] = true;
   }
   if (answerDataList.length > currentDataList.length) {
-    dataScore -= (answerDataList.length - currentDataList.length) * 0.5;
     dataScore /= answerDataList.length;
   } else {
-    dataScore /= currentDataList.length;
+    dataScore /= seletedList.filter(v => !!v).length;
   }
   return dataScore;
 };
@@ -123,6 +121,14 @@ export const getScoreOfDataExtraction = (resultCtx: DataExtractionCtx, answerCtx
   const scoreList = getScoreOfDataset(answerInfo || [], fieldInfo || [], answerTable!, dataTable!).filter(
     v => v.matchedIndex !== -1
   );
+  if (!scoreList.length) {
+    return {
+      score: 0,
+      fieldScore: 0,
+      dataScore: 0,
+      scoreDetail: []
+    };
+  }
   let fieldScore = 0;
   let dataScore = 0;
   scoreList.forEach(v => {
@@ -131,10 +137,9 @@ export const getScoreOfDataExtraction = (resultCtx: DataExtractionCtx, answerCtx
   });
   dataScore /= scoreList.length;
   if (answerInfo?.length > fieldInfo?.length) {
-    fieldScore -= (answerInfo?.length - fieldInfo?.length) * 0.5;
     fieldScore /= answerInfo?.length;
   } else {
-    fieldScore /= fieldInfo.length;
+    fieldScore /= scoreList.length;
   }
   return {
     score: getFinalScore(fieldScore, dataScore),

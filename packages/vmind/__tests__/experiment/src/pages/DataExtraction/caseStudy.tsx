@@ -2,17 +2,21 @@
 /* eslint-disable no-console */
 import React from 'react';
 import type { FieldInfo } from '../../../../../src/index';
-import { capcutMockData } from '../../data/capcutData';
+import { capcutCnData } from '../../data/capcutDataCn';
+import { capcutEnData } from '../../data/capcutDataEn';
 import { dataExtractionCommonDataset, commonAnswer } from '../../data/dataExtractionData';
 import type { TableColumnProps } from '@arco-design/web-react';
 import { Avatar, Button, Card, Checkbox, Divider, Message, Select, Table, Tooltip } from '@arco-design/web-react';
-import { result as capcutResult } from '../../results/dataExtraction/result3';
+// import { result as capcutResult } from '../../results/dataExtraction/result4';
+import { result as capcutResult } from '../../results/dataExtraction/result7';
 import { result as caseResult } from '../../results/dataExtraction/commonResult';
 import '../page.scss';
 import { IconInfoCircle } from '@arco-design/web-react/icon';
 import { getLanguageOfText } from '../../../../../src/utils/text';
 import { mergeResult, updateScoreInDataExtraction } from './verify';
 import type { DataExtractionDataSetResult } from './type';
+import { isArray } from '@visactor/vutils';
+import { sum } from '@visactor/vchart/esm/util';
 
 const result = [...mergeResult(capcutResult as any, caseResult as any), commonAnswer];
 updateScoreInDataExtraction(result as any, commonAnswer);
@@ -23,7 +27,8 @@ const llmList = result.map((v, index) => ({
   llm: v.llm
 }));
 const datasetMap: Record<string, any> = {
-  capcut: capcutMockData,
+  capcut_cn: capcutCnData,
+  capcut_en: capcutEnData,
   common: dataExtractionCommonDataset
 };
 const datasetList = result[0].result.map((v, index) => ({
@@ -37,7 +42,7 @@ interface Options {
   llm: string;
   resType: 'defaultResult' | 'fieldInfoResult';
 }
-const targetScore = 0.7;
+const targetScore = 0.75;
 export function DataExtractionResult() {
   const [datasetIndex, setDatasetIndex] = React.useState(0);
   const currentDataset = datasetList[datasetIndex];
@@ -70,16 +75,17 @@ export function DataExtractionResult() {
       return {
         title: (
           <div className="column-title">
-            <Tooltip content={info.fieldType}>
-              <div>{`${info.fieldType[0]}__`}</div>
-            </Tooltip>
+            <Tooltip content={info.fieldType}>{info.fieldType && <div>{`${info.fieldType[0]}__`}</div>}</Tooltip>
             <Tooltip content={info.fieldName}>{info.fieldName}</Tooltip>
-            <Tooltip content={info.description}>
+            <Tooltip content={info?.description}>
               <IconInfoCircle />
             </Tooltip>
           </div>
         ),
-        dataIndex: info.fieldName
+        dataIndex: info.fieldName,
+        render: (col: any) => {
+          return isArray(col) ? col.join('-') : col;
+        }
       };
     });
     return (
@@ -143,10 +149,18 @@ export function DataExtractionResult() {
     [answerResult, language]
   );
 
+  const renderTimeCost = React.useCallback((res: DataExtractionDataSetResult[] | undefined | null) => {
+    if (res) {
+      const validTimeCost = res.map(v => Number(v.timeCost)).filter(v => !isNaN(v) && v > 1);
+      const timeCost = (sum(validTimeCost) / validTimeCost.length).toFixed(1);
+      return validTimeCost.length ? <span>{`Time Cost: ${timeCost}s`}</span> : null;
+    }
+  }, []);
+
   const renderScore = React.useCallback(
     (res: DataExtractionDataSetResult[] | undefined | null) => {
       if (answerResult && res) {
-        const validRes = res.filter(v => !!v.score && v.score !== 0);
+        const validRes = res.filter(v => !!v.score || v.score === 0);
         const allCount = validRes.length;
         const reachedCount = validRes.filter(v => v.score! >= targetScore).length;
         let score = 0;
@@ -271,7 +285,7 @@ export function DataExtractionResult() {
               return null;
             }
             return (
-              <div key={v.llm} style={{ width }}>
+              <div key={`${v.llm}-${v.index}-${index}-${v.resType}`} style={{ width }}>
                 <div>
                   <Select
                     defaultValue={v.llm}
@@ -300,6 +314,7 @@ export function DataExtractionResult() {
                   </Select>
                 </div>
                 <div style={{ padding: '4px 10px' }}>{renderScore(index === 0 ? leftResult : rightResult)}</div>
+                <div style={{ padding: '4px 10px' }}>{renderTimeCost(index === 0 ? leftResult : rightResult)}</div>
               </div>
             );
           })}

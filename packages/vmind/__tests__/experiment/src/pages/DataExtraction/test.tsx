@@ -2,7 +2,8 @@
 /* eslint-disable no-console */
 import React from 'react';
 import { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
-import { capcutMockData } from '../../data/capcutData';
+import { capcutCnData } from '../../data/capcutDataCn';
+import { capcutEnData } from '../../data/capcutDataEn';
 import { Button, Checkbox, Divider, Message, Select } from '@arco-design/web-react';
 import { dataExtractionCommonDataset } from '../../data/dataExtractionData';
 import { pick } from '@visactor/vutils';
@@ -10,12 +11,17 @@ import { pick } from '@visactor/vutils';
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
   [Model.DOUBAO_PRO]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY },
+  [Model.DOUBAO_PRO_32K]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY },
   [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
 };
 const datasets = [
   {
-    name: 'capcut',
-    data: capcutMockData
+    name: 'capcut_cn',
+    data: capcutCnData
+  },
+  {
+    name: 'capcut_en',
+    data: capcutEnData
   },
   {
     name: 'common',
@@ -66,6 +72,7 @@ export function DataExtractionTask() {
           'api-key': apiKey,
           Authorization: `Bearer ${apiKey}`
         },
+        maxTokens: 2048,
         model
       });
       const schedule = new Schedule([AtomName.DATA_EXTRACT], {
@@ -94,9 +101,12 @@ export function DataExtractionTask() {
             schedule.setNewTask({
               text: data.text
             });
+            const time1: any = new Date();
             const result = await schedule.run();
+            const time2: any = new Date();
             defaultResult.push({
-              context: result
+              context: result,
+              timeCost: ((time2 - time1) / 1000).toFixed(1)
             });
             await sleep(sleepTime);
           }
@@ -105,9 +115,12 @@ export function DataExtractionTask() {
               text: data.text,
               fieldInfo: data.fieldInfo.map((v: any) => pick(v, ['fieldName']))
             });
+            const time1: any = new Date();
             const result = await schedule.run();
+            const time2: any = new Date();
             fieldInfoResult.push({
-              context: result
+              context: result,
+              timeCost: ((time2 - time1) / 1000).toFixed(1)
             });
             await sleep(sleepTime);
           }

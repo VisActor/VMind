@@ -13,13 +13,15 @@ export function NewDataExtractionPage() {
   const [fieldInfo, setFieldInfo] = useState<FieldInfo[]>([]);
   const [finalFieldInfo, setFinalFieldInfo] = useState<FieldInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [timeCost, setTimeCost] = useState<number>(0);
 
-  const handleOk = React.useCallback(async (dataExtractCtx: any, dataCleanCtx: any) => {
+  const handleOk = React.useCallback(async (dataExtractCtx: any, dataCleanCtx: any, timeCost: number) => {
     setDataset(dataExtractCtx.dataTable);
     setFieldInfo(dataExtractCtx.fieldInfo);
     setFianlDataset(dataCleanCtx.dataTable);
     setFinalFieldInfo(dataCleanCtx.fieldInfo);
     setLoading(false);
+    setTimeCost(timeCost);
     // eslint-disable-next-line no-console
     console.info(dataExtractCtx, dataCleanCtx);
   }, []);
@@ -35,6 +37,7 @@ export function NewDataExtractionPage() {
         <DataInput onOk={handleOk} setLoading={setLoading} />
       </Sider>
       <Content>
+        <p>{`Time Cost: ${timeCost.toFixed(1)}s`}</p>
         <DataTableComp
           dataset={dataset}
           finalDataset={finalDataset}

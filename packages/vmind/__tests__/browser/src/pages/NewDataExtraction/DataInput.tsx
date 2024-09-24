@@ -11,7 +11,7 @@ const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
 type IPropsType = {
-  onOk: (extractCtx: any, dataCleanCtx: any) => void;
+  onOk: (extractCtx: any, dataCleanCtx: any, timeCost: number) => void;
   setLoading: (loading: boolean) => void;
 };
 
@@ -53,7 +53,7 @@ export function DataInput(props: IPropsType) {
   const schedule = React.useRef<Schedule<[AtomName.DATA_EXTRACT]>>(
     new Schedule(
       [AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN],
-      { base: { llm: llm.current, showThoughts }, dataExtract: { reGenerateFieldInfo: !useFieldInfo } },
+      { base: { llm: llm.current, showThoughts }, dataExtract: { reGenerateFieldInfo: true } },
       { text, fieldInfo: useFieldInfo ? fieldInfo : [] }
     )
   );
@@ -68,12 +68,19 @@ export function DataInput(props: IPropsType) {
     });
   }, [url, model, apiKey]);
   useEffect(() => {
-    schedule.current.updateOptions({ base: { showThoughts }, dataExtract: { reGenerateFieldInfo: !useFieldInfo } });
+    schedule.current.updateOptions({ base: { showThoughts } });
   }, [showThoughts, useFieldInfo]);
   const handleQuery = React.useCallback(async () => {
     props.setLoading(true);
+    const time1: any = new Date();
     await schedule.current.run(userInput);
-    props.onOk(schedule.current.getContext(AtomName.DATA_EXTRACT), schedule.current.getContext(AtomName.DATA_CLEAN));
+    const time2: any = new Date();
+    const diff = (time2 - time1) / 1000;
+    props.onOk(
+      schedule.current.getContext(AtomName.DATA_EXTRACT),
+      schedule.current.getContext(AtomName.DATA_CLEAN),
+      diff
+    );
   }, [props, userInput]);
 
   return (
@@ -103,7 +110,7 @@ export function DataInput(props: IPropsType) {
             onChange={index => {
               const dataObj = capcutMockData[index];
               setText(dataObj.text);
-              setFieldInfo(dataObj.fieldInfo || []);
+              setFieldInfo(dataObj.fieldInfo.map((v: any) => ({ fieldName: v })) || []);
               setUserInput(dataObj.input);
               schedule.current.setNewTask({
                 text: dataObj.text,
@@ -113,7 +120,7 @@ export function DataInput(props: IPropsType) {
           >
             {capcutMockData.map((data, index) => (
               <Option key={index} value={index}>
-                {`Demo_${index}`}
+                {`Demo_${index + 1}`}
               </Option>
             ))}
           </Select>
@@ -176,6 +183,7 @@ export function DataInput(props: IPropsType) {
         <RadioGroup value={model} onChange={v => setModel(v)}>
           <Radio value={Model.GPT_4o}>GPT-4-0613</Radio>
           <Radio value={Model.DOUBAO_PRO}>Doubao-pro</Radio>
+          <Radio value={Model.DOUBAO_PRO_32K}>Doubao-pro-32k</Radio>
         </RadioGroup>
       </div>
       <div style={{ width: '90%', marginBottom: 10 }}>
