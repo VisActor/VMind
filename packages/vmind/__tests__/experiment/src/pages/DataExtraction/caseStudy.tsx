@@ -4,22 +4,18 @@ import React from 'react';
 import type { FieldInfo } from '../../../../../src/index';
 import { capcutCnData } from '../../data/capcutDataCn';
 import { capcutEnData } from '../../data/capcutDataEn';
-import { dataExtractionCommonDataset, commonAnswer } from '../../data/dataExtractionData';
+import { dataExtractionCommonDataset } from '../../data/dataExtractionData';
 import type { TableColumnProps } from '@arco-design/web-react';
-import { Avatar, Button, Card, Checkbox, Divider, Message, Select, Table, Tooltip } from '@arco-design/web-react';
-// import { result as capcutResult } from '../../results/dataExtraction/result4';
-import { result as capcutResult } from '../../results/dataExtraction/result7';
-import { result as caseResult } from '../../results/dataExtraction/commonResult';
+import { Avatar, Card, Divider, Select, Table, Tooltip } from '@arco-design/web-react';
 import '../page.scss';
 import { IconInfoCircle } from '@arco-design/web-react/icon';
 import { getLanguageOfText } from '../../../../../src/utils/text';
-import { mergeResult, updateScoreInDataExtraction } from './verify';
 import type { DataExtractionDataSetResult } from './type';
 import { isArray } from '@visactor/vutils';
 import { sum } from '@visactor/vchart/esm/util';
+import { getDataExtractionCaseData } from '../../utils';
 
-const result = [...mergeResult(capcutResult as any, caseResult as any), commonAnswer];
-updateScoreInDataExtraction(result as any, commonAnswer);
+const result = getDataExtractionCaseData();
 console.info(result);
 
 const llmList = result.map((v, index) => ({
@@ -42,6 +38,7 @@ interface Options {
   llm: string;
   resType: 'defaultResult' | 'fieldInfoResult';
 }
+
 const targetScore = 0.75;
 export function DataExtractionResult() {
   const [datasetIndex, setDatasetIndex] = React.useState(0);
@@ -151,7 +148,7 @@ export function DataExtractionResult() {
 
   const renderTimeCost = React.useCallback((res: DataExtractionDataSetResult[] | undefined | null) => {
     if (res) {
-      const validTimeCost = res.map(v => Number(v.timeCost)).filter(v => !isNaN(v) && v > 1);
+      const validTimeCost = res.map(v => Number(v.timeCost)).filter(v => !isNaN(v) && v > 1 && v < 300);
       const timeCost = (sum(validTimeCost) / validTimeCost.length).toFixed(1);
       return validTimeCost.length ? <span>{`Time Cost: ${timeCost}s`}</span> : null;
     }

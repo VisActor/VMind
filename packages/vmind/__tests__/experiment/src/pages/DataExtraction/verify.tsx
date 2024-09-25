@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 import stringSimilarity from 'string-similarity';
 import { DataType } from '../../../../../src';
@@ -5,6 +6,7 @@ import type { DataCell, DataExtractionCtx, FieldInfo, DataTable } from '../../..
 import { getRoleByFieldType } from '../../../../../src/utils/field';
 import { ROLE } from '../../../../../src/common/typings';
 import type { DataExtractionCase, DataExtractionResult, ScoreDetail } from './type';
+import { isNumber } from '@visactor/vutils';
 
 function cosineSimilarity(text1: string, text2: string): number {
   return stringSimilarity.compareTwoStrings(text1, text2);
@@ -27,7 +29,7 @@ function getFieldTypeScore(typeA: DataType, typeB: DataType) {
 
 const getFieldScore = (nameScore: number, typeScore: number) => nameScore * 0.75 + typeScore * 0.25;
 
-const getFinalScore = (fieldScore: number, dataScore: number) => fieldScore * 0.4 + dataScore * 0.6;
+const getFinalScore = (fieldScore: number, dataScore: number) => fieldScore * 0.3 + dataScore * 0.7;
 
 const getDataScore = (currentDataList: DataCell[], answerDataList: DataCell[], role: ROLE) => {
   let dataScore = 0;
@@ -45,15 +47,17 @@ const getDataScore = (currentDataList: DataCell[], answerDataList: DataCell[], r
         }
       }
     }
-    dataScore = currentSelectedIndex !== -1 ? dataScore + maxScore : dataScore;
-    seletedList[currentSelectedIndex] = true;
+    if (currentSelectedIndex !== -1) {
+      dataScore += maxScore;
+      seletedList[currentSelectedIndex] = true;
+    }
   }
   if (answerDataList.length > currentDataList.length) {
     dataScore /= answerDataList.length;
   } else {
     dataScore /= seletedList.filter(v => !!v).length;
   }
-  return dataScore;
+  return dataScore || 0;
 };
 
 /** fieldInfoA is answer */
@@ -103,11 +107,11 @@ function getScoreOfDataset(
 
 function getValueCompareFunction(role: ROLE) {
   if (role === ROLE.MEASURE) {
-    return (a: DataCell, b: DataCell) => {
+    return (a: any, b: any) => {
       if (+a === +b || a === b) {
         return 1;
       }
-      return 0;
+      return isNumber(a) && isNumber(b) && Math.abs(a) === Math.abs(b) ? 0.2 : 0;
     };
   }
   return (a: DataCell, b: DataCell) => {

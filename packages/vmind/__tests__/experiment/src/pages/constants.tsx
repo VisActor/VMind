@@ -2,6 +2,7 @@ import { IconBgColors, IconBulb, IconLanguage } from '@arco-design/web-react/ico
 import React from 'react';
 import { DataExtractionTask } from './DataExtraction/test';
 import { DataExtractionResult } from './DataExtraction/caseStudy';
+import { ChartGenerationTask } from './ChartGenerator/test';
 type MenuInfo = {
   menuItem: string;
   subItems: {
@@ -14,7 +15,7 @@ type MenuInfo = {
 };
 
 export enum PLAYGROUND_PAGES {
-  CHART_GENERATION = 'chart_generation',
+  CHART_GENERATION = 'chart-generation',
   SMART_INSIGHT = 'smart-insight',
   DATA_EXTRACTION = 'data-extraction'
 }
@@ -35,6 +36,17 @@ export const PLAYGROUND_MENU_INFO: {
         key: '1',
         name: 'Case Study',
         component: <DataExtractionResult />
+      }
+    ]
+  },
+  [PLAYGROUND_PAGES.CHART_GENERATION]: {
+    menuItem: 'Chart Generation',
+    icon: <IconBgColors />,
+    subItems: [
+      {
+        key: '0',
+        name: 'Run Case',
+        component: <ChartGenerationTask />
       }
     ]
   }
