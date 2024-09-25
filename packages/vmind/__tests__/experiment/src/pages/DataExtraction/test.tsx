@@ -7,6 +7,7 @@ import { capcutEnData } from '../../data/capcutDataEn';
 import { Button, Checkbox, Divider, Message, Select } from '@arco-design/web-react';
 import { dataExtractionCommonDataset } from '../../data/dataExtractionData';
 import { pick } from '@visactor/vutils';
+import { getCurrentFormattedTime, sleep } from '../../utils';
 
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
@@ -29,22 +30,6 @@ const datasets = [
   }
 ];
 
-function getCurrentFormattedTime() {
-  const now = new Date();
-
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0'); // 月份从0开始，所以需要加1
-  const day = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-
-  return `${year}-${month}-${day} ${hours}:${minutes}`;
-}
-
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 export function DataExtractionTask() {
   const [selectedDataset, setSelectedDataset] = React.useState<string[]>(['common']);
   const [selectedLLM, setSelectedLLm] = React.useState<Record<string, boolean>>(
@@ -64,7 +49,7 @@ export function DataExtractionTask() {
       if (!selectedLLM[model]) {
         continue;
       }
-      const sleepTime = model === Model.DOUBAO_PRO ? 8000 : 4000;
+      const sleepTime = model === Model.DOUBAO_PRO ? 8000 : 5000;
       const apiKey = ModelConfigMap[model]?.key;
       const llm = new LLMManage({
         url: ModelConfigMap[model]?.url,
