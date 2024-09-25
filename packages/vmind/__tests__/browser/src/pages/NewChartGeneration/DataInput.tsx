@@ -78,8 +78,8 @@ export function DataInput(props: IPropsType) {
       maxTokens: 2048
     })
   );
-  const schedule = React.useRef<Schedule<[AtomName.CHART_COMMAND]>>(
-    new Schedule([AtomName.CHART_COMMAND], { base: { llm: llm.current } })
+  const schedule = React.useRef<Schedule<[AtomName.DATA_CLEAN, AtomName.CHART_COMMAND]>>(
+    new Schedule([AtomName.DATA_CLEAN, AtomName.CHART_COMMAND], { base: { llm: llm.current } })
   );
 
   const vmind: VMind = useMemo(() => {
@@ -99,8 +99,8 @@ export function DataInput(props: IPropsType) {
   }, [apiKey, model, url]);
 
   const askGPT = useCallback(async () => {
-    const finaldataTable = specTemplateTest && model !== Model.CHART_ADVISOR ? undefined : dataTable;
-
+    let finalDataTable = specTemplateTest && model !== Model.CHART_ADVISOR ? undefined : dataTable;
+    let finalFieldInfo = fieldInfo;
     const startTime = new Date().getTime();
 
     setLoading(true);
@@ -109,12 +109,15 @@ export function DataInput(props: IPropsType) {
       schedule.current.setNewTask({
         ...chartGenerationMockData[0].result[dataTableIndex].context
       });
-      finalDescribe = (await schedule.current.run()).command;
+      const ctx = await schedule.current.run();
+      finalDescribe = ctx.command;
+      finalDataTable = ctx.dataTable;
+      finalFieldInfo = ctx.fieldInfo || fieldInfo;
     }
     const chartGenerationRes = await vmind.generateChart(
       finalDescribe,
-      transferFieldInfoInSimpleFieldInfo(fieldInfo),
-      finaldataTable,
+      transferFieldInfoInSimpleFieldInfo(finalFieldInfo),
+      finalDataTable,
       {
         theme: 'light'
       }
