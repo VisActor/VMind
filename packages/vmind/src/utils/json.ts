@@ -1,8 +1,5 @@
 import JSON5 from 'json5';
-
-export const replaceAll = (originStr: string, replaceStr: string, newStr: string) => {
-  return originStr.split(replaceStr).join(newStr);
-};
+import { replaceAll } from './text';
 
 export const matchJSONStr = (str: string) => {
   const first = str.indexOf('{');

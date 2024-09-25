@@ -29,6 +29,7 @@ export enum AtomName {
   DATA_EXTRACT = 'dataExtract',
   DATA_CLEAN = 'dataClean',
   DATA_QUERY = 'dataQuery',
+  CHART_COMMAND = 'chartCommand',
   CHART_GENERATE = 'chartGenerate'
 }
 
@@ -80,6 +81,18 @@ export interface DataExtractionCtx extends BaseContext {
   fieldInfo?: FieldInfo[];
   /** Data Table values */
   dataTable?: DataTable;
+}
+
+/** Context of Chart Command Atom */
+export interface ChartCommandCtx extends BaseContext {
+  /** text object of data extraction */
+  text: string;
+  /** extra fieldsInfo of dataTable */
+  fieldInfo?: FieldInfo[];
+  /** Data Table values */
+  dataTable?: DataTable;
+  /** command */
+  command: string;
 }
 
 export interface DataCleanCtx extends BaseContext {

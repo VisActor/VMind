@@ -16,7 +16,8 @@ export enum Model {
   GPT_4_0613 = 'gpt-4-0613',
   GPT_4o = 'gpt-4o-2024-05-13',
   DOUBAO_LITE = 'doubao-lite-32K',
-  DOUBAO_PRO = 'doubao-pro-32k',
+  DOUBAO_PRO = 'doubao-pro-128k',
+  DOUBAO_PRO_32K = 'doubao-pro-32k',
   SKYLARK2 = 'skylark2-pro-4k',
   SKYLARK2_v1_2 = 'skylark2-pro-4k-v1.2',
   CHART_ADVISOR = 'chart-advisor'
@@ -39,7 +40,9 @@ export interface ILLMOptions {
   /** show llm thoughs or not */
   showThoughts?: boolean;
   /** repetition penalty */
-  frequency_penalty?: number;
+  frequencyPenalty?: number;
+  /** topP */
+  topP?: number;
 }
 
 /** LLM Messages api */

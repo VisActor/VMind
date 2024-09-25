@@ -26,7 +26,7 @@ export class LLMManage {
       model: Model.DOUBAO_PRO,
       maxTokens: 1024,
       temperature: 0,
-      frequency_penalty: 0
+      frequencyPenalty: 0
     };
   }
 
@@ -35,7 +35,16 @@ export class LLMManage {
   }
 
   async run(name: AtomName, messages: LLMMessage[]) {
-    const { url, headers, method, maxTokens, temperature, model, frequency_penalty } = this.options;
+    const {
+      url,
+      headers,
+      method,
+      maxTokens,
+      temperature,
+      model,
+      frequencyPenalty: frequency_penalty,
+      topP: top_p
+    } = this.options;
     if (!this.historys[name]) {
       this.historys[name] = [];
     }
@@ -50,11 +59,8 @@ export class LLMManage {
           max_tokens: maxTokens,
           temperature,
           stream: false,
-          frequency_penalty
-          // seedSwitch: false
-          // Only models after gpt-3.5-turbo-1106 support this parameter.
-          // response_format:
-          //   { "type": "json_object" }
+          frequency_penalty,
+          top_p
         }
       }).then(response => response.data);
 

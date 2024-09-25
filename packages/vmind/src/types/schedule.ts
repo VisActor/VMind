@@ -1,4 +1,12 @@
-import type { AtomName, BaseContext, DataExtractionCtx, DataCleanCtx, DataQueryCtx, ChartGeneratorCtx } from './atom';
+import type {
+  AtomName,
+  BaseContext,
+  DataExtractionCtx,
+  DataCleanCtx,
+  DataQueryCtx,
+  ChartGeneratorCtx,
+  ChartCommandCtx
+} from './atom';
 
 export interface Tasks {
   /** current atom task should run or not */
@@ -15,6 +23,7 @@ export type AtomTypeMap = {
   [AtomName.DATA_EXTRACT]: DataExtractionCtx;
   [AtomName.DATA_CLEAN]: DataCleanCtx;
   [AtomName.DATA_QUERY]: DataQueryCtx;
+  [AtomName.CHART_COMMAND]: ChartCommandCtx;
   [AtomName.CHART_GENERATE]: ChartGeneratorCtx;
 };
 
