@@ -11,4 +11,5 @@ export type Cell = {
   target?: string;
   value?: string;
   category?: string;
+  group?: string;
 };
