@@ -5,9 +5,14 @@ export const SUPPORTED_CHART_LIST = Object.values(ChartType);
 export const COMBINATION_BASIC_CHART_LIST = Object.values(CombinationBasicChartType);
 export const COMBINATION_CHART_LIST = Object.values(CombinationChartType);
 
-export const NEED_COLOR_FIELD_CHART_LIST = [ChartType.PieChart, ChartType.RoseChart, ChartType.LinearProgress];
+export const NEED_COLOR_FIELD_CHART_LIST = [
+  ChartType.PieChart,
+  ChartType.RoseChart,
+  ChartType.LinearProgress,
+  ChartType.CircularProgress
+];
 
-export const NEED_SIZE_FIELD_CHART_LIST = [ChartType.ScatterPlot, ChartType.BasicHeatMap, ChartType.LiquidChart];
+export const NEED_SIZE_FIELD_CHART_LIST = [ChartType.ScatterPlot, ChartType.BasicHeatMap];
 
 export const NEED_COLOR_AND_SIZE_CHART_LIST = [
   ChartType.WordCloud,
@@ -16,8 +21,7 @@ export const NEED_COLOR_AND_SIZE_CHART_LIST = [
   ChartType.VennChart,
   ChartType.Gauge,
   ChartType.SunburstChart,
-  ChartType.TreemapChart,
-  ChartType.CircularProgress
+  ChartType.TreemapChart
 ];
 
 export const CARTESIAN_CHART_LIST = [
@@ -34,10 +38,11 @@ export const CARTESIAN_CHART_LIST = [
   ChartType.BasicHeatMap
 ];
 
-export const DYNAMIC_CHART_LIST = [
+export const TIME_SERIES_CHART_LIST = [
   ChartType.DynamicBarChart,
   ChartType.DynamicScatterPlotChart,
-  ChartType.DynamicRoseChart
+  ChartType.DynamicRoseChart,
+  ChartType.SequenceChart
 ];
 
 export const DEFAULT_MAP_OPTION: BasemapOption = {
