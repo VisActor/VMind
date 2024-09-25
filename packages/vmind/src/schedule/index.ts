@@ -3,7 +3,7 @@ import { merge } from '@visactor/vutils';
 import type { BaseContext } from '../types/atom';
 import { AtomName } from '../types/atom';
 import { BaseAtom } from '../atom/base';
-import { DataQueryAtom, DataExtractionAtom, ChartGeneratorAtom } from '../atom';
+import { DataQueryAtom, DataExtractionAtom, ChartGeneratorAtom, ChartCommandAtom } from '../atom';
 import type { CombineAll, MapAtomTypes, TaskMapping } from '../types/schedule';
 import { DataCleanAtom } from '../atom/dataClean';
 import type { BaseOptions, DataCleanOptions, DataExtractionOptions } from '../atom/type';
@@ -14,6 +14,7 @@ export interface ScheduleOptions {
   [AtomName.DATA_CLEAN]?: DataCleanOptions;
   [AtomName.DATA_QUERY]?: BaseOptions;
   [AtomName.CHART_GENERATE]?: BaseOptions;
+  [AtomName.CHART_COMMAND]?: BaseOptions;
 }
 
 export class Schedule<T extends AtomName[]> {
@@ -65,6 +66,8 @@ export class Schedule<T extends AtomName[]> {
         return new DataCleanAtom(this.context, options);
       case AtomName.DATA_QUERY:
         return new DataQueryAtom(this.context, options);
+      case AtomName.CHART_COMMAND:
+        return new ChartCommandAtom(this.context, options);
       case AtomName.CHART_GENERATE:
         return new ChartGeneratorAtom(this.context, options);
       default:

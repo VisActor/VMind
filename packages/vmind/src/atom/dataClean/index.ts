@@ -1,9 +1,44 @@
 import type { DataCleanCtx } from '../../types/atom';
-import { AtomName, ROLE, type DataExtractionCtx } from '../../types/atom';
+import { AtomName, type DataExtractionCtx } from '../../types/atom';
 import type { DataCleanOptions } from '../type';
 import { BaseAtom } from '../base';
-import { merge, pick } from '@visactor/vutils';
-import { getRoleByFieldType } from '../../utils/field';
+import { merge } from '@visactor/vutils';
+import {
+  getCtxByfilterSameValueColumn,
+  getCtxByneedNumericalFields,
+  getCtxBymeasureAutoTransfer,
+  getCtxByfilterSameDataItem,
+  getCtxByFilterRowWithNonEmptyValues,
+  getCtxByRangeValueTranser
+} from './utils';
+
+/** The order of pipeline is meaningful   */
+const pipelines = [
+  {
+    key: 'rangeValueTransfer',
+    func: getCtxByRangeValueTranser
+  },
+  {
+    key: 'filterRowWithEmptyValues',
+    func: getCtxByFilterRowWithNonEmptyValues
+  },
+  {
+    key: 'filterSameValueColumn',
+    func: getCtxByfilterSameValueColumn
+  },
+  {
+    key: 'measureAutoTransfer',
+    func: getCtxBymeasureAutoTransfer
+  },
+  {
+    key: 'filterSameDataItem',
+    func: getCtxByfilterSameDataItem
+  },
+  {
+    key: 'needNumericalFields',
+    func: getCtxByneedNumericalFields
+  }
+];
 
 export class DataCleanAtom extends BaseAtom<DataCleanCtx, DataCleanOptions> {
   name = AtomName.DATA_CLEAN;
@@ -26,7 +61,11 @@ export class DataCleanAtom extends BaseAtom<DataCleanCtx, DataCleanOptions> {
   buildDefaultOptions(): DataCleanOptions {
     return {
       filterSameValueColumn: true,
-      needNumericalFields: true
+      needNumericalFields: true,
+      measureAutoTransfer: true,
+      filterSameDataItem: true,
+      filterRowWithEmptyValues: true,
+      rangeValueTransfer: 'avg'
     };
   }
 
@@ -35,41 +74,14 @@ export class DataCleanAtom extends BaseAtom<DataCleanCtx, DataCleanOptions> {
   }
 
   _runWithOutLLM(): DataCleanCtx {
-    const { filterSameValueColumn, needNumericalFields } = this.options;
-    // @attention the value of context maybe not new after some clean task
-    const { fieldInfo = [], dataTable = [] } = this.context || {};
     let newContext = { ...this.context };
-    if (filterSameValueColumn && dataTable.length > 1 && fieldInfo.length) {
-      const cleanFieldKey: string[] = [];
-      fieldInfo.forEach(info => {
-        if ((info.role ?? getRoleByFieldType(info.fieldType)) === ROLE.MEASURE) {
-          return;
-        }
-        let shouldFilter = true;
-        const prev = dataTable[0][info.fieldName];
-        for (let i = 1; i < dataTable.length; i++) {
-          if (dataTable[i][info.fieldName] !== prev) {
-            shouldFilter = false;
-            break;
-          }
-        }
-        shouldFilter && cleanFieldKey.push(info.fieldName);
-      });
-      if (cleanFieldKey.length) {
-        newContext.fieldInfo = fieldInfo.filter(info => !cleanFieldKey.includes(info.fieldName));
-        const fieldNameList = newContext.fieldInfo.map(info => info.fieldName);
-        newContext.dataTable = dataTable.map(dataItem => pick(dataItem, fieldNameList));
+    pipelines.forEach(({ key, func }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((this.options as any)[key]) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        newContext = func(newContext, (this.options as any)[key]);
       }
-    }
-    if (
-      needNumericalFields &&
-      newContext.fieldInfo.findIndex(info => (info.role ?? getRoleByFieldType(info.fieldType)) === ROLE.MEASURE) === -1
-    ) {
-      newContext = {
-        dataTable: [],
-        fieldInfo: []
-      };
-    }
+    });
     this.setNewContext(newContext);
     return this.context;
   }
