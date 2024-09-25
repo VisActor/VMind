@@ -54,9 +54,9 @@ export const getBasePrompt = (
   showThoughs: boolean = true
 ) => `You are an expert extraction algorithm.You are an expert extraction algorithm, especially sensitive to data, date, category, data comparison and similar content.Your task is to extract high-quality data tables and field information from the text for further analysis, such as visualization charts, etc.
 # Field Information Explanation
-1. ALWAYS generate field information, which represents the specific information of each column field in the data table.
-2. ALWAYS generate field description
-3. ALWAYS generate field type, chosen from 'date' | 'time' | 'string' | 'region' | 'numerical' | 'ratio' ｜ 'count';${getFieldTypeExplanation(
+1. ALWAYS generate a field information, which represents the specific information of each column field in the data table.
+2. ALWAYS generate a field description
+3. ALWAYS generate a field type, chosen from 'date' | 'time' | 'string' | 'region' | 'numerical' | 'ratio' ｜ 'count';${getFieldTypeExplanation(
   language
 )}
 ${dataTableExplanation}
@@ -64,16 +64,17 @@ ${getCommonInfomation(language)}
 # Steps
 You should think step-by-step as follow:
 
-0. using language answer: ${language}
+0. Answer language MUST: ${language}
 1. Determine whether the current task is related to data extraction.
 2. If not, return isDataExtraction is false in json mode; If yes, continue follow Steps
 3. Read the entire text and fields with numerical or ratio or count field type first.
-4. Read all text again and generate field information associated  with the fields found in Step3.The newly generated fields are all simple.
-5. Read all text and extract all corresponding data table based on the field information. The data corresponding to a field should always be concise, and a field should express only one meaning.
+4. Read all text again and generate field information associated with the fields found in Step3.The newly generated fields are all simple.
+5. Read all text and extract all corresponding data table based on the field information.The data corresponding to a field should always be concise, and a field should express only one meaning.
 6. Format date data according to the date granularity such as the following: yyyy-mm-dd | mm-dd | mm | yyyy-mm | yyyy-qq.
 7. When a date field contains data with multiple date granularities, convert the fieldType to string.
-8. Only use numbers that appear in the text, Do not perform any calculations or numerical conversion such as currency conversion calculation.
-9. Assume the data is incomplete, then reconsider and execute the task again.
+8. Extract interval/range data in the form of an array.
+9. Do not perform any calculations or numerical conversion such as currency conversion calculation.
+10. Assume the data is incomplete, then reconsider and execute the task again.
 
 Response in the following format:
 \`\`\`
@@ -95,7 +96,7 @@ ${baseExamples}
 You only need to return the JSON in your response directly to the user.Finish your tasks in one-step.
 # Constraints:
 1. Strictly define the type of return format, use JSON format to reply, do not include any extra content.
-2. The numbers in the dataset do not carry any units.
+2. Dataset numbers are unit-free, e.g., '10万' becomes '100000', '1k' becomes '1000'.
 3. Only extract value in ratio type, such as '95%' --> '95'; 'reduce 30%' --> '-30'
 4. If you do not know the value of a field, return null for the field's value.
 5. The change in values should be reflected in the positive or negative nature of the data, not in the field names.`;
@@ -120,13 +121,15 @@ dataExample?: (string | number)[] // data example of this field
 ${getCommonInfomation(language)}
 You should think step-by-step as follows:
 # Steps
-0. using language answer: ${language}
+0. Answer language MUST: ${language}
 1. Determine whether the current task is related to data extraction.
 2. If not, return isDataExtraction is false in json mode; If yes, continue follow Steps
-3. Read all text and extract all corresponding data table based on the field information.
-4. Adjust the data to ensure consistency within the same field especially time field.
-5. Only use numbers that appear in the text, Do not perform any calculations or numerical conversion, such as currency conversion calculation.
-6. Assume the data is incomplete, then reconsider and execute the task again.
+3. Read all text and extract all corresponding data table based on the user's field information.The data corresponding to a field should always be concise.
+4. Format date data according to the date granularity such as the following: yyyy-mm-dd | mm-dd | mm | yyyy-mm | yyyy-qq.
+5. When a date field contains data with multiple date granularities, convert the fieldType to string.
+6. Extract interval/range data in the form of an array.
+7. Do not perform any calculations or numerical conversion such as currency conversion calculation.
+8. Assume the data is incomplete, then reconsider and execute the task again.
 
 # Respones
 Response in the following format:
@@ -166,16 +169,23 @@ text: John Smith was very tall, ranked in the 90th percentile for his age group.
 Response:
 \`\`\`
 {"dataTable":[{"name":"John Smith","rank":90,},{"name":"Jane Doe","rank":75}]}
+
+# Examples3
+text: 现在有大约60%-70%的年轻人有入睡困难，而在两年前，入睡困难的年轻人占比才只有30%。
+\`\`\`
+{"fieldInfo:":[{"fieldName":"年份","description":"数据对应时间","fieldType":"date",dateGranularity:"year"},{"fieldName":"入睡困难占比","description":"年轻人入睡困呐占总人数的比例","fieldType":"ratio"}]}
+\`\`\`
+Response:
+\`\`\`
+{"dataTable":[{"年份":"2024","占比":[0.6,0.7],},{"年份":"2022","占比":0.3}]}
+\`\`\`
 ----------------------------------
 
 You only need to return the JSON in your response directly to the user.
 Finish your tasks in one-step.
 # Constraints:
 1. Strictly define the type of return format, use JSON format to reply, do not include any extra content.
-2. The numbers in the dataset do not carry any units.
-3. Only use numbers that appear in the text.
-4. Only extract value in ratio type, such as '95%' --> '95'; 'reduce 30%' --> '-30'
-5. If you do not know the value of a field, return null for the field's value.
-6. If it is a date field, standardize the data format according to the date granularity into forms such as the following: yyyy-mm-dd | mm-dd | mm | yyyy-mm | yyyy-qq.
-7. The change in values should be reflected in the positive or negative nature of the data, not in the field names.
-`;
+2. Dataset numbers are unit-free, e.g., '10万' becomes '100000', '1k' becomes '1000'.
+3. Only extract value in ratio type, such as '95%' --> '95'; 'reduce 30%' --> '-30'
+4. If you do not know the value of a field, return null for the field's value.
+5. The change in values should be reflected in the positive or negative nature of the data, not in the field names.`;
