@@ -16,7 +16,7 @@ export const patchChartType: Transformer<
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
   const { chartType, chartTypeList } = context;
-  const chartTypeNew: ChartType = replaceAll(chartType, '-', ' ') as ChartType;
+  const chartTypeNew: ChartType = replaceAll(replaceAll(chartType, '/', ''), '-', ' ') as ChartType;
 
   if (!chartTypeList.includes(chartTypeNew)) {
     throw Error('Unsupported Chart Type. Please Change User Input');

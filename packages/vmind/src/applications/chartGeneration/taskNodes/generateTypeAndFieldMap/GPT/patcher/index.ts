@@ -4,6 +4,7 @@ import { isArray, isNil } from '@visactor/vutils';
 import type { Transformer } from '../../../../../../base/tools/transformer';
 import {
   foldDatasetByYField,
+  getDataListByField,
   getFieldByDataType,
   getFieldByRole,
   getFieldsByDataType,
@@ -307,7 +308,7 @@ export const patchDynamicBarChart: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { chartType, cell, fieldInfo } = context;
+  const { chartType, cell, fieldInfo, dataset } = context;
   const cellNew = { ...cell };
   let chartTypeNew = chartType;
 
@@ -328,6 +329,16 @@ export const patchDynamicBarChart: Transformer<
           chartTypeNew = <ChartType>ChartType.BarChart.toUpperCase();
         }
       }
+    }
+  }
+  if (cellNew.time) {
+    const timeData = getDataListByField(dataset, cellNew.time);
+    if (timeData.length < 5 && !cellNew.color) {
+      // transfer dynamic bar chart to bar chart
+      chartTypeNew = <ChartType>ChartType.BarChart.toUpperCase();
+      cellNew.color = cellNew.x;
+      cellNew.x = cellNew.time;
+      cellNew.time = undefined;
     }
   }
 

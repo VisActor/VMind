@@ -12,14 +12,14 @@ export class ChartTypeGenerationPrompt extends Prompt<GenerateChartTypeContext> 
     const { llmOptions, chartTypeList } = context;
 
     const chartKnowledge = chartTypeList.reduce((res, chartType) => {
-      const { knowledge } = chartKnowledgeBase[chartType];
-      return [...res, ...(knowledge ?? [])];
+      const { knowledge = [] } = chartKnowledgeBase?.[chartType] || {};
+      return [...res, ...knowledge];
     }, []);
     const chartRecommendKnowledgeStr = getStrFromArray(chartKnowledge);
 
     const chartConstraints = chartTypeList.reduce((res, chartType) => {
-      const { constraints } = chartKnowledgeBase[chartType];
-      return [...res, ...(constraints ?? [])];
+      const { constraints = [] } = chartKnowledgeBase?.[chartType] || {};
+      return [...res, ...constraints];
     }, []);
     const chartRecommendConstraintsStr = getStrFromArray(chartConstraints);
 
