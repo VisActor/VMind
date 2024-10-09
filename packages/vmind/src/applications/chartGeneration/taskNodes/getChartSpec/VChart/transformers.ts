@@ -402,7 +402,7 @@ export const seriesField: Transformer<Context, GetChartSpecOutput> = (context: C
     }
     if (!isValidColor) {
       spec.seriesField = undefined;
-      spec.xField = spec.xField.filter((field: string) => field !== colorField);
+      spec.xField = spec.xField?.filter((field: string) => field !== colorField);
       cellNew.color = undefined;
     }
   }
