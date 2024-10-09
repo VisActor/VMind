@@ -3,6 +3,7 @@ import React from 'react';
 import { DataExtractionTask } from './DataExtraction/test';
 import { DataExtractionResult } from './DataExtraction/caseStudy';
 import { ChartGenerationTask } from './ChartGenerator/test';
+import { ChartGeneratorResult } from './ChartGenerator/caseStudy';
 type MenuInfo = {
   menuItem: string;
   subItems: {
@@ -47,6 +48,11 @@ export const PLAYGROUND_MENU_INFO: {
         key: '0',
         name: 'Run Case',
         component: <ChartGenerationTask />
+      },
+      {
+        key: '1',
+        name: 'Case Study',
+        component: <ChartGeneratorResult />
       }
     ]
   }

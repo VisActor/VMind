@@ -3,7 +3,6 @@
 import React from 'react';
 import VMind, { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
 import { Button, Checkbox, Divider, Message, Select } from '@arco-design/web-react';
-import { pick } from '@visactor/vutils';
 import {
   getCurrentFormattedTime,
   getDataExtractionCaseData,
@@ -14,10 +13,10 @@ import type { DataExtractionDataSetResult } from '../DataExtraction/type';
 
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
-  [Model.DOUBAO_PRO]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY },
-  [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
+  [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.DOUBAO_PRO]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY }
 };
-const datasetList = ['capcut_cn', 'capcut_en'];
+const datasetList = ['capcut_cn', 'capcut_en', 'common'];
 const dataExtractionResult = getDataExtractionCaseData();
 
 export function ChartGenerationTask() {
@@ -31,6 +30,7 @@ export function ChartGenerationTask() {
       typeResult: DataExtractionDataSetResult[],
       type: 'default' | 'fieldInfo',
       vmind: VMind,
+      schedule: Schedule<[AtomName.DATA_CLEAN, AtomName.CHART_COMMAND]>,
       baseOptions: {
         dataset: string;
         model: Model;
@@ -38,21 +38,34 @@ export function ChartGenerationTask() {
     ) => {
       const result: any[] = [];
       for (let i = 0; i < typeResult.length; i++) {
-        const { dataTable, fieldInfo } = typeResult[i].context;
-        const chartGenerationResult = await vmind.generateChart(
-          '',
-          transferFieldInfoInSimpleFieldInfo(fieldInfo),
+        const { dataTable, fieldInfo, text } = typeResult[i].context;
+        schedule.setNewTask({
           dataTable,
-          {
-            theme: 'light'
-          }
-        );
+          fieldInfo,
+          text: text
+        });
+        const newCtx = await schedule.run();
+        const chartGenerationResult = newCtx.command
+          ? await vmind.generateChart(
+              newCtx.command,
+              transferFieldInfoInSimpleFieldInfo(newCtx.fieldInfo!),
+              newCtx.dataTable,
+              {
+                theme: 'light'
+              }
+            )
+          : {
+              spec: null
+            };
         result.push({
           ...baseOptions,
           type,
           context: typeResult[i].context,
+          command: newCtx.command,
           spec: chartGenerationResult.spec
         });
+        await sleep(baseOptions.model.includes('doubao') ? 10000 : 5000);
+        console.info(`Current index:${i} Result: `, result);
       }
       return result;
     },
@@ -60,13 +73,28 @@ export function ChartGenerationTask() {
   );
   const handleRun = React.useCallback(async () => {
     (messageApi as any).info('Run Chart Generator Task!');
-    console.info('---------Run Data Extraction Task!---------');
+    console.info('---------Run Chart Generator Task!---------');
 
     const result: any = [];
     const llmKeys: Model[] = Object.keys(ModelConfigMap) as any;
     for (let llmIndex = 0; llmIndex < llmKeys.length; llmIndex++) {
       const model = llmKeys[llmIndex];
+      if (!selectedLLM[model]) {
+        return;
+      }
       const apiKey = ModelConfigMap[model]?.key;
+      const llm = new LLMManage({
+        url: ModelConfigMap[model]?.url,
+        headers: {
+          'api-key': apiKey,
+          Authorization: `Bearer ${apiKey}`
+        },
+        maxTokens: 2048,
+        model
+      });
+      const schedule = new Schedule([AtomName.DATA_CLEAN, AtomName.CHART_COMMAND], {
+        base: { llm, showThoughts: false }
+      });
       const vmind: VMind = new VMind({
         model,
         cache: false,
@@ -76,6 +104,7 @@ export function ChartGenerationTask() {
           Authorization: `Bearer ${apiKey}`
         }
       });
+      console.info('Begin Model: ', model);
       const currentModelDataExtractionRes = dataExtractionResult.find(v => v.llm === model)?.result || [];
       for (let i = 0; i < currentModelDataExtractionRes.length; i++) {
         const modelRes = currentModelDataExtractionRes[i];
@@ -83,9 +112,10 @@ export function ChartGenerationTask() {
         if (!selectedDataset.includes(dataset)) {
           continue;
         }
-        // result.push(...(await getDataSetResult(defaultResult, 'default', vmind, { dataset, model })));
-        result.push(...(await getDataSetResult(fieldInfoResult, 'fieldInfo', vmind, { dataset, model })));
-        await sleep(5000);
+        console.info('Begin Dataset: ', dataset);
+        result.push(...(await getDataSetResult(defaultResult, 'default', vmind, schedule, { dataset, model })));
+        // result.push(...(await getDataSetResult(fieldInfoResult, 'fieldInfo', vmind, { dataset, model })));
+        console.info('Current Result: ', result);
       }
     }
     (messageApi as any).info(`Finish ALL!`);
@@ -114,7 +144,7 @@ export function ChartGenerationTask() {
 
     // 释放 URL 对象
     URL.revokeObjectURL(url);
-  }, [messageApi, selectedDataset, selectedLLM]);
+  }, [getDataSetResult, messageApi, selectedDataset]);
 
   return (
     <div style={{ padding: 20 }}>

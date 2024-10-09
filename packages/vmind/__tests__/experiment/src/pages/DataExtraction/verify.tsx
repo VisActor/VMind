@@ -181,7 +181,7 @@ export const mergeResult = (result1: DataExtractionResult, result2: DataExtracti
   [...result1, ...result2].forEach(v => {
     const { llm, result } = v;
     if (!modelResult[llm]) {
-      modelResult[llm] = result;
+      modelResult[llm] = [...result];
     } else {
       modelResult[llm].push(...result);
     }

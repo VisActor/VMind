@@ -53,19 +53,25 @@ function transferFieldInfoInSimpleFieldInfo(fieldInfo: FieldInfo[]): SimpleField
 
 export function DataInput(props: IPropsType) {
   const [dataTableIndex, setdataTableIndex] = useState<number>(0);
-  const [describe, setDescribe] = useState<string>('');
-  const [dataTable, setDataTable] = useState<DataTable>(
-    chartGenerationMockData[0].result[dataTableIndex].context.dataTable as any
-  );
-  const [fieldInfo, setFieldInfo] = useState<FieldInfo[]>(
-    chartGenerationMockData[0].result[dataTableIndex].context.fieldInfo as any
-  );
+  const [query, setQuery] = useState<string>('');
   const [model, setModel] = useState<Model>(Model.GPT_4o);
+  const mockData = React.useMemo(() => {
+    const llmData = chartGenerationMockData.find(item => item.llm === model) ?? chartGenerationMockData[0];
+    return llmData.result;
+  }, [model]);
+  const [dataTable, setDataTable] = useState<DataTable>(mockData[dataTableIndex].context.dataTable as any);
+  const [fieldInfo, setFieldInfo] = useState<FieldInfo[]>(mockData[dataTableIndex].context.fieldInfo as any);
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
   const [apiKey, setApiKey] = React.useState(ModelConfigMap[model]?.key);
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    setDataTable(mockData[dataTableIndex].context.dataTable as any);
+    setFieldInfo(mockData[dataTableIndex].context.fieldInfo as any);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [model]);
 
   const llm = React.useRef<LLMManage>(
     new LLMManage({
@@ -79,8 +85,22 @@ export function DataInput(props: IPropsType) {
     })
   );
   const schedule = React.useRef<Schedule<[AtomName.DATA_CLEAN, AtomName.CHART_COMMAND]>>(
-    new Schedule([AtomName.DATA_CLEAN, AtomName.CHART_COMMAND], { base: { llm: llm.current } })
+    new Schedule([AtomName.DATA_CLEAN, AtomName.CHART_COMMAND], {
+      base: { llm: llm.current },
+      chartCommand: { useDataTable: true }
+    })
   );
+
+  React.useEffect(() => {
+    llm.current.updateOptions({
+      url,
+      headers: {
+        'api-key': apiKey,
+        Authorization: `Bearer ${apiKey}`
+      },
+      model
+    });
+  }, [url, model, apiKey]);
 
   const vmind: VMind = useMemo(() => {
     if (!url || !apiKey) {
@@ -104,24 +124,18 @@ export function DataInput(props: IPropsType) {
     const startTime = new Date().getTime();
 
     setLoading(true);
-    let finalDescribe = describe;
-    if (!finalDescribe) {
-      schedule.current.setNewTask({
-        ...chartGenerationMockData[0].result[dataTableIndex].context
-      });
-      const ctx = await schedule.current.run();
-      finalDescribe = ctx.command;
-      finalDataTable = ctx.dataTable;
-      finalFieldInfo = ctx.fieldInfo || fieldInfo;
-    }
-    const chartGenerationRes = await vmind.generateChart(
-      finalDescribe,
-      transferFieldInfoInSimpleFieldInfo(finalFieldInfo),
-      finalDataTable,
-      {
-        theme: 'light'
-      }
-    );
+    schedule.current.setNewTask({
+      ...mockData[dataTableIndex].context
+    });
+    const ctx = await schedule.current.run(query);
+    const finalDescribe = ctx.command;
+    finalDataTable = ctx.dataTable;
+    finalFieldInfo = ctx.fieldInfo || fieldInfo;
+    const chartGenerationRes = finalDescribe
+      ? await vmind.generateChart(finalDescribe, transferFieldInfoInSimpleFieldInfo(finalFieldInfo), finalDataTable, {
+          theme: 'light'
+        })
+      : { spec: null };
     const endTime = new Date().getTime();
     const { spec } = chartGenerationRes;
 
@@ -131,7 +145,7 @@ export function DataInput(props: IPropsType) {
     props.onSpecGenerate(finalSpec, finalDescribe, costTime);
 
     setLoading(false);
-  }, [model, dataTable, describe, vmind, fieldInfo, props, dataTableIndex]);
+  }, [model, dataTable, fieldInfo, mockData, dataTableIndex, query, vmind, props]);
 
   return (
     <div className="left-sider">
@@ -160,15 +174,15 @@ export function DataInput(props: IPropsType) {
           }}
           defaultValue={0}
           onChange={v => {
-            const ctx = chartGenerationMockData[0].result[v].context;
+            const ctx = mockData[v].context;
             setdataTableIndex(v);
             setFieldInfo(ctx.fieldInfo as any);
             setDataTable(ctx.dataTable as any);
           }}
         >
-          {chartGenerationMockData[0].result.map((v, index) => (
-            <Option key={index} value={index}>
-              {index}
+          {mockData.map((v, index) => (
+            <Option key={`${model}-${index}`} value={index}>
+              {index + 1}
             </Option>
           ))}
         </Select>
@@ -178,13 +192,13 @@ export function DataInput(props: IPropsType) {
           <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
             1
           </Avatar>
-          <span style={{ marginLeft: 10 }}>What would you like to visualize?</span>
+          <span style={{ marginLeft: 10 }}>Query to adjust result?</span>
         </p>
 
         <TextArea
-          placeholder={describe}
-          value={describe}
-          onChange={v => setDescribe(v)}
+          placeholder={query}
+          value={query}
+          onChange={v => setQuery(v)}
           style={{ minHeight: 60, marginTop: 12, background: 'transparent', border: '1px solid #eee' }}
         />
       </div>
