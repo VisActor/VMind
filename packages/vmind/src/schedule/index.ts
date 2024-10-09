@@ -6,7 +6,7 @@ import { BaseAtom } from '../atom/base';
 import { DataQueryAtom, DataExtractionAtom, ChartGeneratorAtom, ChartCommandAtom } from '../atom';
 import type { CombineAll, MapAtomTypes, TaskMapping } from '../types/schedule';
 import { DataCleanAtom } from '../atom/dataClean';
-import type { BaseOptions, DataCleanOptions, DataExtractionOptions } from '../atom/type';
+import type { BaseOptions, ChartCommandOptions, DataCleanOptions, DataExtractionOptions } from '../atom/type';
 
 export interface ScheduleOptions {
   [AtomName.BASE]?: BaseOptions;
@@ -14,7 +14,7 @@ export interface ScheduleOptions {
   [AtomName.DATA_CLEAN]?: DataCleanOptions;
   [AtomName.DATA_QUERY]?: BaseOptions;
   [AtomName.CHART_GENERATE]?: BaseOptions;
-  [AtomName.CHART_COMMAND]?: BaseOptions;
+  [AtomName.CHART_COMMAND]?: ChartCommandOptions;
 }
 
 export class Schedule<T extends AtomName[]> {

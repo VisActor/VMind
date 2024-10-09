@@ -1,4 +1,5 @@
 import JSON5 from 'json5';
+import { jsonrepair } from 'jsonrepair';
 import { replaceAll } from './text';
 
 export const matchJSONStr = (str: string) => {
@@ -13,9 +14,13 @@ export const parseLLMJson = (JsonStr: string, prefix?: string) => {
     try {
       return JSON5.parse(str);
     } catch (err) {
-      return {
-        error: true
-      };
+      try {
+        return JSON5.parse(jsonrepair(str));
+      } catch (err) {
+        return {
+          error: true
+        };
+      }
     }
   };
   if (prefix) {
