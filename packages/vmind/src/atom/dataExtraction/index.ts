@@ -6,6 +6,7 @@ import type { LLMMessage } from '../../types/llm';
 import { getBasePrompt, getFieldInfoPrompt } from './prompt';
 import { getLanguageOfText } from '../../utils/text';
 import { formatFieldInfo } from '../../utils/field';
+import { getCtxBymeasureAutoTransfer } from '../dataClean/utils';
 
 export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtractionOptions> {
   name = AtomName.DATA_EXTRACT;
@@ -33,14 +34,14 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtracti
 
   getLLMMessages(query?: string): LLMMessage[] {
     const { fieldInfo, text } = this.context;
-    const { showThoughts, reGenerateFieldInfo } = this.options;
+    const { showThoughts, reGenerateFieldInfo, llm } = this.options;
     const addtionContent = this.getHistoryLLMMessages(query);
     const language = getLanguageOfText(text);
     if (!fieldInfo || !fieldInfo?.length) {
       return [
         {
           role: 'system',
-          content: getBasePrompt(language, showThoughts)
+          content: getBasePrompt(llm.options.model, language, showThoughts)
         },
         {
           role: 'user',
@@ -85,5 +86,9 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
       ),
       dataTable
     } as DataExtractionCtx;
+  }
+
+  protected _runWithOutLLM(): DataExtractionCtx {
+    return getCtxBymeasureAutoTransfer(this.context, this.context.text) as DataExtractionCtx;
   }
 }

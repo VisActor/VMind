@@ -14,23 +14,26 @@ fieldType?: 'measure' | 'dimension',
 dataLength?: number, // The number of valid data contained in the current field.
 }[],
 text?: string;
+dataTable?: Record<string, string | number>[]; // Specific data
 }
 \`\`\`
 # Response
 \`\`\`
   {
-    command: string; // visual description
+    command: string | false; // visual description or false
   }
 \`\`\`
 # Steps
-You should think step-by-step as follow:
+You should carefully think and execute the following steps:
 0. Answer language MUST: ${language}
-1. Find the most important measure field based on the user's input.
+1. Find the MOST IMPORTANT measure field based on the user's input.
 2. Ignore those fields where data is clearly missing or insufficient.
-3. Generate a precise and concise visual description based on your rich experience.
-4. The description needs to include the field name.
-5. The final description does not need to use all fields, as some fields may be incomplete or unimportant.
-6. Return in JSON mode.
+4. Try to use the fewest fields to display the most important information.
+5. Generate a precise and concise visual description based on your rich experience.
+6. The description needs to include the field name.
+7. The final description does not need to use all fields, as some fields may be incomplete or unimportant.
+8. If unable to generate, return command is false.
+9. MUST return in JSON mode.
 # Examples1
 ## User Input:
 \`\`\`

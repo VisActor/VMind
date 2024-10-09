@@ -71,6 +71,19 @@ export interface FieldInfo {
   dataExample?: DataCell[];
 }
 
+export interface ClusterDataView {
+  /** cluster result */
+  dataTable: DataTable;
+  /** cluster field */
+  fieldInfo: FieldInfo[];
+  /** valid count of measure fields */
+  validColumnLength: number;
+  /** table row length */
+  validRowLength: number;
+  /** valid cell count */
+  validCellCount: number;
+}
+
 /** Context of Data Extraction Atom */
 export interface DataExtractionCtx extends BaseContext {
   /** text object of data extraction */
@@ -100,6 +113,10 @@ export interface DataCleanCtx extends BaseContext {
   fieldInfo?: FieldInfo[];
   /** Data Table values */
   dataTable?: DataTable;
+  /** clutser result */
+  clusterResult?: ClusterDataView[];
+  /** original data table */
+  originalDataTable?: DataTable;
 }
 
 /** Context of Data Query Atom */
