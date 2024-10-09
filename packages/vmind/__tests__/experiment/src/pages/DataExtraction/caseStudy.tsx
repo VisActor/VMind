@@ -11,7 +11,7 @@ import '../page.scss';
 import { IconInfoCircle } from '@arco-design/web-react/icon';
 import { getLanguageOfText } from '../../../../../src/utils/text';
 import type { DataExtractionDataSetResult } from './type';
-import { isArray } from '@visactor/vutils';
+import { isArray, isObject } from '@visactor/vutils';
 import { sum } from '@visactor/vchart/esm/util';
 import { getDataExtractionCaseData } from '../../utils';
 
@@ -23,9 +23,9 @@ const llmList = result.map((v, index) => ({
   llm: v.llm
 }));
 const datasetMap: Record<string, any> = {
+  common: dataExtractionCommonDataset,
   capcut_cn: capcutCnData,
-  capcut_en: capcutEnData,
-  common: dataExtractionCommonDataset
+  capcut_en: capcutEnData
 };
 const datasetList = result[0].result.map((v, index) => ({
   index,
@@ -81,6 +81,9 @@ export function DataExtractionResult() {
         ),
         dataIndex: info.fieldName,
         render: (col: any) => {
+          if (isObject(col)) {
+            return JSON.stringify(col);
+          }
           return isArray(col) ? col.join('-') : col;
         }
       };
@@ -244,7 +247,7 @@ export function DataExtractionResult() {
   const width = `${(0.8 / count) * 100}%`;
   return (
     <div className="case-container">
-      <div className="dataset-selector">
+      <div className="dataset-selector row-flex">
         <p>Please select dataset to anlysis:</p>
         <Select defaultValue={0} onChange={v => setDatasetIndex(v)}>
           {datasetList.map(v => (

@@ -60,18 +60,18 @@
       }
     }
   }
-}
 
-.dataset-selector {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
+  .row-flex {
+    display: flex;  
+    align-items: center;
 
-  p {
-    margin-right: 12px;
-  }
+    p {
+      flex-shrink: 0;
+    }
 
-  .arco-select {
-    width: 200px;
+    .arco-select {
+      width: 200px;
+      margin: 0 12px;
+    }
   }
 }

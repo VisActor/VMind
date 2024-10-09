@@ -49,7 +49,7 @@ export function DataExtractionTask() {
       if (!selectedLLM[model]) {
         continue;
       }
-      const sleepTime = model === Model.DOUBAO_PRO ? 8000 : 5000;
+      const sleepTime = model === Model.DOUBAO_PRO ? 8000 : 4000;
       const apiKey = ModelConfigMap[model]?.key;
       const llm = new LLMManage({
         url: ModelConfigMap[model]?.url,
@@ -110,22 +110,24 @@ export function DataExtractionTask() {
             await sleep(sleepTime);
           }
           console.info(`---------Finish dataset_${dataIndex}---------`);
+          console.info('current result:', defaultResult, fieldInfoResult);
         }
         datasetResult.push({
           dataset: dataset.name,
           defaultResult,
           fieldInfoResult
         });
+        console.info('current result:', datasetResult);
       }
 
       llmResult.push({
         llm: model,
         result: datasetResult
       });
+      console.info('current result:', llmResult);
     }
     (messageApi as any).info(`Finish ALL!`);
     console.info(`---------Finish ALL---------`);
-    console.info(llmResult);
     // 将 JSON 对象转换为字符串
     const jsonString = JSON.stringify(llmResult, null, 2);
 

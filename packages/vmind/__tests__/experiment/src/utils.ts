@@ -1,10 +1,12 @@
-import { result as capcutResult } from './results/dataExtraction/result6';
+import { result as capcutResult } from './results/dataExtraction/result7';
 import { result as caseResult } from './results/dataExtraction/commonResult';
+import { result as doubaoResult } from './results/dataExtraction/doubao1';
 import { commonAnswer } from './data/dataExtractionData';
 import { mergeResult, updateScoreInDataExtraction } from './pages/DataExtraction/verify';
 import type { FieldInfo } from '../../../src';
 import { DataType } from '../../../src/common/typings';
 import type { SimpleFieldInfo } from '../../../src/common/typings';
+import type { DataExtractionResult } from './pages/DataExtraction/type';
 
 export function getCurrentFormattedTime() {
   const now = new Date();
@@ -22,10 +24,11 @@ export function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export function getDataExtractionCaseData() {
+export function getDataExtractionCaseData(): DataExtractionResult {
+  // const result = [...doubaoResult, commonAnswer];
   const result = [...mergeResult(capcutResult as any, caseResult as any), commonAnswer];
   updateScoreInDataExtraction(result as any, commonAnswer);
-  return result;
+  return result as any;
 }
 
 function dataTypeTransfer(dataType: string): DataType {
