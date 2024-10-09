@@ -18,12 +18,13 @@ import {
   BASIC_HEAT_MAP_COLOR_THEMES
 } from './constants';
 import { getFieldByDataType } from '../../../../../common/utils/utils';
-import { array, isArray } from '@visactor/vutils';
+import { array, isArray, uniqArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
-import { DataType, ChartType } from '../../../../../common/typings';
+import { DataType, ChartType, ROLE } from '../../../../../common/typings';
 import { builtinThemeMap } from '../../../../../common/builtinTheme';
 import type { VMindDataset } from '../../../../../common/typings';
 import { COLOR_FIELD } from '@visactor/chart-advisor';
+import type { DataCell } from '../../../../../types';
 
 type Context = GetChartSpecContext & GetChartSpecOutput;
 
@@ -371,6 +372,41 @@ export const colorLine: Transformer<Context, GetChartSpecOutput> = (context: Con
     };
   }
   return { spec };
+};
+
+export const seriesField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, fieldInfo, dataset, cell } = context;
+  const cellNew: any = { ...cell };
+  const { seriesField, xField } = spec;
+  const colorField = isArray(seriesField) ? seriesField[0] : seriesField;
+  const colorFieldInfo = fieldInfo.find(v => v.fieldName === colorField);
+  if (colorField && colorFieldInfo?.role === ROLE.DIMENSION && xField) {
+    const xMap = new Map<DataCell, DataCell[]>();
+    dataset.forEach(row => {
+      const xValue = row[xField[0]];
+      if (xMap.has(xValue)) {
+        xMap.get(xValue).push(row[colorField]);
+      } else {
+        xMap.set(xValue, [row[colorField]]);
+      }
+    });
+    const xValues = Array.from(xMap.keys());
+    let isValidColor = false;
+    for (let i = 0; i < xValues.length; i++) {
+      const xValue = xValues[i];
+      const colorValues = uniqArray(xMap.get(xValue));
+      if (isArray(colorValues) && colorValues.length > 1) {
+        isValidColor = true;
+        break;
+      }
+    }
+    if (!isValidColor) {
+      spec.seriesField = undefined;
+      spec.xField = spec.xField.filter((field: string) => field !== colorField);
+      cellNew.color = undefined;
+    }
+  }
+  return { spec, cell: cellNew };
 };
 
 export const cartesianLine: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
@@ -1562,7 +1598,10 @@ export const sunburstDisplayConf: Transformer<Context, GetChartSpecOutput> = (co
 
 export const treemapData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   const { dataset, cell, spec } = context;
-  spec.data = { id: 'data', values: getTreemapData(dataset, cell.color, 0, cell.size) };
+  spec.data = {
+    id: 'data',
+    values: getTreemapData(dataset, isArray(cell.color) ? cell.color : [cell.color], 0, cell.size)
+  };
   return { spec };
 };
 

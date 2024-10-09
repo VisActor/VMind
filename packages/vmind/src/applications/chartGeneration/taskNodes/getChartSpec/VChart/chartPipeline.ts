@@ -75,7 +75,8 @@ import {
   basemap,
   mapField,
   mapDisplayConf,
-  registerChart
+  registerChart,
+  seriesField
 } from './transformers';
 
 const pipelineBar = [
@@ -83,6 +84,7 @@ const pipelineBar = [
   data,
   colorBar,
   cartesianBar,
+  seriesField,
   axis,
   legend,
   displayConfBar,
@@ -94,6 +96,7 @@ const pipelineLine = [
   data,
   colorLine,
   cartesianLine,
+  seriesField,
   axis,
   legend,
   displayConfLine,
@@ -115,6 +118,7 @@ const pipelineRankingBar = [
   colorDynamicBar,
   rankingBarField,
   rankingBarAxis,
+  seriesField,
   customMark,
   rankingBarLabel,
   theme
