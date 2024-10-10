@@ -107,3 +107,4 @@ packages/calculator/tsconfig.esm.tsbuildinfo
 packages/chart-advisor/tsconfig.esm.tsbuildinfo
 packages/chart-advisor/tsconfig.cjs.tsbuildinfo
 packages/vmind/__tests__/browser/src/pages/mockData.ts
+packages/vmind/__tests__/experiment/src/results

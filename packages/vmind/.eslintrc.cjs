@@ -53,6 +53,8 @@ module.exports = {
         allow: ['warn', 'error']
       }
     ],
+    'semi': 1,
+    'comma-dangle': 1,
     // 如果一个变量不会被重新赋值，最好使用const进行声明
     'prefer-const': 2,
     // 禁止在条件中使用常量表达式
