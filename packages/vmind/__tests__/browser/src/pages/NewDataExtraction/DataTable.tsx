@@ -40,10 +40,20 @@ interface Props {
   fieldInfo: FieldInfo[];
   finalFieldInfo: FieldInfo[];
   loading: boolean;
+  showFieldInfo?: boolean;
+  style?: any;
 }
-export const DataTableComp = ({ dataset, finalDataset, fieldInfo, finalFieldInfo, loading }: Props) => {
+export const DataTableComp = ({
+  dataset,
+  finalDataset,
+  fieldInfo,
+  finalFieldInfo,
+  loading,
+  showFieldInfo = true,
+  style = {}
+}: Props) => {
   return (
-    <div className="right-chart">
+    <div className="right-chart" style={style}>
       <Spin loading={loading}>
         <Card hoverable style={{ flex: 1, background: 'rgb(244, 244, 245)' }}>
           <div>
@@ -51,8 +61,12 @@ export const DataTableComp = ({ dataset, finalDataset, fieldInfo, finalFieldInfo
             <SimpleTable data={finalDataset} fieldInfo={finalFieldInfo} />
             <p style={{ marginTop: 30 }}>DataExtration Result:</p>
             <SimpleTable data={dataset} fieldInfo={fieldInfo} />
-            <p>fieldInfo:</p>
-            <TextArea value={JSON.stringify(fieldInfo, null, 4)} style={{ height: 300 }}></TextArea>
+            {showFieldInfo ? (
+              <>
+                <p>fieldInfo:</p>
+                <TextArea value={JSON.stringify(fieldInfo, null, 4)} style={{ height: 300 }}></TextArea>
+              </>
+            ) : null}
           </div>
         </Card>
       </Spin>

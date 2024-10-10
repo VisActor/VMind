@@ -49,7 +49,7 @@ export function transferFieldInfoInSimpleFieldInfo(fieldInfo: FieldInfo[]): Simp
   return fieldInfo.map(item => ({
     fieldName: item.fieldName,
     description: item.description,
-    type: dataTypeTransfer(item.fieldType),
+    type: dataTypeTransfer(item.type),
     role: item.role
   }));
 }

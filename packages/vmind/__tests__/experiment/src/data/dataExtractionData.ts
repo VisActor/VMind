@@ -46,7 +46,7 @@ const economyData = {
         {
           fieldName: '日期',
           description: '具体日期',
-          fieldType: 'date',
+          type: 'date',
           dateGranularity: 'day',
           role: 'dimension',
           location: 'dimension'
@@ -54,28 +54,28 @@ const economyData = {
         {
           fieldName: '汇率类型',
           description: '汇率的类型',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '汇率',
           description: '人民币对美元的汇率',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '较前一交易日升值',
           description: '较前一交易日升值的基点数',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '单日涨幅',
           description: '单日涨幅百分比',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -125,28 +125,28 @@ const economyData = {
         {
           fieldName: '市场',
           description: '市场名称',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '指数',
           description: '指数名称',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '个股',
           description: '指数名称',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '涨幅',
           description: '指数涨幅',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -177,14 +177,14 @@ const economyData = {
         {
           fieldName: '收益率优势',
           description: '黄金收益率相对于其他资产的优势',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '比较资产',
           description: '与黄金收益率比较的资产',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         }
@@ -247,14 +247,14 @@ const economyData = {
         {
           fieldName: '银行名称',
           description: '银行的名称',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '资产规模',
           description: '银行的资产规模',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         }
@@ -341,28 +341,28 @@ const economyData = {
         {
           fieldName: '银行',
           description: '银行名称',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '增速',
           description: '银行的同比增速',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '初始金额',
           description: '初始金额',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '最终金额',
           description: '最终金额',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         }
@@ -397,21 +397,21 @@ const economyData = {
         {
           fieldName: '银行',
           description: '银行名称',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '不良率',
           description: '银行的不良贷款率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '同比变化',
           description: '不良率的同比变化',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -447,35 +447,35 @@ const economyData = {
         {
           fieldName: '时间范围',
           description: '数据对应的时间范围',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '信托类型',
           description: '信托产品的类型',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '成立个数',
           description: '信托产品的成立个数',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '成立规模',
           description: '信托产品的成立规模',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '规模占比',
           description: '信托产品的规模占比',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -502,28 +502,28 @@ const economyData = {
         {
           fieldName: '月份',
           description: '具体月份',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: 'LPR期限',
           description: '贷款市场报价利率的期限',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '基点变化',
           description: 'LPR基点变化',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '调整后LPR',
           description: '调整后的LPR值',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         }
@@ -558,21 +558,21 @@ const economyData = {
         {
           fieldName: '时间',
           description: '数据对应的时间',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '国债收益率',
           description: '10年期国债收益率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '备注',
           description: '相关备注信息',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         }
@@ -611,28 +611,28 @@ const economyData = {
         {
           fieldName: '存款期限',
           description: '存款的期限',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '利率调整前',
           description: '调整前的利率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '利率调整后',
           description: '调整后的利率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '基点变化',
           description: '利率变化的基点数',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         }
@@ -698,42 +698,42 @@ const technologyData = {
         {
           fieldName: '型号',
           description: '手机型号',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '起售价',
           description: '手机起售价',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '屏幕尺寸',
           description: '手机屏幕尺寸',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '芯片',
           description: '手机芯片配置',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '电池容量',
           description: '手机电池容量的大小',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '有线快充',
           description: '手机快充瓦数',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '自拍镜头像素',
           description: '手机自拍镜头像素',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '后置摄像头数量',
           description: '后置摄像头数量',
-          fieldType: 'numerical'
+          type: 'numerical'
         }
       ]
     },
@@ -812,43 +812,43 @@ const technologyData = {
         {
           fieldName: '年份',
           description: '年份',
-          fieldType: 'date',
+          type: 'date',
           dateGranularity: 'year'
         },
         {
           fieldName: '论文数量',
           description: '收录的科研论文数量',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '检索工具',
           description: '科研论文检索工具',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '世界排名',
           description: '科研论文数量排名',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '发明专利授权数',
           description: '发明专利授权数',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '发明专利授权占比',
           description: '发明专利授权占比',
-          fieldType: 'ratio'
+          type: 'ratio'
         },
         {
           fieldName: '境内发明专利有效量',
           description: '境内发明专利有效量',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '每万人口高价值发明专利拥有量',
           description: '每万人口高价值发明专利拥有量',
-          fieldType: 'numerical'
+          type: 'numerical'
         }
       ]
     },
@@ -857,45 +857,62 @@ const technologyData = {
       text: '受数据源更新的影响，记者主要以8月数据为基础，分析国产C级车市场的现状。8月，国产C级车的累计销量为92398辆，环比上个月上涨29.01%。其中，燃油车和新能源车的销量之和分别为31112辆、61286辆，在C级车总销量中的占比分别为33.67%、66.33%。',
       dataTable: [
         {
-          累计销量: 92398,
-          环比增长率: 29.01,
-          类别: '燃油车',
+          月份: '8月',
+          车类型: '燃油车',
           销量: 31112,
-          占比: 33.67
+          环比增长率: null,
+          在总销量中占比: 33.67
         },
         {
-          累计销量: 92398,
-          环比增长率: 29.01,
-          类别: '新能源车',
+          月份: '8月',
+          车类型: '新能源车',
           销量: 61286,
-          占比: 66.33
+          环比增长率: null,
+          在总销量中占比: 66.33
+        },
+        {
+          月份: '8月',
+          车类型: '国产C级车',
+          销量: 92398,
+          环比增长率: 29.01,
+          在总销量中占比: null
         }
       ],
       fieldInfo: [
         {
-          fieldName: '累计销量',
-          description: '国产C级车的累计销量',
-          fieldType: 'numerical'
+          fieldName: '月份',
+          description: '数据对应的月份',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: '环比增长率',
-          description: '环比上个月的增长率',
-          fieldType: 'ratio'
-        },
-        {
-          fieldName: '类别',
-          description: '车型类别',
-          fieldType: 'string'
+          fieldName: '车类型',
+          description: '车辆类型，包括燃油车和新能源车',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
           fieldName: '销量',
-          description: '具体车型的销量',
-          fieldType: 'numerical'
+          description: '车辆的销售数量',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
         },
         {
-          fieldName: '占比',
-          description: '具体车型在总销量中的占比',
-          fieldType: 'ratio'
+          fieldName: '环比增长率',
+          description: '与上个月相比的销售增长率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '在总销量中占比',
+          description: '某类型车在C级车总销量中的比例',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
         }
       ]
     },
@@ -971,28 +988,28 @@ const technologyData = {
         {
           fieldName: '品牌',
           description: '汽车品牌',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '车型',
           description: '具体车型',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '月份',
           description: '具体月份',
-          fieldType: 'date',
+          type: 'date',
           dateGranularity: 'month'
         },
         {
           fieldName: '销量',
           description: '单月销量',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '累计销量',
           description: '今年前8个月的累计销量',
-          fieldType: 'numerical'
+          type: 'numerical'
         }
       ]
     },
@@ -1065,19 +1082,19 @@ const technologyData = {
         {
           fieldName: '车型',
           description: '汽车的具体型号',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '销量',
           description: '汽车的销量',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '梯队',
           description: '汽车所在的梯队',
-          fieldType: 'string'
+          type: 'string'
         }
       ]
     },
@@ -1111,27 +1128,27 @@ const technologyData = {
         {
           fieldName: '商品',
           description: '购买的商品名称',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '售价',
           description: '商品原售价',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '门店优惠',
           description: '门店优惠金额',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '政府补贴',
           description: '政府补贴金额',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '最终价格',
           description: '最终到手价格',
-          fieldType: 'numerical'
+          type: 'numerical'
         }
       ]
     },
@@ -1154,42 +1171,42 @@ const technologyData = {
         {
           fieldName: '产品',
           description: '产品名称',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '点频速率',
           description: '点频速率',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '最远探测距离',
           description: '最远探测距离',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '最小角分辨率',
           description: '最小角分辨率',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '视野覆盖角度',
           description: '视野覆盖的角度',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '零部件数量',
           description: '零部件数量具体减少的百分比',
-          fieldType: 'ratio'
+          type: 'ratio'
         },
         {
           fieldName: '生产工序时间',
           description: '生产工序时间具体缩短的百分比',
-          fieldType: 'ratio'
+          type: 'ratio'
         },
         {
           fieldName: '核心工序自动化率',
           description: '核心工序自动化率百分比',
-          fieldType: 'ratio'
+          type: 'ratio'
         }
       ]
     },
@@ -1208,22 +1225,22 @@ const technologyData = {
         {
           fieldName: '音乐用户规模',
           description: '音乐用户规模',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: '音乐用户占比',
           description: '音乐用护用在网民整体中的总占比',
-          fieldType: 'ratio'
+          type: 'ratio'
         },
         {
           fieldName: '男性占比',
           description: '男性在音乐用户规模中的总占比',
-          fieldType: 'ratio'
+          type: 'ratio'
         },
         {
           fieldName: '女性占比',
           description: '女性在音乐用户规模中的总占比',
-          fieldType: 'ratio'
+          type: 'ratio'
         }
       ]
     },
@@ -1242,22 +1259,22 @@ const technologyData = {
         {
           fieldName: 'organization',
           description: 'The name of organization',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: 'web pages number',
           description: 'the number of web pages',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: 'books number',
           description: 'the number of books',
-          fieldType: 'numerical'
+          type: 'numerical'
         },
         {
           fieldName: 'videos of films and television programmes number',
           description: 'the number of videos of films and television programmes',
-          fieldType: 'numerical'
+          type: 'numerical'
         }
       ]
     },
@@ -1290,18 +1307,18 @@ const technologyData = {
         {
           fieldName: 'year',
           description: 'The year when the product was launched',
-          fieldType: 'date',
+          type: 'date',
           dateGranularity: 'year'
         },
         {
           fieldName: 'product',
           description: 'the name of product',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: 'price',
           description: 'The price of the product',
-          fieldType: 'numerical'
+          type: 'numerical'
         }
       ]
     }
@@ -1316,272 +1333,270 @@ const realEstateData = {
       text: `2022年全国GDP约为121万亿元，同比增加3%，全国房地产开发投资达13万亿元，同比下降10%，占全国生产总值的10.7%，可见房地产行业处于国民经济的支柱地位。但部分房地产企业前期急速扩张，盲目追求高周转，加之市场下行，购房者对地产行业信心不足，现金无法及时回流，导致房地产企业财务状况不断恶化，很多房地产企业触碰“三道红线”，进而加剧了融资困难。这无疑威胁着企业的生存和发展。因此，研究房地产企业财务风险及管理是非常必要的。`,
       fieldInfo: [
         {
-          fieldName: '全国GDP',
-          fieldType: 'numerical',
-          description: '全国GDP值'
+          fieldName: '年份',
+          description: '数据对应的年份',
+          type: 'date',
+          dateGranularity: 'year',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: '房地产开发总投资',
-          fieldType: 'numerical',
-          description: '全国房地产开发投资值'
+          fieldName: '全国GDP',
+          description: '全国国内生产总值',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
         },
         {
           fieldName: '全国GDP同比',
-          fieldType: 'ratio',
-          description: '全国GDP同比值'
+          description: '全国GDP同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
         },
         {
-          fieldName: '房地产占比',
-          fieldType: 'ratio',
-          description: '房地产占全国gdp总值百分比'
+          fieldName: '全国房地产开发投资',
+          description: '全国房地产开发投资总额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
         },
         {
-          fieldName: '房地产同比',
-          fieldType: 'ratio',
-          description: '房地产同比变化'
+          fieldName: '全国房地产开发投资同比',
+          description: '全国房地产开发投资同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '房地产占GDP比重',
+          description: '房地产开发投资占全国GDP的比重',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
         }
       ],
       dataTable: [
         {
+          年份: '2022',
+          全国GDP同比: 0.03,
           全国GDP: 121000000000000,
-          房地产开发总投资: 13000000000000,
-          全国GDP同比: 3,
-          房地产占比: 10.7,
-          房地产同比: -10
+          全国房地产开发投资: 13000000000000,
+          全国房地产开发投资同比: -0.01,
+          房地产占GDP比重: 0.0107
         }
       ]
     },
     {
       isEnglish: false,
       text: `
-2023年上半年，房地产政策环境整体延续了去年末以来的宽松态势，如优化限购、优化限价、优化限贷、优化限售、购房补贴等，政策的导向主要是支持企业、稳定市场，以促进房地产行业的回稳。然而，尽管政策环境有所改善，但房地产开发投资的情况仍然严峻。国家统计局数据显示，2023年1—10月，全国房地产开发投资95922亿元，同比下降9.3%，其中，住宅投资72799亿元，下降8.8%。2023年1—10月，商品房销售面积92579万平方米，同比下降7.8%，其中住宅销售面积下降6.8%。商品房销售额97161亿元，下降了4.9%，其中住宅销售额下降3.7%。2023年1—10月，房地产开发企业到位资金总额107345亿元，同比下降13.8%，其中，国内贷款13117亿元，下降11.0%，利用外资37亿元，下降40.3%，自筹资金总额34781亿元，下降21.4%，定金及预收款36596亿元，下降10.4%，个人按揭贷款18506亿元，下降7.6%。2023年10月，房地产开发景气指数（简称“国房景气指数”）为93.40。此外，房地产开发企业的到位资金也出现了同比下降的情况。见图1。这表明，尽管政策环境在改善，但由于市场环境的变化和企业内部因素，房地产企业仍面临一定的经营压力。;
-`,
+    2023年上半年，房地产政策环境整体延续了去年末以来的宽松态势，如优化限购、优化限价、优化限贷、优化限售、购房补贴等，政策的导向主要是支持企业、稳定市场，以促进房地产行业的回稳。然而，尽管政策环境有所改善，但房地产开发投资的情况仍然严峻。国家统计局数据显示，2023年1—10月，全国房地产开发投资95922亿元，同比下降9.3%，其中，住宅投资72799亿元，下降8.8%。2023年1—10月，商品房销售面积92579万平方米，同比下降7.8%，其中住宅销售面积下降6.8%。商品房销售额97161亿元，下降了4.9%，其中住宅销售额下降3.7%。2023年1—10月，房地产开发企业到位资金总额107345亿元，同比下降13.8%，其中，国内贷款13117亿元，下降11.0%，利用外资37亿元，下降40.3%，自筹资金总额34781亿元，下降21.4%，定金及预收款36596亿元，下降10.4%，个人按揭贷款18506亿元，下降7.6%。2023年10月，房地产开发景气指数（简称“国房景气指数”）为93.40。此外，房地产开发企业的到位资金也出现了同比下降的情况。见图1。这表明，尽管政策环境在改善，但由于市场环境的变化和企业内部因素，房地产企业仍面临一定的经营压力。;
+    `,
       fieldInfo: [
         {
-          fieldName: 'name',
-          fieldType: 'string',
-          description: 'name'
+          fieldName: '年份',
+          description: '数据对应的年份',
+          type: 'date',
+          dateGranularity: 'year',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'value',
-          fieldType: 'numerical',
-          description: 'value'
+          fieldName: '月份范围',
+          description: '数据对应的月份范围',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'unit',
-          fieldType: 'string',
-          description: 'unit'
+          fieldName: '房地产开发投资',
+          description: '全国房地产开发投资总额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
         },
         {
-          fieldName: 'isPercent',
-          fieldType: 'boolean',
-          description: 'isPercent'
+          fieldName: '同比变化',
+          description: '同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
         },
         {
-          fieldName: 'year',
-          fieldType: 'string',
-          description: 'year'
+          fieldName: '住宅投资',
+          description: '全国住宅投资总额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
         },
         {
-          fieldName: 'monthRange',
-          fieldType: 'number[]',
-          description: 'monthRange'
+          fieldName: '住宅投资同比变化',
+          description: '住宅投资同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '商品房销售面积',
+          description: '全国商品房销售面积',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '商品房销售面积同比变化',
+          description: '商品房销售面积同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '住宅销售面积同比变化',
+          description: '住宅销售面积同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '商品房销售额',
+          description: '全国商品房销售总额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '商品房销售额同比变化',
+          description: '商品房销售额同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '住宅销售额同比变化',
+          description: '住宅销售额同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '房地产开发企业到位资金总额',
+          description: '全国房地产开发企业到位资金总额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '房地产开发企业到位资金同比变化',
+          description: '房地产开发企业到位资金同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '国内贷款',
+          description: '全国房地产开发企业国内贷款总额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '国内贷款同比变化',
+          description: '国内贷款同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '利用外资',
+          description: '全国房地产开发企业利用外资总额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '利用外资同比变化',
+          description: '利用外资同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '自筹资金总额',
+          description: '全国房地产开发企业自筹资金总额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '自筹资金同比变化',
+          description: '自筹资金同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '定金及预收款',
+          description: '全国房地产开发企业定金及预收款总额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '定金及预收款同比变化',
+          description: '定金及预收款同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '个人按揭贷款',
+          description: '全国房地产开发企业个人按揭贷款总额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '个人按揭贷款同比变化',
+          description: '个人按揭贷款同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '国房景气指数',
+          description: '房地产开发景气指数',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
         }
       ],
       dataTable: [
         {
-          name: '全国房地产开发投资',
-          value: 95922,
-          unit: '亿元',
-          isPercent: false,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '全国房地产开发投资同步下降率',
-          value: 9.3,
-          unit: '%',
-          isPercent: true,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '住宅投资',
-          value: 72799,
-          unit: '亿元',
-          isPercent: false,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '住宅投资同比下降',
-          value: 8.8,
-          unit: '%',
-          isPercent: true,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '商品房销售总面积',
-          value: 92579,
-          unit: '万平方米',
-          isPercent: false,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '商品房销售总面积同比下降',
-          value: 7.8,
-          unit: '%',
-          isPercent: true,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '住宅销售面积同比下降',
-          value: 6.8,
-          unit: '%',
-          isPercent: true,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-
-        {
-          name: '商品房销售额',
-          value: 97161,
-          unit: '亿元',
-          isPercent: false,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '同比下降',
-          value: 4.9,
-          unit: '%',
-          isPercent: true,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-
-        {
-          name: '住宅销售额同比下降',
-          value: 3.7,
-          unit: '%',
-          isPercent: true,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '房地产开发企业到位资金总额',
-          value: 107345,
-          unit: '亿元',
-          isPercent: false,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '房地产开发企业到位资金总额',
-          value: 107345,
-          unit: '亿元',
-          isPercent: false,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '房地产开发企业到位资金总额同比下降',
-          value: 13.8,
-          unit: '%',
-          isPercent: true,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '国内贷款',
-          value: 13117,
-          unit: '亿元',
-          isPercent: false,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '国内贷款同比下降',
-          value: 11,
-          unit: '%',
-          isPercent: true,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '利用外资',
-          value: 37,
-          unit: '亿元',
-          isPercent: false,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '利用外资同比下降',
-          value: 40.3,
-          unit: '%',
-          isPercent: true,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '自筹资金总额',
-          value: 34781,
-          unit: '亿元',
-          isPercent: false,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '自筹资金总额同比下降',
-          value: 21.4,
-          unit: '%',
-          isPercent: true,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '定金及预收款',
-          value: 36596,
-          unit: '亿元',
-          isPercent: false,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '定金及预收款同比下降',
-          value: 10.4,
-          unit: '%',
-          isPercent: true,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '个人按揭贷款',
-          value: 18506,
-          unit: '亿元',
-          isPercent: false,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '个人按揭贷款同比下降',
-          value: 7.6,
-          unit: '%',
-          isPercent: true,
-          year: '2023',
-          monthRange: [1, 10]
-        },
-        {
-          name: '房地产开发景气指数',
-          value: 93.4,
-          unit: '',
-          isPercent: false,
-          year: '2023',
-          monthRange: [1, 10]
+          年份: '2023',
+          月份范围: '1-10月',
+          房地产开发投资: 959220000000,
+          同比变化: -9.3,
+          住宅投资: 727990000000,
+          住宅投资同比变化: -8.8,
+          商品房销售面积: 925790000,
+          商品房销售面积同比变化: -7.8,
+          住宅销售面积同比变化: -6.8,
+          商品房销售额: 971610000000,
+          商品房销售额同比变化: -4.9,
+          住宅销售额同比变化: -3.7,
+          房地产开发企业到位资金总额: 1073450000000,
+          房地产开发企业到位资金同比变化: -13.8,
+          国内贷款: 131170000000,
+          国内贷款同比变化: -11,
+          利用外资: 370000000,
+          利用外资同比变化: -40.3,
+          自筹资金总额: 347810000000,
+          自筹资金同比变化: -21.4,
+          定金及预收款: 365960000000,
+          定金及预收款同比变化: -10.4,
+          个人按揭贷款: 185060000000,
+          个人按揭贷款同比变化: -7.6,
+          国房景气指数: 93.4
         }
       ]
     },
@@ -1592,173 +1607,124 @@ const realEstateData = {
       `,
       fieldInfo: [
         {
-          fieldName: 'name',
-          fieldType: 'string',
-          description: 'name'
+          fieldName: '时间范围',
+          description: '数据对应的时间范围',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'value',
-          fieldType: 'numerical',
-          description: 'value'
+          fieldName: '类型',
+          description: '房屋类型',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'unit',
-          fieldType: 'string',
-          description: 'unit'
+          fieldName: '指标',
+          description: '房屋相关指标',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'monthRange',
-          fieldType: 'numerical',
-          description: 'monthRange'
+          fieldName: '面积',
+          description: '房屋面积',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
         },
         {
-          fieldName: 'year',
-          fieldType: 'numerical',
-          description: 'year'
-        },
-        {
-          fieldName: 'isPercent',
-          fieldType: 'boolean',
-          description: 'isPercent'
+          fieldName: '同比变化',
+          description: '同比变化百分比',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
         }
       ],
       dataTable: [
         {
-          name: '房地产开发企业房屋施工面积',
-          value: 709420,
-          unit: '万平方米',
-          isPercent: false,
-          monthRange: [1, 8]
+          时间范围: '1—8月份',
+          类型: '房屋',
+          指标: '施工面积',
+          面积: 7094200000,
+          同比变化: -12
         },
         {
-          name: '房地产开发企业房屋施工面积同比下降',
-          value: 12,
-          unit: '%',
-          isPercent: true,
-          monthRange: [1, 8]
+          时间范围: '1—8月份',
+          类型: '住宅',
+          指标: '施工面积',
+          面积: 4960520000,
+          同比变化: -12.6
         },
         {
-          name: '住宅施工面积',
-          value: 496052,
-          unit: '万平方米',
-          isPercent: false,
-          monthRange: [1, 8]
+          时间范围: '1—8月份',
+          类型: '房屋',
+          指标: '新开工面积',
+          面积: 494650000,
+          同比变化: -22.5
         },
         {
-          name: '住宅施工面积同比下降',
-          value: 12.6,
-          unit: '%',
-          isPercent: true,
-          monthRange: [1, 8]
+          时间范围: '1—8月份',
+          类型: '住宅',
+          指标: '新开工面积',
+          面积: 359090000,
+          同比变化: -23
         },
         {
-          name: '房屋新开工面积',
-          value: 49465,
-          unit: '万平方米',
-          isPercent: false,
-          monthRange: [1, 8]
+          时间范围: '1—8月份',
+          类型: '房屋',
+          指标: '竣工面积',
+          面积: 333940000,
+          同比变化: -23.6
         },
         {
-          name: '房屋新开工面积同比下降',
-          value: 22.5,
-          unit: '%',
-          isPercent: true,
-          monthRange: [1, 8]
-        },
-        {
-          name: '住宅新开工面积',
-          value: 35909,
-          unit: '万平方米',
-          isPercent: false,
-          monthRange: [1, 8]
-        },
-        {
-          name: '住宅新开工面积同比下降',
-          value: 23,
-          unit: '%',
-          isPercent: true,
-          monthRange: [1, 8]
-        },
-        {
-          name: '房屋竣工面积',
-          value: 33394,
-          unit: '万平方米',
-          isPercent: false,
-          monthRange: [1, 8]
-        },
-        {
-          name: '房屋竣工面积同比下降',
-          value: 23.6,
-          unit: '%',
-          isPercent: true,
-          monthRange: [1, 8]
-        },
-        {
-          name: '住宅竣工面积',
-          value: 24393,
-          unit: '万平方米',
-          isPercent: false,
-          monthRange: [1, 8]
-        },
-        {
-          name: '住宅竣工面积同比下降',
-          value: 23.2,
-          unit: '%',
-          isPercent: true,
-          monthRange: [1, 8]
+          时间范围: '1—8月份',
+          类型: '住宅',
+          指标: '竣工面积',
+          面积: 243930000,
+          同比变化: -23.2
         }
       ]
     },
     {
       isEnglish: false,
       text: `
-      从2016年至2020年，由于房价上涨以及一二线城市的成交占比上升，房地产年成交金额从14万亿元升至17万亿元，但年销售面积基本稳定在16亿平方米左右，几乎没有增长`,
+        从2016年至2020年，由于房价上涨以及一二线城市的成交占比上升，房地产年成交金额从14万亿元升至17万亿元，但年销售面积基本稳定在16亿平方米左右，几乎没有增长`,
       fieldInfo: [
         {
-          fieldName: 'name',
-          fieldType: 'string',
-          description: 'name'
+          fieldName: '年份',
+          description: '数据对应的年份',
+          type: 'date',
+          dateGranularity: 'year',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'value',
-          fieldType: 'numerical',
-          description: 'value'
+          fieldName: '年成交金额',
+          description: '房地产年成交金额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
         },
         {
-          fieldName: 'unit',
-          fieldType: 'string',
-          description: 'unit'
-        },
-        {
-          fieldName: 'year',
-          fieldType: 'string',
-          description: 'year'
+          fieldName: '年销售面积',
+          description: '房地产年销售面积',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
         }
       ],
       dataTable: [
         {
-          name: '房地产年成交金额',
-          year: '2016',
-          value: 14,
-          unit: '万亿元'
+          年份: '2016',
+          年成交金额: 140000000000000,
+          年销售面积: 1600000000
         },
         {
-          name: '房地产年成交金额',
-          year: '2020',
-          value: 17,
-          unit: '万亿元'
-        },
-        {
-          name: '年销售面积',
-          year: '2016',
-          value: 16,
-          unit: '亿元'
-        },
-        {
-          name: '年销售面积',
-          year: '2020',
-          value: 16,
-          unit: '亿元'
+          年份: '2020',
+          年成交金额: 170000000000000,
+          年销售面积: 1600000000
         }
       ]
     },
@@ -1767,303 +1733,313 @@ const realEstateData = {
       text: `2004-2019年全年，全国商品房销售均价（元/平方米）约2778，3167，3366，3863，3800，4681，5032，5357，5790，6237，6324，6793，7476，7892，8736，9310。`,
       fieldInfo: [
         {
-          fieldName: 'name',
-          fieldType: 'string',
-          description: 'name'
+          fieldName: '年份',
+          description: '数据对应的年份',
+          type: 'date',
+          dateGranularity: 'year',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'value',
-          fieldType: 'numerical',
-          description: 'value'
-        },
-        {
-          fieldName: 'unit',
-          fieldType: 'string',
-          description: 'unit'
-        },
-        {
-          fieldName: 'year',
-          fieldType: 'string',
-          description: 'year'
+          fieldName: '全国商品房销售均价',
+          description: '全国商品房销售的平均价格',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
         }
       ],
       dataTable: [
         {
-          year: '2004',
-          value: 2778,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2004',
+          全国商品房销售均价: 2778
         },
         {
-          year: '2005',
-          value: 3167,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2005',
+          全国商品房销售均价: 3167
         },
         {
-          year: '2006',
-          value: 3366,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2006',
+          全国商品房销售均价: 3366
         },
         {
-          year: '2007',
-          value: 3863,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2007',
+          全国商品房销售均价: 3863
         },
         {
-          year: '2008',
-          value: 3800,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2008',
+          全国商品房销售均价: 3800
         },
         {
-          year: '2009',
-          value: 4681,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2009',
+          全国商品房销售均价: 4681
         },
         {
-          year: '2010',
-          value: 5032,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2010',
+          全国商品房销售均价: 5032
         },
         {
-          year: '2011',
-          value: 5357,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2011',
+          全国商品房销售均价: 5357
         },
         {
-          year: '2012',
-          value: 5790,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2012',
+          全国商品房销售均价: 5790
         },
         {
-          year: '2013',
-          value: 6237,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2013',
+          全国商品房销售均价: 6237
         },
         {
-          year: '2014',
-          value: 6324,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2014',
+          全国商品房销售均价: 6324
         },
         {
-          year: '2015',
-          value: 6793,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2015',
+          全国商品房销售均价: 6793
         },
         {
-          year: '2016',
-          value: 7476,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2016',
+          全国商品房销售均价: 7476
         },
         {
-          year: '2017',
-          value: 7892,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2017',
+          全国商品房销售均价: 7892
         },
         {
-          year: '2018',
-          value: 8736,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2018',
+          全国商品房销售均价: 8736
         },
         {
-          year: '2019',
-          value: 9310,
-          unit: '元/平方米',
-          name: '全国商品房销售均价'
+          年份: '2019',
+          全国商品房销售均价: 9310
         }
       ]
     },
     {
       isEnglish: false,
       text: `
-  2013年10月，王健林（万达集团董事长）860亿元荣登中国大陆首富。 [11]（福布斯中国大陆富豪榜）
-  2015年03月，王健林242亿美元，中国大陆首富。（福布斯）
-  2017年10月，许家印（恒大地产集团董事局主席）以2900亿元成为中国首富。（2017胡润百富榜）
-  2018年福布斯中国大陆富豪榜，前400富豪中房地产行业占大多数。其中，前三位富豪是：许家印（No.3，2125亿元）、王健林（No.4，1566亿）、杨惠妍（No.6，1180亿） [12]
-  2018年前五名的中国女富豪中，有四位来自房地产行业。其中，碧桂园的联席主席杨惠妍以1269亿元，再度蝉联中国最富有女性榜榜首。龙湖集团董事长吴亚军以607.5亿元财富位居第二名，富华国际集团主席陈丽华以391.5亿元财富位居第三名。 [13]
-  `,
+    2013年10月，王健林（万达集团董事长）860亿元荣登中国大陆首富。 [11]（福布斯中国大陆富豪榜）
+    2015年03月，王健林242亿美元，中国大陆首富。（福布斯）
+    2017年10月，许家印（恒大地产集团董事局主席）以2900亿元成为中国首富。（2017胡润百富榜）
+    2018年福布斯中国大陆富豪榜，前400富豪中房地产行业占大多数。其中，前三位富豪是：许家印（No.3，2125亿元）、王健林（No.4，1566亿）、杨惠妍（No.6，1180亿） [12]
+    2018年前五名的中国女富豪中，有四位来自房地产行业。其中，碧桂园的联席主席杨惠妍以1269亿元，再度蝉联中国最富有女性榜榜首。龙湖集团董事长吴亚军以607.5亿元财富位居第二名，富华国际集团主席陈丽华以391.5亿元财富位居第三名。 [13]
+    `,
       fieldInfo: [
         {
-          fieldName: 'name',
-          description: '名称',
-          fieldType: 'string'
+          fieldName: '年份',
+          description: '具体年份',
+          type: 'date',
+          dateGranularity: 'year',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'value',
-          description: '值',
-          fieldType: 'numerical'
+          fieldName: '月份',
+          description: '具体月份',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'unit',
-          description: '单位',
-          fieldType: 'string'
+          fieldName: '姓名',
+          description: '富豪姓名',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'gender',
-          description: '性别',
-          fieldType: 'string'
+          fieldName: '公司',
+          description: '公司名称',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'year',
-          description: '年份',
-          fieldType: 'string'
+          fieldName: '财富',
+          description: '财富值',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
         },
         {
-          fieldName: 'month',
-          description: '月份',
-          fieldType: 'string'
+          fieldName: '排名',
+          description: '排名',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '榜单',
+          description: '榜单名称',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         }
       ],
       dataTable: [
         {
-          year: '2013',
-          month: '10月',
-          name: '王健林',
-          value: 860,
-          unit: '亿元'
+          年份: 2013,
+          月份: '10月',
+          姓名: '王健林',
+          公司: '万达集团',
+          财富: 86000000000,
+          排名: '首富',
+          榜单: '福布斯中国大陆富豪榜'
         },
         {
-          year: '2015',
-          month: '3月',
-          name: '王健林',
-          value: 242,
-          unit: '亿元'
+          年份: 2015,
+          月份: '03月',
+          姓名: '王健林',
+          公司: '万达集团',
+          财富: 24200000000,
+          排名: '首富',
+          榜单: '福布斯'
         },
         {
-          year: '2017',
-          month: '10月',
-          name: '许家印',
-          value: 2900,
-          unit: '亿元'
+          年份: 2017,
+          月份: '10月',
+          姓名: '许家印',
+          公司: '恒大地产集团',
+          财富: 290000000000,
+          排名: '首富',
+          榜单: '2017胡润百富榜'
         },
         {
-          year: '2018',
-          name: '许家印',
-          value: 2125,
-          unit: '亿元'
+          年份: 2018,
+          月份: null,
+          姓名: '许家印',
+          公司: '恒大地产集团',
+          财富: 212500000000,
+          排名: 'No.3',
+          榜单: '福布斯中国大陆富豪榜'
         },
         {
-          year: '2018',
-          name: '王健林',
-          value: 1566,
-          unit: '亿元'
+          年份: 2018,
+          月份: null,
+          姓名: '王健林',
+          公司: '万达集团',
+          财富: 156600000000,
+          排名: 'No.4',
+          榜单: '福布斯中国大陆富豪榜'
         },
         {
-          year: '2018',
-          name: '杨惠妍',
-          value: 1180,
-          unit: '亿元'
+          年份: 2018,
+          月份: null,
+          姓名: '杨惠妍',
+          公司: '碧桂园',
+          财富: 118000000000,
+          排名: 'No.6',
+          榜单: '福布斯中国大陆富豪榜'
         },
         {
-          year: '2018',
-          name: '杨惠妍',
-          value: 1269,
-          unit: '亿元',
-          gender: '女'
+          年份: 2018,
+          月份: null,
+          姓名: '杨惠妍',
+          公司: '碧桂园',
+          财富: 126900000000,
+          排名: '最富有女性榜榜首',
+          榜单: '中国女富豪榜'
         },
         {
-          year: '2018',
-          name: '吴亚军',
-          value: 607.5,
-          unit: '亿元',
-          gender: '女'
+          年份: 2018,
+          月份: null,
+          姓名: '吴亚军',
+          公司: '龙湖集团',
+          财富: 60750000000,
+          排名: '第二名',
+          榜单: '中国女富豪榜'
         },
         {
-          year: '2018',
-          name: '陈丽华',
-          value: 391.5,
-          unit: '亿元',
-          gender: '女'
+          年份: 2018,
+          月份: null,
+          姓名: '陈丽华',
+          公司: '富华国际集团',
+          财富: 39150000000,
+          排名: '第三名',
+          榜单: '中国女富豪榜'
         }
       ]
     },
     {
       isEnglish: false,
       text: `1-8月，北京市房屋施工面积10870.3万平方米，同比下降9.9%，其中住宅施工面积5434.9万平方米，下降9.1%。北京市商品房销售面积658.1万平方米，同比下降5.1%，其中住宅销售面积466.6万平方米，下降8.7%。
-  `,
+    `,
       fieldInfo: [
         {
-          fieldName: 'name',
-          fieldType: 'string',
-          description: 'name'
+          fieldName: '时间',
+          description: '数据对应的时间范围',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'value',
-          fieldType: 'numerical',
-          description: 'value'
+          fieldName: '地区',
+          description: '数据对应的地区',
+          type: 'region',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'monthRange',
-          fieldType: 'string',
-          description: 'monthRange'
+          fieldName: '房屋类型',
+          description: '房屋的类型',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'unit',
-          fieldType: 'string',
-          description: 'unit'
+          fieldName: '指标',
+          description: '数据指标',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '面积',
+          description: '房屋面积',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '同比变化',
+          description: '同比变化率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
         }
       ],
       dataTable: [
         {
-          name: '北京市房屋施工面积',
-          monthRange: '1-8月',
-          value: 10870.3,
-          unit: '万平方米'
+          时间: '1-8月',
+          地区: '北京市',
+          房屋类型: '房屋',
+          指标: '施工面积',
+          面积: 108703000,
+          同比变化: -9.9
         },
         {
-          name: '北京市房屋施工面积同比下降',
-          monthRange: '1-8月',
-          value: 9.9,
-          unit: '%'
+          时间: '1-8月',
+          地区: '北京市',
+          房屋类型: '住宅',
+          指标: '施工面积',
+          面积: 54349000,
+          同比变化: -9.1
         },
         {
-          name: '住宅施工面积',
-          monthRange: '1-8月',
-          value: 5434.9,
-          unit: '万平方米'
+          时间: '1-8月',
+          地区: '北京市',
+          房屋类型: '商品房',
+          指标: '销售面积',
+          面积: 6581000,
+          同比变化: -5.1
         },
         {
-          name: '住宅施工面积同比下降',
-          monthRange: '1-8月',
-          value: 9.1,
-          unit: '%'
-        },
-        {
-          name: '北京市商品房销售面积',
-          monthRange: '1-8月',
-          value: 658.1,
-          unit: '万平方米'
-        },
-        {
-          name: '北京市商品房销售面积同比下降',
-          monthRange: '1-8月',
-          value: 5.1,
-          unit: '%'
-        },
-        {
-          name: '住宅销售面积',
-          monthRange: '1-8月',
-          value: 466.6,
-          unit: '万平方米'
-        },
-        {
-          name: '住宅销售面积同比下降',
-          monthRange: '1-8月',
-          value: 8.7,
-          unit: '%'
+          时间: '1-8月',
+          地区: '北京市',
+          房屋类型: '住宅',
+          指标: '销售面积',
+          面积: 4666000,
+          同比变化: -8.7
         }
       ]
     },
@@ -2072,24 +2048,28 @@ const realEstateData = {
       text: `近年来建筑工程系在人才培养、教学改革、科学研究、学科建设、国际交流、社会服务、系企合作等各个层面取得了国内外公认的丰硕成果。每年平均招收各类硕士研究生220多名、博士研究生50多名`,
       fieldInfo: [
         {
-          fieldName: '人员类型',
-          description: '学生的类型',
-          fieldType: 'string'
+          fieldName: '类别',
+          description: '研究生类别',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: '人数',
-          description: '学生的人数',
-          fieldType: 'numerical'
+          fieldName: '平均招收人数',
+          description: '每年平均招收人数',
+          type: 'count',
+          role: 'measure',
+          location: 'measure'
         }
       ],
       dataTable: [
         {
-          人员类型: '研究生',
-          人数: 220
+          类别: '硕士研究生',
+          平均招收人数: 220
         },
         {
-          人员类型: '博士生',
-          人数: 50
+          类别: '博士研究生',
+          平均招收人数: 50
         }
       ]
     },
@@ -2098,165 +2078,533 @@ const realEstateData = {
       text: `此次调查显示，如果将东京港区元麻布的分户出售住宅的每坪(3.3平方米)单价定为100(按日元计算)，大阪为68.2，与全球15个主要城市中最高的香港(268.2)相比，均不到一半。在其他主要城市中，从高到低依次为伦敦的207.5，台北和上海165.6，纽约144.6，新加坡140.2。`,
       fieldInfo: [
         {
-          fieldName: '位置',
-          fieldType: 'string',
-          description: '位置'
+          fieldName: '城市',
+          description: '城市名称',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: '出售住宅的每坪单价',
-          fieldType: 'numerical',
-          description: '出售住宅的每坪单价'
+          fieldName: '每坪单价',
+          description: '每坪(3.3平方米)的单价，单位为日元',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
         }
       ],
       dataTable: [
         {
-          位置: '东京港区元麻布',
-          出售住宅的每坪单价: 100
+          城市: '东京港区元麻布',
+          每坪单价: 100
         },
         {
-          位置: '大阪',
-          出售住宅的每坪单价: 68.2
+          城市: '大阪',
+          每坪单价: 68.2
         },
         {
-          位置: '香港',
-          出售住宅的每坪单价: 268.2
+          城市: '香港',
+          每坪单价: 268.2
         },
         {
-          位置: '伦敦',
-          出售住宅的每坪单价: 207.5
+          城市: '伦敦',
+          每坪单价: 207.5
         },
         {
-          位置: '台北',
-          出售住宅的每坪单价: 165.6
+          城市: '台北',
+          每坪单价: 165.6
         },
         {
-          位置: '上海',
-          出售住宅的每坪单价: 144.6
+          城市: '上海',
+          每坪单价: 165.6
         },
         {
-          位置: '纽约',
-          出售住宅的每坪单价: 140.2
+          城市: '纽约',
+          每坪单价: 144.6
         },
         {
-          位置: '新加坡',
-          出售住宅的每坪单价: 140.2
+          城市: '新加坡',
+          每坪单价: 140.2
         }
       ]
     },
     {
-      isEnglish: true,
-      text: `Alabama
-Typical single-family home price: $220,659 (63% of the U.S. typical home price)
-Median household income as a percentage of home value: 27%
-Alabama is relatively affordable. The median household income is 80% of the national level, but home prices rank ninth lowest in the country.
-Alaska
-Typical single-family home price: $369,997 (106% of the U.S. typical home price)
-Median household income as a percentage of home value: 24%
-Alaska's home prices are 6% higher than the national average, but the median income is 18% higher, offsetting each other.
-Arizona
-Typical single-family home price: $430,577 (123% of the U.S. typical home price)
-Median household income as a percentage of home value: 17%
-Arizona's home prices are expensive, 23% higher than the U.S. average. The median household income is on par with the national average, making home buying less affordable.
-Arkansas
-Typical single-family home price: $198,511 (57% of the U.S. typical home price)
-Median household income as a percentage of home value: 28%
-Arkansas has the third-lowest home prices in the U.S. Despite the median household income being 26% lower than the national average, the income-to-home value ratio is the highest (best).
-California
-Typical single-family home price: $760,526 (217% of the U.S. typical home price)
-Median household income as a percentage of home value: 12%
-California has the second-highest home prices in the U.S., and the income-to-home value ratio is the second-lowest, despite residents' incomes being 22% higher than the U.S. median.
-Colorado
-Typical single-family home price: $548,012 (157% of the U.S. typical home price)
-Median household income as a percentage of home value: 16%
-Colorado's home prices rank sixth in the nation, while the income-to-home value ratio ranks sixth lowest, despite the median household income being 19% higher than the national average.
-Connecticut
-Typical single-family home price: $405,050 (116% of the U.S. typical home price)
-Median household income as a percentage of home value: 22%
-Connecticut's home prices are 16% higher than the U.S. typical home price, but the state has a relatively high income-to-home value ratio, making homes somewhat affordable.
-Delaware
-Typical single-family home price: $370,761 (106% of the U.S. typical home price)
-Median household income as a percentage of home value: 22%
-Delaware's home prices are 6% higher than the U.S. typical home price, but the median household income is 10% higher, offsetting each other.
-District of Columbia
-Typical single-family home price: $722,619 (206% of the U.S. typical home price)
-Median household income as a percentage of home value: 14%
-Washington D.C. has the third-highest home prices in the nation, and the income-to-home value ratio is the third-lowest, despite the median income being 35% higher than the national median.
-Florida
-Typical single-family home price: $407,218 (116% of the U.S. typical home price)
-Median household income as a percentage of home value: 17%
-Florida's home prices are 16% higher than the U.S. typical home price, but the median household income is 7% lower, leading to a low income-to-home value ratio and affordability concerns.
-Georgia
-Typical single-family home price: $320,091 (91% of the U.S. typical home price)
-Median household income as a percentage of home value: 23%
-Georgia's home prices are not expensive, but the median household income is below the national median, making affordability average.
-Hawaii
-Typical single-family home price: $971,167 (277% of the U.S. typical home price)
-Median household income as a percentage of home value: 10%
-Hawaii has the most expensive and least affordable home prices in the nation, despite the median income being 24% higher than the national median, the income-to-home value ratio is very low.
-Idaho
-Typical single-family home price: $444,451 (127% of the U.S. typical home price)
-Median household income as a percentage of home value: 16%
-Idaho's home prices are 27% higher than the U.S. average, leading to affordability issues as the median household income is 3% lower than the national average.`,
+      isEnglish: false,
+      text: `
+  Alabama:
+  典型独立住宅房价:$220,659(相当于美国典型房价的63%)
+  家庭收入中位数占房屋价值的百分比:27%
+  Alabama可负担性相对较好.家庭收入中位数相当于全国水平的80%，但房价在全国排名倒数第9。
+  
+  Alaska:
+  典型独立住宅房价:$369,997(相当于美国典型房价的106%)
+  家庭收入中位数占房屋价值的百分比:24%
+  阿拉斯加的房价比全国平均房价高6%，但收入中位数比全国中位数高18%，两者相互抵消了。
+  
+  Arizona:
+  典型独立住宅房价:$430,577(相当于美国典型房价的123%)
+  家庭收入中位数占房屋价值的百分比:17%
+  亚利桑那州住宅价格昂贵，比美国平均价格高出23%。该州家庭收入中位数与全国平均水平一致，在亚利桑那州买房不是最实惠的选择。
+  
+  Arkansas:
+  典型独立住宅房价:$198,511(相当于美国典型房价的57%)
+  家庭收入中位数占房屋价值的百分比:28%
+  
+  阿肯色州的房屋价格是美国倒数第三低的。尽管阿肯色州的家庭收入中位数比全国平均水平低26%，但该州的收入与房屋价值比却是最高(最好)的。
+  
+  California:
+  典型独立住宅房价:$760,526(相当于美国典型房价的217%)
+  家庭收入中位数占房屋价值的百分比:12%
+  加州的房屋价格是美国第二高的，而收入与房屋价值之比是美国第二低的，尽管居民收入比美国中位数高出22%。
+  
+  Colorado:
+  典型独立住宅房价:$548,012(相当于美国典型房价的157%)
+  家庭收入中位数占房屋价值的百分比:16%
+  科罗拉多州的房价在全国排名第六，而该州的收入与房屋价值比在全国排名倒数第六，尽管那里的家庭中位数比全国平均水平高出19%。
+  
+  Connecticut:
+  典型独立住宅房价:$405,050(相当于美国典型房价的116%)
+  家庭收入中位数占房屋价值的百分比:22%
+  康涅狄格州的房价比美国典型房价高16%，但该州拥有相对较高的收入与房屋价值比，房价在一定程度上还是可以承受的。
+  
+  Delaware:
+  典型独立住宅房价:$370,761(相当于美国典型房价的106%)
+  家庭收入中位数占房屋价值的百分比:22%
+  特拉华州的房价比美国典型房价高6%，但该州家庭收入中位数比美国高10%，两者相互抵消了。
+  
+  DistrictofColumbia:
+  典型独立住宅房价:$722,619(相当于美国典型房价的206%)
+  家庭收入中位数占房屋价值的百分比:14%
+  华盛顿特区的房价是全国第三高的，收入与房屋价值之比是全国第三低的，尽管那里的收入中位数比全国中位数高35%。
+  
+  Florida:
+  典型独立住宅房价:$407,218(相当于美国典型房价的116%)
+  家庭收入中位数占房屋价值的百分比:17%
+  佛罗里达州房屋价格比美国典型房价高16%，但该州家庭收入中位数比美国家庭收入中位数低7%，导致收入与房屋价值比较低，房价的可负担性令人担忧。
+  
+  Georgia:
+  典型独立住宅房价:$320,091(相当于美国典型房价的91%)
+  家庭收入中位数占房屋价值的百分比:23%
+  乔治亚州的房价并不贵，但由于该州的收入低于中位数，房价的可负担性一般。
+  
+  Hawaii:
+  典型独立住宅房价:$971,167(相当于美国典型房价的277%)
+  家庭收入中位数占房屋价值的百分比:10%
+  夏威夷的房价是全国最贵的，也是最难以负担的，尽管夏威夷的收入中位数比全国中位数高24%，但家庭收入与房屋价值之比很低。
+  
+  Idaho:
+  典型独立住宅房价:$444,451(相当于美国典型房价的127%)
+  家庭收入中位数占房屋价值的百分比:16%
+  爱达荷州的房子比美国平均房价贵27%。这就带来了负担能力问题，因为爱达荷州的家庭收入中位数比全国平均水平低3%。
+  
+  Illinois:
+  典型独立住宅房价:$255,659(相当于美国典型房价的73%)
+  家庭收入中位数占房屋价值的百分比:30%
+  伊利诺斯州的房价远低于美国的典型房价，可负担性非常好，因为那里的家庭收入中位数还略高于美国的中位数。
+  
+  Indiana:
+  典型独立住宅房价:$233,554(相当于美国典型房价的67%)
+  家庭收入中位数占房屋价值的百分比:29%
+  印第安纳州的房价比美国典型价格低33%，而家庭收入中位数仅比美国中位数低11%，因此印第安纳州的房价是可以承受的。
+  
+  Iowa:
+  典型独立住宅房价:$216,265(相当于美国典型房价的62%)
+  家庭收入中位数占房屋价值的百分比:32%
+  爱荷华州的家庭收入与房屋价值之比排名第二，可负担性好。因为房价很低，仅为美国典型房屋价格的62%，而家庭收入中位数仅比全国中位数低7%。
+  
+  Kansas:
+  典型独立住宅房价:$219,578(相当于美国典型房价的62%)
+  家庭收入中位数占房屋价值的百分比:31%
+  堪萨斯州的房价是美国典型房价的63%，是全美房价可负担性最好的地区之一，收入与房屋价值之比很高。
+  
+  Kentucky:
+  典型独立住宅房价:$197,627(相当于美国典型房价的56%)
+  家庭收入中位数占房屋价值的百分比:30%
+  肯塔基州的住宅价格比美国的典型住宅便宜42%。尽管肯塔基州的家庭收入中位数比美国家庭收入中位数低21%，但该州的收入与房屋价值比很高。
+  
+  Louisiana:
+  典型独立住宅房价:$201,639(相当于美国典型房价的58%)
+  家庭收入中位数占房屋价值的百分比:28%
+  路易斯安那州的典型房屋价值为201,639美元，仅为美国典型房屋价值的58%。这使得收入与房屋价值之比很高，尽管路易斯安那州的家庭收入中位数比全国平均水平低26%。
+  
+  Maine:
+  典型独立住宅房价:$385,874(相当于美国典型房价的110%)
+  家庭收入中位数占房屋价值的百分比:18%
+  缅因州的住宅价格高于美国典型住宅价格的10%。但家庭收入中位数比全国平均水平低7%，因此该州的收入与房屋价值之比低于平均水平。
+  
+  Maryland:
+  典型独立住宅房价:$418,269(相当于美国典型房价的119%)
+  家庭收入中位数占房屋价值的百分比:23%
+  马里兰州的住宅价格为418,269美元，比美国典型房价高出19%。但这在一定程度上被马里兰州家庭收入中位数比全国中位数高27%所抵消。
+  
+  Massachusetts:
+  典型独立住宅房价:$607,770(相当于美国典型房价的119%)
+  家庭收入中位数占房屋价值的百分比:15%
+  马萨诸塞州的房屋价格排名全美第四，但收入与房屋价值之比却处于最低之列，尽管该州的收入中位数比全国中位数高出26%。
+  
+  Michigan:
+  典型独立住宅房价:$$235,236(相当于美国典型房价的67%)
+  家庭收入中位数占房屋价值的百分比:28%
+  由于房屋价格较低，收入中位数接近全国中位数，密歇根州的房价处于可承担的范围内。
+  
+  Minnesota:
+  典型独立住宅房价:$$336,351(相当于美国典型房价的96%)
+  家庭收入中位数占房屋价值的百分比:24%
+  明尼苏达州的房价为336,351美元，仅比全国典型房价低4%。这里的家庭收入中位数比全国中位数高10%，房价相对便宜。
+  
+  Mississippi:
+  典型独立住宅房价:$176,725(相当于美国典型房价的50%)
+  家庭收入中位数占房屋价值的百分比:30%
+  密西西比州的房价为176,725美元，是美国典型房价的50%，是全国第二低房价。虽然收入中位数是美国中位数的71%，但收入与房屋价值之比在全国排名第七。
+  
+  Missouri:
+  典型独立住宅房价:$240,129(相当于美国典型房价的69%)
+  家庭收入中位数占房屋价值的百分比:27%
+  密苏里州的典型房屋价格是美国平均房价的69%，因此收入与房屋价值比高于平均水平，尽管那里的家庭收入中位数比全国平均水平低13%。
+  
+  Montana:
+  典型独立住宅房价:$454,673(相当于美国典型房价的130%)
+  家庭收入中位数占房屋价值的百分比:15%
+  蒙大拿州是收入与房屋价值比最低的州之一，因为那里的房屋比美国平均房屋价格贵30%，而收入中位数比美国平均收入低10%。
+  
+  Nebraska:
+  典型独立住宅房价:$254,636(相当于美国典型房价的73%)
+  家庭收入中位数占房屋价值的百分比:27%
+  内布拉斯加州的典型房屋价格为254,636美元，是美国典型房屋价值的73%。因此，该州的收入与房屋价值比很高。
+  
+  Nevada:
+  典型独立住宅房价:$432,527(相当于美国典型房价的124%)
+  家庭收入中位数占房屋价值的百分比:17%
+  内华达州独立住宅的平均价格为432,527美元，比美国典型房价高出24%。家庭收入中位数略低于全国中位数，住房负担能力令人担忧。
+  
+  NewHampshire:
+  典型独立住宅房价:$470,958(相当于美国典型房价的135%)
+  家庭收入中位数占房屋价值的百分比:19%
+  房价很高，收入与房屋价值之比低于平均水平。
+  
+  NewJersey:
+  典型独立住宅房价:$507,923(相当于美国典型房价的145%)
+  家庭收入中位数占房屋价值的百分比:19%
+  作为人口最密集的州，新泽西州典型的独户住宅价格为507,923美元。家庭收入中位数高于美国的中位数，但收入与房屋价值之比使其可负担性不高。
+  
+  NewMexico:
+  典型独立住宅房价:$293,540(相当于美国典型房价的84%)
+  家庭收入中位数占房屋价值的百分比:20%
+  虽然新墨西哥州的典型房屋价格低于美国的典型房价，但该州的家庭收入中位数也远低于全国的中位数，导致收入与房屋价值比较低，房价可负担性令人担忧。
+  
+  NewYork:
+  典型独立住宅房价:$425,011(相当于美国典型房价的121%)
+  家庭收入中位数占房屋价值的百分比:19%
+  纽约的典型房价为425,011美元，是美国典型房价的121%。纽约的家庭收入中位数仅比全国中位数高6%，收入与房屋价值之比很低。
+  
+  NorthCarolina:
+  典型独立住宅房价:$321,908(相当于美国典型房价的92%)
+  家庭收入中位数占房屋价值的百分比:21%
+  北卡罗莱纳州的房价略低于全国的典型房价，家庭收入中位数也略低。因此，收入与房屋价值之比表现一般。
+  
+  NorthDakota:
+  典型独立住宅房价:$261,931(相当于美国典型房价的75%)
+  家庭收入中位数占房屋价值的百分比:27%
+  达科他州收入与房屋价值比较好，因为房价远低于全国典型房价，家庭收入中位数接近全国中位数。
+  
+  Ohio:
+  典型独立住宅房价:$220,031(相当于美国典型房价的63%)
+  家庭收入中位数占房屋价值的百分比:30%
+  俄亥俄州的典型房屋价格在全国排名倒数第九。家庭收入中位数是美国中位数的88%，从而导致收入与房屋价值比较号，排名正数第九。
+  
+  Oklahoma:
+  典型独立住宅房价:$199,559(相当于美国典型房价的57%)
+  家庭收入中位数占房屋价值的百分比:30%
+  俄克拉何马州房屋价格便宜，只有美国典型房价的57%。收入中位数很低，只有全国中位数的80%，但这足以使俄克拉何马州成为最负担得起的住房市场之一。
+  
+  Oregon:
+  典型独立住宅房价:$501,513(相当于美国典型房价的143%)
+  家庭收入中位数占房屋价值的百分比:15%
+  俄勒冈州的收入与房屋价值比是全美第五低的，因为该州房屋价格在全国排名第九，而家庭收入中位数仅比全国中位数高1%。
+  
+  Pennsylvania:
+  典型独立住宅房价:$257,912(相当于美国典型房价的74%)
+  家庭收入中位数占房屋价值的百分比:28%
+  宾夕法尼亚州可负担性好，房价是全国典型价格的74%，家庭收入中位数几乎与全国中位数持平。
+  
+  RhodeIsland:
+  典型独立住宅房价:$444,7162(相当于美国典型房价的127%)
+  家庭收入中位数占房屋价值的百分比:18%
+  罗德岛房价444,716美元，家庭收入中位数仅比全国中位数高9%，可负担性充满挑战。
+  
+  SouthCarolina:
+  典型独立住宅房价:$287,956(相当于美国典型房价的82%)
+  家庭收入中位数占房屋价值的百分比:22%
+  南卡罗来纳州的房价和家庭收入中位数都略低于全国典型的房价和家庭收入中位数，导致收入与房屋价值比也处于平均水平。
+  
+  SouthDakota:
+  典型独立住宅房价:$297,804(相当于美国典型房价的85%)
+  家庭收入中位数占房屋价值的百分比:23%
+  南达科他州的房屋价格比美国典型房屋价值低15%，而该州的收入中位数仅比全国中位数低7%。因此，房价相对来说是可以承受的。
+  
+  Tennessee:
+  典型独立住宅房价:$310,132(相当于美国典型房价的89%)
+  家庭收入中位数占房屋价值的百分比:21%
+  田纳西州住宅价格为310,132美元，是美国典型住宅价格的89%。中等家庭收入是全国平均水平的87%，收入与房屋价值之比略低于平均水平。
+  
+  Texas:
+  典型独立住宅房价:$303,414(相当于美国典型房价的87%)
+  家庭收入中位数占房屋价值的百分比:24%
+  德克萨斯州的房价比全国典型房价低13%。收入中位数是全国收入中位数的96%，其收入/房屋价值略高于平均水平。
+  
+  Utah:
+  典型独立住宅房价:$518,938(相当于美国典型房价的148%)
+  家庭收入中位数占房屋价值的百分比:17%
+  犹他州的房屋价格在全国排名第七，是美国典型房屋价值的150%。该州的家庭收入中位数仅比全国中位数高19%，因此住房相对难以负担。
+  
+  Vermont:
+  典型独立住宅房价:$397,388(相当于美国典型房价的114%)
+  家庭收入中位数占房屋价值的百分比:19%
+  佛蒙特州的房价比美国典型房价高出10%，家庭收入中位数略高于全国中位数，收入与房屋价值比处于平均水平。
+  
+  Virginia:
+  典型独立住宅房价:$377,498(相当于美国典型房价的108%)
+  家庭收入中位数占房屋价值的百分比:23%
+  房屋价格和家庭收入中位数都高出8%，因此收入与房屋价值之比是平均水平。
+  
+  Washington:
+  典型独立住宅房价:$585,767(相当于美国典型房价的167%)
+  家庭收入中位数占房屋价值的百分比:16%
+  华盛顿州的房价是全美第五高的，尽管该州的收入中位数高于全国中位数，但其收入与房屋价值之比却位于全美最低之列。
+  
+  WestVirginia:
+  典型独立住宅房价:$158,172(相当于美国典型房价的45%)
+  家庭收入中位数占房屋价值的百分比:34%
+  西弗吉尼亚州是美国房价最低的州，仅为美国典型房价的45%。因此西弗吉尼亚州的收入与房价之比是全国最高的。
+  
+  Wisconsin:
+  典型独立住宅房价:$296,580(相当于美国典型房价的85%)
+  家庭收入中位数占房屋价值的百分比:24%
+  威斯康星州的典型房屋价格为296,580美元，收入中位数接近全国中位数，该州的收入与房屋价值比高于平均水平。
+  
+  Wyoming:
+  典型独立住宅房价:$339,601(相当于美国典型房价的97%)
+  家庭收入中位数占房屋价值的百分比:21%
+  怀俄明州的典型房屋价格几乎与全国典型房价持平，收入中位数略低于全国中位数，导致收入与房屋价值之比略低于平均水平。`,
       fieldInfo: [
         {
-          fieldName: 'name',
-          fieldType: 'string',
-          description: 'name of state'
+          fieldName: '地区',
+          type: 'string',
+          description: '洲名称',
+          role: 'dimension',
+          location: 'dimension'
         },
         {
-          fieldName: 'price',
-          fieldType: 'string',
-          description: 'price of house'
+          fieldName: '住宅房价',
+          type: 'numerical',
+          description: '典型独立住宅房价',
+          role: 'measure',
+          location: 'measure'
         }
       ],
       dataTable: [
         {
-          name: 'Alabama',
-          price: '369,997'
+          地区: 'Alabama',
+          住宅房价: 220657
         },
         {
-          name: 'Arizona',
-          price: '430,577'
+          地区: 'Alaska',
+          住宅房价: 369997
         },
         {
-          name: 'Arkansas',
-          price: '198,511'
+          地区: 'Arizona',
+          住宅房价: 430577
         },
         {
-          name: 'California',
-          price: '760,526'
+          地区: 'Arkansas',
+          住宅房价: 198511
         },
         {
-          name: 'Colorado',
-          price: '548,012'
+          地区: 'California',
+          住宅房价: 760526
         },
         {
-          name: 'Connecticut',
-          price: '405,050'
+          地区: 'Colorado',
+          住宅房价: 548012
         },
         {
-          name: 'Delaware',
-          price: '370,761'
+          地区: 'Connecticut',
+          住宅房价: 405050
         },
         {
-          name: 'District of Columbia',
-          price: '722,619'
+          地区: 'Delaware',
+          住宅房价: 370761
         },
         {
-          name: 'Florida',
-          price: '407,218'
+          地区: 'DistrictofColumbia',
+          住宅房价: 722619
         },
         {
-          name: 'Georgia',
-          price: '320,091'
+          地区: 'Florida',
+          住宅房价: 407218
         },
         {
-          name: 'Hawaii',
-          price: '971,167'
+          地区: 'Georgia',
+          住宅房价: 320091
         },
         {
-          name: 'Idaho',
-          price: '444,451'
+          地区: 'Hawaii',
+          住宅房价: 971167
+        },
+        {
+          地区: 'Idaho',
+          住宅房价: 444451
+        },
+        {
+          地区: 'Illinois',
+          住宅房价: 255659
+        },
+        {
+          地区: 'Indiana',
+          住宅房价: 233554
+        },
+        {
+          地区: 'Iowa',
+          住宅房价: 216265
+        },
+        {
+          地区: 'Kansas',
+          住宅房价: 219578
+        },
+        {
+          地区: 'Kentucky',
+          住宅房价: 197627
+        },
+        {
+          地区: 'Louisiana',
+          住宅房价: 201639
+        },
+        {
+          地区: 'Maine',
+          住宅房价: 385874
+        },
+        {
+          地区: 'Maryland',
+          住宅房价: 418269
+        },
+        {
+          地区: 'Massachusetts',
+          住宅房价: 607770
+        },
+        {
+          地区: 'Michigan',
+          住宅房价: 235236
+        },
+        {
+          地区: 'Minnesota',
+          住宅房价: 336351
+        },
+        {
+          地区: 'Mississippi',
+          住宅房价: 176725
+        },
+        {
+          地区: 'Missouri',
+          住宅房价: 240129
+        },
+        {
+          地区: 'Montana',
+          住宅房价: 454673
+        },
+        {
+          地区: 'Nebraska',
+          住宅房价: 254636
+        },
+        {
+          地区: 'Nevada',
+          住宅房价: 432527
+        },
+        {
+          地区: 'NewHampshire',
+          住宅房价: 470958
+        },
+        {
+          地区: 'NewJersey',
+          住宅房价: 507923
+        },
+        {
+          地区: 'NewMexico',
+          住宅房价: 293540
+        },
+        {
+          地区: 'NewYork',
+          住宅房价: 425011
+        },
+        {
+          地区: 'NorthCarolina',
+          住宅房价: 321908
+        },
+        {
+          地区: 'NorthDakota',
+          住宅房价: 261931
+        },
+        {
+          地区: 'Ohio',
+          住宅房价: 220031
+        },
+        {
+          地区: 'Oklahoma',
+          住宅房价: 199559
+        },
+        {
+          地区: 'Oregon',
+          住宅房价: 501513
+        },
+        {
+          地区: 'Pennsylvania',
+          住宅房价: 257912
+        },
+        {
+          地区: 'RhodeIsland',
+          住宅房价: 444716
+        },
+        {
+          地区: 'SouthCarolina',
+          住宅房价: 287956
+        },
+        {
+          地区: 'SouthDakota',
+          住宅房价: 297804
+        },
+        {
+          地区: 'Tennessee',
+          住宅房价: 310132
+        },
+        {
+          地区: 'Texas',
+          住宅房价: 303414
+        },
+        {
+          地区: 'Utah',
+          住宅房价: 518938
+        },
+        {
+          地区: 'Vermont',
+          住宅房价: 397388
+        },
+        {
+          地区: 'Virginia',
+          住宅房价: 377498
+        },
+        {
+          地区: 'Washington',
+          住宅房价: 585767
+        },
+        {
+          地区: 'WestVirginia',
+          住宅房价: 158172
+        },
+        {
+          地区: 'Wisconsin',
+          住宅房价: 296580
+        },
+        {
+          地区: 'Wyoming',
+          住宅房价: 339601
         }
       ]
     }
@@ -2272,17 +2620,17 @@ const enviromentData = {
       fieldInfo: [
         {
           fieldName: '类别',
-          fieldType: 'string',
+          type: 'string',
           description: 'type'
         },
         {
           fieldName: '比例',
-          fieldType: 'ratio',
+          type: 'ratio',
           description: 'percent'
         },
         {
           fieldName: '同比变化',
-          fieldType: 'number',
+          type: 'numerical',
           description: 'change'
         }
       ],
@@ -2320,17 +2668,17 @@ const enviromentData = {
       fieldInfo: [
         {
           fieldName: '海区',
-          fieldType: 'region',
+          type: 'region',
           description: 'Sea Area'
         },
         {
           fieldName: '超标率',
-          fieldType: 'number',
+          type: 'numerical',
           description: 'Exceeding standard rate'
         },
         {
           fieldName: '浓度',
-          fieldType: 'number',
+          type: 'numerical',
           description: 'Chemical Concentration'
         }
       ],
@@ -2363,17 +2711,17 @@ const enviromentData = {
       fieldInfo: [
         {
           fieldName: '区域',
-          fieldType: 'region',
+          type: 'region',
           description: 'area'
         },
         {
           fieldName: '沉淀物质量',
-          fieldType: 'string',
+          type: 'string',
           description: '沉淀物'
         },
         {
           fieldName: '量好点位比例',
-          fieldType: 'ratio',
+          type: 'ratio',
           description: 'percent'
         }
       ],
@@ -2416,22 +2764,22 @@ const enviromentData = {
       fieldInfo: [
         {
           fieldName: '污染物',
-          fieldType: 'string',
+          type: 'string',
           description: 'Pollutants'
         },
         {
           fieldName: '监测站',
-          fieldType: 'string',
+          type: 'string',
           description: 'place'
         },
         {
           fieldName: '含量',
-          fieldType: 'number',
+          type: 'numerical',
           description: 'content'
         },
         {
           fieldName: '极值类型',
-          fieldType: 'string',
+          type: 'string',
           description: 'type'
         }
       ],
@@ -2492,22 +2840,22 @@ const enviromentData = {
       fieldInfo: [
         {
           fieldName: '污染物',
-          fieldType: 'string',
+          type: 'string',
           description: 'Pollutants'
         },
         {
           fieldName: '监测站',
-          fieldType: 'string',
+          type: 'string',
           description: 'place'
         },
         {
           fieldName: '沉降通量',
-          fieldType: 'number',
+          type: 'numerical',
           description: 'flux'
         },
         {
           fieldName: '极值类型',
-          fieldType: 'string',
+          type: 'string',
           description: 'type'
         }
       ],
@@ -2592,12 +2940,12 @@ const enviromentData = {
       fieldInfo: [
         {
           fieldName: '生物类型',
-          fieldType: 'string',
+          type: 'string',
           description: 'type'
         },
         {
           fieldName: '次数',
-          fieldType: 'number',
+          type: 'numerical',
           description: 'count'
         }
       ],
@@ -2682,27 +3030,27 @@ const enviromentData = {
       fieldInfo: [
         {
           fieldName: '保护地名称',
-          fieldType: 'string',
+          type: 'string',
           description: 'name'
         },
         {
           fieldName: '保护地级别',
-          fieldType: 'string',
+          type: 'string',
           description: 'level'
         },
         {
           fieldName: '新增或调整',
-          fieldType: 'string',
+          type: 'string',
           description: 'add or adjust'
         },
         {
           fieldName: '面积',
-          fieldType: 'number',
+          type: 'numerical',
           description: 'area'
         },
         {
           fieldName: '面积变化',
-          fieldType: 'number',
+          type: 'numerical',
           description: 'area change'
         }
       ],
@@ -2736,17 +3084,17 @@ const enviromentData = {
       fieldInfo: [
         {
           fieldName: '离子类型',
-          fieldType: 'string',
+          type: 'string',
           description: 'Ion Type'
         },
         {
           fieldName: '离子名称',
-          fieldType: 'string',
+          type: 'string',
           description: 'Ion Name'
         },
         {
           fieldName: '浓度比例',
-          fieldType: 'number',
+          type: 'numerical',
           description: 'Concentration Ratio'
         }
       ],
@@ -2779,17 +3127,17 @@ const enviromentData = {
       fieldInfo: [
         {
           fieldName: '类型',
-          fieldType: 'string',
+          type: 'string',
           description: 'type'
         },
         {
           fieldName: '占比',
-          fieldType: 'ratio',
+          type: 'ratio',
           description: 'percent'
         },
         {
           fieldName: '同比变化',
-          fieldType: 'number',
+          type: 'numerical',
           description: 'change'
         }
       ],
@@ -2832,17 +3180,17 @@ const enviromentData = {
       fieldInfo: [
         {
           fieldName: '噪声水平',
-          fieldType: 'string',
+          type: 'string',
           description: 'noise level'
         },
         {
           fieldName: '城市个数',
-          fieldType: 'number',
+          type: 'numerical',
           description: 'number of cities'
         },
         {
           fieldName: '占比',
-          fieldType: 'number',
+          type: 'numerical',
           description: 'percentage'
         }
       ],
@@ -2899,14 +3247,14 @@ const cultureSportsData = {
         {
           fieldName: '年龄段',
           description: '运动员的年龄段',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '占比',
           description: '各年龄段运动员占比',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -2935,7 +3283,7 @@ const cultureSportsData = {
         {
           fieldName: '年份',
           description: '数据对应的年份',
-          fieldType: 'date',
+          type: 'date',
           dateGranularity: 'year',
           role: 'dimension',
           location: 'dimension'
@@ -2943,14 +3291,14 @@ const cultureSportsData = {
         {
           fieldName: '体育产业总规模',
           description: '体育产业的总规模',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '体育产业增加值',
           description: '体育产业的增加值',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         }
@@ -2974,56 +3322,56 @@ const cultureSportsData = {
         {
           fieldName: '省份',
           description: '运动员所属省份',
-          fieldType: 'region',
+          type: 'region',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '运动员人数',
           description: '参加奥运会的运动员人数',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '大项数量',
           description: '参加的大项数量',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '小项数量',
           description: '参加的小项数量',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '金牌数',
           description: '获得的金牌数量',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '银牌数',
           description: '获得的银牌数量',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '铜牌数',
           description: '获得的铜牌数量',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '最佳成绩',
           description: '是否创造了历届奥运会参赛最佳成绩',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         }
@@ -3115,28 +3463,28 @@ const cultureSportsData = {
         {
           fieldName: '球员',
           description: '球员姓名',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '球队',
           description: '球员所属球队',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '数据类型',
           description: '球员数据类型',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '场均数据',
           description: '球员场均数据',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         }
@@ -3198,42 +3546,42 @@ const cultureSportsData = {
         {
           fieldName: '球星',
           description: '球星姓名',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '年龄',
           description: '球星在第21个赛季的年龄',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '出场次数',
           description: '球星在第21个赛季的出场次数',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '场均得分',
           description: '球星在第21个赛季的场均得分',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '场均篮板',
           description: '球星在第21个赛季的场均篮板',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '场均助攻',
           description: '球星在第21个赛季的场均助攻',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         }
@@ -3310,35 +3658,35 @@ const cultureSportsData = {
         {
           fieldName: '同比增长',
           description: '全国规模以上文化及相关产业企业营业收入同比增长率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '行业类别',
           description: '具体行业类别',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '行业营业收入',
           description: '具体行业的营业收入',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '行业同比增长',
           description: '具体行业的营业收入同比增长率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '两年平均增长',
           description: '具体行业的营业收入两年平均增长率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -3402,21 +3750,21 @@ const cultureSportsData = {
         {
           fieldName: '类型',
           description: '票房统计类型',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '地区',
           description: '省份或城市名称',
-          fieldType: 'region',
+          type: 'region',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '排名',
           description: '票房排名',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         }
@@ -3448,49 +3796,49 @@ const cultureSportsData = {
         {
           fieldName: '演出类型',
           description: '具体的演出类型',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '演出场次',
           description: '演出场次数量',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '与2019年相比增长',
           description: '与2019年相比的增长率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '票房收入',
           description: '票房收入金额',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '同比增长',
           description: '与去年同期相比的增长率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '观演人数',
           description: '观演人数数量',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '观演人数同比增长',
           description: '观演人数与去年同期相比的增长率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -3534,21 +3882,21 @@ const cultureSportsData = {
         {
           fieldName: '领域',
           description: '学术论文的研究领域',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '语言',
           description: '学术论文使用的语言',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '占比',
           description: '学术论文使用该语言的比例',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -3578,42 +3926,42 @@ const cultureSportsData = {
         {
           fieldName: '国家或地区',
           description: '国家或地区名称',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '世界遗产总数',
           description: '世界遗产的总数量',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '世界文化遗产',
           description: '世界文化遗产的数量',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '世界自然遗产',
           description: '世界自然遗产的数量',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '世界文化与自然双重遗产',
           description: '世界文化与自然双重遗产的数量',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '占比',
           description: '世界遗产占比',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -3632,84 +3980,69 @@ const agricultureData = {
         {
           指标: '农林牧渔业总产值',
           年份: '2023',
-          数值: 158507,
-          单位: '亿元'
+          数值: 1585070000000
         },
         {
           指标: '农林牧渔业总产值',
           年份: '1952',
-          数值: 461,
-          单位: '亿元'
+          数值: 46100000000
         },
         {
           指标: '年均增长',
           年份: '1953-2023',
-          数值: 4.5,
-          单位: '%'
+          数值: 4.5
         },
         {
           指标: '年均增长',
           年份: '1979-2023',
-          数值: 5.5,
-          单位: '%'
+          数值: 5.5
         },
         {
           指标: '年均增长',
           年份: '1953-1978',
-          数值: 2.8,
-          单位: '%'
+          数值: 2.8
         },
         {
           指标: '农业年均增速',
           年份: '1953-2023',
-          数值: 3.8,
-          单位: '%'
+          数值: 3.8
         },
         {
           指标: '林业年均增速',
           年份: '1953-2023',
-          数值: 6.7,
-          单位: '%'
+          数值: 6.7
         },
         {
           指标: '牧业年均增速',
           年份: '1953-2023',
-          数值: 5.6,
-          单位: '%'
+          数值: 5.6
         },
         {
           指标: '渔业年均增速',
           年份: '1953-2023',
-          数值: 8.7,
-          单位: '%'
+          数值: 8.7
         },
         {
           指标: '农林牧渔专业及辅助性活动年均增速',
           年份: '2004-2023',
-          数值: 7.5,
-          单位: '%'
+          数值: 7.5
         }
       ],
       fieldInfo: [
         {
           fieldName: '指标',
           description: '具体指标名称',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '年份',
           description: '具体年份或范围',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '数值',
           description: '具体数值',
-          fieldType: 'number'
-        },
-        {
-          fieldName: '单位',
-          description: '数值的单位',
-          fieldType: 'string'
+          type: 'numerical'
         }
       ],
       text: '新中国成立以来，随着农业的蓬勃发展，我国农林牧渔业总产值实现较快增长。2023年，我国农林牧渔业总产值([1])158507亿元（当年价，下同），比1952年的461亿元增加158046亿元。按可比价格计算，1953-2023年年均增长4.5%。其中，改革开放以来（1979—2023年）农林牧渔业总产值年均增长5.5%，比改革开放以前（1953—1978年）年均增速提高2.7个百分点。分产业看，农林牧渔各业均保持稳定增长，1953-2023年农业、林业、牧业、渔业年均增速分别为3.8%、6.7%、5.6%、8.7%，2004-2023年农林牧渔专业及辅助性活动总产值年均增速为7.5%，农业经济稳步提升。'
@@ -3720,26 +4053,22 @@ const agricultureData = {
         {
           指标: '农业产值占总产值比重',
           年份: '1952',
-          比重: 85.9,
-          单位: '%'
+          比重: 85.9
         },
         {
           指标: '林业产值占总产值比重',
           年份: '1952',
-          比重: 1.6,
-          单位: '%'
+          比重: 1.6
         },
         {
           指标: '牧业产值占总产值比重',
           年份: '1952',
-          比重: 11.2,
-          单位: '%'
+          比重: 11.2
         },
         {
           指标: '渔业产值占总产值比重',
           年份: '1952',
-          比重: 1.3,
-          单位: '%'
+          比重: 1.3
         },
         {
           指标: '农业产值占总产值比重',
@@ -3750,72 +4079,59 @@ const agricultureData = {
         {
           指标: '林业产值占总产值比重',
           年份: '2023',
-          比重: 4.4,
-          单位: '%'
+          比重: 4.4
         },
         {
           指标: '牧业产值占总产值比重',
           年份: '2023',
-          比重: 24.6,
-          单位: '%'
+          比重: 24.6
         },
         {
           指标: '渔业产值占总产值比重',
           年份: '2023',
-          比重: 10.2,
-          单位: '%'
+          比重: 10.2
         },
         {
           指标: '比重变化（农业）',
           年份: '1952-2023',
-          比重: -31.0,
-          单位: '%'
+          比重: -31.0
         },
         {
           指标: '比重变化（林业）',
           年份: '1952-2023',
-          比重: 2.8,
-          单位: '%'
+          比重: 2.8
         },
         {
           指标: '比重变化（牧业）',
           年份: '1952-2023',
-          比重: 13.4,
-          单位: '%'
+          比重: 13.4
         },
         {
           指标: '比重变化（渔业）',
           年份: '1952-2023',
-          比重: 8.9,
-          单位: '%'
+          比重: 8.9
         },
         {
           指标: '农林牧渔专业及辅助性活动占总产值比重',
           年份: '2023',
-          比重: 5.9,
-          单位: '%'
+          比重: 5.9
         }
       ],
       fieldInfo: [
         {
           fieldName: '指标',
           description: '具体指标名称',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '年份',
           description: '具体年份或者年份范围',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '比重',
           description: '各产业占总产值的比重/比重变化',
-          fieldType: 'number'
-        },
-        {
-          fieldName: '单位',
-          description: '数值的单位',
-          fieldType: 'string'
+          type: 'ratio'
         }
       ],
       text: '新中国成立以来，随着农业生产方式的变革，我国农业生产实现了由“以种植业为主、以粮为纲”的高度单一结构向“农林牧渔全面、多元、协调发展”的历史转变，多元化食物供给体系加快构建。1952年，农业产值占农林牧渔业总产值的比重达85.9%，处于绝对主导地位，林业、牧业和渔业产值所占比重分别为1.6%、11.2%和1.3%。改革开放后，农林牧渔业加速发展，农林牧渔业结构逐步协调合理。2023年，农业产值占农林牧渔业总产值的比重为54.9%，比1952年下降31.0个百分点；林业、牧业、渔业分别占4.4%、24.6%、10.2%，分别提高2.8个、13.4个、8.9个百分点。农林牧渔专业及辅助性活动占农林牧渔业总产值的比重为5.9%，农业服务呈蓬勃发展态势。'
@@ -3826,44 +4142,44 @@ const agricultureData = {
         {
           产业类型: '农业总产值',
           年份: '2018',
-          产值: 11.358
+          产值: 11358000000000
         },
         {
           产业类型: '种植业',
           年份: '2018',
-          产值: 6.145
+          产值: 6145000000000
         },
         {
           产业类型: '畜牧业',
           年份: '2018',
-          产值: 2.87
+          产值: 2870000000000
         },
         {
           产业类型: '渔业',
           年份: '2018',
-          产值: 1.213
+          产值: 1213000000000
         },
         {
           产业类型: '林业',
           年份: '2018',
-          产值: 0.5433
+          产值: 543300000000
         }
       ],
       fieldInfo: [
         {
           fieldName: '产业类型',
           description: '农业产业的具体类型',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '年份',
           description: '具体年份',
-          fieldType: 'date'
+          type: 'date'
         },
         {
           fieldName: '产值',
           description: '产业产值',
-          fieldType: 'number'
+          type: 'numerical'
         }
       ],
       text: '2018年，在农产品消费增长的推动下，中国农业总产值达到11.358万亿元。根据国家统计局的定义，种植业即庄稼种植，其2018年产值为6.145万亿元，占农业总产值的54.1%；其次是畜牧业，产值为2.87万亿元，占比25.3%；渔业产值为1.213万亿元，林业产值为5,433亿元。但由于中国城镇化进程加速，第二、三产业快速发展，农业产值占国内生产总值的比重继续下降，从2017年的13.9%下降到2018年的12.6%，为1978年以来的最低水平。'
@@ -3874,64 +4190,64 @@ const agricultureData = {
         {
           农产品类型: '夏粮',
           年份: '2018',
-          产量: 13878
+          产量: 138780000
         },
         {
           农产品类型: '秋粮',
           年份: '2018',
-          产量: 49052
+          产量: 490520000
         },
         {
           农产品类型: '早稻',
           年份: '2018',
-          产量: 2859
+          产量: 28590000
         },
         {
           农产品类型: '棉花',
           年份: '2018',
-          产量: 610
+          产量: 6100000
         },
         {
           农产品类型: '粮食',
           年份: '2018',
-          产量: 65789
+          产量: 657890000
         },
         {
           农产品类型: '豆类',
           年份: '2018',
-          产量: 1920
+          产量: 19200000
         },
         {
           农产品类型: '薯类',
           年份: '2018',
-          产量: 2865
+          产量: 28650000
         },
         {
           农产品类型: '肉类',
           年份: '2018',
-          产量: 8625
+          产量: 86250000
         },
         {
           农产品类型: '水产品',
           年份: '2018',
-          产量: 6458
+          产量: 64580000
         }
       ],
       fieldInfo: [
         {
           fieldName: '农产品类型',
           description: '农产品的具体种类',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '年份',
           description: '具体年份',
-          fieldType: 'date'
+          type: 'date'
         },
         {
           fieldName: '产量',
           description: '农产品产量',
-          fieldType: 'number'
+          type: 'numerical'
         }
       ],
       text: '2018年，夏粮产量13,878万吨，秋粮产量49,052万吨，早稻产量2,859万吨。棉花总产量610万吨。2018年，粮食、豆类、薯类产量分别为65,789万吨、1,920万吨、2,865万吨。近年来，由于人口收入增长和城市化进程，传统粮食生产已发生重大转变，蔬菜和水果在总产出中所占比重有所增加。2018年，肉类产量达到8,625万吨，水产品产量达到6,458万吨。'
@@ -3984,12 +4300,12 @@ const agricultureData = {
         {
           fieldName: '整治项目',
           description: '村庄环境整治的具体项目',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '工程量',
           description: '项目工程量',
-          fieldType: 'number or string depending on content'
+          type: 'number or string depending on content'
         }
       ],
       text: '村庄环境整治:建筑立面刷白145947.45平方米、清水砖墙面粉刷 2760.28平方米、商铺店招修缮1339.07平方米、水泥压花43584.97平方米、屋前场地硬化19921.01平方米、池塘挡墙护坡1601.00米、道路护脚墙2993.72米、颐养之家提升1614.00平方米、菜园矮墙2119.19米、其他基础配套设施1项。'
@@ -4066,12 +4382,12 @@ const agricultureData = {
         {
           fieldName: '产品类别品种',
           description: '农产品的类别、品种',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '价格变化幅度',
           description: '价格同比变化幅度',
-          fieldType: 'ratio'
+          type: 'ratio'
         }
       ],
       text: '上半年，全国农产品生产者价格总水平同比下降3.2%，其中，一季度下降3.9%，二季度下降2.9%。分类别看，农业产品价格同比下降3.0%，林业产品价格上涨2.6%，饲养动物及其产品价格下降4.4%，渔业产品价格下降2.9%。分品种看，谷物价格同比下降4.8%，其中，小麦下降2.5%，稻谷上涨2.0%，玉米下降12.0%；油料下降2.7%，水果下降8.9%，蔬菜下降1.6%；生猪上涨1.4%，活牛、活羊分别下降16.0%、9.5%，活家禽、禽蛋分别下降3.3%、10.6%。'
@@ -4104,12 +4420,12 @@ const agricultureData = {
         {
           fieldName: '指标名称',
           description: '数字乡村相关指标名称',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '数值',
           description: '具体指标数值',
-          fieldType: 'number or percentage depending on content'
+          type: 'number or percentage depending on content'
         }
       ],
       text: '其间，中共中央、国务院出台《数字乡村发展战略纲要》，农业农村部、中央网信办联合制定《数字农业农村发展规划（2019—2025年）》。2024年，国家数据局等17部委联合印发《“数据要素×”三年行动计划（2024—2026年）》，指出要在现代农业等多个行业领域全面启动实施“数据要素×”三年行动。在数字中国发展战略和一系列政策支持下，我国数字农业、数字乡村建设取得积极进展。根据《中国数字乡村发展报告（2022年）》，2021年全国数字乡村发展水平达39.1%，农业生产信息化率为25.4%，全国六类涉农政务服务事项综合在线办事率达68.2%，以数据驱动的乡村治理水平不断提高。截至2022年6月，农村互联网普及率达58.8%，与“十三五”初期相比，城乡互联网普及率差距缩小近15个百分点。2022年利用信息化手段开展服务的村级综合服务站点共48.3万个，行政村覆盖率达86.0%；全国农村网络零售额达2.17万亿元，比上年增长3.6%。'
@@ -4140,22 +4456,22 @@ const agricultureData = {
         {
           fieldName: '指标名称',
           description: '不同的数字乡村相关指标名称',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '2018 年数值',
           description: '2018 年对应指标数值',
-          fieldType: 'percentage'
+          type: 'percentage'
         },
         {
           fieldName: '2025 年数值',
           description: '2025 年对应指标数值',
-          fieldType: 'percentage'
+          type: 'percentage'
         },
         {
           fieldName: '年均增速',
           description: '对应指标的年均增长速度',
-          fieldType: 'percentage'
+          type: 'percentage'
         }
       ],
       text: `1.农业数字经济占农业增加值比重（%） 从2018年的7.3%到2025年的15%，年均增速10.8%
@@ -4167,55 +4483,55 @@ const agricultureData = {
       dataTable: [
         {
           培育对象: '农民合作社带头人',
-          '2023 年人数': 7.2
+          '2023 年人数': 72000
         },
         {
           培育对象: '家庭农场主',
-          '2023 年人数': 12.9
+          '2023 年人数': 129000
         },
         {
           培育对象: '农业社会化服务组织带头人',
-          '2023 年人数': 4.3
+          '2023 年人数': 43000
         },
         {
           培育对象: '农业企业负责人',
-          '2023 年人数': 4.2
+          '2023 年人数': 42000
         },
         {
           培育对象: '农业职业经理人',
-          '2023 年人数': 0.8
+          '2023 年人数': 8000
         },
         {
           培育对象: '农村电商带头人',
-          '2023 年人数': 1.9
+          '2023 年人数': 19000
         },
         {
           培育对象: '脱贫区域产业带头人',
-          '2023 年人数': 6.6
+          '2023 年人数': 66000
         },
         {
           培育对象: '返乡群体（大学毕业生、农民工和退役军人等）',
-          '2023 年人数': 10.5
+          '2023 年人数': 105000
         },
         {
           培育对象: '学习‘三品一标’相关课程人员',
-          '2023 年人数': 11.7
+          '2023 年人数': 117000
         },
         {
           培育对象: '学习冷链物流相关课程人员',
-          '2023 年人数': 2.8
+          '2023 年人数': 28000
         }
       ],
       fieldInfo: [
         {
           fieldName: '培育对象',
           description: '不同的培训对象类别',
-          fieldType: 'string'
+          type: 'string'
         },
         {
           fieldName: '2023 年人数',
           description: '2023 年对应培育对象的人数',
-          fieldType: 'number'
+          type: 'numerical'
         }
       ],
       text: '2023年，各地培育农民合作社带头人7.2万人、家庭农场主12.9万人、农业社会化服务组织带头人4.3万人、农业企业负责人4.2万人；培养农业职业经理人0.8万人、农村电商带头人1.9万人；支持脱贫区域培育产业带头人近6.6万人；大学毕业生、农民工和退役军人等返乡群体10.5万人参加培训。针对产业发展急需短板环节，11.7万人学习了“三品一标”相关课程，2.8万人学习了冷链物流相关课程。'
@@ -4242,12 +4558,12 @@ const retailData = {
         {
           fieldName: '年份',
           description: '具体年份',
-          fieldType: 'date'
+          type: 'date'
         },
         {
           fieldName: '支出规模',
           description: '中国零售行业大数据市场支出规模，单位为亿元人名币',
-          fieldType: 'number'
+          type: 'numerical'
         }
       ],
       text: '智通财经APP获悉，IDC于近日发布了《零售行业数据智能市场分析——以客户为主导的零售业的逆向体验》。报告显示，2023年，中国零售行业大数据市场支出规模达到4306亿元人民币，预计2027年将增长至9809亿元人民币，年均增长率CAGR为22.9%'
@@ -4257,7 +4573,7 @@ const retailData = {
       dataTable: [
         {
           品类: '酒水',
-          整体搜索量环比: 0.48,
+          整体搜索量环比: 48,
           年份: '2024年年初至1月12日'
         }
       ],
@@ -4265,7 +4581,7 @@ const retailData = {
         {
           fieldName: '年份',
           description: '数据对应的年份',
-          fieldType: 'date',
+          type: 'date',
           dateGranularity: 'year',
           role: 'dimension',
           location: 'dimension'
@@ -4273,14 +4589,14 @@ const retailData = {
         {
           fieldName: '品类',
           description: '商品品类',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '整体搜索量环比',
           description: '整体搜索量环比变化率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -4335,21 +4651,21 @@ const retailData = {
         {
           fieldName: '信息化市场类型',
           description: '零售业信息化市场类型',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '产品类型',
           description: '零售业信息化产品类型',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '占比',
           description: '硬件占比',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -4384,14 +4700,14 @@ const retailData = {
         {
           fieldName: '零售业态',
           description: '零售业态类型',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '零售额增长率',
           description: '零售额比上年增长率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -4426,21 +4742,21 @@ const retailData = {
         {
           fieldName: '销售规模',
           description: '百强企业企业的销售规模',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '企业数量',
           description: '企业的数量',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '同比变化',
           description: '销售规模的同比变化',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -4467,28 +4783,28 @@ const retailData = {
         {
           fieldName: '价格区间',
           description: '价格区间',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '销量最高车型',
           description: '车型名称',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '销量最高车型销量份额',
           description: '销量份额',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '销量前三车型销量份额',
           description: '销量份额',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -4509,7 +4825,7 @@ const retailData = {
         {
           fieldName: '月份',
           description: '具体月份',
-          fieldType: 'date',
+          type: 'date',
           dateGranularity: 'month',
           role: 'dimension',
           location: 'dimension'
@@ -4517,21 +4833,21 @@ const retailData = {
         {
           fieldName: '发展指数',
           description: '中国零售药店发展指数',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '环比变化',
           description: '发展指数环比变化',
-          fieldType: 'numerical',
+          type: 'numerical',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '同比变化',
           description: '发展指数同比变化',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -4558,14 +4874,14 @@ const retailData = {
         {
           fieldName: '企业类型',
           description: '企业所属类型',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '企业数量',
           description: '各类型企业数量',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         }
@@ -4596,14 +4912,14 @@ const retailData = {
         {
           fieldName: '商业模式',
           description: '生鲜零售线上商业模式',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '占比',
           description: '商业模式占比',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -4637,14 +4953,14 @@ const retailData = {
         {
           fieldName: '商品类别',
           description: '商品的具体类别',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '零售额同比增速',
           description: '商品零售额与去年同期相比的增长速度',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -4663,21 +4979,21 @@ const travelData = {
         {
           fieldName: '铁路局',
           description: '铁路局集团公司名称',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '增开旅客列车',
           description: '增开的旅客列车数量',
-          fieldType: 'count',
+          type: 'count',
           role: 'measure',
           location: 'measure'
         },
         {
           fieldName: '方向',
           description: '热门方向',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         }
@@ -4768,14 +5084,14 @@ const travelData = {
         {
           fieldName: '产品',
           description: '携程的产品或业务类型',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: '同比',
           description: '交易额Year-on-year-Growth率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -4814,14 +5130,14 @@ const travelData = {
         {
           fieldName: '国家',
           description: '国家名称',
-          fieldType: 'string',
+          type: 'string',
           role: 'dimension',
           location: 'dimension'
         },
         {
           fieldName: 'GDP',
           description: '国内生产总值增长率',
-          fieldType: 'ratio',
+          type: 'ratio',
           role: 'measure',
           location: 'measure'
         }
@@ -4831,15 +5147,1443 @@ const travelData = {
   ]
 };
 
+const newTravelData = {
+  domain: 'travel',
+  data: [
+    {
+      text: `高端度假型民宿同比去年暑假
+出租率下降1.0% 平均房价上涨5.5% 单房收入上涨4.9%
+舒适旅行型民宿同比去年暑假
+出租率基本持平 平均房价下降3.1% 单房收入下降4.0%
+实惠出游型民宿同比去年暑假
+出租率上涨1.0% 平均房价下降5.3% 单房收入下降2.0%
+高端度假型民宿同比去年暑假，平均房价上涨5.5%，单房收入上涨4.9%，显示出高端市场需求仍然强劲，消费者愿意为高端服务支付溢价。这种稳定性为未来的高端度假民宿市场扩展和投资提供了积极的信号。`,
+      isEnglish: false,
+      fieldInfo: [
+        {
+          fieldName: '民宿类型',
+          description: '民宿的类型',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '指标',
+          description: '具体的指标',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '同比变化',
+          description: '与去年暑假相比的变化',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          民宿类型: '高端度假型民宿',
+          指标: '出租率',
+          同比变化: -1
+        },
+        {
+          民宿类型: '高端度假型民宿',
+          指标: '平均房价',
+          同比变化: 5.5
+        },
+        {
+          民宿类型: '高端度假型民宿',
+          指标: '单房收入',
+          同比变化: 4.9
+        },
+        {
+          民宿类型: '舒适旅行型民宿',
+          指标: '出租率',
+          同比变化: 0
+        },
+        {
+          民宿类型: '舒适旅行型民宿',
+          指标: '平均房价',
+          同比变化: -3.1
+        },
+        {
+          民宿类型: '舒适旅行型民宿',
+          指标: '单房收入',
+          同比变化: -4
+        },
+        {
+          民宿类型: '实惠出游型民宿',
+          指标: '出租率',
+          同比变化: 1
+        },
+        {
+          民宿类型: '实惠出游型民宿',
+          指标: '平均房价',
+          同比变化: -5.3
+        },
+        {
+          民宿类型: '实惠出游型民宿',
+          指标: '单房收入',
+          同比变化: -2
+        }
+      ]
+    },
+    {
+      text: '从出游用户年龄来看，36-45岁以及26-35岁年龄段的用户出游人次占比分别达到了45%和26%。',
+      isEnglish: false,
+      fieldInfo: [
+        {
+          fieldName: '年龄段',
+          description: '用户年龄段',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '出游人次占比',
+          description: '出游人次占比',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          年龄段: '36-45岁',
+          出游人次占比: 45
+        },
+        {
+          年龄段: '26-35岁',
+          出游人次占比: 26
+        },
+        {
+          年龄段: '其他',
+          出游人次占比: 29
+        }
+      ]
+    },
+    {
+      text: '报告显示，2024年五一假期，酒店行业平均入住率55%，平均房价为293.9元，平均单房收益161.6元，较去年同比增长2.0%。民宿行业平均入住率64.1%，平均房价为414.1元，平均单房收益265.4元，较去年同比下降19.1%。',
+      isEnglish: false,
+      fieldInfo: [
+        {
+          fieldName: '年份',
+          description: '数据对应的年份',
+          type: 'date',
+          dateGranularity: 'year',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '假期',
+          description: '假期名称',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '行业',
+          description: '行业类型',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '平均入住率',
+          description: '行业的平均入住率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '平均房价',
+          description: '行业的平均房价',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '平均单房收益',
+          description: '行业的平均单房收益',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '同比增长率',
+          description: '与去年相比的增长率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          行业: '酒店',
+          平均入住率: 55,
+          平均房价: 293.9,
+          平均单房收益: 161.6,
+          同比增长率: 2
+        },
+        {
+          行业: '民宿',
+          平均入住率: 64.1,
+          平均房价: 414.1,
+          平均单房收益: 265.4,
+          同比增长率: -19.1
+        }
+      ]
+    },
+    {
+      isEnglish: false,
+      dataTable: [
+        {
+          旅游类型: '国内旅游',
+          人次占比: 93
+        },
+        {
+          旅游类型: '入境旅游',
+          人次占比: 1
+        },
+        {
+          旅游类型: '出境旅游',
+          人次占比: 6
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '旅游类型',
+          description: '旅游市场类型',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '人次占比',
+          description: '旅游市场人次所占份额',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: '《报告》显示，按照国内组织人次、入境外联人次、出境组织人次3项指标，国内旅游、入境旅游、出境旅游市场人次所占份额依次为93%、1%和6%。'
+    },
+    {
+      text: `在国内旅游方面，2024年第二季度全国旅行社国内旅游组织4810.72万人次、12219.05万人天；接待4609.48万人次、10176.61万人天。国内旅游单项服务1.98亿人次。
+出入境旅游方面，2024年第二季度全国旅行社入境旅游外联67.06万人次、253.76万人天；接待189.42万人次、644.16万人天。入境旅游单项服务113.15万人次。`,
+      isEnglish: false,
+      dataTable: [
+        {
+          旅游类型: '国内旅游',
+          旅行社组织人次: 48107200,
+          旅行社组织人天: 122190500,
+          旅行社接待人次: 46094800,
+          旅行社接待人天: 101766100,
+          单项服务人次: 198000000
+        },
+        {
+          旅游类型: '出入境旅游',
+          旅行社组织人次: 670600,
+          旅行社组织人天: 2537600,
+          旅行社接待人次: 1894200,
+          旅行社接待人天: 6441600,
+          单项服务人次: 1131500
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '旅游类型',
+          description: '国内旅游或出入境旅游',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '旅行社组织人次',
+          description: '旅行社组织的旅游人次',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '旅行社组织人天',
+          description: '旅行社组织的旅游人天',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '旅行社接待人次',
+          description: '旅行社接待的旅游人次',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '旅行社接待人天',
+          description: '旅行社接待的旅游人天',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '单项服务人次',
+          description: '单项服务的旅游人次',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        }
+      ]
+    },
+    {
+      dataTable: [
+        {
+          year: '2018',
+          domestic_tourist_trips: 9000000000,
+          international_arrivals: 1400000000,
+          domestic_tourism_ratio: 600,
+          asia_pacific_ratio: 50
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: 'year',
+          description: 'The year the data was recorded',
+          type: 'date',
+          dateGranularity: 'year',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: 'domestic_tourist_trips',
+          description: 'Number of domestic tourist trips',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: 'international_arrivals',
+          description: 'Number of international tourist arrivals',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: 'domestic_tourism_ratio',
+          description: 'Ratio of domestic tourism to international tourism',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: 'asia_pacific_ratio',
+          description: 'Percentage of domestic tourist trips in Asia and the Pacific',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: 'An estimated 9 billion domestic tourist trips (overnight visitors) were recorded around the world in 2018, of which well over 50% in Asia and the Pacific. Worldwide, domestic tourism is over six times bigger than international tourism (1.4 billion international arrivals in 2018) measured in number of tourist trips.'
+    },
+    {
+      dataTable: [
+        {
+          year: 2009,
+          CO2_emissions_per_inhabitant: 8
+        },
+        {
+          year: 2011,
+          CO2_emissions_per_inhabitant: 7.8
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: 'year',
+          description: 'Year of the data',
+          type: 'date',
+          dateGranularity: 'year',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: 'CO2_emissions_per_inhabitant',
+          description: 'Average CO2 emissions per inhabitant',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: 'There was a slight reduction in CO2-emissions per inhabitant in the EU-27 between 2009 and 2011,\nfrom an average of 8.0 tonnes to 7.8 tonnes per inhabitant. Direct CO2-emissions from private\nhouseholds fell, on average, by 0.2 tonnes per inhabitant during this period. '
+    }
+  ]
+};
+
+const enegryData = {
+  domain: 'energy',
+  data: [
+    {
+      isEnglish: false,
+      text: '总部位于阿布扎比的能源公司马斯达尔(Masdar)已完成以 14 亿美元从 Brookfield Renewable 手中收购独立可再生能源开发商 Saeta Yield 的交易。 马斯达尔在一份声明中表示，此次交易涉及 745 兆瓦的风电资产，以及 1.6 千兆瓦的开发项目。这还不包括受监管的 350 兆瓦聚光太阳能资产组合，布鲁克菲尔德将保留并继续运营这些资产。 此次出售是西班牙规模最大的交易之一，符合 Brookfield 的资产轮换战略，即回收资本以资助增长活动。这也符合 Masdar 加速欧洲能源转型的承诺，即到 2030 年实现全球 100 吉瓦的发电容量。 待获得必要的批准后，该交易预计将于 2024 年底完成。',
+      fieldInfo: [
+        {
+          fieldName: '收购价格',
+          description: '公司收购交易价格',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '风电',
+          description: '发电量',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '太阳能',
+          description: '发电量',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '开发项目',
+          description: '发电量',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          收购价格: 1400000000,
+          风电: 745,
+          太阳能: 350,
+          开发项目: 1.6
+        }
+      ]
+    },
+    {
+      isEnglish: false,
+      text: '1—8月，新疆维吾尔自治区经济运行总体平稳。1—8月，规模以上工业增加值同比增长7.2%。从三大门类看，采矿业、制造业、电力热力燃气及水生产供应业增加值同比分别增长5.9%、6.7%、11.2 %。',
+      fieldInfo: [
+        {
+          fieldName: '工业门类',
+          description: '工业门类',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '同比增长',
+          description: '工业同比增加值',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          工业门类: '规模以上',
+          同比增长: 7.2
+        },
+        {
+          工业门类: '采矿业',
+          同比增长: 5.9
+        },
+        {
+          工业门类: '制造业',
+          同比增长: 6.7
+        },
+        {
+          工业门类: '电力热力燃气及水生产供应业',
+          同比增长: 11.2
+        }
+      ]
+    },
+    {
+      isEnglish: false,
+      text: '据悉，该公司位于加拿大萨斯喀彻温省，主要从事钾盐勘探开发，持有索西钾盐项目及其他四项钾盐矿权。其中，索西项目主要产品为氯化钾钾肥，其探明及控制的氯化钾储量为1.73亿吨，一期和二期设计产能分别为200万吨/年和80万吨/年，合计产能为280万吨/年。',
+      fieldInfo: [
+        {
+          fieldName: '产能项目',
+          description: '产能项目',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '设计产能',
+          description: '设计产能',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          产能项目: '一期',
+          设计产能: 2000000
+        },
+        {
+          产能项目: '一期',
+          设计产能: 800000
+        },
+        {
+          产能项目: '总计',
+          设计产能: 2800000
+        }
+      ]
+    },
+    {
+      isEnglish: false,
+      text: '《公示》显示，中广核新兴风电场“大代小”改造工程项目总装机90MW，拟拆除原风电场内46台0.85MW级风力发电机组，拟安装15台6MW级风力发电机组（机组实际单机容量以设备招标最终结果为准），风力发电机组通过35kV集电线路送至陆上升压站。',
+      fieldInfo: [
+        {
+          fieldName: '总装机功率',
+          description: '总装机功率',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '拆除功率',
+          description: '拆除的风力发电机功率',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '拆除数量',
+          description: '拆除的风力发电机数量',
+          type: 'count',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '安装功率',
+          description: '安装的风力发电机功率',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '安装数量',
+          description: '安装的风力发电机数量',
+          type: 'count',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '集电线路',
+          description: '集电线路',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          总装机功率: 90,
+          拆除功率: 0.85,
+          拆除数量: 46,
+          安装功率: 15,
+          安装数量: 6,
+          集电线路: 35
+        }
+      ]
+    },
+    {
+      isEnglish: false,
+      text: '煤炭是我国能源安全的“压舱石”。全国原煤产量分别于2021年、2022年跃上41亿吨、45亿吨台阶，2023年达到47.1亿吨，年均增长4.5%，原煤占我国一次能源生产总量的比重仍保持在65%以上。',
+      fieldInfo: [
+        {
+          fieldName: '年份',
+          description: '原煤产量年份',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '原煤产量',
+          description: '原煤产量',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          年份: '2021',
+          原煤产量: 4100000000
+        },
+        {
+          年份: '2022',
+          原煤产量: 4500000000
+        },
+        {
+          年份: '2021',
+          原煤产量: 4710000000
+        }
+      ]
+    },
+    {
+      isEnglish: false,
+      text: '从中国铁路乌鲁木齐局集团有限公司获悉，截至9月18日，今年新疆铁路疆煤外运量超6000万吨，同比增长51%。今年以来，新疆铁路部门发运煤炭10500万吨、同比增长17.1%，其中疆煤外运6016.6万吨，为保障国家能源安全、服务区域经济社会发展提供了有力支撑。',
+      fieldInfo: [
+        {
+          fieldName: '类型',
+          description: '新疆铁路疆煤类型',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '运量',
+          description: '煤炭运量',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '同比',
+          description: '同比',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          类型: '发运煤炭',
+          运量: 105000000,
+          同比: 17.1
+        },
+        {
+          类型: '外运量',
+          运量: 60166000,
+          同比: 51
+        }
+      ]
+    },
+    {
+      isEnglish: false,
+      text: '隆众资讯预测，成品油本轮下调已板上钉钉，国内汽柴油下调幅度约为375元/吨。中新经纬梳理发现，年内成品油价已经历十八轮调整，呈现“七涨七跌四搁浅”，国内汽、柴油价格每吨较去年底分别提高150元、145元。目前，成品油年内最大下调幅度为汽油降305元/吨，柴油降290元/吨。若按机构测算，本轮调整或现年内最大跌幅。',
+      fieldInfo: [
+        {
+          fieldName: '成品油类型',
+          description: '成品油类型',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '预测下调幅度',
+          description: '成品油类型',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '上升价格',
+          description: '成品油较去年上升价格',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '年内最大下调幅度',
+          description: '成品油类型',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          成品油类型: '汽油',
+          预测下调幅度: 375,
+          上升价格: 150,
+          年内最大下调幅度: 305
+        },
+        {
+          成品油类型: '柴油',
+          预测下调幅度: 375,
+          上升价格: 145,
+          年内最大下调幅度: 290
+        }
+      ]
+    },
+    {
+      isEnglish: false,
+      text: '9月23日，从国网浙江省电力有限公司了解到，今年1到8月，浙江新增新能源装机818万千瓦。至8月底，省内新能源装机规模达到5054万千瓦，其中光伏装机4110万千瓦，风电装机636万千瓦。',
+      fieldInfo: [
+        {
+          fieldName: '装机类型',
+          description: '装机类型',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '功率',
+          description: '发电功率',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          装机类型: '新增新能源装机',
+          功率: 8180000
+        },
+        {
+          装机类型: '新能源装机规模',
+          功率: 50540000
+        },
+        {
+          装机类型: '光伏装机规模',
+          功率: 41100000
+        },
+        {
+          装机类型: '风力装机规模',
+          功率: 6360000
+        }
+      ]
+    },
+    {
+      isEnglish: false,
+      text: '欧洲汽车制造商协会（ACEA）当地时间19日公布的数据显示，欧盟8月份新车销量下滑18.3%，跌至三年来最低水平。主要市场德国、法国和意大利的销量均出现两位数的下滑，分别下跌27.8%、24.3% 和13.4%。',
+      fieldInfo: [
+        {
+          fieldName: '市场区域',
+          description: '市场区域',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '下滑销量',
+          description: '新车下滑销量',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          市场区域: '欧盟',
+          下滑销量: 18.3
+        },
+        {
+          市场区域: '德国',
+          下滑销量: 27.8
+        },
+        {
+          市场区域: '法国',
+          下滑销量: 24.3
+        },
+        {
+          市场区域: '意大利',
+          下滑销量: 13.4
+        }
+      ]
+    },
+    {
+      isEnglish: false,
+      text: '武建飞介绍，该硫化锂正极材料显示出每克1165.23毫安时的高比容量，接近理论值每克1167毫安时。在常温下循环6200次后，其容量仍可保持84.4%。搭配商业化的硅碳负极组装全电池后，常温下循环400次放电，电池比容量仍能保持在初始容量的97%以上。',
+      fieldInfo: [
+        {
+          fieldName: '电池搭配',
+          description: '是否搭配商业化的硅碳负极组装全电池',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '循环次数',
+          description: '常温下循环次数',
+          type: 'count',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '电池比容量',
+          description: '电池比容量',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      dataTable: [
+        {
+          电池搭配: '搭配商业化的硅碳负极组装全电池',
+          循环次数: 400,
+          电池比容量: 97
+        },
+        {
+          电池搭配: '无搭配',
+          循环次数: '6200',
+          电池比容量: 84.4
+        }
+      ]
+    }
+  ]
+};
+
+const eCommerceData = {
+  domain: 'e-Commerce',
+  data: [
+    {
+      isEnglish: false,
+      dataTable: [
+        {
+          品类: '整体保暖服饰',
+          同比增长: 105
+        },
+        {
+          品类: '男/女士羽绒服',
+          同比增长: 236
+        },
+        {
+          品类: '儿童保暖内衣',
+          同比增长: 135
+        },
+        {
+          品类: '加绒裤',
+          同比增长: 156
+        },
+        {
+          品类: '围巾、手套、帽子套装',
+          同比增长: 214
+        },
+        {
+          品类: '冲锋衣裤',
+          同比增长: 150
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '品类',
+          description: '服饰品类',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '同比增长',
+          description: '成交额同比增长率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: '京东整体保暖服饰成交额同比增长105%。其中，男/女士羽绒服成交额同比增长236%，儿童保暖内衣成交额同比增长135%，加绒裤成交额同比增长156%，围巾、手套、帽子套装成交额同比增长214%，冲锋衣裤成交额同比增长超150%。'
+    },
+    {
+      dataTable: [
+        {
+          类别: '金银珠宝',
+          同比增长率: 27.3
+        },
+        {
+          类别: '烟酒',
+          同比增长率: 19.1
+        },
+        {
+          类别: '东北地区',
+          同比增长率: 13.2
+        },
+        {
+          类别: '中部地区',
+          同比增长率: 8.7
+        },
+        {
+          类别: '东部地区',
+          同比增长率: 3.8
+        },
+        {
+          类别: '西部地区',
+          同比增长率: 3
+        },
+        {
+          类别: '全国农村',
+          同比增长率: 3.6
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '类别',
+          description: '商品或地区类别',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '同比增长率',
+          description: '同比增长率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: '金银珠宝、烟酒同比分别增长27.3%和19.1%。东北和中部地区网络零售额同比分别增长13.2%和8.7%，比全国增速分别高出9.2和4.7个百分点。东部和西部地区网络零售额同比分别增长3.8%和3%。全国农村网络零售额达2.17万亿元，同比增长3.6%'
+    },
+    {
+      dataTable: [
+        {
+          类别: '全国农村网络零售额',
+          零售额: 2170000000000,
+          同比增长率: 3.6
+        },
+        {
+          类别: '农村实物商品网络零售额',
+          零售额: 1990000000000,
+          同比增长率: 4.9
+        },
+        {
+          类别: '全国农产品网络零售额',
+          零售额: 531380000000,
+          同比增长率: 9.2
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '类别',
+          description: '零售类别',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '零售额',
+          description: '零售总额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '同比增长率',
+          description: '与去年同期相比的增长率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: '农产品网络零售增势较好。全国农村网络零售额达2.17万亿元，同比增长3.6%。其中，农村实物商品网络零售额1.99万亿元，同比增长4.9%。全国农产品网络零售额5313.8亿元，同比增长9.2%，增速较2021年提升6.4个百分点'
+    },
+    {
+      dataTable: [
+        {
+          国家: '马来西亚',
+          最低销售额: 3000000,
+          最高销售额: 12500000
+        },
+        {
+          国家: '印度尼西亚',
+          最低销售额: 3700000,
+          最高销售额: 10500000
+        },
+        {
+          国家: '菲律宾',
+          最低销售额: 2700000,
+          最高销售额: 6800000
+        },
+        {
+          国家: '泰国',
+          最低销售额: 4140000,
+          最高销售额: 39140000
+        },
+        {
+          国家: '越南',
+          最低销售额: 2200000,
+          最高销售额: 6070000
+        },
+        {
+          国家: '美国',
+          最低销售额: 2400000,
+          最高销售额: 4300000
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '国家',
+          type: 'region',
+          description: '国家名称',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '最低销售额',
+          type: 'numerical',
+          description: '头部达人最低销售额',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '最高销售额',
+          type: 'numerical',
+          description: '头部达人最高销售额',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: '马来西亚：头部达人销售额普遍在300-1250万美元之间。\n\n印度尼西亚：头部达人销售额范围在370-1050万美元之间。\n\n菲律宾：头部达人销售额在270-680万美元之间。\n\n泰国：头部达人销售额差距较大，从414万到3914万美元不等。\n\n越南：头部达人销售额在220-607万美元之间。\n\n美国：头部达人销售额相对较低，在240-430万美元之间。'
+    },
+    {
+      dataTable: [
+        {
+          品类: '直播带货',
+          增长类型: '月均环比',
+          增长率: 117
+        },
+        {
+          品类: '宠物用品',
+          增长类型: '直播增长',
+          增长率: 239
+        },
+        {
+          品类: '短视频带货',
+          增长类型: '月均增长',
+          增长率: 27
+        },
+        {
+          品类: '儿童时尚',
+          增长类型: '月均增速',
+          增长率: 200
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '品类',
+          description: '商品品类',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '增长类型',
+          description: '增长类型',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '增长率',
+          description: '增长率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: '直播带货规模持续扩大，月均环比增长117%，美妆个护、女装、手机数码为销量前三品类。宠物用品直播增长最快，达239%。短视频带货月均增长27%，儿童时尚品类增速最猛，月均增速高达200%。'
+    },
+    {
+      dataTable: [
+        {
+          公司: 'TikTok Shop',
+          销售额占比: 37
+        },
+        {
+          公司: 'Temu',
+          销售额占比: 37.2
+        },
+        {
+          公司: 'Shein',
+          销售额占比: 25.8
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '公司',
+          description: '公司名称',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '销售额占比',
+          description: '销售额占美国电商销售额的比例',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: 'TikTok Shop 的 Deals for You Days活动期间的销售额占美国电商销售额的 37%，这表明夏季销售额将迎来增长。与此同时，Temu 的这一比例为 37.2%，Shein 为 25.8%'
+    },
+    {
+      dataTable: [
+        {
+          年份: '2018E',
+          GMV: 4716000000000,
+          综合变现率: 2.8,
+          预期收入: 133000000000,
+          'P/GMV': 0.47,
+          'P/S': 16.66
+        },
+        {
+          年份: '2019E',
+          GMV: 9621000000000,
+          综合变现率: 3.1,
+          预期收入: 298000000000,
+          'P/GMV': 0.23,
+          'P/S': 7.46
+        },
+        {
+          年份: '2020E',
+          GMV: 14936000000000,
+          综合变现率: 3.4,
+          预期收入: 507000000000,
+          'P/GMV': 0.15,
+          'P/S': 4.38
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '年份',
+          description: '预测年份',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: 'GMV',
+          description: '商品交易总额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '综合变现率',
+          description: '预期综合变现率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '预期收入',
+          description: '预期收入',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: 'P/GMV',
+          description: '市值与商品交易总额的比率',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: 'P/S',
+          description: '市值与收入的比率',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: '拼多多 2018E、2019E、2020E 的 GMV 分别为 4716(A)、9621、14936 亿\n元，预期综合变现率 2.8%、3.1%、3.4%，对应预期收入 133、298、507\n亿元。按 2 月 20 日收盘价 29.09 美元计算(按 6.7 汇率，折合 2,140 亿\n元市值)，拼多多 2018E、2019E、2020E 的 P/GMV 分别为 0.47X、0.23X、\n0.15X，P/S 分别为 16.66X、7.46X、4.38X。'
+    },
+    {
+      dataTable: [
+        {
+          平台: '天猫',
+          销售额占比: 60.02,
+          销售额: 554300000000
+        },
+        {
+          平台: '京东',
+          销售额占比: 27.86,
+          销售额: 257300000000
+        },
+        {
+          平台: '拼多多',
+          销售额占比: 7.34,
+          销售额: 67800000000
+        },
+        {
+          平台: '其他渠道',
+          销售额占比: 4.77,
+          销售额: 44100000000
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '平台',
+          description: '电商平台名称',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '销售额占比',
+          description: '双11当天各平台销售额占比',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '销售额',
+          description: '双11当天各平台销售额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: '如果按双11当天（准确地说是11月10日20:00至11月11日24:00）销售额各家的占比——天猫占比60.02%、京东27.86%、拼多多7.34%，其他渠道占比4.77%来测算，今年双11综合电商平台的销售额分别为：天猫5543亿元、京东2573亿元、拼多多678亿元、其他441亿元。'
+    },
+    {
+      dataTable: [
+        {
+          平台: '直播电商',
+          销售额: 215100000000,
+          同比增长: 18.58,
+          去年增速: 146.1
+        },
+        {
+          平台: '新零售',
+          销售额: 23600000000,
+          同比增长: 8.26,
+          去年增速: 10.8
+        },
+        {
+          平台: '社区团购',
+          销售额: 12400000000,
+          同比增长: -8.15,
+          去年增速: null
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '平台',
+          description: '电商平台类型',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '销售额',
+          description: '平台销售额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '同比增长',
+          description: '平台销售额同比增长率',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '去年增速',
+          description: '平台去年销售额增速',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: '直播电商平台销售额为2151亿元，是贡献双11整体销售额增长2.08%的主力。但是它今年也仅仅同比增长18.58%，而去年它的增速高达146.1%。新零售相对比较稳定，销售额236亿元，同比增长8.26%（去年增速为10.8%）。而社区团购表现更差，销售额只有124亿元，比去年的135亿元下跌了8.15%。'
+    },
+    {
+      dataTable: [
+        {
+          年份: 2009,
+          平台: '淘宝',
+          双11销售额: 52000000
+        },
+        {
+          年份: 2010,
+          平台: '淘宝',
+          双11销售额: 936000000
+        },
+        {
+          年份: 2011,
+          平台: '淘宝',
+          双11销售额: 3360000000
+        },
+        {
+          年份: 2012,
+          平台: '天猫',
+          双11销售额: 19100000000
+        },
+        {
+          年份: 2013,
+          平台: '天猫和淘宝',
+          双11销售额: 35000000000
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '年份',
+          description: '具体年份',
+          type: 'date',
+          dateGranularity: 'year',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '平台',
+          description: '电商平台名称',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '双11销售额',
+          description: '双11当天的销售额',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: '回顾2009年，淘宝发起首届双11，第一年的GMV仅5200万，只有27个品牌参加。但2010年的双11，销售额便飙升到9.36亿元；2011年，这一数字变成了33.6亿元；2012年，淘宝商城正式更名为天猫，线上总成交额达到191亿元；2013年双11，天猫和淘宝的交易额更是翻倍至350亿'
+    }
+  ]
+};
+
+const transposition = {
+  domain: 'transposition',
+  data: [
+    {
+      isEnglish: false,
+      dataTable: [
+        {
+          日期: '8月30日',
+          指数值: 980.58,
+          变化类型: '比上月末',
+          变化值: 0.4
+        },
+        {
+          日期: '8月30日',
+          指数值: 973.34,
+          变化类型: '环比',
+          变化值: 2
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '日期',
+          description: '具体日期',
+          type: 'date',
+          dateGranularity: 'day',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '指数值',
+          description: '指数的具体值',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '变化类型',
+          description: '指数变化的类型',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '变化值',
+          description: '指数变化的值',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: '8月，沿海内贸终端补库节奏放缓，但受台风、内贸运力外放等因素影响，即期运力略有收紧，沿海散货综合指数走势平稳。8月30日，上海航运交易所发布的沿海（散货）综合运价指数报收980.58点， 比上月末上涨0.4%，月平均值为973.34点， 环比上涨0.2%。'
+    },
+    {
+      isEnglish: false,
+      dataTable: [
+        {
+          公路等级: '四级及以上等级公路',
+          里程: 5270100,
+          里程增加: 107600,
+          里程比重: 96.9,
+          比重提高: 0.5
+        },
+        {
+          公路等级: '二级及以上等级公路',
+          里程: 762200,
+          里程增加: 18600,
+          里程比重: 14,
+          比重提高: 0.1
+        },
+        {
+          公路等级: '高速公路',
+          里程: 183600,
+          里程增加: 6400,
+          里程比重: null,
+          比重提高: null
+        },
+        {
+          公路等级: '国家高速公路',
+          里程: 122300,
+          里程增加: 2400,
+          里程比重: null,
+          比重提高: null
+        }
+      ],
+      fieldInfo: [
+        {
+          fieldName: '公路等级',
+          description: '公路的等级',
+          type: 'string',
+          role: 'dimension',
+          location: 'dimension'
+        },
+        {
+          fieldName: '里程',
+          description: '公路的里程',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '里程增加',
+          description: '公路里程的增加量',
+          type: 'numerical',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '里程比重',
+          description: '公路里程占总里程的比重',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        },
+        {
+          fieldName: '比重提高',
+          description: '公路里程比重的提高量',
+          type: 'ratio',
+          role: 'measure',
+          location: 'measure'
+        }
+      ],
+      text: '年末全国四级及以上等级公路里程527.01万公里，比上年末增加10.76万公里，占公路里程比重为96.9%、提高0.5个百分点。其中，二级及以上等级公路里程76.22万公里、增加1.86万公里，占公路里程比重为14.0%、提高0.1个百分点；高速公路里程18.36万公里、增加0.64万公里，国家高速公路里程12.23万公里、增加0.24万公里'
+    }
+  ]
+};
+
 export const dataExtractionCommonDataset = [
   economyData,
   technologyData,
-  // realEstateData,
   enviromentData,
   cultureSportsData,
   agricultureData,
   retailData,
-  travelData
+  travelData,
+  realEstateData,
+  newTravelData,
+  enegryData,
+  transposition,
+  eCommerceData
 ].reduce((prev: Record<string, any>[], cureV) => {
   return [
     ...prev,

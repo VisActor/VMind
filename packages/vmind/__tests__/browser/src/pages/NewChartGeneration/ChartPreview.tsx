@@ -11,6 +11,9 @@ type IPropsType = {
   spec: any;
   specList?: any;
   costTime: number;
+  showTime?: boolean;
+  showSpec?: boolean;
+  style?: any;
 };
 
 function downloadGif(link: string, filename = 'out') {
@@ -72,7 +75,7 @@ export function ChartPreview(props: IPropsType) {
   }, [props]);
 
   return (
-    <div className="right-chart">
+    <div className="right-chart" style={props.style}>
       <Modal
         title={outType}
         visible={!!outType}
@@ -95,8 +98,10 @@ export function ChartPreview(props: IPropsType) {
           <div>
             <p>Command: {props.command}</p>
           </div>
-          <div className="right-chart-content">{props.spec ? <div id="chart"></div> : null}</div>
-          {props.spec ? (
+          <div className="right-chart-content">
+            {props.spec ? <div id="chart" style={{ height: 300, width: 500 }}></div> : null}
+          </div>
+          {props.spec && props.showSpec ? (
             <div>
               <p>Total Time: {props.costTime / 1000} s</p>
               <p>spec:</p>

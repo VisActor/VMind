@@ -46,7 +46,7 @@ export function ChartGeneratorResult() {
       return {
         title: (
           <div className="column-title">
-            <Tooltip content={info.fieldType}>{info.fieldType && <div>{`${info.fieldType[0]}__`}</div>}</Tooltip>
+            <Tooltip content={info.type}>{info.type && <div>{`${info.type[0]}__`}</div>}</Tooltip>
             <Tooltip content={info.fieldName}>{info.fieldName}</Tooltip>
             <Tooltip content={info?.description}>
               <IconInfoCircle />
