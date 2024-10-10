@@ -80,8 +80,8 @@ function getScoreOfDataset(
       if (!seletedList[i]) {
         const dataListB = dataTableB?.map(v => v[fieldInfoB[i].fieldName]) || [];
         const cosValue = cosineSimilarity(fieldInfo.fieldName, fieldInfoB[i].fieldName);
-        const currentTypeScore = getFieldTypeScore(fieldInfo.fieldType, fieldInfoB[i].fieldType);
-        const role = fieldInfo.role ?? getRoleByFieldType(fieldInfo.fieldType);
+        const currentTypeScore = getFieldTypeScore(fieldInfo.type, fieldInfoB[i].type);
+        const role = fieldInfo.role ?? getRoleByFieldType(fieldInfo.type);
         const currentDataScore = getDataScore(dataListB, dataListA, role);
         const currentScore = getFinalScore(getFieldScore(cosValue, currentTypeScore), currentDataScore);
         if (currentScore > finalScore && currentTypeScore !== -1 && currentDataScore > 0) {

@@ -343,18 +343,18 @@ export const capcutMockData: any[] = [
       {
         fieldName: 'year',
         description: 'The year when the product was launched',
-        fieldType: 'date',
+        type: 'date',
         dateGranularity: 'year'
       },
       {
         fieldName: 'product',
         description: 'the name of product',
-        fieldType: 'string'
+        type: 'string'
       },
       {
         fieldName: 'price',
         description: 'The price of the product',
-        fieldType: 'numerical'
+        type: 'numerical'
       }
     ]
   }

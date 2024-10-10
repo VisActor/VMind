@@ -29,7 +29,7 @@ export function NewChartGenerationPage() {
         />
       </Sider>
       <Content>
-        <ChartPreview spec={spec} command={command} specList={specList} costTime={costTime} />
+        <ChartPreview showSpec={true} spec={spec} command={command} specList={specList} costTime={costTime} />
       </Content>
     </Layout>
   );
