@@ -52,7 +52,7 @@ export class ChartCommandAtom extends BaseAtom<ChartCommandCtx, ChartCommandOpti
           text,
           fieldInfo: fieldInfo.map(info => ({
             fieldName: info.fieldName,
-            fieldType: info.role || getRoleByFieldType(info.fieldType),
+            type: info.role || getRoleByFieldType(info.type),
             dataLength: dataTable?.filter(v => isValidData(v[info.fieldName]))?.length || undefined
           })),
           dataTable: this.options?.useDataTable ? JSON.stringify(dataTable) : undefined

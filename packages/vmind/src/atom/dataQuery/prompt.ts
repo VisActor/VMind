@@ -1,6 +1,6 @@
-/* eslint-disable max-len */
-export const VMIND_DATA_SOURCE = 'VMind_data_source';
+import { VMIND_DATA_SOURCE } from './const';
 
+/* eslint-disable max-len */
 export const getQueryDatasetPrompt = (
   showThoughts: boolean
 ) => `You are an expert in data analysis. Here is a raw dataset named ${VMIND_DATA_SOURCE}. User will tell you his command and column information of ${VMIND_DATA_SOURCE}. Your task is to generate a sql and fieldInfo according to Instruction. Response one JSON object only.
@@ -40,7 +40,7 @@ Response in the following format:
 #Examples:
 
 User's Command: Show me the change of the GDP rankings of each country.
-Column Information: [{"fieldName":"country","fieldType":"string","role":"dimension"},{"fieldName":"continent","fieldType":"string","role":"dimension"},{"fieldName":"GDP","fieldType":"float","role":"measure"},{"fieldName":"year","fieldType":"int","role":"measure"}]
+Column Information: [{"fieldName":"country","type":"string","role":"dimension"},{"fieldName":"continent","type":"string","role":"dimension"},{"fieldName":"GDP","type":"float","role":"measure"},{"fieldName":"year","type":"int","role":"measure"}]
 
 Response:
 \`\`\`
@@ -66,7 +66,7 @@ Response:
 ----------------------------------
 
 User's Command: 请使用[柱状图]展示[2022年GDP排名前五的中国城市及其2022年的GDP].
-Column Information: [{"fieldName":"城市","fieldType":"string","role":"dimension"},{"fieldName":"2022年GDP（亿元）","fieldType":"int","role":"measure"}]
+Column Information: [{"fieldName":"城市","type":"string","role":"dimension"},{"fieldName":"2022年GDP（亿元）","type":"int","role":"measure"}]
 
 Response:
 \`\`\`

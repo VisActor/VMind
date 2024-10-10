@@ -1,7 +1,7 @@
 /** Atom Function Types */
 
-import type { AutoChartCell } from '@visactor/chart-advisor/src/type';
-import type { ChartType } from 'src/common/typings';
+import type { BasemapOption, Cell, ChartType } from './chart';
+import type { VizSchema } from '../atom/type';
 
 /** Base DataCell */
 export type DataCell = string | number;
@@ -40,7 +40,9 @@ export enum DataType {
   REGION = 'region',
   NUMERICAL = 'numerical',
   RATIO = 'ratio',
-  COUNT = 'count'
+  COUNT = 'count',
+  FLOAT = 'float',
+  INT = 'int'
 }
 
 export enum ROLE {
@@ -48,27 +50,22 @@ export enum ROLE {
   MEASURE = 'measure'
 }
 
-export enum LOCATION {
-  DIMENSION = 'dimension',
-  MEASURE = 'measure'
-}
-
 /** field information Of Data Table */
 export interface FieldInfo {
-  /** field ID */
-  fieldId: string;
   /** name of field */
   fieldName: string;
   /** description of field */
   description?: string;
   /** field type, eg: time / category / numerical */
-  fieldType: DataType;
+  type: DataType;
   /** field role */
   role: ROLE;
   /** field location */
-  location: LOCATION;
+  location?: ROLE;
   /** example of field value */
   dataExample?: DataCell[];
+  /** domain of field value */
+  domain?: (string | number)[];
 }
 
 export interface ClusterDataView {
@@ -128,7 +125,9 @@ export interface DataQueryCtx extends BaseContext {
   /** fieldsInfo of sql query result */
   llmFieldInfo?: FieldInfo[];
   /** Data Table values */
-  dataTabel: DataTable;
+  dataTable: DataTable;
+  /** user's command */
+  command: string;
   /** sql */
   sql?: string;
 }
@@ -138,9 +137,19 @@ export interface ChartGeneratorCtx extends BaseContext {
   /** extra fieldsInfo of dataTable */
   fieldInfo?: FieldInfo[];
   /** Data Table values */
-  dataTabel: DataTable;
+  dataTable: DataTable;
+  /** command */
+  command: string;
   /** chart type generator result */
   chartType?: ChartType;
   /** field mapping result */
-  cells: AutoChartCell;
+  cell: Cell;
+  /** supported chart list */
+  chartTypeList?: ChartType[];
+  /** only use in map chart */
+  basemapOption?: BasemapOption;
+  /** vizSchema */
+  vizSchema: VizSchema;
+  /** chart spec */
+  spec: any;
 }

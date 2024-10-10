@@ -10,7 +10,7 @@ User Input is Bellow:
 {
 fieldInfo: {
 fieldName: string; // name of this field,
-fieldType?: 'measure' | 'dimension',
+type?: 'measure' | 'dimension',
 dataLength?: number, // The number of valid data contained in the current field.
 }[],
 text?: string;
@@ -37,7 +37,7 @@ You should carefully think and execute the following steps:
 # Examples1
 ## User Input:
 \`\`\`
-{"text":'今年6月各大厂商发布了过去1个月的财报数据，其中阿里在V月份利润额达到了1000亿，经调整后的利润额为100亿，而字节跳动V月份的利润额为800亿，经调整后利润额为120亿。 ',"fieldInfo:":[{"fieldName":"公司","fieldType":"dimension",},{"fieldName":"月份",fieldType":"dimension",},{"fieldName":"利润调整","fieldType":"dimension",},{"fieldName":"利润额","fieldType":"measure",}]}
+{"text":'今年6月各大厂商发布了过去1个月的财报数据，其中阿里在V月份利润额达到了1000亿，经调整后的利润额为100亿，而字节跳动V月份的利润额为800亿，经调整后利润额为120亿。 ',"fieldInfo:":[{"fieldName":"公司","type":"dimension",},{"fieldName":"月份",type":"dimension",},{"fieldName":"利润调整","type":"dimension",},{"fieldName":"利润额","type":"measure",}]}
 \`\`\`
 ## Response
 \`\`\`

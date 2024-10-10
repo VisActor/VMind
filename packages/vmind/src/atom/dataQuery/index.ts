@@ -6,11 +6,13 @@ import { merge, pick } from '@visactor/vutils';
 import type { LLMMessage, LLMResponse } from '../../types/llm';
 import { getQueryDatasetPrompt } from './prompt';
 import { parseSQLResponse } from './utils';
+import type { ExecuteQueryCtx } from './executeQuery';
+import { executeDataQuery, getFinalQueryResult, patchSQLBeforeQuery, restoreDatasetAfterQuery } from './executeQuery';
 
 export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
   name = AtomName.DATA_QUERY;
 
-  isLLMAtom: true;
+  isLLMAtom = true;
 
   constructor(context: DataQueryCtx, option: BaseOptions) {
     super(context, option);
@@ -23,6 +25,7 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
         dataTable: [],
         fieldInfo: [],
         llmFieldInfo: [],
+        command: '',
         dataTableSummary: ''
       },
       context
@@ -36,11 +39,11 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
   }
 
   getLLMMessages(query?: string): LLMMessage[] {
-    const { fieldInfo } = this.context;
+    const { fieldInfo, command } = this.context;
     const { showThoughts } = this.options;
     const addtionContent = this.getHistoryLLMMessages(query);
     if (this.options.useSQL) {
-      const fieldInfoContent = fieldInfo.map(info => pick(info, ['fieldName', 'fieldType', 'role']));
+      const fieldInfoContent = fieldInfo.map(info => pick(info, ['fieldName', 'type', 'role']));
       return [
         {
           role: 'system',
@@ -48,7 +51,7 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
         },
         {
           role: 'user',
-          content: `User's Command: ${query}\nColumn Information: ${JSON.stringify(fieldInfoContent)}`
+          content: `User's Command: ${command}\nColumn Information: ${JSON.stringify(fieldInfoContent)}`
         },
         ...addtionContent
       ];
@@ -57,15 +60,11 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
     return [];
   }
 
-  parseLLMContent(data: LLMResponse) {
-    const resJson = this.options.llm.parseJson(data);
-    if (resJson.error) {
-      return this.context;
-    }
+  parseLLMContent(resJson: any, llmRes: LLMResponse) {
     const { sql, fieldInfo: responseFiledInfo } = resJson;
-    if (!sql || !responseFiledInfo) {
+    if ((!sql || !responseFiledInfo) && llmRes?.choices?.[0]) {
       //try to parse the response with another format
-      const content = data.choices[0].message.content;
+      const content = llmRes.choices[0].message.content;
       return {
         ...this.context,
         ...parseSQLResponse(content)
@@ -75,6 +74,16 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
   }
 
   protected _runWithOutLLM(): DataQueryCtx {
+    // get dataset and fieldInfo after query
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let newContext: ExecuteQueryCtx = { ...this.context } as any;
+    [patchSQLBeforeQuery, executeDataQuery, restoreDatasetAfterQuery, getFinalQueryResult].forEach(func => {
+      newContext = {
+        ...newContext,
+        ...func(newContext)
+      };
+    });
+    this.setNewContext({ ...this.context, dataTable: newContext.dataTable, fieldInfo: newContext.fieldInfo });
     return this.context;
   }
 }
