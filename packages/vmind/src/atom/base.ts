@@ -11,6 +11,8 @@ import type { BaseOptions } from './type';
 export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
   /** name */
   name: AtomName = AtomName.BASE;
+  /** context before atom execute */
+  protected originContext: Ctx;
   /** current context to self-update */
   protected context: Ctx;
   /** llm response and user's query */
@@ -90,6 +92,10 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     return this.context;
   }
 
+  getContextBeforeRun() {
+    return this.originContext;
+  }
+
   /** check should run or not when context in schdule changed */
   shouldRunByContextUpdate(context: Ctx) {
     return false;
@@ -105,6 +111,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
   async run(userInput?: { context?: Ctx; query?: string }) {
     const { context, query } = userInput || {};
     this.updateContext(context);
+    this.originContext = this.context;
     if (this.isLLMAtom && query) {
       return await this.runWithChat(query);
     }
@@ -116,8 +123,8 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
         return this.context;
       }
       this.recordLLMResponse(data);
+      this.setNewContext(this.parseLLMContent(resJson, data));
       this._runWithOutLLM();
-      this.setNewContext(this.parseLLMContent(resJson));
     } else {
       this._runWithOutLLM();
     }
@@ -160,7 +167,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     return [];
   }
 
-  protected parseLLMContent(resJson: any) {
+  protected parseLLMContent(resJson: any, llmRes?: LLMResponse) {
     return { ...this.context };
   }
 

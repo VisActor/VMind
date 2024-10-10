@@ -27,7 +27,7 @@ const removeFieldInfoInCtx = (context: DataCleanCtx, cleanFieldKey: string[]) =>
 export const transferFieldInfo = (context: DataCleanCtx) => {
   (context.fieldInfo || []).forEach(info => {
     if (!info.role || !info.location) {
-      info.role = getRoleByFieldType(info.fieldType);
+      info.role = getRoleByFieldType(info.type);
       info.location = info.role as any;
     }
   });
@@ -92,7 +92,7 @@ export const getCtxBymeasureAutoTransfer = (context: DataCleanCtx, text?: string
       if (info.role === ROLE.DIMENSION) {
         return;
       }
-      if (info.fieldType === DataType.RATIO) {
+      if (info.type === DataType.RATIO) {
       }
       for (let i = 0; i < dataTable.length; i++) {
         let value = dataTable[i][info.fieldName];
@@ -100,7 +100,7 @@ export const getCtxBymeasureAutoTransfer = (context: DataCleanCtx, text?: string
           dataTable[i][info.fieldName] = extractFirstNumberInString(value as string);
         }
         value = dataTable[i][info.fieldName];
-        if (info.fieldType === DataType.RATIO && isStringText && isNumber(value)) {
+        if (info.type === DataType.RATIO && isStringText && isNumber(value)) {
           const ratioValue = value * 100;
           if (text.includes(`${ratioValue}%`) && !text.includes(`${value}`)) {
             dataTable[i][info.fieldName] = ratioValue;

@@ -19,21 +19,21 @@ text:今年6月各大厂商发布了过去1个月的财报数据，其中阿里�
 
 Response:
 \`\`\`
-{"fieldInfo":[{"fieldName":"公司","description":"公司名称","fieldType":"string",},{"fieldName":"月份","description":"具体月份","fieldType":"string",},{"fieldName":"利润调整","description":"是否经过利润调整","fieldType":"string",},{"fieldName":"利润额","description":"利润总额","fieldType":"numerical",}],"dataTable":[{"公司":"阿里","月份":"5月","利润调整":"调整前","利润额":100000000000,},{"公司":"阿里","月份":"5月","利润调整":"调整后","利润额":10000000000,},{"公司":"字节跳动","月份":"5月","利润调整":"调整前","利润额":80000000000,},{"公司":"字节跳动","月份":"5月","利润调整":"调整后","利润额":12000000000,},]}
+{"fieldInfo":[{"fieldName":"公司","description":"公司名称","type":"string",},{"fieldName":"月份","description":"具体月份","type":"string",},{"fieldName":"利润调整","description":"是否经过利润调整","type":"string",},{"fieldName":"利润额","description":"利润总额","type":"numerical",}],"dataTable":[{"公司":"阿里","月份":"5月","利润调整":"调整前","利润额":100000000000,},{"公司":"阿里","月份":"5月","利润调整":"调整后","利润额":10000000000,},{"公司":"字节跳动","月份":"5月","利润调整":"调整前","利润额":80000000000,},{"公司":"字节跳动","月份":"5月","利润调整":"调整后","利润额":12000000000,},]}
 \`\`\`
 # Examples2
 text: John Smith was very tall, ranking in the 90th percentile for his age group. He knew Jane Doe. who ranking in the 75th percentile for her age group.
 
 Response:
 \`\`\`
-{"fieldInfo":[{"fieldName":"name","description":"The name of a person","fieldType":"string",},{"fieldName":"ranking","description":"The ranking of height in age group","fieldType":"ratio"}],"dataTable":[{"name":"John Smith","ranking":90,},{"name":"Jane Doe","ranking":75}]}
+{"fieldInfo":[{"fieldName":"name","description":"The name of a person","type":"string",},{"fieldName":"ranking","description":"The ranking of height in age group","type":"ratio"}],"dataTable":[{"name":"John Smith","ranking":90,},{"name":"Jane Doe","ranking":75}]}
 \`\`\`
 # Examples3
 text: 现在有大约60%-70%的年轻人有入睡困难，而在两年前，入睡困难的年轻人占比才只有30%。
 
 Response:
 \`\`\`
-{"fieldInfo":[{"fieldName":"年份","description":"数据对应时间","fieldType":"date",dateGranularity:"year"},{"fieldName":"入睡困难占比","description":"年轻人入睡困呐占总人数的比例","fieldType":"ratio"}],"dataTable":[{"年份":"2024","占比":[0.6,0.7],},{"年份":"2022","占比":0.3}]}
+{"fieldInfo":[{"fieldName":"年份","description":"数据对应时间","type":"date",dateGranularity:"year"},{"fieldName":"入睡困难占比","description":"年轻人入睡困呐占总人数的比例","type":"ratio"}],"dataTable":[{"年份":"2024","占比":[0.6,0.7],},{"年份":"2022","占比":0.3}]}
 \`\`\`
 `;
 
@@ -54,7 +54,7 @@ Response in the following format:
 fieldInfo: {
 fieldName: string;
 description: string;
-fieldType: 'date' | 'time' | 'string' | 'region' | 'numerical' | 'ratio' ｜ 'count';
+type: 'date' | 'time' | 'string' | 'region' | 'numerical' | 'ratio' ｜ 'count';
 ratioGranularity?: '%' | '‰'; // generate when fieldType is 'ratio', represent the ratio granularity of ratio data
 dateGranularity?: 'year' | 'quarter' | 'month' | 'week' | 'day'; // generate when fieldType is 'date', represent the date granularity of date time
 }[],
@@ -100,7 +100,7 @@ You should think step-by-step as follow:
 3. Re-read the text, generate concise and clear fields associated with the fields found in Step2.
 4. Extract all relevant data tables from the text based on field information. Each field's data should be concise and convey a single meaning.
 5. Format date data based on granularity, e.g., yyyy-mm-dd, mm-dd, mm, yyyy-mm, or yyyy-qq.
-6. When a date field has multiple date granularities, change the fieldType to a string.
+6. When a date field has multiple date granularities, change the type of field to string.
 7. Extract interval/range data in the form of an array.
 8. Avoid any calculations or numerical conversions, like currency conversion.
 9. Check the data in the dataTable to ensure the correctness of the type.

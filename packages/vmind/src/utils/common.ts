@@ -1,5 +1,5 @@
 import { isFunction } from '@visactor/vutils';
-import type { DataCell } from 'src/types';
+import type { DataCell } from '../types';
 
 export const sampleSize = (array: any, n: number) => {
   const length = array === null ? 0 : array.length;
@@ -35,3 +35,7 @@ export const uniqBy = (array: any, key: string | ((item: any) => string)) => {
 export const isValidData = (data: DataCell) => {
   return data !== null && data !== undefined && data !== 'null' && data !== '';
 };
+
+const KNOWLEDGE_START_INDEX = 1;
+export const getStrFromArray = (array: string[]) =>
+  array.map((item, index) => `${index + KNOWLEDGE_START_INDEX}. ${item}`).join('\n');
