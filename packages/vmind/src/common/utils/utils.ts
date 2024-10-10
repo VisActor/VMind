@@ -5,6 +5,7 @@ import {
   DEFAULT_VIDEO_LENGTH,
   VIDEO_LENGTH_BY_CHART_TYPE
 } from '../../applications/chartGeneration/taskNodes/getChartSpec/VChart/constants';
+import { isFunction, uniqArray } from '@visactor/vutils';
 
 export const calculateTokenUsage = (usageList: any[]) => {
   const totalUsage = {
@@ -94,6 +95,10 @@ export const foldDatasetByYField = (
   return fold(dataset as any, yFieldList, foldName, foldValue, aliasMap, false);
 };
 
+export const getDataListByField = (dataset: VMindDataset, fieldName: string) => {
+  return uniqArray(dataset.map(d => d[fieldName])) as (string | number)[];
+};
+
 export function getObjectProperties(e: Error): {} {
   const properties: any = {};
 
@@ -113,10 +118,10 @@ export const getStrFromDict = (dict: Record<string, string>) =>
     .map(key => `${key}: ${dict[key]}`)
     .join('\n');
 
-export const uniqBy = (array: any, key: string) => {
+export const uniqBy = (array: any, key: string | ((item: any) => string)) => {
   const seen = new Set();
   return array.filter((item: any) => {
-    const k = item[key];
+    const k = isFunction(key) ? key(item) : item[key];
     if (k === undefined) {
       return false;
     }
