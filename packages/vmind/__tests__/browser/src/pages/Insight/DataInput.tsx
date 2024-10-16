@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import './index.scss';
 import {
   Avatar,
@@ -14,7 +14,7 @@ import {
   Checkbox,
   Modal
 } from '@arco-design/web-react';
-import VMind, { ArcoTheme } from '../../../../../src/index';
+import VMind, { ArcoTheme, AtomName, LLMManage, Schedule } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
 import {
   ChangePointChart,
@@ -30,14 +30,13 @@ import {
   ScatterPlotChart
 } from './data';
 import JSON5 from 'json5';
-import { InsightLanguage } from '../../../../../src/applications/types';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
 type IPropsType = {
-  onInsightGenerate: (insights: any, costTime: number) => void;
+  onInsightGenerate: (insights: any, spec: any, costTime: number) => void;
   onSpecChange: (spec: any) => void;
 };
 const demoDataList: { [key: string]: any } = {
@@ -56,10 +55,11 @@ const demoDataList: { [key: string]: any } = {
 
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
-  [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.SKYLARK2_v1_2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
+  [Model.DOUBAO_PRO]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
-  [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
+  [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.GPT_4_0613]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
@@ -79,41 +79,49 @@ export function DataInput(props: IPropsType) {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const vmind: VMind = useMemo(() => {
-    if (!url || !apiKey) {
-      Message.error('Please set your LLM URL and API Key!!!');
-      return null as unknown as VMind;
-    }
-    return new VMind({
+  const llm = React.useRef<LLMManage>(
+    new LLMManage({
       url,
-      model,
-      cache,
-      showThoughts: showThoughts,
       headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'api-key': apiKey
-      }
+        'api-key': apiKey,
+        Authorization: `Bearer ${apiKey}`
+      },
+      model,
+      maxTokens: 2048
+    })
+  );
+  const schedule = React.useRef<Schedule<[AtomName.DATA_INSIGHT]>>(
+    new Schedule([AtomName.DATA_INSIGHT, AtomName.DATA_CLEAN], { base: { llm: llm.current, showThoughts } })
+  );
+  useEffect(() => {
+    llm.current.updateOptions({
+      url,
+      headers: {
+        'api-key': apiKey,
+        Authorization: `Bearer ${apiKey}`
+      },
+      model
     });
-  }, [apiKey, cache, model, showThoughts, url]);
+  }, [url, model, apiKey]);
 
   const getInsight = useCallback(async () => {
     const startTime = new Date().getTime();
     const specJson = JSON5.parse(spec);
-    const insights = await vmind.intelligentInsight(specJson, {
-      //insightNumberLimit: 2,
-      generateText: true
-      //language: InsightLanguage.EN
+    schedule.current.setNewTask({
+      spec: specJson
     });
+    await schedule.current.run();
     const endTime = new Date().getTime();
     const costTime = endTime - startTime;
+    const { insights } = schedule.current.getContext();
 
-    props.onInsightGenerate(insights, costTime);
+    props.onInsightGenerate(insights, specJson, costTime);
 
     console.log(costTime);
     console.log(insights);
 
     setLoading(false);
-  }, [props, spec, vmind]);
+  }, [props, spec]);
 
   return (
     <div className="left-sider">
@@ -190,9 +198,7 @@ export function DataInput(props: IPropsType) {
         <RadioGroup value={model} onChange={v => setModel(v)}>
           <Radio value={Model.GPT3_5}>GPT-3.5</Radio>
           <Radio value={Model.GPT4}>GPT-4</Radio>
-          <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
-
-          <Radio value={Model.SKYLARK}>skylark pro</Radio>
+          <Radio value={Model.DOUBAO_PRO}>Doubao-Pro</Radio>
           <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
         </RadioGroup>
       </div>
