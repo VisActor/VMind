@@ -2,6 +2,7 @@ export enum ChartType {
   DynamicBarChart = 'Dynamic Bar Chart',
   BarChart = 'Bar Chart',
   LineChart = 'Line Chart',
+  AreaChart = 'Area Chart',
   PieChart = 'Pie Chart',
   ScatterPlot = 'Scatter Plot',
   WordCloud = 'Word Cloud',

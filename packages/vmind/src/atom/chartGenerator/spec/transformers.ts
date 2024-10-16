@@ -27,6 +27,7 @@ import { builtinThemeMap } from '../const';
 const chartTypeMap: { [chartName: string]: string } = {
   [ChartType.BarChart.toUpperCase()]: 'bar',
   [ChartType.LineChart.toUpperCase()]: 'line',
+  [ChartType.AreaChart.toUpperCase()]: 'area',
   [ChartType.PieChart.toUpperCase()]: 'pie',
   [ChartType.WordCloud.toUpperCase()]: 'wordCloud',
   [ChartType.ScatterPlot.toUpperCase()]: 'scatter',

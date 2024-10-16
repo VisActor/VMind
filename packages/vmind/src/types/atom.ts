@@ -2,15 +2,18 @@
 
 import type { BasemapOption, Cell, ChartType } from './chart';
 import type { VizSchema } from '../atom/type';
+import type { FieldInfo, DataTable } from './base';
+import type { Insight } from '../atom/dataInsight/type';
 
-/** Base DataCell */
-export type DataCell = string | number;
-
-/** Base Data Item */
-export type DataItem = Record<string, DataCell>;
-
-/** Data Table */
-export type DataTable = DataItem[];
+export enum AtomName {
+  BASE = 'base',
+  DATA_EXTRACT = 'dataExtract',
+  DATA_CLEAN = 'dataClean',
+  DATA_QUERY = 'dataQuery',
+  CHART_COMMAND = 'chartCommand',
+  CHART_GENERATE = 'chartGenerate',
+  DATA_INSIGHT = 'dataInsight'
+}
 
 /** Base LLM Context */
 export interface BaseContext {
@@ -22,50 +25,8 @@ export interface BaseContext {
   query?: string;
   /** llm response content */
   response?: string;
-}
-
-export enum AtomName {
-  BASE = 'base',
-  DATA_EXTRACT = 'dataExtract',
-  DATA_CLEAN = 'dataClean',
-  DATA_QUERY = 'dataQuery',
-  CHART_COMMAND = 'chartCommand',
-  CHART_GENERATE = 'chartGenerate'
-}
-
-export enum DataType {
-  DATE = 'date',
-  TIME = 'time',
-  STRING = 'string',
-  REGION = 'region',
-  NUMERICAL = 'numerical',
-  RATIO = 'ratio',
-  COUNT = 'count',
-  FLOAT = 'float',
-  INT = 'int'
-}
-
-export enum ROLE {
-  DIMENSION = 'dimension',
-  MEASURE = 'measure'
-}
-
-/** field information Of Data Table */
-export interface FieldInfo {
-  /** name of field */
-  fieldName: string;
-  /** description of field */
-  description?: string;
-  /** field type, eg: time / category / numerical */
-  type: DataType;
-  /** field role */
-  role: ROLE;
-  /** field location */
-  location?: ROLE;
-  /** example of field value */
-  dataExample?: DataCell[];
-  /** domain of field value */
-  domain?: (string | number)[];
+  /** error info */
+  error?: string;
 }
 
 export interface ClusterDataView {
@@ -91,6 +52,12 @@ export interface DataExtractionCtx extends BaseContext {
   fieldInfo?: FieldInfo[];
   /** Data Table values */
   dataTable?: DataTable;
+  /** multiple results */
+  dataset?: {
+    summary: string;
+    textPosition: [number, number];
+    fieldInfo: FieldInfo[];
+  }[];
 }
 
 /** Context of Chart Command Atom */
@@ -152,4 +119,17 @@ export interface ChartGeneratorCtx extends BaseContext {
   vizSchema: VizSchema;
   /** chart spec */
   spec: any;
+}
+
+export interface DataInsightCtx extends BaseContext {
+  /** spec of chart */
+  spec?: any;
+  /** data tabel */
+  dataTable?: DataTable;
+  /** fieldsInfo of dataTable */
+  fieldInfo?: FieldInfo[];
+  /** final insight */
+  insights: Insight[];
+  /** chartType of vchart */
+  vChartType?: string;
 }

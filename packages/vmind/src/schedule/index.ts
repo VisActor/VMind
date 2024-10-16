@@ -3,16 +3,23 @@ import { merge } from '@visactor/vutils';
 import type { BaseContext } from '../types/atom';
 import { AtomName } from '../types/atom';
 import { BaseAtom } from '../atom/base';
-import { DataQueryAtom, DataExtractionAtom, ChartGeneratorAtom, ChartCommandAtom } from '../atom';
+import { DataQueryAtom, DataExtractionAtom, ChartGeneratorAtom, ChartCommandAtom, DataInsightAtom } from '../atom';
 import type { CombineAll, MapAtomTypes, TaskMapping } from '../types/schedule';
 import { DataCleanAtom } from '../atom/dataClean';
-import type { BaseOptions, ChartCommandOptions, DataCleanOptions, DataExtractionOptions } from '../atom/type';
+import type {
+  BaseOptions,
+  ChartCommandOptions,
+  DataCleanOptions,
+  DataExtractionOptions,
+  DataInsightOptions
+} from '../atom/type';
 
 export interface ScheduleOptions {
   [AtomName.BASE]?: BaseOptions;
   [AtomName.DATA_EXTRACT]?: DataExtractionOptions;
   [AtomName.DATA_CLEAN]?: DataCleanOptions;
   [AtomName.DATA_QUERY]?: BaseOptions;
+  [AtomName.DATA_INSIGHT]?: DataInsightOptions;
   [AtomName.CHART_GENERATE]?: BaseOptions;
   [AtomName.CHART_COMMAND]?: ChartCommandOptions;
 }
@@ -66,6 +73,8 @@ export class Schedule<T extends AtomName[]> {
         return new DataCleanAtom(this.context, options);
       case AtomName.DATA_QUERY:
         return new DataQueryAtom(this.context, options);
+      case AtomName.DATA_INSIGHT:
+        return new DataInsightAtom(this.context, options);
       case AtomName.CHART_COMMAND:
         return new ChartCommandAtom(this.context, options);
       case AtomName.CHART_GENERATE:
