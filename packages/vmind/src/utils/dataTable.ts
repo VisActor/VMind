@@ -1,7 +1,7 @@
-import { isArray, isNil } from '@visactor/vutils';
+import { isArray, isNil, isNumber } from '@visactor/vutils';
 import { FOLD_NAME, FOLD_VALUE, fold } from '@visactor/chart-advisor';
-import type { DataItem, DataTable, FieldInfo } from '../types';
-import { getFieldInfo } from '../atom/dataQuery/utils';
+import { ROLE, type DataItem, type DataTable, type FieldInfo } from '../types';
+import { getFieldInfo } from './field';
 
 export const foldDataTableByYField = (
   dataTable: DataItem[],
@@ -33,4 +33,23 @@ export const getFieldInfoFromDataTable = (dataTable: DataItem[]): FieldInfo[] =>
 
 export const isValidDataTable = (dataTable?: DataTable | undefined | null) => {
   return !isNil(dataTable) && isArray(dataTable) && dataTable.length > 0;
+};
+
+export const transferMeasureInTable = (dataTable: DataItem[], fieldInfo: FieldInfo[]) => {
+  const newDataTable: DataTable = [];
+  const measureFields = fieldInfo.filter(field => field.role === ROLE.MEASURE);
+  if (measureFields.length) {
+    dataTable.forEach(row => {
+      const newRow = { ...row };
+      measureFields.forEach(field => {
+        const value = Number(row[field.fieldName]);
+        if (isNumber(value)) {
+          newRow[field.fieldName] = value;
+        }
+      });
+      newDataTable.push(newRow);
+    });
+    return newDataTable;
+  }
+  return dataTable;
 };
