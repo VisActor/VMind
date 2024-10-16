@@ -19,8 +19,8 @@ export function InsightPage() {
         }}
       >
         <DataInput
-          onInsightGenerate={(insights, costTime) => {
-            setSpec(insights.spec);
+          onInsightGenerate={(insights, spec, costTime) => {
+            setSpec(spec);
             setInsights(insights);
             setCostTime(costTime);
           }}
