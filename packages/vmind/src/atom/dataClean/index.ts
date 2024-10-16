@@ -1,5 +1,5 @@
 import type { DataCleanCtx } from '../../types/atom';
-import { AtomName, type DataExtractionCtx } from '../../types/atom';
+import { AtomName } from '../../types/atom';
 import type { DataCleanOptions } from '../type';
 import { BaseAtom } from '../base';
 import { merge } from '@visactor/vutils';
@@ -10,7 +10,8 @@ import {
   getCtxByfilterSameDataItem,
   getCtxByFilterRowWithNonEmptyValues,
   getCtxByRangeValueTranser,
-  getSplitDataViewOfDataTable
+  getSplitDataViewOfDataTable,
+  transferFieldInfo
 } from './utils';
 
 /** The order of pipeline is meaningful   */
@@ -51,11 +52,11 @@ const pipelines: { key: string; func: (ctx: DataCleanCtx, ...args: any[]) => Dat
 export class DataCleanAtom extends BaseAtom<DataCleanCtx, DataCleanOptions> {
   name = AtomName.DATA_CLEAN;
 
-  constructor(context: DataExtractionCtx, option: DataCleanOptions) {
+  constructor(context: DataCleanCtx, option: DataCleanOptions) {
     super(context, option);
   }
 
-  buildDefaultContext(context: DataExtractionCtx): DataExtractionCtx {
+  buildDefaultContext(context: DataCleanCtx): DataCleanCtx {
     return merge(
       {},
       {
@@ -76,6 +77,11 @@ export class DataCleanAtom extends BaseAtom<DataCleanCtx, DataCleanOptions> {
       rangeValueTransfer: 'avg',
       hierarchicalClustering: true
     };
+  }
+
+  updateContext(context: DataCleanCtx): DataCleanCtx {
+    this.context = transferFieldInfo(super.updateContext(context));
+    return this.context;
   }
 
   shouldRunByContextUpdate(context: DataCleanCtx): boolean {

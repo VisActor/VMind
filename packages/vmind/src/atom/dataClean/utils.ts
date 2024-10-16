@@ -1,11 +1,11 @@
 import { getRoleByFieldType } from '../../utils/field';
-import type { ClusterDataView, DataCell, DataItem } from '../../types/atom';
-import { DataType, ROLE, type DataCleanCtx, type DataTable, type FieldInfo } from '../../types/atom';
+import type { ClusterDataView } from '../../types/atom';
+import type { DataItem } from '../../types';
+import { DataType, ROLE, type DataCleanCtx, type FieldInfo } from '../../types';
 import { isArray, isNumber, pick } from '@visactor/vutils';
 import { extractFirstNumberInString } from '../../utils/text';
-import { isValidData, uniqBy } from '../../utils/common';
+import { isValidData, uniqBy, average } from '../../utils/common';
 import type { RangeValueTransferType } from '../type';
-import { average, sum } from '@visactor/vchart/esm/util';
 import { agglomerativeHierarchicalClustering, type ClusterDataItem } from '../../utils/cluster';
 
 const removeFieldInfoInCtx = (context: DataCleanCtx, cleanFieldKey: string[]) => {
