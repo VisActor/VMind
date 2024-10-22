@@ -66,7 +66,7 @@ export const PLAYGROUND_MENU_INFO: {
 };
 export const CollapseCSS = {
   width: '100vw',
-  height: '100vh',
   border: '1px solid var(--color-border)',
+  overflow: 'auto',
   background: 'var(--color-fill-2)'
 };

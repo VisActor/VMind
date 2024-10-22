@@ -1,8 +1,8 @@
 import { getRoleByFieldType } from '../../utils/field';
-import type { ClusterDataView } from '../../types/atom';
-import type { DataItem } from '../../types';
+import type { ClusterDataView, DatasetFromText } from '../../types/atom';
+import type { DataItem, DataTable } from '../../types';
 import { DataType, ROLE, type DataCleanCtx, type FieldInfo } from '../../types';
-import { isArray, isNumber, pick } from '@visactor/vutils';
+import { isArray, isNumber, isString, pick } from '@visactor/vutils';
 import { extractFirstNumberInString } from '../../utils/text';
 import { isValidData, uniqBy, average } from '../../utils/common';
 import type { RangeValueTransferType } from '../type';
@@ -60,6 +60,15 @@ export const getCtxByfilterSameValueColumn = (context: DataCleanCtx) => {
     });
     return removeFieldInfoInCtx(newContext, cleanFieldKey);
   }
+  if (dataTable.length && fieldInfo.length) {
+    const cleanFieldKey: string[] = [];
+    fieldInfo.forEach(info => {
+      if (info.role === ROLE.DIMENSION && !isValidData(dataTable[0][info.fieldName])) {
+        cleanFieldKey.push(info.fieldName);
+      }
+    });
+    return removeFieldInfoInCtx(newContext, cleanFieldKey);
+  }
   return newContext;
 };
 
@@ -87,23 +96,43 @@ export const getCtxByneedNumericalFields = (context: DataCleanCtx) => {
 export const getCtxBymeasureAutoTransfer = (context: DataCleanCtx, text?: string) => {
   const { fieldInfo = [], dataTable = [] } = context || {};
   const isStringText = text && typeof text === 'string';
-  if (dataTable.length > 1 && fieldInfo.length) {
+  if (dataTable.length >= 1 && fieldInfo.length) {
     fieldInfo.forEach(info => {
       if (info.role === ROLE.DIMENSION) {
         return;
       }
-      if (info.type === DataType.RATIO) {
-      }
       for (let i = 0; i < dataTable.length; i++) {
         let value = dataTable[i][info.fieldName];
-        if (typeof dataTable[i][info.fieldName] === 'string') {
-          dataTable[i][info.fieldName] = extractFirstNumberInString(value as string);
+        if (typeof dataTable[i][info.fieldName] === 'string' && isNaN(Number(value))) {
+          const extractionValue = `${extractFirstNumberInString(value as string)}`;
+          const beforeLen = (value as string).length;
+          const curLen = extractionValue.length;
+          dataTable[i][info.fieldName] =
+            extractionValue !== 'null' && (curLen / beforeLen > 0.9 || beforeLen - curLen <= 2)
+              ? Number(extractionValue)
+              : null;
+        } else if (typeof dataTable[i][info.fieldName] === 'string') {
+          value = Number(value);
+          dataTable[i][info.fieldName] = value;
+        } else if (!isNumber(value)) {
+          value = null;
+          dataTable[i][info.fieldName] = null;
         }
         value = dataTable[i][info.fieldName];
-        if (info.type === DataType.RATIO && isStringText && isNumber(value)) {
-          const ratioValue = value * 100;
-          if (text.includes(`${ratioValue}%`) && !text.includes(`${value}`)) {
-            dataTable[i][info.fieldName] = ratioValue;
+        if (info.type === DataType.RATIO && isNumber(value)) {
+          if (isStringText) {
+            // revised wrong ratio value in extraction
+            const ratioValue = value * 100;
+            if (text.includes(`${ratioValue}%`) && !text.includes(`${value}`)) {
+              dataTable[i][info.fieldName] = ratioValue;
+              value = ratioValue;
+            }
+          }
+          // transfer ratio value to absolue value without unit
+          if (info.ratioGranularity === '%') {
+            dataTable[i][info.fieldName] = value / 100;
+          } else if (info.ratioGranularity === '‰') {
+            dataTable[i][info.fieldName] = value / 1000;
           }
         }
       }
@@ -144,17 +173,22 @@ export const getCtxByFilterRowWithNonEmptyValues = (context: DataCleanCtx) => {
 };
 
 const transferRangeData = (cell: number[], type: RangeValueTransferType) => {
+  const validCell = cell.filter(v => isValidData(v));
   switch (type) {
     case 'avg':
-      return average(cell);
+      return average(validCell);
     case 'filter':
       return null;
     case 'max':
-      return Math.max(...cell);
+      return Math.max(...validCell);
     case 'min':
-      return Math.min(...cell);
+      return Math.min(...validCell);
+    case 'first':
+      return validCell[0];
+    case 'last':
+      return validCell[validCell.length - 1];
     default:
-      return cell.join('-');
+      return validCell.join('-');
   }
 };
 
@@ -164,12 +198,13 @@ export const getCtxByRangeValueTranser = (context: DataCleanCtx, type: RangeValu
   return {
     ...context,
     dataTable: dataTable.map(item => {
+      const newItem = { ...item };
       fieldInfo.forEach(info => {
-        if (isArray(item[info.fieldName])) {
-          item[info.fieldName] = transferRangeData(item[info.fieldName] as any, type);
+        if (info.role === ROLE.MEASURE && !isString(item[info.fieldName]) && isArray(item[info.fieldName])) {
+          newItem[info.fieldName] = transferRangeData(item[info.fieldName] as any, type);
         }
       });
-      return item;
+      return newItem;
     })
   };
 };
@@ -198,8 +233,25 @@ export const getCtxByValidColumnRatio = (context: DataCleanCtx, ratio = 0.2) => 
   );
 };
 
+export const canMergeDataTable = (ctxA: DatasetFromText, ctxB: DatasetFromText) => {
+  const { fieldInfo: fieldInfoA = [], summary: summaryA } = ctxA || {};
+  const { fieldInfo: fieldInfoB = [], summary: summaryB } = ctxB || {};
+  if (fieldInfoA.length !== fieldInfoB.length || !fieldInfoA.length || !summaryA || !summaryB) {
+    return false;
+  }
+  return fieldInfoA.every(item => {
+    return fieldInfoB.find(
+      itemB =>
+        itemB.fieldName === item.fieldName &&
+        itemB.type === item.type &&
+        itemB?.unit === item?.unit &&
+        itemB?.ratioGranularity === item?.ratioGranularity
+    );
+  });
+};
+
 /** get main data view and cluster result */
-export const getSplitDataViewOfDataTable = (context: DataCleanCtx, threshold: number) => {
+export const getSplitDataViewOfDataTable = (context: DataCleanCtx, threshold = 0.4) => {
   const { dataTable = [], fieldInfo } = context || {};
   const measureFieldInfo = fieldInfo.filter(info => info.role === ROLE.MEASURE);
   const dimensionFieldInfo = fieldInfo.filter(info => info.role === ROLE.DIMENSION);
@@ -240,7 +292,7 @@ export const getSplitDataViewOfDataTable = (context: DataCleanCtx, threshold: nu
       validRowLength: newContext.dataTable.length,
       validCellCount
     };
-    dataViewList.push(dataView);
+    validCellCount > 0 && dataViewList.push(dataView);
   });
   dataViewList.sort((a, b) =>
     a.validCellCount < b.validCellCount ||
@@ -251,11 +303,109 @@ export const getSplitDataViewOfDataTable = (context: DataCleanCtx, threshold: nu
       ? 1
       : -1
   );
+  if (dataViewList.length === 0) {
+    return context;
+  }
   return {
     ...context,
     originDataTable: dataTable,
     fieldInfo: dataViewList[0].fieldInfo,
     dataTable: dataViewList[0].dataTable,
     clusterResult: dataViewList
+  };
+};
+
+export const canMergeClusterResult = (clusterResult: ClusterDataView[]) => {
+  if (!clusterResult.length) {
+    return false;
+  }
+  return clusterResult.every(dataView => {
+    const { fieldInfo, dataTable } = dataView;
+    return (
+      dataTable.length === 1 && fieldInfo.findIndex(info => [DataType.DATE, DataType.TIME].includes(info.type)) === -1
+    );
+  });
+};
+
+export const mergeClusterDataView = (clusterResult: ClusterDataView[]) => {
+  const newFieldInfo: FieldInfo[] = [];
+  const newDataTable: DataTable = [{}];
+  clusterResult.forEach(dataView => {
+    const { fieldInfo, dataTable } = dataView;
+    const measureFields = fieldInfo.filter(info => info.role === ROLE.MEASURE);
+    newFieldInfo.push(...measureFields);
+    measureFields.forEach(field => {
+      newDataTable[0][field.fieldName] = dataTable[0][field.fieldName];
+    });
+  });
+  return {
+    fieldInfo: newFieldInfo,
+    dataTable: newDataTable
+  };
+};
+
+const isSameFields = (a: FieldInfo[], b: FieldInfo[]) => {
+  if (a.length !== b.length) {
+    return false;
+  }
+  return a.every((info, index) => {
+    const matchInB = b.find(item => item.fieldName === info.fieldName);
+    return (
+      matchInB &&
+      matchInB.role === info.role &&
+      matchInB.type === info.type &&
+      matchInB.unit === info.unit &&
+      matchInB.dateGranularity === info.dateGranularity
+    );
+  });
+};
+
+function longestCommonSubstringAtEdges(a: string, b: string) {
+  // 检查开头
+  let startLen = 0;
+  while (startLen < a.length && startLen < b.length && a[startLen] === b[startLen]) {
+    startLen++;
+  }
+
+  // 检查结尾
+  let endLen = 0;
+  while (endLen < a.length && endLen < b.length && a[a.length - 1 - endLen] === b[b.length - 1 - endLen]) {
+    endLen++;
+  }
+
+  // 返回较长的公共子字符串
+  if (startLen >= endLen) {
+    return {
+      strA: a.substring(startLen, a.length),
+      strB: b.substring(startLen, b.length),
+      commonStr: a.substring(0, startLen)
+    };
+  }
+  return {
+    strA: a.substring(0, a.length - endLen),
+    strB: b.substring(0, b.length - endLen),
+    commonStr: a.substring(endLen, a.length)
+  };
+}
+
+export const mergeDataTable = (ctxA: DatasetFromText, ctxB: DatasetFromText) => {
+  const { dataTable: tableA, summary: summaryA, textRange: rangeA } = ctxA;
+  const { dataTable: tableB, summary: summaryB, textRange: rangeB } = ctxB;
+  const { strA, strB, commonStr } = longestCommonSubstringAtEdges(summaryA, summaryB);
+  const newFieldInfo: FieldInfo = {
+    fieldName: 'mergedSummary',
+    role: ROLE.DIMENSION,
+    type: DataType.STRING
+  };
+  const newDataTable = [
+    ...tableA.map(v => ({ ...v, mergedSummary: strA })),
+    ...tableB.map(v => ({ ...v, mergedSummary: strB }))
+  ];
+  const textRange = rangeA && rangeB ? [rangeA[0], rangeB[1]] : null;
+  return {
+    dataTable: newDataTable,
+    fieldInfo: [newFieldInfo, ...ctxA.fieldInfo],
+    summary: `${summaryA} and ${summaryB}`,
+    textRange: textRange as any
   };
 };

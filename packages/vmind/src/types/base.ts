@@ -42,6 +42,8 @@ export interface FieldInfo {
   domain?: (string | number)[];
   /** unit of measure field */
   unit?: string;
+  /**  */
+  ratioGranularity?: '%' | '‰';
   /** granularity of date field */
   dateGranularity?: 'year' | 'quarter' | 'month' | 'week' | 'day';
 }

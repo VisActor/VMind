@@ -4,15 +4,18 @@ import React from 'react';
 import { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
 import { capcutCnData } from '../../data/capcutDataCn';
 import { capcutEnData } from '../../data/capcutDataEn';
+import { capcutMockV2Data } from '../../data/capcutV2Data';
 import { Button, Checkbox, Divider, Message, Select } from '@arco-design/web-react';
 import { dataExtractionCommonDataset } from '../../data/dataExtractionData';
 import { pick } from '@visactor/vutils';
 import { getCurrentFormattedTime, sleep } from '../../utils';
 
+const Option = Select.Option;
+
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
   [Model.DOUBAO_PRO]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY },
-  [Model.DOUBAO_PRO_32K]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY },
+  [Model.DOUBAO_PRO_32K]: { url: globalVariables.VITE_VMIND_URL, key: globalVariables.VITE_VMIND_KEY },
   [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
 };
 const datasets = [
@@ -23,6 +26,10 @@ const datasets = [
   {
     name: 'capcut_en',
     data: capcutEnData
+  },
+  {
+    name: 'capcut_v2',
+    data: capcutMockV2Data
   },
   {
     name: 'common',
@@ -38,6 +45,8 @@ export function DataExtractionTask() {
   const [useDefault, setUseDefault] = React.useState<boolean>(true);
   const [useFieldInfo, setUseFieldInfo] = React.useState<boolean>(false);
   const [messageApi, contextHolder] = Message.useMessage();
+  const [type, setType] = React.useState<'multiple' | 'normal'>('multiple');
+
   const handleRun = React.useCallback(async () => {
     (messageApi as any).info('Run Data Extraction Task!');
     console.info('---------Run Data Extraction Task!---------');
@@ -60,12 +69,17 @@ export function DataExtractionTask() {
         maxTokens: 2048,
         model
       });
-      const schedule = new Schedule([AtomName.DATA_EXTRACT], {
-        base: { llm, showThoughts: false },
-        dataExtract: {
-          reGenerateFieldInfo: true
-        }
-      });
+      const schedule =
+        type === 'normal'
+          ? new Schedule([AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN], {
+              base: { llm, showThoughts: false },
+              dataExtract: { reGenerateFieldInfo: true }
+            })
+          : new Schedule([AtomName.DATA_EXTRACT, AtomName.MULTIPLE_DATA_CLEAN], {
+              base: { llm, showThoughts: false },
+              dataExtract: { isCapcut: true }
+            });
+
       (messageApi as any).info(`Begin ${model}!`);
       console.info(`---------Begin ${model}---------`);
 
@@ -87,10 +101,12 @@ export function DataExtractionTask() {
               text: data.text
             });
             const time1: any = new Date();
-            const result = await schedule.run();
+            const res = await schedule.run();
+            const dataExtractionRes = schedule.getContext(AtomName.DATA_EXTRACT);
             const time2: any = new Date();
             defaultResult.push({
-              context: result,
+              context: dataExtractionRes,
+              dataClean: res,
               timeCost: ((time2 - time1) / 1000).toFixed(1)
             });
             await sleep(sleepTime);
@@ -101,10 +117,12 @@ export function DataExtractionTask() {
               fieldInfo: data.fieldInfo.map((v: any) => pick(v, ['fieldName']))
             });
             const time1: any = new Date();
-            const result = await schedule.run();
+            const res = await schedule.run();
+            const dataExtractionRes = schedule.getContext(AtomName.DATA_EXTRACT);
             const time2: any = new Date();
             fieldInfoResult.push({
-              context: result,
+              context: dataExtractionRes,
+              dataClean: res,
               timeCost: ((time2 - time1) / 1000).toFixed(1)
             });
             await sleep(sleepTime);
@@ -151,7 +169,7 @@ export function DataExtractionTask() {
 
     // 释放 URL 对象
     URL.revokeObjectURL(url);
-  }, [messageApi, selectedDataset, selectedLLM, useDefault, useFieldInfo]);
+  }, [messageApi, selectedDataset, selectedLLM, type, useDefault, useFieldInfo]);
 
   return (
     <div style={{ padding: 20 }}>
@@ -170,6 +188,19 @@ export function DataExtractionTask() {
               {v.name}
             </Select.Option>
           ))}
+        </Select>
+      </div>
+      <div className="dataset-selector">
+        <p>Select DataExtraction Type</p>
+        <Select
+          style={{ width: '100%' }}
+          defaultValue={type}
+          onChange={value => {
+            setType(value);
+          }}
+        >
+          <Option value={'multiple'}>Multiple</Option>
+          <Option value={'normal'}>Normal</Option>
         </Select>
       </div>
       <div>

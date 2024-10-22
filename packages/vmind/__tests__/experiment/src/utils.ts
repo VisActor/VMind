@@ -1,12 +1,14 @@
-import { result as capcutResult } from './results/dataExtraction/result7';
-import { result as caseResult } from './results/dataExtraction/commonResult';
+// import { result as capcutResult } from './results/dataExtraction/result7';
+import { result as capcutResult, caseResult, capcutV2Result } from './results/dataExtraction/version1';
+// import { result as caseResult } from './results/dataExtraction/commonResult';
 import { result as doubaoResult } from './results/dataExtraction/doubao1';
 import { commonAnswer } from './data/dataExtractionData';
 import { mergeResult, updateScoreInDataExtraction } from './pages/DataExtraction/verify';
-import type { FieldInfo } from '../../../src';
+import { AtomName, Schedule, type FieldInfo } from '../../../src';
 import { DataType } from '../../../src/common/typings';
 import type { SimpleFieldInfo } from '../../../src/common/typings';
 import type { DataExtractionResult } from './pages/DataExtraction/type';
+import { DataCleanAtom, MultipleDataCleanAtom } from '../../../src/atom';
 
 export function getCurrentFormattedTime() {
   const now = new Date();
@@ -24,9 +26,49 @@ export function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export function getDataExtractionCaseData(): DataExtractionResult {
+function revisedTestData(data: DataExtractionResult, reGenerateDataClean = false) {
+  if (!reGenerateDataClean) {
+    return data as any;
+  }
+  const dataClean = new MultipleDataCleanAtom({} as any, {});
+  // for (let i = 0; i < data.length; i++) {
+  //   for (let j = 0; j < data[i].result.length; j++) {
+  //     const caseResult = data[i].result[j];
+  //     for (let l = 0; l < caseResult.defaultResult.length; l++) {
+  //       const defaultRes = caseResult.defaultResult[l];
+  //       schedule.setNewTask(defaultRes.context);
+  //       caseResult.defaultResult[l].dataClean = (await schedule.run()) as any;
+  //     }
+  //   }
+  // }
+  return data.map(llmResult => {
+    return {
+      llm: llmResult.llm,
+      result: llmResult.result.map(caseResult => {
+        return {
+          dataset: caseResult.dataset,
+          fieldInfoResult: caseResult.fieldInfoResult,
+          defaultResult: caseResult.defaultResult.map(v => {
+            dataClean.reset(v.context as any);
+            return {
+              ...v,
+              dataClean: dataClean._runWithOutLLM()
+            };
+          })
+        };
+      })
+    };
+  }) as any;
+}
+export function getDataExtractionCaseData(reGenerateDataClean = false): DataExtractionResult {
   // const result = [...doubaoResult, commonAnswer];
-  const result = [...mergeResult(capcutResult as any, caseResult as any), commonAnswer];
+  const result = [
+    ...mergeResult(
+      revisedTestData(capcutResult as any, reGenerateDataClean),
+      revisedTestData(capcutV2Result as any, reGenerateDataClean)
+    ),
+    commonAnswer
+  ];
   updateScoreInDataExtraction(result as any, commonAnswer);
   return result as any;
 }

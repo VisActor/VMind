@@ -6,7 +6,9 @@ import type {
   DataQueryCtx,
   ChartGeneratorCtx,
   ChartCommandCtx,
-  DataInsightCtx
+  DataInsightCtx,
+  MultipleDataCleanCtx,
+  MultipleChartCommandsCtx
 } from './atom';
 
 export interface Tasks {
@@ -23,9 +25,11 @@ export type AtomTypeMap = {
   [AtomName.BASE]: BaseContext;
   [AtomName.DATA_EXTRACT]: DataExtractionCtx;
   [AtomName.DATA_CLEAN]: DataCleanCtx;
+  [AtomName.MULTIPLE_DATA_CLEAN]: MultipleDataCleanCtx;
   [AtomName.DATA_QUERY]: DataQueryCtx;
   [AtomName.DATA_INSIGHT]: DataInsightCtx;
   [AtomName.CHART_COMMAND]: ChartCommandCtx;
+  [AtomName.MULTIPLE_CHART_COMMAND]: MultipleChartCommandsCtx;
   [AtomName.CHART_GENERATE]: ChartGeneratorCtx;
 };
 

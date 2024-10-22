@@ -144,7 +144,7 @@ export function DataInput(props: IPropsType) {
           </Select>
         </div>
 
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 12 }}>
           <p>
             <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
               1
@@ -159,7 +159,7 @@ export function DataInput(props: IPropsType) {
           />
         </div>
 
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 12 }}>
           <p>
             <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
               2
@@ -198,7 +198,7 @@ export function DataInput(props: IPropsType) {
       </div>
       <Divider style={{ marginTop: 30 }} />
 
-      <div className="generate-botton" style={{ alignSelf: 'center', marginTop: 20 }}>
+      <div className="generate-botton" style={{ alignSelf: 'center', marginTop: 12 }}>
         <Button
           loading={loading}
           onClick={() => {

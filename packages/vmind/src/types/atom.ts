@@ -9,8 +9,10 @@ export enum AtomName {
   BASE = 'base',
   DATA_EXTRACT = 'dataExtract',
   DATA_CLEAN = 'dataClean',
+  MULTIPLE_DATA_CLEAN = 'multipleDataClean',
   DATA_QUERY = 'dataQuery',
   CHART_COMMAND = 'chartCommand',
+  MULTIPLE_CHART_COMMAND = 'multipleChartCommand',
   CHART_GENERATE = 'chartGenerate',
   DATA_INSIGHT = 'dataInsight'
 }
@@ -42,6 +44,20 @@ export interface ClusterDataView {
   validCellCount: number;
 }
 
+/** Multiple Dataset */
+export interface DatasetFromText {
+  /** text object of data extraction */
+  text?: string;
+  /** summary of dataset */
+  summary: string;
+  /** data table of dataset */
+  dataTable: DataTable;
+  /** field info of dataset */
+  fieldInfo: FieldInfo[];
+  /** data position in text */
+  textRange?: [string, string];
+}
+
 /** Context of Data Extraction Atom */
 export interface DataExtractionCtx extends BaseContext {
   /** text object of data extraction */
@@ -53,17 +69,15 @@ export interface DataExtractionCtx extends BaseContext {
   /** Data Table values */
   dataTable?: DataTable;
   /** multiple results */
-  dataset?: {
-    summary: string;
-    textPosition: [number, number];
-    fieldInfo: FieldInfo[];
-  }[];
+  datasets?: DatasetFromText[];
 }
 
 /** Context of Chart Command Atom */
 export interface ChartCommandCtx extends BaseContext {
   /** text object of data extraction */
   text: string;
+  /** summary of data table */
+  summary?: string;
   /** extra fieldsInfo of dataTable */
   fieldInfo?: FieldInfo[];
   /** Data Table values */
@@ -81,6 +95,18 @@ export interface DataCleanCtx extends BaseContext {
   clusterResult?: ClusterDataView[];
   /** original data table */
   originalDataTable?: DataTable;
+}
+
+export interface MultipleDataCleanCtx extends BaseContext {
+  /** multiple dataset */
+  datasets: DatasetFromText[];
+}
+
+export interface MultipleChartCommandsCtx extends BaseContext {
+  /** multiple dataset */
+  datasets: DatasetFromText[];
+  /** commands */
+  commands: string[];
 }
 
 /** Context of Data Query Atom */

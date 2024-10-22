@@ -14,6 +14,17 @@ export interface DataExtractionDataSetResult {
     dataTable: DataTable;
     fieldInfo: FieldInfo[];
     text: string;
+    datasets?: any[];
+  };
+  dataClean?: {
+    dataTable: DataTable;
+    fieldInfo: FieldInfo[];
+    text: string;
+    datasets?: any[];
+    score?: number;
+    fieldScore?: number;
+    dataScore?: number;
+    scoreDetail?: ScoreDetail[];
   };
   timeCost?: string;
   score?: number;

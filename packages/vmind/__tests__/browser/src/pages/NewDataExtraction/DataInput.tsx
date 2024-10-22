@@ -4,21 +4,22 @@ import '../DataExtraction/index.scss';
 import { Avatar, Input, Divider, Button, Select, Checkbox, Modal, Radio } from '@arco-design/web-react';
 import type { FieldInfo } from '../../../../../src/index';
 import { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
-import { capcutMockData } from '../../constants/capcutData';
+import { capcutMockV2Data as capcutMockData } from '../../constants/capcutData';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
 type IPropsType = {
+  type: 'normal' | 'multiple';
   onOk: (extractCtx: any, dataCleanCtx: any, timeCost: number) => void;
   setLoading: (loading: boolean) => void;
+  setType: (value: 'normal' | 'multiple') => void;
 };
 
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
-  [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.SKYLARK2_v1_2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
+  [Model.DOUBAO_PRO]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY },
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
   [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
   [Model.GPT_4_0613]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
@@ -31,13 +32,30 @@ export function DataInput(props: IPropsType) {
   const [text, setText] = useState<string>(capcutMockData[defaultIndex].text);
   const [userInput, setUserInput] = useState<string>(capcutMockData[defaultIndex].input);
 
-  const [model, setModel] = useState<Model>(Model.GPT_4o);
+  const [model, setModel] = useState<Model>(Model.DOUBAO_PRO);
   const [useFieldInfo, setUseFieldInfo] = useState<boolean>(false);
   const [showThoughts, setShowThoughts] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
   const [apiKey, setApiKey] = React.useState(ModelConfigMap[model]?.key);
   const [fieldInfo, setFieldInfo] = useState<FieldInfo[]>(capcutMockData[defaultIndex].fieldInfo || []);
+
+  const getScheduleByType = React.useCallback(
+    (value: string) => {
+      if (value === 'normal') {
+        return new Schedule(
+          [AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN],
+          { base: { llm: llm.current, showThoughts }, dataExtract: { reGenerateFieldInfo: true } },
+          { text, fieldInfo: useFieldInfo ? fieldInfo : [] }
+        );
+      }
+      return new Schedule([AtomName.DATA_EXTRACT, AtomName.MULTIPLE_DATA_CLEAN], {
+        base: { llm: llm.current, showThoughts },
+        dataExtract: { isCapcut: true }
+      });
+    },
+    [fieldInfo, showThoughts, text, useFieldInfo]
+  );
 
   const llm = React.useRef<LLMManage>(
     new LLMManage({
@@ -50,13 +68,8 @@ export function DataInput(props: IPropsType) {
       maxTokens: 2048
     })
   );
-  const schedule = React.useRef<Schedule<[AtomName.DATA_EXTRACT]>>(
-    new Schedule(
-      [AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN],
-      { base: { llm: llm.current, showThoughts }, dataExtract: { reGenerateFieldInfo: true } },
-      { text, fieldInfo: useFieldInfo ? fieldInfo : [] }
-    )
-  );
+
+  const schedule = React.useRef(getScheduleByType(props.type));
   useEffect(() => {
     llm.current.updateOptions({
       url,
@@ -78,7 +91,7 @@ export function DataInput(props: IPropsType) {
     const diff = (time2 - time1) / 1000;
     props.onOk(
       schedule.current.getContext(AtomName.DATA_EXTRACT),
-      schedule.current.getContext(AtomName.DATA_CLEAN),
+      schedule.current.getContext(props.type === 'normal' ? AtomName.DATA_CLEAN : AtomName.MULTIPLE_DATA_CLEAN),
       diff
     );
   }, [props, userInput]);
@@ -96,11 +109,31 @@ export function DataInput(props: IPropsType) {
           </Button>
         </div>
       </div>
-      <div style={{ width: '90%', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ width: '90%', display: 'flex', flexDirection: 'column', flex: 1 }}>
         <div>
           <p>
             <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
               0
+            </Avatar>
+            <span style={{ marginLeft: 10 }}>Select DataExtraction Type</span>
+          </p>
+          <Select
+            style={{ width: '100%' }}
+            defaultValue={props.type}
+            onChange={value => {
+              props.setType(value);
+              schedule.current = getScheduleByType(value);
+            }}
+          >
+            <Option value={'multiple'}>Multiple</Option>
+            <Option value={'normal'}>Normal</Option>
+          </Select>
+        </div>
+
+        <div>
+          <p>
+            <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+              1
             </Avatar>
             <span style={{ marginLeft: 10 }}>Select Demo Data (optional)</span>
           </p>
@@ -110,7 +143,7 @@ export function DataInput(props: IPropsType) {
             onChange={index => {
               const dataObj = capcutMockData[index];
               setText(dataObj.text);
-              setFieldInfo(dataObj.fieldInfo.map((v: any) => ({ fieldName: v })) || []);
+              setFieldInfo((dataObj.fieldInfo || []).map((v: any) => ({ fieldName: v })) || []);
               setUserInput(dataObj.input);
               schedule.current.setNewTask({
                 text: dataObj.text,
@@ -126,10 +159,10 @@ export function DataInput(props: IPropsType) {
           </Select>
         </div>
 
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 12 }} className="flex-text-area">
           <p>
             <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-              1
+              2
             </Avatar>
             <span style={{ marginLeft: 10 }}>Input your data in text format</span>
           </p>
@@ -143,14 +176,14 @@ export function DataInput(props: IPropsType) {
                 fieldInfo: []
               });
             }}
-            style={{ minHeight: 350, background: 'transparent', border: '1px solid #eee' }}
+            style={{ background: 'transparent', border: '1px solid #eee' }}
           />
         </div>
 
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 12 }}>
           <p>
             <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-              2
+              3
             </Avatar>
             <span style={{ marginLeft: 10 }}>Query to adjust?</span>
           </p>
@@ -169,21 +202,20 @@ export function DataInput(props: IPropsType) {
             schedule.current.setNewTask({ text, fieldInfo: useFieldInfo ? fieldInfo : [] });
             handleQuery();
           }}
-          style={{ marginTop: 20, marginRight: 12 }}
+          style={{ marginTop: 12, marginRight: 12 }}
         >
           ReGenerate
         </Button>
-        <Button onClick={handleQuery} style={{ marginTop: 20 }}>
+        <Button onClick={handleQuery} style={{ marginTop: 12 }}>
           Query
         </Button>
       </div>
-      <Divider style={{ marginTop: 20 }} />
+      <Divider style={{ marginTop: 12 }} />
 
       <div style={{ width: '90%', marginBottom: 10 }}>
         <RadioGroup value={model} onChange={v => setModel(v)}>
           <Radio value={Model.GPT_4o}>GPT-4-0613</Radio>
           <Radio value={Model.DOUBAO_PRO}>Doubao-pro</Radio>
-          <Radio value={Model.DOUBAO_PRO_32K}>Doubao-pro-32k</Radio>
         </RadioGroup>
       </div>
       <div style={{ width: '90%', marginBottom: 10 }}>

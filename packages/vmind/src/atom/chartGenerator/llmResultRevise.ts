@@ -54,8 +54,7 @@ export const patchChartType = (context: GenerateChartCellContext) => {
   if (!chartTypeList.includes(chartTypeNew)) {
     console.error('Unsupported Chart Type. Please Change User Input');
     return {
-      error: true,
-      message: 'Unsupported Chart Type. Please Change User Input'
+      error: 'Unsupported Chart Type. Please Change User Input'
     };
   }
 
@@ -253,7 +252,7 @@ export const patchPieChart = (context: GenerateChartCellContext) => {
         if (colorField) {
           cellNew.color = colorField.fieldName;
         } else {
-          cellNew.color = remainedFields[0].fieldName;
+          cellNew.color = remainedFields?.[0].fieldName;
         }
       }
       if (!cellNew.angle) {
@@ -262,7 +261,7 @@ export const patchPieChart = (context: GenerateChartCellContext) => {
         if (angleField) {
           cellNew.angle = angleField.fieldName;
         } else {
-          cellNew.angle = remainedFields[0].fieldName;
+          cellNew.angle = remainedFields?.[0].fieldName;
         }
       }
     }
@@ -290,7 +289,7 @@ export const patchWordCloud = (context: GenerateChartCellContext) => {
           if (sizeField) {
             cellNew.size = sizeField.fieldName;
           } else {
-            cellNew.size = remainedFields[0].fieldName;
+            cellNew.size = remainedFields?.[0].fieldName;
           }
         }
       }
@@ -303,7 +302,7 @@ export const patchWordCloud = (context: GenerateChartCellContext) => {
           if (colorField) {
             cellNew.color = colorField.fieldName;
           } else {
-            cellNew.color = remainedFields[0].fieldName;
+            cellNew.color = remainedFields?.[0].fieldName;
           }
         }
       }
@@ -368,7 +367,7 @@ export const patchCartesianXField = (context: GenerateChartCellContext) => {
       if (xField) {
         cellNew.x = xField.fieldName;
       } else {
-        cellNew.x = remainedFields[0].fieldName;
+        cellNew.x = remainedFields?.[0].fieldName;
       }
     }
   }
@@ -393,7 +392,7 @@ export const patchNeedColor = (context: GenerateChartCellContext) => {
       if (colorField) {
         cellNew.color = colorField.fieldName;
       } else {
-        cellNew.color = remainedFields[0].fieldName;
+        cellNew.color = remainedFields?.[0].fieldName;
       }
     }
   }
@@ -418,7 +417,7 @@ export const patchNeedSize = (context: GenerateChartCellContext) => {
       if (sizeField) {
         cellNew.size = sizeField.fieldName;
       } else {
-        cellNew.size = remainedFields[0].fieldName;
+        cellNew.size = remainedFields?.[0].fieldName;
       }
     }
   }
@@ -445,8 +444,7 @@ export const patchRangeColumnChart = (context: GenerateChartCellContext) => {
         'The y-axis of the range column chart requires two numeric fields, but the result of data aggregation does not have two numeric fields';
       console.error(message);
       return {
-        error: true,
-        message
+        error: message
       };
     }
   }
@@ -468,7 +466,7 @@ export const patchLinearProgressChart = (context: GenerateChartCellContext) => {
       if (xField) {
         cellNew.x = xField.fieldName;
       } else {
-        cellNew.x = remainedFields[0].fieldName;
+        cellNew.x = remainedFields?.[0].fieldName;
       }
     }
 
@@ -481,7 +479,7 @@ export const patchLinearProgressChart = (context: GenerateChartCellContext) => {
       if (yField) {
         cellNew.y = yField.fieldName;
       } else {
-        cellNew.y = remainedFields[0].fieldName;
+        cellNew.y = remainedFields?.[0].fieldName;
       }
     }
   }
@@ -505,7 +503,7 @@ export const patchBasicHeatMapChart = (context: GenerateChartCellContext) => {
         cellNew.x = colorField[0];
         cellNew.y = colorField[1];
       } else {
-        cellNew.x = remainedFields[0].fieldName;
+        cellNew.x = remainedFields?.[0].fieldName;
         cellNew.y = remainedFields[1].fieldName;
       }
     }

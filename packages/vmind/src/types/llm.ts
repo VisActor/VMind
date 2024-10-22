@@ -14,10 +14,10 @@ export enum Model {
   GPT3_5_1106 = 'gpt-3.5-turbo-1106',
   GPT4 = 'gpt-4',
   GPT_4_0613 = 'gpt-4-0613',
-  GPT_4o = 'gpt-4o-2024-05-13',
+  GPT_4o = 'gpt-4o-2024-08-06',
   DOUBAO_LITE = 'doubao-lite-32K',
   DOUBAO_PRO = 'doubao-pro-128k',
-  DOUBAO_PRO_32K = 'doubao-pro-32k',
+  DOUBAO_PRO_32K = 'doubao-pro-32k-240828',
   SKYLARK2 = 'skylark2-pro-4k',
   SKYLARK2_v1_2 = 'skylark2-pro-4k-v1.2',
   CHART_ADVISOR = 'chart-advisor'

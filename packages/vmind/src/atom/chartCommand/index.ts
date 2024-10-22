@@ -38,8 +38,8 @@ export class ChartCommandAtom extends BaseAtom<ChartCommandCtx, ChartCommandOpti
   }
 
   protected getLLMMessages(query?: string): LLMMessage[] {
-    const { fieldInfo, text, dataTable } = this.context;
-    const language = getLanguageOfText(text);
+    const { fieldInfo, text, dataTable, summary } = this.context;
+    const language = getLanguageOfText(text || summary);
     const addtionContent = this.getHistoryLLMMessages(query);
     return [
       {
@@ -49,13 +49,18 @@ export class ChartCommandAtom extends BaseAtom<ChartCommandCtx, ChartCommandOpti
       {
         role: 'user',
         content: JSON.stringify({
-          text,
-          fieldInfo: fieldInfo.map(info => ({
-            fieldName: info.fieldName,
-            type: info.role || getRoleByFieldType(info.type),
-            dataLength: dataTable?.filter(v => isValidData(v[info.fieldName]))?.length || undefined
-          })),
-          dataTable: this.options?.useDataTable ? JSON.stringify(dataTable) : undefined
+          userInput: [
+            {
+              text,
+              summary,
+              fieldInfo: fieldInfo.map(info => ({
+                fieldName: info.fieldName,
+                type: info.role || getRoleByFieldType(info.type),
+                dataLength: dataTable?.filter(v => isValidData(v[info.fieldName]))?.length || undefined
+              })),
+              dataTable: this.options?.useDataTable ? JSON.stringify(dataTable) : undefined
+            }
+          ]
         })
       },
       ...addtionContent
@@ -63,8 +68,9 @@ export class ChartCommandAtom extends BaseAtom<ChartCommandCtx, ChartCommandOpti
   }
 
   protected parseLLMContent(resJson: any): ChartCommandCtx {
-    const { command } = resJson;
-    if (command === false || command === 'false') {
+    const { commands = [] } = resJson;
+    const command = commands?.[0] || '';
+    if (command === false || command === 'false' || !command) {
       console.error("Can't generate chart command in this case");
       return {
         ...this.context,

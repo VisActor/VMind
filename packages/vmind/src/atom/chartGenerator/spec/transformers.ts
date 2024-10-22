@@ -21,7 +21,7 @@ import type { GenerateChartCellContext } from '../type';
 import { getFieldByDataType } from '../../../utils/field';
 import { isValidDataTable } from '../../../utils/dataTable';
 import { DataType, ChartType, ROLE } from '../../../types';
-import type { DataCell, DataTable } from '../../../types';
+import type { DataCell, DataTable, FieldInfo } from '../../../types';
 import { builtinThemeMap } from '../const';
 
 const chartTypeMap: { [chartName: string]: string } = {
@@ -373,9 +373,10 @@ export const colorLine = (context: GenerateChartCellContext) => {
 export const seriesField = (context: GenerateChartCellContext) => {
   const { spec, fieldInfo, dataTable, cell } = context;
   const cellNew: any = { ...cell };
-  const { seriesField, xField } = spec;
+  const { seriesField, xField: propsXField } = spec;
   const colorField = isArray(seriesField) ? seriesField[0] : seriesField;
   const colorFieldInfo = fieldInfo.find(v => v.fieldName === colorField);
+  const xField = isArray(propsXField) ? propsXField : [propsXField];
   if (colorField && colorFieldInfo?.role === ROLE.DIMENSION && xField) {
     const xMap = new Map<DataCell, DataCell[]>();
     dataTable.forEach(row => {
@@ -398,7 +399,7 @@ export const seriesField = (context: GenerateChartCellContext) => {
     }
     if (!isValidColor) {
       spec.seriesField = undefined;
-      spec.xField = spec.xField?.filter((field: string) => field !== colorField);
+      spec.xField = xField.filter((field: string) => field !== colorField);
       cellNew.color = undefined;
     }
   }
@@ -1401,7 +1402,7 @@ export const circularProgressStyle = (context: GenerateChartCellContext) => {
 };
 
 export const indicator = (context: GenerateChartCellContext) => {
-  const { spec, cell } = context;
+  const { spec, cell, fieldInfo } = context;
   const firstEntry = spec.data.values[0];
   if (!firstEntry) {
     return { spec };

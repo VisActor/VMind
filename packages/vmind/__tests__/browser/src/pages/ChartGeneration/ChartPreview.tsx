@@ -96,7 +96,7 @@ export function ChartPreview(props: IPropsType) {
       ManualTicker,
       defaultTimeline,
       createCanvas
-    } as any);
+    });
     const src = URL.createObjectURL(new Blob([data], { type: 'video/mp4' }));
     setSrc(src);
     setOutType('gif');
