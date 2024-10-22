@@ -1,25 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ChartGeneratorCtx } from '../../types/atom';
 import { AtomName } from '../../types/atom';
-import type { BaseOptions } from '../type';
+import type { ChartGeneratorOptions } from '../type';
 import { BaseAtom } from '../base';
 import { merge } from '@visactor/vutils';
 import type { LLMMessage } from '../../types/llm';
 import { DEFAULT_MAP_OPTION, SUPPORTED_CHART_LIST } from './const';
 import { getPrompt, revisedUserInput } from './prompt';
 import { getContextAfterRevised } from './llmResultRevise';
-import { getVizSchema } from './vizSchema';
-import { checkChartTypeAndCell } from './utils';
+import { checkChartTypeAndCell, getVizSchema } from './utils';
 import { getChartSpecWithContext } from './spec';
+import { getRuleLLMContent } from './spec/rule';
+import { getCellContextByAdvisor } from './advisor';
 
-export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, BaseOptions> {
+export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGeneratorOptions> {
   name = AtomName.CHART_GENERATE;
 
   isLLMAtom = true;
 
+  useRule = false;
+
   useChartAdvisor: boolean;
 
-  constructor(context: ChartGeneratorCtx, option: BaseOptions) {
+  constructor(context: ChartGeneratorCtx, option: ChartGeneratorOptions) {
     super(context, option);
   }
 
@@ -34,6 +37,12 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, BaseOptions>
       },
       context
     );
+  }
+
+  buildDefaultOptions(): ChartGeneratorOptions {
+    return {
+      useChartAdvisor: false
+    };
   }
   updateContext(context: ChartGeneratorCtx) {
     this.context = super.updateContext(context);
@@ -73,15 +82,50 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, BaseOptions>
     return newContext;
   }
 
+  protected runBeforeLLM(): ChartGeneratorCtx {
+    const { dataTable } = this.context;
+    this.useRule = false;
+    if (this.options.useChartAdvisor) {
+      this.isLLMAtom = false;
+    }
+    if (dataTable.length > 1) {
+      return this.context;
+    }
+    this.isLLMAtom = false;
+    this.useRule = true;
+    const ruleResJson = getRuleLLMContent(this.context);
+    if (ruleResJson) {
+      this.updateContext(this.parseLLMContent(ruleResJson));
+    } else {
+      this.updateContext({
+        cell: null
+      } as any);
+    }
+    return this.context;
+  }
+
   protected _runWithOutLLM(): ChartGeneratorCtx {
-    if (this.useChartAdvisor) {
+    this.isLLMAtom = true;
+    if (this.useRule && !this.context.cell) {
+      /** use table */
+      this.context.spec = null;
+      return this.context;
+    }
+    if (!this.useRule && (this.useChartAdvisor || this.options.useChartAdvisor)) {
       // @todo
+      const { cell, dataset, chartType } = getCellContextByAdvisor(this.context);
+      this.context = {
+        ...this.context,
+        cell,
+        dataTable: dataset,
+        chartType
+      };
     }
     const newContext = {
       ...this.context,
       ...getChartSpecWithContext(this.context)
     };
     this.updateContext(newContext);
-    return getChartSpecWithContext(this.context);
+    return newContext;
   }
 }

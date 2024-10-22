@@ -51,7 +51,7 @@ const getFieldTypeExplanation = (language: 'chinese' | 'english') => {
 };
 export const getBasePrompt = (
   language: 'chinese' | 'english',
-  showThoughs: boolean = true
+  showThoughs: boolean = false
 ) => `You are an expert extraction algorithm.You are an expert extraction algorithm, especially sensitive to data, date, category, data comparison and similar content.Your task is to extract high-quality data tables and field information from the text for further analysis, such as visualization charts, etc.
 # Field Information Explanation
 1. ALWAYS generate a field information, which represents the specific information of each column field in the data table.
@@ -103,7 +103,7 @@ You only need to return the JSON in your response directly to the user.Finish yo
 
 export const getFieldInfoPrompt = (
   language: 'chinese' | 'english',
-  showThoughs: boolean = true,
+  showThoughs: boolean = false,
   reGenerateFieldInfo: boolean = false
 ) => `You are an expert extraction algorithm and are highly sensitive to comparative data, trend data, date data and similar information.Only extract relevant information from the text. Your goal is to extract structured information from the user's input that matches the form described below. When extracting information please make sure it matches the type information exactly.
 The definition of the field information is as follows.

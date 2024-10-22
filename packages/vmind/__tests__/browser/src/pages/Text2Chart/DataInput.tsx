@@ -1,24 +1,24 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
 import '../DataExtraction/index.scss';
-import { Avatar, Input, Divider, Button, Select, Checkbox, Modal, Radio } from '@arco-design/web-react';
-import type { FieldInfo } from '../../../../../src/index';
+import { Avatar, Input, Divider, Button, Select, Modal, Radio } from '@arco-design/web-react';
 import { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
-import { capcutMockData } from '../../constants/capcutData';
+import { capcutMockV2Data as capcutMockData } from '../../constants/capcutData';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
 type IPropsType = {
-  onOk: (extractCtx: any, dataCleanCtx: any, chartCtx: any, timeCost: number) => void;
+  type: 'normal' | 'multiple';
+  setType: (value: 'normal' | 'multiple') => void;
+  onOk: (text: string, extractCtx: any, dataCleanCtx: any, chartCtx: any[], timeCost: number) => void;
   setLoading: (loading: boolean) => void;
 };
 
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
-  [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.SKYLARK2_v1_2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
+  [Model.DOUBAO_PRO]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY },
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
   [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
   [Model.GPT_4_0613]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
@@ -31,13 +31,16 @@ export function DataInput(props: IPropsType) {
   const [text, setText] = useState<string>(capcutMockData[defaultIndex].text);
   const [userInput, setUserInput] = useState<string>(capcutMockData[defaultIndex].input);
 
-  const [model, setModel] = useState<Model>(Model.GPT_4o);
-  const [useFieldInfo, setUseFieldInfo] = useState<boolean>(false);
-  const [showThoughts, setShowThoughts] = useState<boolean>(false);
+  const [model, setModel] = useState<Model>(Model.DOUBAO_PRO);
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
   const [apiKey, setApiKey] = React.useState(ModelConfigMap[model]?.key);
-  const [fieldInfo, setFieldInfo] = useState<FieldInfo[]>(capcutMockData[defaultIndex].fieldInfo || []);
+  const llmModel = React.useMemo(() => {
+    if (model.endsWith('-advisor')) {
+      return model.split('-&&-')[0];
+    }
+    return model;
+  }, [model]);
 
   const llm = React.useRef<LLMManage>(
     new LLMManage({
@@ -50,21 +53,27 @@ export function DataInput(props: IPropsType) {
       maxTokens: 2048
     })
   );
-  const schedule = React.useRef<
-    Schedule<
-      [AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN, AtomName.CHART_COMMAND, AtomName.DATA_QUERY, AtomName.CHART_GENERATE]
-    >
-  >(
-    new Schedule(
-      [
-        AtomName.DATA_EXTRACT,
-        AtomName.DATA_CLEAN,
-        AtomName.CHART_COMMAND,
-        AtomName.DATA_QUERY,
-        AtomName.CHART_GENERATE
-      ],
-      { base: { llm: llm.current, showThoughts }, dataExtract: { reGenerateFieldInfo: true } }
-    )
+  const getScheduleByType = React.useCallback(
+    (value: string) => {
+      if (value === 'normal') {
+        return new Schedule(
+          [AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN, AtomName.CHART_COMMAND],
+          { base: { llm: llm.current, showThoughts: false }, dataExtract: { reGenerateFieldInfo: true } },
+          { text }
+        );
+      }
+      return new Schedule([AtomName.DATA_EXTRACT, AtomName.MULTIPLE_DATA_CLEAN, AtomName.MULTIPLE_CHART_COMMAND], {
+        base: { llm: llm.current, showThoughts: false },
+        dataExtract: { isCapcut: true }
+      });
+    },
+    [text]
+  );
+  const schedule = React.useRef(getScheduleByType(props.type));
+  const chartSchedule = React.useRef(
+    new Schedule([AtomName.CHART_GENERATE], {
+      base: { llm: llm.current, showThoughts: false }
+    })
   );
   useEffect(() => {
     llm.current.updateOptions({
@@ -73,25 +82,50 @@ export function DataInput(props: IPropsType) {
         'api-key': apiKey,
         Authorization: `Bearer ${apiKey}`
       },
-      model
+      model: llmModel
     });
-  }, [url, model, apiKey]);
-  useEffect(() => {
-    schedule.current.updateOptions({ base: { showThoughts } });
-  }, [showThoughts, useFieldInfo]);
+  }, [url, llmModel, apiKey]);
   const handleQuery = React.useCallback(async () => {
     props.setLoading(true);
     const time1: any = new Date();
     await schedule.current.run(userInput);
+    const chartResult = [];
+    if (props.type === 'multiple') {
+      const { datasets, commands } = schedule.current.getContext() as any;
+      for (let i = 0; i < datasets.length; i++) {
+        const dataset = datasets[i];
+        const { dataTable, fieldInfo, textRange } = dataset;
+        chartSchedule.current.setNewTask({
+          dataTable,
+          fieldInfo,
+          command: commands[i]
+        });
+        chartResult.push({
+          context: await chartSchedule.current.run(),
+          textRange
+        });
+      }
+    } else {
+      const { dataTable, fieldInfo } = schedule.current.getContext();
+      chartSchedule.current.setNewTask({
+        text,
+        dataTable,
+        fieldInfo
+      });
+      chartResult.push({
+        context: await chartSchedule.current.run()
+      });
+    }
     const time2: any = new Date();
     const diff = (time2 - time1) / 1000;
     props.onOk(
+      text,
       schedule.current.getContext(AtomName.DATA_EXTRACT),
-      schedule.current.getContext(AtomName.DATA_CLEAN),
-      schedule.current.getContext(AtomName.CHART_GENERATE),
+      schedule.current.getContext(),
+      chartResult,
       diff
     );
-  }, [props, userInput]);
+  }, [chartSchedule, props, text, userInput]);
 
   return (
     <div className="left-sider">
@@ -106,11 +140,31 @@ export function DataInput(props: IPropsType) {
           </Button>
         </div>
       </div>
-      <div style={{ width: '90%', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ width: '90%', display: 'flex', flexDirection: 'column', flex: 1 }}>
         <div>
           <p>
             <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
               0
+            </Avatar>
+            <span style={{ marginLeft: 10 }}>Select DataExtraction Type</span>
+          </p>
+          <Select
+            style={{ width: '100%' }}
+            defaultValue={props.type}
+            onChange={value => {
+              props.setType(value);
+              schedule.current = getScheduleByType(value);
+            }}
+          >
+            <Option value={'multiple'}>Multiple</Option>
+            <Option value={'normal'}>Normal</Option>
+          </Select>
+        </div>
+
+        <div>
+          <p>
+            <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+              1
             </Avatar>
             <span style={{ marginLeft: 10 }}>Select Demo Data (optional)</span>
           </p>
@@ -120,11 +174,9 @@ export function DataInput(props: IPropsType) {
             onChange={index => {
               const dataObj = capcutMockData[index];
               setText(dataObj.text);
-              setFieldInfo(dataObj.fieldInfo.map((v: any) => ({ fieldName: v })) || []);
               setUserInput(dataObj.input);
               schedule.current.setNewTask({
-                text: dataObj.text,
-                fieldInfo: dataObj.fieldInfo || []
+                text: dataObj.text
               });
             }}
           >
@@ -136,10 +188,10 @@ export function DataInput(props: IPropsType) {
           </Select>
         </div>
 
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 12 }} className="flex-text-area">
           <p>
             <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-              1
+              2
             </Avatar>
             <span style={{ marginLeft: 10 }}>Input your data in text format</span>
           </p>
@@ -157,10 +209,10 @@ export function DataInput(props: IPropsType) {
           />
         </div>
 
-        <div style={{ marginTop: 20 }}>
+        {/* <div style={{ marginTop: 12 }}>
           <p>
             <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-              2
+              3
             </Avatar>
             <span style={{ marginLeft: 10 }}>Query to adjust?</span>
           </p>
@@ -170,33 +222,44 @@ export function DataInput(props: IPropsType) {
             onChange={v => setUserInput(v)}
             style={{ minHeight: 80, background: 'transparent', border: '1px solid #eee' }}
           />
-        </div>
+        </div> */}
       </div>
 
       <div>
         <Button
           onClick={() => {
-            schedule.current.setNewTask({ text, fieldInfo: useFieldInfo ? fieldInfo : [] });
+            schedule.current.setNewTask({ text });
             handleQuery();
           }}
-          style={{ marginTop: 20, marginRight: 12 }}
+          style={{ marginTop: 12, marginRight: 12 }}
         >
           ReGenerate
         </Button>
-        <Button onClick={handleQuery} style={{ marginTop: 20 }}>
-          Query
-        </Button>
       </div>
-      <Divider style={{ marginTop: 20 }} />
+      <Divider style={{ marginTop: 12 }} />
 
       <div style={{ width: '90%', marginBottom: 10 }}>
-        <RadioGroup value={model} onChange={v => setModel(v)}>
-          <Radio value={Model.GPT_4o}>GPT-4-0613</Radio>
+        <RadioGroup
+          value={model}
+          onChange={v => {
+            setModel(v);
+            // const preModel = v.split('-&&-')[0];
+            chartSchedule.current = v.endsWith('-advisor')
+              ? new Schedule([AtomName.CHART_GENERATE], {
+                  chartGenerate: { useChartAdvisor: true }
+                })
+              : new Schedule([AtomName.CHART_GENERATE], {
+                  base: { llm: llm.current, showThoughts: false }
+                });
+          }}
+        >
+          <Radio value={Model.GPT_4o}>GPT-4o</Radio>
           <Radio value={Model.DOUBAO_PRO}>Doubao-pro</Radio>
-          <Radio value={Model.DOUBAO_PRO_32K}>Doubao-pro-32k</Radio>
+          <Radio value={`${Model.GPT_4o}-&&-advisor`}>GPT-4o + chart-advisor</Radio>
+          <Radio value={`${Model.DOUBAO_PRO}-&&-advisor`}>Doubao-pro + chart-advisor</Radio>
         </RadioGroup>
       </div>
-      <div style={{ width: '90%', marginBottom: 10 }}>
+      {/* <div style={{ width: '90%', marginBottom: 10 }}>
         <Checkbox checked={useFieldInfo} onChange={v => setUseFieldInfo(v)}>
           Use FieldInfo
         </Checkbox>
@@ -205,7 +268,7 @@ export function DataInput(props: IPropsType) {
         <Checkbox checked={showThoughts} onChange={v => setShowThoughts(v)}>
           Show Thoughts
         </Checkbox>
-      </div>
+      </div> */}
 
       <Modal
         title="Set API Key and URL"

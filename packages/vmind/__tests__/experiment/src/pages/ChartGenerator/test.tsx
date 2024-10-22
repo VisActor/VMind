@@ -1,75 +1,112 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 import React from 'react';
-import VMind, { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
+import { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
 import { Button, Checkbox, Divider, Message, Select } from '@arco-design/web-react';
-import {
-  getCurrentFormattedTime,
-  getDataExtractionCaseData,
-  sleep,
-  transferFieldInfoInSimpleFieldInfo
-} from '../../utils';
+import { getCurrentFormattedTime, getDataExtractionCaseData, sleep } from '../../utils';
 import type { DataExtractionDataSetResult } from '../DataExtraction/type';
 
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
   [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.DOUBAO_PRO_32K]: { url: globalVariables.VITE_VMIND_URL, key: globalVariables.VITE_VMIND_KEY },
   [Model.DOUBAO_PRO]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY }
 };
-const datasetList = ['capcut_cn', 'capcut_en', 'common'];
+const datasetList = ['capcut_cn', 'capcut_en', 'common', 'capcut_v2'];
 const dataExtractionResult = getDataExtractionCaseData();
 
 export function ChartGenerationTask() {
-  const [selectedDataset, setSelectedDataset] = React.useState<string[]>(datasetList);
+  const [selectedDataset, setSelectedDataset] = React.useState<string[]>(['capcut_v2']);
   const [selectedLLM, setSelectedLLm] = React.useState<Record<string, boolean>>(
     Object.keys(ModelConfigMap).reduce((prev, cur) => ({ ...prev, [cur]: true }), {})
   );
   const [messageApi, contextHolder] = Message.useMessage();
+  const [extractionType, setExtractionType] = React.useState<'multiple' | 'normal'>('multiple');
+
   const getDataSetResult = React.useCallback(
     async (
       typeResult: DataExtractionDataSetResult[],
       type: 'default' | 'fieldInfo',
-      vmind: VMind,
-      schedule: Schedule<[AtomName.DATA_CLEAN, AtomName.CHART_COMMAND]>,
+      commandSchedule: Schedule<[AtomName.MULTIPLE_CHART_COMMAND]>,
+      chartSchedule: Schedule<[AtomName.CHART_GENERATE]>,
       baseOptions: {
         dataset: string;
         model: Model;
       }
     ) => {
       const result: any[] = [];
+      const sleepTime = baseOptions.model.includes('doubao') ? 10000 : 5000;
       for (let i = 0; i < typeResult.length; i++) {
-        const { dataTable, fieldInfo, text } = typeResult[i].context;
-        schedule.setNewTask({
-          dataTable,
-          fieldInfo,
-          text: text
-        });
-        const newCtx = await schedule.run();
-        const chartGenerationResult = newCtx.command
-          ? await vmind.generateChart(
-              newCtx.command,
-              transferFieldInfoInSimpleFieldInfo(newCtx.fieldInfo!),
-              newCtx.dataTable,
-              {
-                theme: 'light'
-              }
-            )
-          : {
-              spec: null
-            };
+        const cleanCtx = typeResult[i].dataClean ?? typeResult[i].context;
+        const chartRes = [];
+        const time1: any = new Date();
+        let cnt = 0;
+        if (extractionType === 'multiple') {
+          commandSchedule.setNewTask({
+            datasets: cleanCtx.datasets
+          });
+          const commandCtx = await commandSchedule.run();
+          const { commands = [] } = commandCtx;
+          for (let j = 0; j < commands.length; j++) {
+            const { dataTable, fieldInfo, textRange } = commandCtx.datasets[j];
+            chartSchedule.setNewTask({
+              dataTable,
+              fieldInfo,
+              command: commands[j]
+            });
+            const chartCtx = await chartSchedule.run();
+            chartRes.push({
+              context: {
+                spec: chartCtx.spec,
+                summary: chartCtx.summary,
+                command: chartCtx.command,
+                cell: chartCtx.cell
+              },
+              textRange
+            });
+            cnt++;
+            await sleep(sleepTime);
+          }
+        } else {
+          const { fieldInfo, dataTable } = cleanCtx;
+          commandSchedule.setNewTask({
+            datasets: [cleanCtx]
+          });
+          const commandCtx = await commandSchedule.run();
+          chartSchedule.setNewTask({
+            dataTable,
+            fieldInfo,
+            command: commandCtx.commands[0]
+          });
+          const chartCtx = await chartSchedule.run();
+          chartRes.push({
+            context: {
+              spec: chartCtx.spec,
+              summary: chartCtx.summary,
+              command: chartCtx.command,
+              cell: chartCtx.cell
+            }
+          });
+          cnt++;
+          await sleep(sleepTime);
+        }
+        const time2: any = new Date();
+        const timeCost = (time2 - time1 - cnt * sleepTime) / 1000;
+        const extractionCost = Number(typeResult[i].timeCost);
         result.push({
           ...baseOptions,
           type,
-          context: typeResult[i].context,
-          command: newCtx.command,
-          spec: chartGenerationResult.spec
+          context: cleanCtx,
+          chartRes,
+          extractionCost,
+          generationCost: Number(timeCost.toFixed(1)),
+          timeCost: Number((timeCost + extractionCost).toFixed(1))
         });
-        await sleep(baseOptions.model.includes('doubao') ? 10000 : 5000);
         console.info(`Current index:${i} Result: `, result);
       }
       return result;
     },
-    []
+    [extractionType]
   );
   const handleRun = React.useCallback(async () => {
     (messageApi as any).info('Run Chart Generator Task!');
@@ -80,7 +117,7 @@ export function ChartGenerationTask() {
     for (let llmIndex = 0; llmIndex < llmKeys.length; llmIndex++) {
       const model = llmKeys[llmIndex];
       if (!selectedLLM[model]) {
-        return;
+        continue;
       }
       const apiKey = ModelConfigMap[model]?.key;
       const llm = new LLMManage({
@@ -92,17 +129,11 @@ export function ChartGenerationTask() {
         maxTokens: 2048,
         model
       });
-      const schedule = new Schedule([AtomName.DATA_CLEAN, AtomName.CHART_COMMAND], {
-        base: { llm, showThoughts: false }
+      const commandSchedule = new Schedule([AtomName.MULTIPLE_CHART_COMMAND], {
+        base: { llm }
       });
-      const vmind: VMind = new VMind({
-        model,
-        cache: false,
-        url: ModelConfigMap[model]?.url,
-        headers: {
-          'api-key': apiKey,
-          Authorization: `Bearer ${apiKey}`
-        }
+      const chartSchedule = new Schedule([AtomName.CHART_GENERATE], {
+        base: { llm }
       });
       console.info('Begin Model: ', model);
       const currentModelDataExtractionRes = dataExtractionResult.find(v => v.llm === model)?.result || [];
@@ -113,7 +144,9 @@ export function ChartGenerationTask() {
           continue;
         }
         console.info('Begin Dataset: ', dataset);
-        result.push(...(await getDataSetResult(defaultResult, 'default', vmind, schedule, { dataset, model })));
+        result.push(
+          ...(await getDataSetResult(defaultResult, 'default', commandSchedule, chartSchedule, { dataset, model }))
+        );
         // result.push(...(await getDataSetResult(fieldInfoResult, 'fieldInfo', vmind, { dataset, model })));
         console.info('Current Result: ', result);
       }
@@ -144,7 +177,7 @@ export function ChartGenerationTask() {
 
     // 释放 URL 对象
     URL.revokeObjectURL(url);
-  }, [getDataSetResult, messageApi, selectedDataset]);
+  }, [getDataSetResult, messageApi, selectedDataset, selectedLLM]);
 
   return (
     <div style={{ padding: 20 }}>

@@ -102,6 +102,7 @@ const pipelineLine = [
   //animationCartisianLine,
   theme
 ];
+const pipeAreaLine = [...pipelineLine];
 const pipelinePie = [
   chartType,
   data,
@@ -230,6 +231,7 @@ const pipelineVenn = [chartType, registerChart, vennData, color, vennField, lege
 const pipelineMap: { [chartType: string]: any } = {
   [ChartType.BarChart.toUpperCase()]: pipelineBar,
   [ChartType.LineChart.toUpperCase()]: pipelineLine,
+  [ChartType.AreaChart.toUpperCase()]: pipeAreaLine,
   [ChartType.PieChart.toUpperCase()]: pipelinePie,
   [ChartType.WordCloud.toUpperCase()]: pipelineWordCloud,
   [ChartType.ScatterPlot.toUpperCase()]: pipelineScatterPlot,

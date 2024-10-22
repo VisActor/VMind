@@ -4,6 +4,7 @@ import React from 'react';
 import type { FieldInfo } from '../../../../../src/index';
 import { capcutCnData } from '../../data/capcutDataCn';
 import { capcutEnData } from '../../data/capcutDataEn';
+import { capcutMockV2Data } from '../../data/capcutV2Data';
 import { dataExtractionCommonDataset } from '../../data/dataExtractionData';
 import type { TableColumnProps } from '@arco-design/web-react';
 import { Avatar, Card, Divider, Select, Table, Tooltip } from '@arco-design/web-react';
@@ -15,23 +16,12 @@ import { isArray, isObject } from '@visactor/vutils';
 import { sum } from '@visactor/vchart/esm/util';
 import { getDataExtractionCaseData } from '../../utils';
 
-const result = getDataExtractionCaseData();
-console.info(result);
-
-const llmList = result.map((v, index) => ({
-  index,
-  llm: v.llm
-}));
 const datasetMap: Record<string, any> = {
   common: dataExtractionCommonDataset,
   capcut_cn: capcutCnData,
-  capcut_en: capcutEnData
+  capcut_en: capcutEnData,
+  capcut_v2: capcutMockV2Data
 };
-const datasetList = result[0].result.map((v, index) => ({
-  index,
-  name: v.dataset,
-  dataset: datasetMap[v.dataset]
-}));
 
 interface Options {
   index: number;
@@ -41,10 +31,31 @@ interface Options {
 
 const targetScore = 0.75;
 export function DataExtractionResult() {
+  const result = React.useMemo(() => getDataExtractionCaseData(), []);
+  const llmList = React.useMemo(
+    () =>
+      result.map((v, index) => ({
+        index,
+        llm: v.llm
+      })),
+    [result]
+  );
+  const datasetList = React.useMemo(
+    () =>
+      result[0].result.map((v, index) => ({
+        index,
+        name: v.dataset,
+        dataset: datasetMap[v.dataset]
+      })),
+    [result]
+  );
+
   const [datasetIndex, setDatasetIndex] = React.useState(0);
   const currentDataset = datasetList[datasetIndex];
   const currentDatasetName = currentDataset.name;
   const [language, setLanguage] = React.useState<'all' | 'zh' | 'en'>('all');
+  const [contextType, setContextType] = React.useState<'clean' | 'extraction'>('extraction');
+  const [showDetail, setShowDetail] = React.useState(true);
   const [leftOptions, setLeftOptions] = React.useState<Options>({
     index: datasetIndex,
     llm: llmList[0].llm,
@@ -57,17 +68,17 @@ export function DataExtractionResult() {
   });
   const leftResult = React.useMemo(
     () => result[leftOptions.index].result.find(v => v.dataset === currentDatasetName)?.[leftOptions.resType],
-    [leftOptions.index, leftOptions.resType, currentDatasetName]
+    [result, leftOptions.index, leftOptions.resType, currentDatasetName]
   );
   const rightResult = React.useMemo(
     () =>
       rightOptions?.llm
         ? result[rightOptions.index].result.find(v => v.dataset === currentDatasetName)?.[rightOptions.resType]
         : null,
-    [rightOptions?.llm, rightOptions.index, rightOptions.resType, currentDatasetName]
+    [rightOptions?.llm, rightOptions.index, rightOptions.resType, result, currentDatasetName]
   );
   const renderTable = React.useCallback((context: any) => {
-    const { dataTable, fieldInfo } = context;
+    const { dataTable = [], fieldInfo = [] } = context || {};
     const columns: TableColumnProps[] = fieldInfo.map((info: FieldInfo) => {
       return {
         title: (
@@ -102,37 +113,53 @@ export function DataExtractionResult() {
     );
   }, []);
 
-  const changeOptions = React.useCallback((v: any, type: 'llm' | 'resType' | 'language', index: number) => {
-    const newOptions =
-      type === 'llm'
-        ? {
-            index: v,
-            llm: llmList?.[v]?.llm
-          }
-        : {
-            [type]: v
-          };
-    if (index === 0) {
-      setLeftOptions(prev => ({
-        ...prev,
-        ...newOptions
-      }));
-    } else {
-      setRightOptions(prev => ({
-        ...prev,
-        ...newOptions
-      }));
-    }
-  }, []);
+  const renderResult = React.useCallback(
+    (result: any) => {
+      const context = contextType === 'clean' ? result?.dataClean ?? result?.context : result?.context;
+      if (!context?.datasets?.length) {
+        return renderTable(context);
+      }
+      return context.datasets.map((data: DataExtractionDataSetResult, index: number) => {
+        return renderTable(data);
+      });
+    },
+    [contextType, renderTable]
+  );
+  const changeOptions = React.useCallback(
+    (v: any, type: 'llm' | 'resType' | 'language', index: number) => {
+      const newOptions =
+        type === 'llm'
+          ? {
+              index: v,
+              llm: llmList?.[v]?.llm
+            }
+          : {
+              [type]: v
+            };
+      if (index === 0) {
+        setLeftOptions(prev => ({
+          ...prev,
+          ...newOptions
+        }));
+      } else {
+        setRightOptions(prev => ({
+          ...prev,
+          ...newOptions
+        }));
+      }
+    },
+    [llmList]
+  );
 
   const answerResult = React.useMemo(() => {
     const answer = result.find(v => v.llm === 'answer');
     return (answer?.result || []).find(v => v.dataset === currentDataset.name);
-  }, [currentDataset.name]);
+  }, [currentDataset.name, result]);
 
   const getCardDisplayStyle = React.useCallback(
     (data: DataExtractionDataSetResult) => {
-      const { context, score } = data;
+      const { context } = data;
+      const score = contextType === 'clean' ? data?.dataClean?.score ?? data?.score : data?.score;
       const isEn = context?.isEnglish ?? getLanguageOfText(context.text) === 'english';
       const displayStyle = language === 'all' || isEn === (language === 'en') ? {} : { display: 'none ' };
       const borderColor =
@@ -146,7 +173,7 @@ export function DataExtractionResult() {
         ...borderColor
       };
     },
-    [answerResult, language]
+    [answerResult, contextType, language]
   );
 
   const renderTimeCost = React.useCallback((res: DataExtractionDataSetResult[] | undefined | null) => {
@@ -160,7 +187,8 @@ export function DataExtractionResult() {
   const renderScore = React.useCallback(
     (res: DataExtractionDataSetResult[] | undefined | null) => {
       if (answerResult && res) {
-        const validRes = res.filter(v => !!v.score || v.score === 0);
+        const resByType = contextType === 'clean' ? res.map(v => v.dataClean ?? v) : res;
+        const validRes = resByType.filter(v => !!v.score || v.score === 0);
         const allCount = validRes.length;
         const reachedCount = validRes.filter(v => v.score! >= targetScore).length;
         let score = 0;
@@ -225,23 +253,24 @@ export function DataExtractionResult() {
       }
       return <p>No answer to get score</p>;
     },
-    [answerResult]
+    [answerResult, contextType]
   );
 
   const renderCaseScore = React.useCallback(
     (data: DataExtractionDataSetResult) => {
-      if (answerResult && data?.score !== undefined) {
+      const resByType = contextType === 'clean' ? data?.dataClean ?? data : data;
+      if (answerResult && resByType?.score !== undefined) {
         return (
           <div>
-            Score: {data.score.toFixed(2)}
-            FieldScore: {data.fieldScore?.toFixed(2)}
-            DataScore: {data.dataScore?.toFixed(2)}
+            Score: {resByType.score.toFixed(2)}
+            FieldScore: {resByType.fieldScore?.toFixed(2)}
+            DataScore: {resByType.dataScore?.toFixed(2)}
           </div>
         );
       }
       return null;
     },
-    [answerResult]
+    [answerResult, contextType]
   );
   const count = rightResult ? 2 : 1;
   const width = `${(0.8 / count) * 100}%`;
@@ -255,6 +284,11 @@ export function DataExtractionResult() {
               {v.name}
             </Select.Option>
           ))}
+        </Select>
+        <p>Please select result Type to show:</p>
+        <Select defaultValue={contextType} onChange={v => setContextType(v)}>
+          <Select.Option value="extraction">Extraction</Select.Option>
+          <Select.Option value="clean">After Clean</Select.Option>
         </Select>
       </div>
       <Divider style={{ margin: '8px 0' }} />
@@ -348,7 +382,7 @@ export function DataExtractionResult() {
                         onClick={() => console.log('Context is :', dataResult.context)}
                       >
                         {renderCaseScore(dataResult)}
-                        {renderTable(dataResult.context)}
+                        {renderResult(dataResult)}
                       </Card>
                     );
                   })}

@@ -54,7 +54,8 @@ Here are some examples:
 ${examples}
 `;
 
-export const getPrompt = (chartTypeList: ChartType[], showThoughts: boolean = true) => {
+export const getPrompt = (propsChartList: ChartType[], showThoughts: boolean = true) => {
+  const chartTypeList = propsChartList.filter(v => !!chartKnowledgeDict[v]);
   const sortedChartTypeList = chartTypeList.sort((a, b) => chartKnowledgeDict[a].index - chartKnowledgeDict[b].index);
 
   const chartKnowledge = sortedChartTypeList.reduce(

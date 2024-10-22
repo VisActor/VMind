@@ -3,6 +3,28 @@ import type { DataTypeName } from '@visactor/chart-advisor';
 import { ChartType } from '@visactor/chart-advisor';
 import type { Cell, FieldInfo } from '../../types';
 import { ChartType as VMindChartType } from '../../types';
+import type { ChartGeneratorCtx } from '../../types';
+
+/**
+ * Generate a vizSchema from fieldInfo
+ * @param fieldInfo SimpleFieldInfo[] - An array of field information, each element contains the field name, description, type, and role, etc.
+ * @returns Partial<VizSchema> - Returns a partial VizSchema object, containing the transformed field information.
+ */
+export const getVizSchema = (context: ChartGeneratorCtx) => {
+  const { fieldInfo } = context;
+  return {
+    fields: fieldInfo.map(d => ({
+      id: d.fieldName,
+      alias: d.fieldName,
+      description: d.description,
+      visible: true,
+      type: d.type,
+      role: d.role,
+      location: d.role
+    }))
+  };
+};
+
 export const typeMap = (type: string): DataTypeName => {
   if (['string'].includes(type)) {
     return 'string';
@@ -14,7 +36,7 @@ export const typeMap = (type: string): DataTypeName => {
   return 'string';
 };
 
-export const VMindChartTypeMap = {
+export const VMindChartTypeMap: Record<string, ChartType[]> = {
   [VMindChartType.BarChart]: [
     ChartType.COLUMN,
     ChartType.COLUMN_PERCENT,
@@ -24,6 +46,7 @@ export const VMindChartTypeMap = {
     ChartType.BAR_PARALLEL
   ],
   [VMindChartType.LineChart]: [ChartType.LINE, ChartType.AREA, ChartType.AREA_PERCENT],
+  [VMindChartType.AreaChart]: [ChartType.AREA, ChartType.AREA_PERCENT],
   [VMindChartType.PieChart]: [ChartType.PIE, ChartType.ANNULAR],
   [VMindChartType.RoseChart]: [ChartType.ROSE],
   [VMindChartType.ScatterPlot]: [ChartType.SCATTER],

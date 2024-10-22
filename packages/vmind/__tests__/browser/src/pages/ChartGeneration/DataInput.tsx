@@ -213,7 +213,7 @@ export function DataInput(props: IPropsType) {
           marginBottom: 10
         }}
       >
-        <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center' }}>
+        <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center' }}>
           <Button size="small" style={{ width: 200 }} shape="round" type="primary" onClick={() => setVisible(true)}>
             Set API-Key and LLM URL
           </Button>
@@ -257,7 +257,7 @@ export function DataInput(props: IPropsType) {
           placeholder={describe}
           value={describe}
           onChange={v => setDescribe(v)}
-          style={{ minHeight: 80, marginTop: 20, background: 'transparent', border: '1px solid #eee' }}
+          style={{ minHeight: 80, marginTop: 12, background: 'transparent', border: '1px solid #eee' }}
         />
       </div>
       <Divider style={{ marginTop: 30 }} />
@@ -298,7 +298,7 @@ export function DataInput(props: IPropsType) {
           placeholder={csv}
           value={csv}
           onChange={v => setCsv(v)}
-          style={{ minHeight: 160, marginTop: 20, background: 'transparent', border: '1px solid #eee' }}
+          style={{ minHeight: 160, marginTop: 12, background: 'transparent', border: '1px solid #eee' }}
         />
       </div>
 
@@ -319,7 +319,7 @@ export function DataInput(props: IPropsType) {
           style={{
             marginBottom: 20,
             minHeight: 160,
-            marginTop: 20,
+            marginTop: 12,
             background: 'transparent',
             border: '1px solid #eee'
           }}

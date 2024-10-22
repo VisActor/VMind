@@ -81,7 +81,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
   }
 
   reset(context?: Ctx) {
-    this.updateContext(context);
+    this.context = this.buildDefaultContext(context);
     this.responses = [];
     this.history.map.clear();
     this.history.idList = [];
@@ -110,24 +110,35 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
    */
   async run(userInput?: { context?: Ctx; query?: string }) {
     const { context, query } = userInput || {};
+    this.context.error = null;
     this.updateContext(context);
     this.originContext = this.context;
-    if (this.isLLMAtom && query) {
-      return await this.runWithChat(query);
-    }
-    if (this.isLLMAtom) {
-      const messages = this.getLLMMessages();
-      const data = await this.options.llm.run(this.name, messages);
-      const resJson = this.options.llm.parseJson(data);
-      if (resJson.error) {
-        return this.context;
+    try {
+      this.runBeforeLLM();
+      if (this.isLLMAtom && query) {
+        return await this.runWithChat(query);
       }
-      this.recordLLMResponse(data);
-      this.setNewContext(this.parseLLMContent(resJson, data));
-      this._runWithOutLLM();
-    } else {
-      this._runWithOutLLM();
+      if (this.isLLMAtom) {
+        const messages = this.getLLMMessages();
+        const data = await this.options.llm.run(this.name, messages);
+        const resJson = this.options.llm.parseJson(data);
+        if (resJson.error) {
+          this.updateContext({ error: resJson.error } as any);
+          return this.context;
+        }
+        this.recordLLMResponse(data);
+        this.setNewContext(this.parseLLMContent(resJson, data));
+        this._runWithOutLLM();
+      } else {
+        this._runWithOutLLM();
+      }
+    } catch (error) {
+      this.context.error = error as string;
     }
+    return this.context;
+  }
+
+  protected runBeforeLLM() {
     return this.context;
   }
 

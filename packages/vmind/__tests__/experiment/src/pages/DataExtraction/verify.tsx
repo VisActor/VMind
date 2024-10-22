@@ -31,13 +31,18 @@ const getFieldScore = (nameScore: number, typeScore: number) => nameScore * 0.75
 
 const getFinalScore = (fieldScore: number, dataScore: number) => fieldScore * 0.3 + dataScore * 0.7;
 
-const getDataScore = (currentDataList: DataCell[], answerDataList: DataCell[], role: ROLE) => {
+const getDataScore = (
+  currentDataList: DataCell[],
+  answerDataList: DataCell[],
+  fieldInfo: FieldInfo,
+  isStrict = true
+) => {
   let dataScore = 0;
   const seletedList = new Array(answerDataList.length).fill(false);
   for (let i = 0; i < currentDataList.length; i++) {
     let maxScore = 0;
     let currentSelectedIndex = -1;
-    const valueCompareFunction = getValueCompareFunction(role);
+    const valueCompareFunction = getValueCompareFunction(fieldInfo);
     for (let j = 0; j < answerDataList.length; j++) {
       if (!seletedList[j]) {
         const currentScore = valueCompareFunction(currentDataList[i], answerDataList[j]);
@@ -52,7 +57,7 @@ const getDataScore = (currentDataList: DataCell[], answerDataList: DataCell[], r
       seletedList[currentSelectedIndex] = true;
     }
   }
-  if (answerDataList.length > currentDataList.length) {
+  if (answerDataList.length > currentDataList.length && isStrict) {
     dataScore /= answerDataList.length;
   } else {
     dataScore /= seletedList.filter(v => !!v).length;
@@ -65,7 +70,8 @@ function getScoreOfDataset(
   fieldInfoA: FieldInfo[],
   fieldInfoB: FieldInfo[],
   dataTableA: DataTable,
-  dataTableB: DataTable
+  dataTableB: DataTable,
+  isStrict = true
 ) {
   const seletedList = fieldInfoB.map(v => false);
   const scoreList: ScoreDetail[] = [];
@@ -81,8 +87,7 @@ function getScoreOfDataset(
         const dataListB = dataTableB?.map(v => v[fieldInfoB[i].fieldName]) || [];
         const cosValue = cosineSimilarity(fieldInfo.fieldName, fieldInfoB[i].fieldName);
         const currentTypeScore = getFieldTypeScore(fieldInfo.type, fieldInfoB[i].type);
-        const role = fieldInfo.role ?? getRoleByFieldType(fieldInfo.type);
-        const currentDataScore = getDataScore(dataListB, dataListA, role);
+        const currentDataScore = getDataScore(dataListB, dataListA, fieldInfo, isStrict);
         const currentScore = getFinalScore(getFieldScore(cosValue, currentTypeScore), currentDataScore);
         if (currentScore > finalScore && currentTypeScore !== -1 && currentDataScore > 0) {
           index = i;
@@ -105,13 +110,18 @@ function getScoreOfDataset(
   return scoreList;
 }
 
-function getValueCompareFunction(role: ROLE) {
+function getValueCompareFunction(fieldInfo: FieldInfo) {
+  const { role, type, ratioGranularity } = fieldInfo;
   if (role === ROLE.MEASURE) {
     return (a: any, b: any) => {
       if (+a === +b || a === b) {
         return 1;
       }
-      return isNumber(a) && isNumber(b) && Math.abs(a) === Math.abs(b) ? 0.2 : 0;
+      if (type === DataType.RATIO) {
+        const rate = ratioGranularity === '‰' ? 1000 : 100;
+        return (isNumber(a) && isNumber(b) && a * rate === b) || b * rate === a ? 1 : 0;
+      }
+      return isNumber(a) && isNumber(b) && Math.abs(a) === Math.abs(b) ? 0.5 : 0;
     };
   }
   return (a: DataCell, b: DataCell) => {
@@ -119,12 +129,18 @@ function getValueCompareFunction(role: ROLE) {
   };
 }
 
-export const getScoreOfDataExtraction = (resultCtx: DataExtractionCtx, answerCtx: DataExtractionCtx) => {
+export const getScoreOfDataExtraction = (
+  resultCtx: DataExtractionCtx,
+  answerCtx: DataExtractionCtx,
+  isStrict = true
+) => {
   const { fieldInfo = [], dataTable } = resultCtx;
   const { fieldInfo: answerInfo = [], dataTable: answerTable } = answerCtx;
-  const scoreList = getScoreOfDataset(answerInfo || [], fieldInfo || [], answerTable!, dataTable!).filter(
-    v => v.matchedIndex !== -1
-  );
+  const scoreList = (
+    isStrict
+      ? getScoreOfDataset(answerInfo || [], fieldInfo || [], answerTable!, dataTable!)
+      : getScoreOfDataset(fieldInfo || [], answerInfo || [], dataTable!, answerTable!, false)
+  ).filter(v => v.matchedIndex !== -1);
   if (!scoreList.length) {
     return {
       score: 0,
@@ -140,7 +156,7 @@ export const getScoreOfDataExtraction = (resultCtx: DataExtractionCtx, answerCtx
     dataScore += v.dataScore;
   });
   dataScore /= scoreList.length;
-  if (answerInfo?.length > fieldInfo?.length) {
+  if (answerInfo?.length > fieldInfo?.length && isStrict) {
     fieldScore /= answerInfo?.length;
   } else {
     fieldScore /= scoreList.length;
@@ -153,6 +169,26 @@ export const getScoreOfDataExtraction = (resultCtx: DataExtractionCtx, answerCtx
   };
 };
 
+const getValidCellNumber = (ctx: any) => {
+  const { dataTable = [], fieldInfo = [] } = ctx;
+  return dataTable.length * fieldInfo.length;
+};
+
+const getCtx = (ctx: any) => {
+  if (ctx.datasets?.length) {
+    let res = ctx.datasets[0];
+    let preCount = getValidCellNumber(res);
+    for (let i = 1; i < ctx.datasets.length; i++) {
+      const curCount = getValidCellNumber(ctx.datasets[i]);
+      if (curCount > preCount) {
+        preCount = curCount;
+        res = ctx.datasets[i];
+      }
+    }
+    return res;
+  }
+  return ctx;
+};
 export const updateScoreInDataExtraction = (result: DataExtractionResult, answer: DataExtractionCase) => {
   result.forEach(llmResult => {
     llmResult.result.forEach(caseResult => {
@@ -161,13 +197,23 @@ export const updateScoreInDataExtraction = (result: DataExtractionResult, answer
         if (caseResult.defaultResult.length) {
           caseResult.defaultResult = caseResult.defaultResult.map((v, index) => ({
             ...v,
-            ...getScoreOfDataExtraction(v.context, answerCase.defaultResult[index].context)
+            ...getScoreOfDataExtraction(getCtx(v.context), getCtx(answerCase.defaultResult[index].context)),
+            dataClean: v?.dataClean
+              ? {
+                  ...v.dataClean,
+                  ...getScoreOfDataExtraction(
+                    getCtx(v.dataClean),
+                    getCtx(answerCase.defaultResult[index].context),
+                    false
+                  )
+                }
+              : undefined
           }));
         }
         if (caseResult.fieldInfoResult.length) {
           caseResult.fieldInfoResult = caseResult.fieldInfoResult.map((v, index) => ({
             ...v,
-            ...getScoreOfDataExtraction(v.context, answerCase.defaultResult[index].context)
+            ...getScoreOfDataExtraction(getCtx(v.context), getCtx(answerCase.defaultResult[index].context))
           }));
         }
       }

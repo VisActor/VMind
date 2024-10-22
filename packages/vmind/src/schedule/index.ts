@@ -3,12 +3,21 @@ import { merge } from '@visactor/vutils';
 import type { BaseContext } from '../types/atom';
 import { AtomName } from '../types/atom';
 import { BaseAtom } from '../atom/base';
-import { DataQueryAtom, DataExtractionAtom, ChartGeneratorAtom, ChartCommandAtom, DataInsightAtom } from '../atom';
+import {
+  DataQueryAtom,
+  DataExtractionAtom,
+  ChartGeneratorAtom,
+  ChartCommandAtom,
+  DataInsightAtom,
+  MultipleDataCleanAtom,
+  MultipleChartCommandAtom
+} from '../atom';
 import type { CombineAll, MapAtomTypes, TaskMapping } from '../types/schedule';
-import { DataCleanAtom } from '../atom/dataClean';
+import { DataCleanAtom } from '../atom/dataClean/dataClean';
 import type {
   BaseOptions,
   ChartCommandOptions,
+  ChartGeneratorOptions,
   DataCleanOptions,
   DataExtractionOptions,
   DataInsightOptions
@@ -18,10 +27,12 @@ export interface ScheduleOptions {
   [AtomName.BASE]?: BaseOptions;
   [AtomName.DATA_EXTRACT]?: DataExtractionOptions;
   [AtomName.DATA_CLEAN]?: DataCleanOptions;
+  [AtomName.MULTIPLE_DATA_CLEAN]?: DataCleanOptions;
   [AtomName.DATA_QUERY]?: BaseOptions;
   [AtomName.DATA_INSIGHT]?: DataInsightOptions;
-  [AtomName.CHART_GENERATE]?: BaseOptions;
+  [AtomName.CHART_GENERATE]?: ChartGeneratorOptions;
   [AtomName.CHART_COMMAND]?: ChartCommandOptions;
+  [AtomName.MULTIPLE_CHART_COMMAND]?: ChartCommandOptions;
 }
 
 export class Schedule<T extends AtomName[]> {
@@ -45,9 +56,9 @@ export class Schedule<T extends AtomName[]> {
   /** @todo */
   historySteps: any;
 
-  constructor(atomList: T, options: ScheduleOptions, context?: CombineAll<MapAtomTypes<T>>) {
+  constructor(atomList: T, options?: ScheduleOptions, context?: CombineAll<MapAtomTypes<T>>) {
     this.atomList = atomList;
-    this.options = options;
+    this.options = options || {};
     this.query = '';
     this.atomInstaces = atomList.map(atomName => this.atomFactory(atomName));
     this.setNewTask(context);
@@ -57,6 +68,7 @@ export class Schedule<T extends AtomName[]> {
     this.context = {} as T;
     this.atomInstaces.forEach(atom => {
       this.context = atom.buildDefaultContext(this.context);
+      atom.reset();
     });
   }
 
@@ -71,12 +83,16 @@ export class Schedule<T extends AtomName[]> {
         return new DataExtractionAtom(this.context, options);
       case AtomName.DATA_CLEAN:
         return new DataCleanAtom(this.context, options);
+      case AtomName.MULTIPLE_DATA_CLEAN:
+        return new MultipleDataCleanAtom(this.context, options);
       case AtomName.DATA_QUERY:
         return new DataQueryAtom(this.context, options);
       case AtomName.DATA_INSIGHT:
         return new DataInsightAtom(this.context, options);
       case AtomName.CHART_COMMAND:
         return new ChartCommandAtom(this.context, options);
+      case AtomName.MULTIPLE_CHART_COMMAND:
+        return new MultipleChartCommandAtom(this.context, options);
       case AtomName.CHART_GENERATE:
         return new ChartGeneratorAtom(this.context, options);
       default:
