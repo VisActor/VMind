@@ -49,23 +49,23 @@ export function ChartGeneratorResult() {
           .forEach((v, index) => {
             timeCostList.push(
               {
-                index,
+                index: index + 1,
                 type: 'all',
                 y: v.timeCost
               },
               {
-                index,
+                index: index + 1,
                 type: 'extraction',
                 y: v.extractionCost
               },
               {
-                index,
+                index: index + 1,
                 type: 'chart',
                 y: v.generationCost
               }
             );
             textLengthList.push({
-              index,
+              index: index + 1,
               type: 'textLength',
               y: v.context.text.length
             });
