@@ -28,6 +28,8 @@ export enum ROLE {
 export interface FieldInfo {
   /** name of field */
   fieldName: string;
+  /** alias of field */
+  alias?: string;
   /** description of field */
   description?: string;
   /** field type, eg: time / category / numerical */

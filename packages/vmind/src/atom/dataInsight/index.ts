@@ -6,11 +6,13 @@ import { merge } from '@visactor/vutils';
 import { extractDataFromContext } from './dataProcess';
 import { AlgorithmType } from './type';
 import { getInsights } from './algorithms';
+import type { LLMMessage } from '../../types/llm';
+import { getPolishPrompt } from './prompt';
 
 export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions> {
-  name = AtomName.DATA_CLEAN;
+  name = AtomName.DATA_INSIGHT;
 
-  isLLMAtom: boolean = false;
+  isLLMAtom: boolean = true;
 
   constructor(context: DataInsightCtx, option: DataInsightOptions) {
     super(context, option);
@@ -20,7 +22,8 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
     return merge(
       {},
       {
-        spec: {}
+        spec: {},
+        insights: []
       },
       context
     );
@@ -36,11 +39,14 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
         AlgorithmType.StatisticsAbnormal,
         AlgorithmType.LOFOutlier,
         AlgorithmType.DbscanOutlier,
-        AlgorithmType.DifferenceOutlier,
-        AlgorithmType.TurningPoint,
-        AlgorithmType.Volatility
+        AlgorithmType.MajorityValue,
+        // AlgorithmType.PageHinkley,
+        // AlgorithmType.DifferenceOutlier,
+        AlgorithmType.TurningPoint
+        // AlgorithmType.Volatility
       ],
-      isLimitedbyChartType: true
+      isLimitedbyChartType: true,
+      language: 'chinese'
     };
   }
 
@@ -48,14 +54,71 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
     return true;
   }
 
+  protected getLLMMessages(query?: string): LLMMessage[] {
+    const { insights } = this.context;
+    const language = this.options?.language;
+    const addtionContent = this.getHistoryLLMMessages(query);
+    return [
+      {
+        role: 'system',
+        content: getPolishPrompt(language)
+      },
+      {
+        role: 'user',
+        content: JSON.stringify({
+          insights: insights.map(insight => ({
+            type: insight.type,
+            content: insight.textContent?.content,
+            variables: insight.textContent?.variables
+          }))
+        })
+      },
+      ...addtionContent
+    ];
+  }
+
+  protected parseLLMContent(resJson: any): DataInsightCtx {
+    const { results } = resJson;
+    if (!results) {
+      console.error('Insights polish error in LLM');
+      return {
+        ...this.context,
+        error: 'Insights polish error in LLM'
+      };
+    }
+    const newInsights = this.context.insights.map((insight, index) => ({
+      ...insight,
+      textContent: {
+        content: results[index] || insight.textContent?.content,
+        variables: insight.textContent?.variables
+      }
+    }));
+    return {
+      ...this.context,
+      insights: newInsights
+    };
+  }
+
   protected runBeforeLLM(): DataInsightCtx {
+    this.isLLMAtom = true;
     const dataInfo = extractDataFromContext(this.context);
-    const { insights } = getInsights(dataInfo, this.options);
+    const insights = getInsights(
+      {
+        ...dataInfo,
+        spec: this.context.spec
+      },
+      this.options
+    );
     const newContext = {
       ...this.context,
+      chartType: dataInfo.chartType,
+      fieldInfo: dataInfo.fieldInfo,
       insights
     };
     this.updateContext(newContext);
+    if (insights.length === 0) {
+      this.isLLMAtom = false;
+    }
     return this.context;
   }
 }

@@ -42,6 +42,7 @@ const volatilityAlgo = (context: DataInsightExtractContext, optioins: Volatility
   return result;
 };
 
+/** @todo @czx add fluctuation period */
 export const Volatility: InsightAlgorithm = {
   name: 'volatility',
   chartType: [ChartType.LineChart, ChartType.DualAxisChart, ChartType.BarChart, ChartType.AreaChart],

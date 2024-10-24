@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { isArray, uniqArray } from '@visactor/vutils';
+import { isArray, merge, uniqArray } from '@visactor/vutils';
 import type { Cell, DataCell, DataTable } from '../../types';
 import { ChartType } from '../../types';
 
@@ -71,6 +71,19 @@ export const getDatasetFromSpec = (spec: any) => {
   return spec.data.map((d: any) => d.values).flat(2);
 };
 
+export const getFieldMappingFromSpec = (spec: any) => {
+  if (!spec) {
+    return {};
+  }
+  let res = {};
+  spec.data.forEach((d: any) => {
+    if (d?.fields) {
+      res = merge(res, d.fields);
+    }
+  });
+  return res;
+};
+
 /**
  * Auto generate cell from a spec template
  * @param spec
@@ -125,9 +138,11 @@ export const getCellFromSpec = (spec: any, chartType?: string) => {
   if ('common' === type) {
     //dual-axis chart
     const series = spec.series ?? [];
+    const seriesField = uniqArray(series.map((s: any) => s?.seriesField).filter((v: string) => !!v));
     return {
       x: series[0]?.xField,
-      y: uniqArray([series[0]?.yField, series[1]?.yField].filter(Boolean))
+      y: uniqArray([series[0]?.yField, series[1]?.yField].filter(Boolean)),
+      color: seriesField?.length === 1 ? seriesField[0] : undefined
     };
   }
   if (type === 'wordCloud') {
@@ -168,4 +183,13 @@ export const revisedCell = (cell: Cell, dataset: DataTable) => {
     }
   }
   return cell;
+};
+
+export const isStackChart = (spec: any) => {
+  const { stack, xField = [], seriesField } = spec || {};
+  return stack && !(isArray(xField) && xField.length === 2 && seriesField && xField[1] !== seriesField);
+};
+
+export const isPercentChart = (spec: any) => {
+  return !!spec?.percent;
 };

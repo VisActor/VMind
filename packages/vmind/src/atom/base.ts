@@ -123,6 +123,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
         const data = await this.options.llm.run(this.name, messages);
         const resJson = this.options.llm.parseJson(data);
         if (resJson.error) {
+          console.error(resJson.error);
           this.updateContext({ error: resJson.error } as any);
           return this.context;
         }

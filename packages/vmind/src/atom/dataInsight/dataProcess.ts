@@ -1,4 +1,10 @@
-import { getCellFromSpec, getChartTypeFromSpec, getDatasetFromSpec, revisedCell } from './utils';
+import {
+  getCellFromSpec,
+  getChartTypeFromSpec,
+  getDatasetFromSpec,
+  getFieldMappingFromSpec,
+  revisedCell
+} from './utils';
 import type { DataCell } from '../../types';
 import { type DataInsightCtx } from '../../types';
 import { isArray } from '@visactor/vutils';
@@ -22,13 +28,18 @@ export const extractDataFromContext = (context: DataInsightCtx) => {
     //no dataset in the input, extract from spec
     dataset = getDatasetFromSpec(spec);
   }
+  const specFieldMapping = getFieldMappingFromSpec(spec);
 
-  let fieldInfo = transferFieldInfo({
-    fieldInfo: inputFieldInfo
-  })?.fieldInfo;
+  let fieldInfo = inputFieldInfo;
   if (!fieldInfo || fieldInfo?.length === 0) {
     fieldInfo = getFieldInfoFromDataset(dataset);
   }
+  fieldInfo = transferFieldInfo(
+    {
+      fieldInfo
+    },
+    specFieldMapping
+  )?.fieldInfo;
   dataset = transferMeasureInTable(dataset, fieldInfo);
 
   const cell = revisedCell(getCellFromSpec(spec, chartType), dataset);

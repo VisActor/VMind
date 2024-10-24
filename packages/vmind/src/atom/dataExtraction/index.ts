@@ -45,7 +45,7 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtracti
     const { fieldInfo, text } = this.context;
     const { showThoughts, reGenerateFieldInfo, llm, isCapcut } = this.options;
     const addtionContent = this.getHistoryLLMMessages(query);
-    const language = getLanguageOfText(text);
+    const language = this.options?.language ?? getLanguageOfText(text);
     if (!fieldInfo || !fieldInfo?.length) {
       return [
         {
