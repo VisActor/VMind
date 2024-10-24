@@ -12,6 +12,7 @@ type TrendInfo = {
   zScore: number;
   measureId: number | string;
   series: string;
+  info?: any;
 };
 
 export interface AbnormalTrendOptions {
@@ -34,12 +35,19 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
       const seriesDataset = seriesDataMap[series].map((d: { [x: string]: any }) => d.dataItem[measureId]);
       const { trend, pValue, zScore } = originalMKTest(seriesDataset, 0.05, false);
       if (trend !== TrendType.NO_TREND) {
+        const startValue = seriesDataset[0];
+        const endValue = seriesDataset[seriesDataset.length - 1];
         seriesTrendInfo.push({
           trend,
           pValue,
           zScore,
           measureId,
-          series
+          series,
+          info: {
+            startValue,
+            endValue,
+            change: trend === TrendType.INCREASING ? endValue / startValue - 1 : 1 - endValue / startValue
+          }
         });
       }
     });
@@ -47,7 +55,7 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
 
   yField.forEach(measureId => {
     const measureOverallTrend = insights.find(
-      (i: { type: InsightType; fieldId: DataCell }) => i.type === InsightType.OverallTrend && i.fieldId === measureId
+      (i: { type: InsightType; fieldId?: DataCell }) => i.type === InsightType.OverallTrend && i?.fieldId === measureId
     );
     if (measureOverallTrend) {
       const measureSeriesTrend = seriesTrendInfo.filter(
@@ -61,7 +69,8 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
             fieldId: measureId,
             value: seriesTrend.trend,
             significant: 1 - seriesTrend.pValue,
-            seriesName: seriesTrend.series
+            seriesName: seriesTrend.series,
+            info: seriesTrend.info
           } as unknown as Insight)
       );
       result.push(...seriesInsights);
@@ -81,7 +90,8 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
                 fieldId: measureId,
                 value: dt.trend,
                 significant: 1 - dt.pValue,
-                seriesName: dt.series
+                seriesName: dt.series,
+                info: dt.info
               } as unknown as Insight)
           );
           result.push(...decreaseInsights);
@@ -96,7 +106,8 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
                 fieldId: measureId,
                 value: it.trend,
                 significant: 1 - it.pValue,
-                seriesName: it.series
+                seriesName: it.series,
+                info: it.info
               } as unknown as Insight)
           );
           result.push(...increaseInsights);

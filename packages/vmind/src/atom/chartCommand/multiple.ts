@@ -49,7 +49,7 @@ export class MultipleChartCommandAtom extends BaseAtom<MultipleChartCommandsCtx,
 
   protected getLLMMessages(query?: string): LLMMessage[] {
     const { datasets } = this.context;
-    const language = getLanguageOfText(datasets?.[0]?.text || datasets?.[0]?.summary);
+    const language = this.options?.language ?? getLanguageOfText(datasets?.[0]?.text || datasets?.[0]?.summary);
     const addtionContent = this.getHistoryLLMMessages(query);
     return [
       {

@@ -15,6 +15,7 @@ import type { RevisedInsightParams } from './revised';
 import { filterCorrelationInsight, filterInsightByType, mergePointInsight } from './revised';
 import { DifferenceAlg } from './outlier/difference';
 import { PageHinkleyAlg } from './drift';
+import { generateInsightTemplate } from './template';
 
 const algorithmMapping = {
   [AlgorithmType.OverallTrending]: {
@@ -96,13 +97,19 @@ export const getInsights = (context: DataInsightExtractContext, options: DataIns
   algorithms.sort((a, b) => algorithmMapping[a].priority - algorithmMapping[b].priority);
   algorithms.forEach(key => {
     const algoInfo = algorithmMapping[key].info;
-    const { chartType: algoSupportedChartType, algorithmFunction, forceChartType } = algoInfo;
+    const { chartType: algoSupportedChartType, algorithmFunction, forceChartType, name, canRun } = algoInfo;
     if (
       (!forceChartType || forceChartType.includes(chartType)) &&
-      (!isLimitedbyChartType || !algoSupportedChartType || algoSupportedChartType.includes(chartType))
+      (!isLimitedbyChartType || !algoSupportedChartType || algoSupportedChartType.includes(chartType)) &&
+      (!canRun || canRun(insightAlgorithmContext))
     ) {
       const res = algorithmFunction(insightAlgorithmContext, options?.algorithmOptions?.[key]);
-      insights.push(...res);
+      insights.push(
+        ...res.map(v => ({
+          ...v,
+          name
+        }))
+      );
     }
   });
 
@@ -125,7 +132,7 @@ export const getInsights = (context: DataInsightExtractContext, options: DataIns
     const significant2 = b.significant ?? -1;
     return significant2 - significant1;
   });
-  const finalInsights = maxNum ? revisedInsights.slice(0, maxNum) : revisedInsights;
+  const finalInsights = generateInsightTemplate(maxNum ? revisedInsights.slice(0, maxNum) : revisedInsights, context);
 
-  return { insights: finalInsights };
+  return finalInsights;
 };

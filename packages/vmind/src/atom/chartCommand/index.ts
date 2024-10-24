@@ -39,7 +39,7 @@ export class ChartCommandAtom extends BaseAtom<ChartCommandCtx, ChartCommandOpti
 
   protected getLLMMessages(query?: string): LLMMessage[] {
     const { fieldInfo, text, dataTable, summary } = this.context;
-    const language = getLanguageOfText(text || summary);
+    const language = this.options?.language ?? getLanguageOfText(text || summary);
     const addtionContent = this.getHistoryLLMMessages(query);
     return [
       {
@@ -74,7 +74,8 @@ export class ChartCommandAtom extends BaseAtom<ChartCommandCtx, ChartCommandOpti
       console.error("Can't generate chart command in this case");
       return {
         ...this.context,
-        command: ''
+        command: '',
+        error: `Can't generate chart command in this case`
       };
     }
     return {

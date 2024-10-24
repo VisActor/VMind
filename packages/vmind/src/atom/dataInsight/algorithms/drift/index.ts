@@ -2,6 +2,7 @@
  * adwin and pageHinkley all based on super parmaeters, so it's difficult to use without data information
  */
 import { isArray } from '@visactor/vutils';
+import normalize from 'array-normalize';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
 import { ChartType, type DataItem } from '../../../../types';
@@ -14,7 +15,7 @@ export interface PageHinkleyOptions {
 export const pageHinkleyFunc = (context: DataInsightExtractContext, options: PageHinkleyOptions) => {
   const result: Insight[] = [];
   const { seriesDataMap, cell } = context;
-  const { delta, lambda } = options;
+  const { delta, lambda } = options || {};
   const { y: celly } = cell;
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
 
@@ -22,14 +23,15 @@ export const pageHinkleyFunc = (context: DataInsightExtractContext, options: Pag
     const dataset: { index: number; dataItem: DataItem }[] = seriesDataMap[group];
     yField.forEach(field => {
       const pageHinkley = new PageHinkley(delta, lambda);
-      dataset.forEach(d => {
-        const isDrift = pageHinkley.setInput(d.dataItem[field] as number);
+      const normalizedDataset = normalize(dataset.map(v => v.dataItem[field] as number));
+      normalizedDataset.forEach((d, index) => {
+        const isDrift = pageHinkley.setInput(d);
         if (isDrift) {
           result.push({
             type: InsightType.Outlier,
-            data: [d],
+            data: [dataset[index]],
             fieldId: field,
-            value: d.dataItem[field],
+            value: d,
             significant: 1,
             seriesName: group
           } as unknown as Insight);

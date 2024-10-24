@@ -158,4 +158,6 @@ export interface DataInsightCtx extends BaseContext {
   insights: Insight[];
   /** chartType of vchart */
   vChartType?: string;
+  /** chartType */
+  chartType?: ChartType;
 }

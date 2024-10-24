@@ -66,9 +66,8 @@ export const TurningPoint: InsightAlgorithm = {
     ChartType.LineChart,
     ChartType.BarChart,
     ChartType.AreaChart,
-    ChartType.RadarChart,
     ChartType.WaterFallChart
   ],
-  insightType: InsightType.ExtremeValue,
+  insightType: InsightType.TurningPoint,
   algorithmFunction: turningPointAlgo
 };

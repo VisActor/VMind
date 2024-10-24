@@ -1,14 +1,14 @@
 import { isArray, isNumber } from '@visactor/vutils';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
-import { type DataItem } from '../../../../types';
+import { ChartType, type DataItem } from '../../../../types';
 
 const getMajorityInGroup = (
   dataset: { index: number; dataItem: DataItem }[],
   measureId: string | number,
   seriesId: string | number,
   dimensionId: string | number,
-  threshold = 0.8
+  threshold = 0.85
 ) => {
   const result: Insight[] = [];
   const sum = dataset.reduce((prev, cur) => {
@@ -70,12 +70,13 @@ const calcMajorityValue = (context: DataInsightExtractContext, options: Majority
     const dimensionInsights = getMajorityInGroup(dimensionDataset, yField[0], groupField, xField, threshold);
     result.push(...dimensionInsights);
   });
-  return [];
-  // return result;
+  // return [];
+  return result;
 };
 
 export const LineChartMajorityValue: InsightAlgorithm = {
   name: 'majorityValue',
+  forceChartType: [ChartType.BarChart, ChartType.AreaChart],
   insightType: InsightType.MajorityValue,
   algorithmFunction: calcMajorityValue
 };

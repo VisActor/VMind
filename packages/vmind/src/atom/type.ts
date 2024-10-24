@@ -7,6 +7,8 @@ export interface BaseOptions {
   llm?: LLMManage;
   /** show llm thoughs or not */
   showThoughts?: boolean;
+  /** answer language */
+  language?: 'chinese' | 'english';
 }
 
 export interface DataExtractionOptions extends BaseOptions {

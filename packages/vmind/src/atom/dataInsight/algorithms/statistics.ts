@@ -157,3 +157,37 @@ export function studentTQuantile(x: number, degree: number) {
 export function coefficientVariation(data: number[]) {
   return jStat.coeffvar(data);
 }
+
+export function longestTrendInterval(data: number[]) {
+  if (data.length === 0) {
+    return { length: 0, start: -1, end: -1 };
+  }
+
+  let maxLength = 1;
+  let currentLength = 1;
+  let start = 0;
+  let end = 0;
+  let maxStart = 0;
+  let maxEnd = 0;
+  let trend = 0; // 0: no trend, 1: increasing, -1: decreasing
+
+  for (let i = 1; i <= data.length; i++) {
+    const currentTrend = i === data.length ? null : Math.sign(data[i] - data[i - 1]);
+
+    if (currentTrend === trend) {
+      currentLength++;
+      end = i;
+    } else {
+      if (currentLength > maxLength) {
+        maxLength = currentLength;
+        maxStart = start;
+        maxEnd = end;
+      }
+      trend = currentTrend;
+      currentLength = currentTrend !== 0 ? 2 : 1;
+      start = i - 1;
+      end = i;
+    }
+  }
+  return { length: maxLength, start: maxStart, end: maxEnd };
+}

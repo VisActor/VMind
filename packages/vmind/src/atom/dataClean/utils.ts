@@ -24,11 +24,14 @@ const removeFieldInfoInCtx = (context: DataCleanCtx, cleanFieldKey: string[]) =>
   };
 };
 
-export const transferFieldInfo = (context: DataCleanCtx) => {
+export const transferFieldInfo = (context: DataCleanCtx, fieldMapping?: Record<string, FieldInfo>) => {
   (context.fieldInfo || []).forEach(info => {
     if (!info.role || !info.location) {
       info.role = getRoleByFieldType(info.type);
       info.location = info.role as any;
+    }
+    if (fieldMapping?.[info.fieldName]) {
+      info.alias = info.alias ?? fieldMapping[info.fieldName]?.alias;
     }
   });
   return context;
@@ -393,13 +396,14 @@ export const mergeDataTable = (ctxA: DatasetFromText, ctxB: DatasetFromText) => 
   const { dataTable: tableB, summary: summaryB, textRange: rangeB } = ctxB;
   const { strA, strB, commonStr } = longestCommonSubstringAtEdges(summaryA, summaryB);
   const newFieldInfo: FieldInfo = {
-    fieldName: 'mergedSummary',
+    fieldName: commonStr,
+    description: `${summaryA} and ${summaryB}`,
     role: ROLE.DIMENSION,
     type: DataType.STRING
   };
   const newDataTable = [
-    ...tableA.map(v => ({ ...v, mergedSummary: strA })),
-    ...tableB.map(v => ({ ...v, mergedSummary: strB }))
+    ...tableA.map(v => ({ ...v, [commonStr]: strA })),
+    ...tableB.map(v => ({ ...v, [commonStr]: strB }))
   ];
   const textRange = rangeA && rangeB ? [rangeA[0], rangeB[1]] : null;
   return {

@@ -62,9 +62,9 @@ const getBandInsightByOutliear = (context: DataInsightExtractContext, outliearFi
         if (band.length > 1) {
           abnormalBand.push({
             type: InsightType.AbnormalBand,
+            name: InsightType.AbnormalBand,
             data: band.map(v => v.content.insight.data[0]),
-            fieldId,
-            text: [],
+            seriesName: fieldId,
             value: null,
             significant: band.length
           });
@@ -105,6 +105,12 @@ export const mergePointInsight = (
     }
     outliear[key].push(insight);
   });
+  const majorityValueInsight = filterInsight(insights, InsightType.MajorityValue).filter(insight => {
+    const { data } = insight;
+    const seriesName = insight?.seriesName as DataCell;
+    const key = `${data[0].index}-&&&-${seriesName}`;
+    return !outliear[key];
+  });
 
   const pairOutlier = filterPairInsight(insights, filterOutliearInsight);
   const { abnormalBand, bandInsightKeys } = getBandInsightByOutliear(context, outliearFieldMapping);
@@ -120,7 +126,8 @@ export const mergePointInsight = (
     ...insightCtx,
     [InsightType.Outlier]: outliearInsight,
     [InsightType.PairOutlier]: pairOutlier,
-    [InsightType.AbnormalBand]: abnormalBand
+    [InsightType.AbnormalBand]: abnormalBand,
+    [InsightType.MajorityValue]: majorityValueInsight
   };
 };
 
@@ -155,6 +162,6 @@ export const filterCorrelationInsight = (insightCtx: RevisedInsightParams) => {
 export const filterInsightByType = (insightCtx: RevisedInsightParams, type: InsightType) => {
   return {
     ...insightCtx,
-    [type]: filterInsight(insightCtx.insights, type)
+    [type]: insightCtx?.[type]?.length ? insightCtx?.[type] : filterInsight(insightCtx.insights, type)
   };
 };

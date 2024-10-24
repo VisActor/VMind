@@ -1,19 +1,22 @@
+/** Page Hinkely algorithm, @todo remove trend influence */
 export class PageHinkley {
   delta: number;
   lambda: number;
   alpha: number;
   sum: number;
+  minSum: number;
   xMean: number;
   num: number;
   changeDetected: boolean;
 
-  constructor(delta = 0.005, lambda = 50, alpha = 1 - 0.0001) {
+  constructor(delta = 0.006, lambda = 0.8, alpha = 0.95) {
     this.delta = delta;
     this.lambda = lambda;
     this.alpha = alpha;
     this.sum = 0;
     this.xMean = 0;
     this.num = 0;
+    this.minSum = 0;
     this.changeDetected = false;
   }
 
@@ -21,6 +24,7 @@ export class PageHinkley {
     this.num = 0;
     this.xMean = 0;
     this.sum = 0;
+    this.minSum = 0;
   }
 
   setInput(x: number) {
@@ -32,8 +36,11 @@ export class PageHinkley {
     this.num += 1;
     this.xMean = (x + this.xMean * (this.num - 1)) / this.num;
     this.sum = this.sum * this.alpha + (x - this.xMean - this.delta);
+    if (this.sum < this.minSum) {
+      this.minSum = this.sum;
+    }
 
-    this.changeDetected = this.sum > this.lambda;
+    this.changeDetected = this.sum - this.minSum > this.lambda;
     if (this.changeDetected) {
       this._resetParams();
     }
