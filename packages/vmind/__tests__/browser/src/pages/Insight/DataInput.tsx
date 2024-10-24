@@ -1,20 +1,8 @@
 /* eslint-disable no-console */
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import './index.scss';
-import {
-  Avatar,
-  Input,
-  Divider,
-  Button,
-  InputNumber,
-  Upload,
-  Message,
-  Select,
-  Radio,
-  Checkbox,
-  Modal
-} from '@arco-design/web-react';
-import VMind, { ArcoTheme, AtomName, LLMManage, Schedule } from '../../../../../src/index';
+import { Avatar, Input, Divider, Button, InputNumber, Select, Radio, Modal } from '@arco-design/web-react';
+import { AtomName, LLMManage, Schedule } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
 import {
   ChangePointChart,
@@ -57,8 +45,6 @@ const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
   [Model.DOUBAO_PRO]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
-  [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
-  [Model.GPT_4_0613]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
   [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
@@ -66,13 +52,11 @@ const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 export function DataInput(props: IPropsType) {
   const defaultDataKey = Object.keys(demoDataList)[0];
   const [spec, setSpec] = useState<string>(JSON.stringify(demoDataList[defaultDataKey].spec));
-  const [fieldInfo, setFieldInfo] = useState<string>(demoDataList[defaultDataKey].fieldInfo);
 
   //const [spec, setSpec] = useState<string>('');
   //const [time, setTime] = useState<number>(1000);
-  const [model, setModel] = useState<Model>(Model.GPT3_5);
-  const [cache, setCache] = useState<boolean>(true);
-  const [showThoughts, setShowThoughts] = useState<boolean>(false);
+  const [model, setModel] = useState<Model>(Model.GPT_4o);
+  const [numLimits, setNumLimits] = useState<number>(8);
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
   const [apiKey, setApiKey] = React.useState(ModelConfigMap[model]?.key);
@@ -91,7 +75,12 @@ export function DataInput(props: IPropsType) {
     })
   );
   const schedule = React.useRef<Schedule<[AtomName.DATA_INSIGHT]>>(
-    new Schedule([AtomName.DATA_INSIGHT, AtomName.DATA_CLEAN], { base: { llm: llm.current, showThoughts } })
+    new Schedule([AtomName.DATA_INSIGHT], {
+      base: { llm: llm.current },
+      dataInsight: {
+        maxNum: numLimits
+      }
+    })
   );
   useEffect(() => {
     llm.current.updateOptions({
@@ -152,7 +141,6 @@ export function DataInput(props: IPropsType) {
             const dataObj = demoDataList[v];
             setSpec(JSON.stringify(dataObj.spec));
             props.onSpecChange(dataObj.spec);
-            setFieldInfo(dataObj.fieldInfo);
           }}
         >
           {Object.keys(demoDataList).map(name => (
@@ -163,54 +151,53 @@ export function DataInput(props: IPropsType) {
         </Select>
       </div>
 
-      <div style={{ width: '100%' }}>
-        <p>
-          <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-            2
-          </Avatar>
-          <span style={{ marginLeft: 10 }}>Input your spec</span>
-        </p>
-        <TextArea
-          placeholder={spec}
-          value={spec}
-          onChange={v => setSpec(v)}
-          style={{ minHeight: 250, background: 'transparent', border: '1px solid #eee' }}
-        />
+      <div style={{ width: '90%', display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <div style={{ width: '100%' }} className="flex-text-area">
+          <p>
+            <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+              2
+            </Avatar>
+            <span style={{ marginLeft: 10 }}>Input your spec</span>
+          </p>
+          <TextArea
+            placeholder={spec}
+            value={spec}
+            onChange={v => setSpec(v)}
+            style={{ minHeight: 250, background: 'transparent', border: '1px solid #eee' }}
+          />
+        </div>
+        <Divider style={{ marginTop: 12 }} />
+        <div>
+          <p>
+            <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+              2
+            </Avatar>
+            <span style={{ marginLeft: 10 }}>Input Max Num Limits</span>
+          </p>
+          <InputNumber
+            placeholder="Please enter"
+            value={numLimits}
+            min={0}
+            max={20}
+            onChange={v => {
+              setNumLimits(v);
+              schedule.current.updateOptions({
+                dataInsight: {
+                  maxNum: v
+                }
+              });
+            }}
+            style={{ width: 160, margin: '10px 24px 10px 0' }}
+          />
+        </div>
+        <Divider style={{ marginTop: 12 }} />
       </div>
-      <div style={{ width: '100%' }}>
-        <p>
-          <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-            2
-          </Avatar>
-          <span style={{ marginLeft: 10 }}>Input your fieldInfo</span>
-        </p>
-        <TextArea
-          placeholder={fieldInfo}
-          value={fieldInfo}
-          onChange={v => setSpec(v)}
-          style={{ minHeight: 150, background: 'transparent', border: '1px solid #eee' }}
-        />
-      </div>
-
-      <Divider style={{ marginTop: 30 }} />
 
       <div style={{ width: '90%', marginBottom: 10 }}>
         <RadioGroup value={model} onChange={v => setModel(v)}>
-          <Radio value={Model.GPT3_5}>GPT-3.5</Radio>
-          <Radio value={Model.GPT4}>GPT-4</Radio>
+          <Radio value={Model.GPT_4o}>GPT-4o</Radio>
           <Radio value={Model.DOUBAO_PRO}>Doubao-Pro</Radio>
-          <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
         </RadioGroup>
-      </div>
-      <div style={{ width: '90%', marginBottom: 10 }}>
-        <Checkbox checked={cache} onChange={v => setCache(v)}>
-          Enable Cache
-        </Checkbox>
-      </div>
-      <div style={{ width: '90%', marginBottom: 20 }}>
-        <Checkbox checked={showThoughts} onChange={v => setShowThoughts(v)}>
-          Show Thoughts
-        </Checkbox>
       </div>
       <div className="generate-botton">
         <Button

@@ -1,14 +1,13 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './index.scss';
 import { Button, Input, Card, Space, Modal, Spin } from '@arco-design/web-react';
 import VChart from '@visactor/vchart';
 import { isNil } from '@visactor/vutils';
-
-const TextArea = Input.TextArea;
+import type { Insight } from '../../../../../src/atom/dataInsight/type';
 
 type IPropsType = {
   spec: any;
-  insights: any;
+  insights: Insight[];
   costTime: number;
 };
 
@@ -57,10 +56,15 @@ export function ChartPreview(props: IPropsType) {
             <div>
               <p>Total Time: {props.costTime / 1000} s</p>
               <p>insights:</p>
-              <TextArea value={JSON.stringify(props.insights.insights, null, 4)} style={{ height: 300 }}></TextArea>
-              <p>spec:</p>
-              <TextArea value={JSON.stringify(props.spec, null, 4)} style={{ height: 300 }}></TextArea>
-              {/*<pre style={{ whiteSpace: 'pre' }}>{JSON.stringify(props.spec, null, 4)}</pre>*/}
+              {props.insights.map((insight, index) => {
+                const { content, variables } = insight?.textContent || {};
+                let text = content ?? '';
+                variables &&
+                  Object.keys(variables).forEach(key => {
+                    text = text.replaceAll(`\${${key}}`, variables[key].value as string);
+                  });
+                return <p key={index}>{text}</p>;
+              })}
             </div>
           ) : null}
         </Card>

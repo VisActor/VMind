@@ -11,7 +11,7 @@ export function InsightPage() {
 
   const [costTime, setCostTime] = useState<number>(0);
   return (
-    <Layout>
+    <Layout style={{ overflow: 'auto' }}>
       <Sider
         style={{
           height: '100%',
