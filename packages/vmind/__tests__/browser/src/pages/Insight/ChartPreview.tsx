@@ -57,13 +57,8 @@ export function ChartPreview(props: IPropsType) {
               <p>Total Time: {props.costTime / 1000} s</p>
               <p>insights:</p>
               {props.insights.map((insight, index) => {
-                const { content, variables } = insight?.textContent || {};
-                let text = content ?? '';
-                variables &&
-                  Object.keys(variables).forEach(key => {
-                    text = text.replaceAll(`\${${key}}`, variables[key].value as string);
-                  });
-                return <p key={index}>{text}</p>;
+                const { plainText = '' } = insight?.textContent || {};
+                return <p key={index}>{plainText}</p>;
               })}
             </div>
           ) : null}

@@ -14,6 +14,7 @@ import {
   SalesLineChart,
   SalesLineChart2,
   SalesLineChart3,
+  SalesScatterChart,
   ScatterClusterChart,
   ScatterPlotChart
 } from './data';
@@ -38,7 +39,8 @@ const demoDataList: { [key: string]: any } = {
   ChangePointChart: ChangePointChart,
   MultiLineChart2: MultiLineChart2,
   ScatterPlotChart: ScatterPlotChart,
-  ScatterClusterChart: ScatterClusterChart
+  ScatterClusterChart: ScatterClusterChart,
+  ScatterSalesChart: SalesScatterChart
 };
 
 const globalVariables = (import.meta as any).env;
