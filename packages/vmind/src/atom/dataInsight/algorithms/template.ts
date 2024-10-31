@@ -1,13 +1,11 @@
-import { isArray } from '@visactor/vutils';
 import { ChartType } from '../../../types';
 import type { DataCell, FieldInfo } from '../../../types';
+import type { InsightTextContent } from '../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../type';
 import { DEFAULT_SERIES_NAME } from '../const';
 import { TrendType } from './statistics';
+import { getFieldIdInCell } from '../../../utils/field';
 
-const getFieldIdInCell = (cellField: any): string => {
-  return isArray(cellField) ? cellField[0] : cellField;
-};
 const getFieldInfoById = (fieldInfo: FieldInfo[], fieldId: string) => {
   return fieldInfo.find(info => info.fieldName === fieldId);
 };
@@ -99,7 +97,9 @@ const getMajorityTemplate = (insight: Insight, ctx: DataInsightExtractContext) =
       },
       c: {
         value: ratio,
-        fieldName: getFieldInfoById(fieldInfo, fieldId as string)?.alias ?? fieldId
+        formatValue: `${(ratio * 100).toFixed(1)}%`,
+        fieldName: getFieldInfoById(fieldInfo, fieldId as string)?.alias ?? fieldId,
+        icon: 'ratio'
       }
     }
   };
@@ -111,7 +111,7 @@ const getAbnormalBandTemplate = (insight: Insight, ctx: DataInsightExtractContex
   const xFieldId = getFieldIdInCell(cell.x);
   const seriesField = getFieldIdInCell(cell?.color);
   return {
-    content: isEmptySeries(seriesName) ? '${b}-${c}之间存在异常区间' : '${a}在${b}-${c}之间存在异常区间',
+    content: isEmptySeries(seriesName) ? '${b}至${c}之间存在异常区间' : '${a}在${b}至${c}之间存在异常区间',
     variables: {
       ...(isEmptySeries(seriesName)
         ? {}
@@ -140,8 +140,8 @@ const getOverallTrendTemplate = (insight: Insight, ctx: DataInsightExtractContex
   const xFieldId = getFieldIdInCell(cell.x);
   return {
     content:
-      '数据整体呈${a}趋势，其中在${b}-${c}连续${a},数据' +
-      (value === TrendType.INCREASING ? '增长了' : '减少至') +
+      '数据整体呈${a}趋势，其中在${b}至${c}间连续${a},数据' +
+      (value === TrendType.INCREASING ? '增长了' : '下降了') +
       '${d}',
     variables: {
       a: {
@@ -158,7 +158,9 @@ const getOverallTrendTemplate = (insight: Insight, ctx: DataInsightExtractContex
         fieldName: getFieldInfoById(fieldInfo, xFieldId)?.alias ?? xFieldId
       },
       d: {
-        value: (+change * 100).toFixed(1) + '%',
+        formatValue: (Math.abs(change) * 100).toFixed(1) + '%',
+        value: change,
+        valueType: value === TrendType.INCREASING ? 'ascendTrend' : 'descendTrend',
         fieldName: null as any
       }
     }
@@ -182,7 +184,8 @@ const getAbnormalTrendTemplate = (insight: Insight, ctx: DataInsightExtractConte
         icon: value === TrendType.INCREASING ? 'ascendTrend' : 'descendTrend'
       },
       c: {
-        value: (+info.change * 100).toFixed(1) + '%',
+        value: (Math.abs(info.change) * 100).toFixed(1) + '%',
+        valueType: value === TrendType.INCREASING ? 'ascendTrend' : 'descendTrend',
         fieldName: null as any
       }
     }
@@ -208,19 +211,22 @@ const getCorrelationTemplate = (insight: Insight, ctx: DataInsightExtractContext
         },
         c: {
           value: correlationType === 'positive' ? '正' : '负',
-          fieldName: null as any,
-          icon: value === TrendType.INCREASING ? 'ascendTrend' : 'descendTrend'
+          fieldName: null as any
         }
       }
     };
   }
   return {
-    content: '${a}在xy上呈线性相关',
+    content: isEmptySeries(seriesName) ? '图表在xy上呈线性相关' : '${a}在xy上呈线性相关',
     variables: {
-      a: {
-        value: seriesName as string,
-        fieldName: getFieldInfoById(fieldInfo, seriesField)?.alias ?? seriesField
-      }
+      ...(isEmptySeries(seriesName)
+        ? {
+            a: {
+              value: seriesName as string,
+              fieldName: getFieldInfoById(fieldInfo, seriesField)?.alias ?? seriesField
+            }
+          }
+        : {})
     }
   };
 };
@@ -242,43 +248,58 @@ const getVolatilityTemplate = (insight: Insight, ctx: DataInsightExtractContext)
   };
 };
 
+export const addPlainText = (textContent: { content: string; variables?: Record<string, InsightTextContent> }) => {
+  const { content, variables = {} } = textContent;
+  let plainText = `${content}`;
+  Object.keys(variables).forEach(key => {
+    const value = variables[key];
+    plainText = plainText.replaceAll(`\${${key}}`, `${value.formatValue || value.value}`);
+  });
+  return {
+    ...textContent,
+    plainText
+  };
+};
+
 export const generateInsightTemplate = (insights: Insight[], ctx: DataInsightExtractContext) => {
   for (let i = 0; i < insights.length; i++) {
     const { type } = insights[i];
+    let textContent = null;
     switch (type) {
       case InsightType.Outlier:
-        insights[i].textContent = getOutlierTemplate(insights[i], ctx);
+        textContent = getOutlierTemplate(insights[i], ctx);
         break;
       case InsightType.TurningPoint:
-        insights[i].textContent = getTurnPointTemplate(insights[i], ctx);
+        textContent = getTurnPointTemplate(insights[i], ctx);
         break;
       case InsightType.MajorityValue:
-        insights[i].textContent = getMajorityTemplate(insights[i], ctx);
+        textContent = getMajorityTemplate(insights[i], ctx);
         break;
       case InsightType.AbnormalBand:
-        insights[i].textContent = getAbnormalBandTemplate(insights[i], ctx);
+        textContent = getAbnormalBandTemplate(insights[i], ctx);
         break;
       case InsightType.OverallTrend:
-        insights[i].textContent = getOverallTrendTemplate(insights[i], ctx);
+        textContent = getOverallTrendTemplate(insights[i], ctx);
         break;
       case InsightType.AbnormalTrend:
-        insights[i].textContent = getAbnormalTrendTemplate(insights[i], ctx);
+        textContent = getAbnormalTrendTemplate(insights[i], ctx);
         break;
       case InsightType.Correlation:
-        insights[i].textContent = getCorrelationTemplate(insights[i], ctx);
+        textContent = getCorrelationTemplate(insights[i], ctx);
         break;
       case InsightType.Volatility:
-        insights[i].textContent = getVolatilityTemplate(insights[i], ctx);
+        textContent = getVolatilityTemplate(insights[i], ctx);
         break;
       case InsightType.ExtremeValue:
-        insights[i].textContent = getExtremeTemplate(insights[i], ctx);
+        textContent = getExtremeTemplate(insights[i], ctx);
         break;
       default:
-        insights[i].textContent = {
+        textContent = {
           content: `数据含有${insights[i].type}的见解`
         };
         break;
     }
+    insights[i].textContent = addPlainText(textContent);
   }
   return insights;
 };

@@ -18,7 +18,7 @@ import {
 import { array, isArray, uniqArray } from '@visactor/vutils';
 import { COLOR_FIELD } from '@visactor/chart-advisor';
 import type { GenerateChartCellContext } from '../type';
-import { getFieldByDataType } from '../../../utils/field';
+import { getFieldByDataType, getFieldIdInCell } from '../../../utils/field';
 import { isValidDataTable } from '../../../utils/dataTable';
 import { DataType, ChartType, ROLE } from '../../../types';
 import type { DataCell, DataTable, FieldInfo } from '../../../types';
@@ -52,9 +52,10 @@ const chartTypeMap: { [chartName: string]: string } = {
   [ChartType.VennChart.toUpperCase()]: 'venn'
 };
 
-export const chartType = (context: GenerateChartCellContext) => {
+export const getVChartTypeByVmind = (type: string) => chartTypeMap[type];
+export const revisedVChartType = (context: GenerateChartCellContext) => {
   const { chartType, spec } = context;
-  spec.type = chartTypeMap[chartType];
+  spec.type = getVChartTypeByVmind(chartType);
   return { spec };
 };
 
@@ -1402,14 +1403,14 @@ export const circularProgressStyle = (context: GenerateChartCellContext) => {
 };
 
 export const indicator = (context: GenerateChartCellContext) => {
-  const { spec, cell, fieldInfo } = context;
+  const { spec, cell } = context;
   const firstEntry = spec.data.values[0];
   if (!firstEntry) {
     return { spec };
   }
   const valueField = (cell.value ?? cell.y) as string;
   const value = firstEntry[valueField];
-  const cat = firstEntry[cell.radius ?? cell.x];
+  const cat = firstEntry[getFieldIdInCell(cell.radius ?? cell.x)];
 
   spec.indicator = {
     visible: true,

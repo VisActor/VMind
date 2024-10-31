@@ -3,10 +3,11 @@ import {
   getChartTypeFromSpec,
   getDatasetFromSpec,
   getFieldMappingFromSpec,
-  revisedCell
+  revisedCell,
+  sumDimensionValues
 } from './utils';
 import type { DataCell } from '../../types';
-import { type DataInsightCtx } from '../../types';
+import { ChartType, type DataInsightCtx } from '../../types';
 import { isArray } from '@visactor/vutils';
 import { DEFAULT_SERIES_NAME } from './const';
 import { getFieldInfoFromDataset } from '../../utils/field';
@@ -45,10 +46,10 @@ export const extractDataFromContext = (context: DataInsightCtx) => {
   const cell = revisedCell(getCellFromSpec(spec, chartType), dataset);
 
   /** @todo dataset sort maybe difference in some special case */
-  const { color, x: cellx } = cell;
+  const { color, x: cellx, y: celly } = cell;
   const seriesField: string = isArray(color) ? color[0] : color;
   const seriesDataMap: DimValueDataMap = {};
-  if (seriesField) {
+  if (seriesField && ![ChartType.PieChart, ChartType.RoseChart].includes(chartType)) {
     dataset.forEach((dataItem, index) => {
       const groupBy = dataItem[seriesField];
       if (!groupBy) {
@@ -79,5 +80,14 @@ export const extractDataFromContext = (context: DataInsightCtx) => {
     dimensionDataMap[groupBy].push({ index, dataItem });
   });
 
-  return { dataset, fieldInfo, chartType, dimensionDataMap, dimensionValues, seriesDataMap, cell };
+  const yField: string[] = isArray(celly) ? celly.flat() : [celly];
+  const onlyOneSeries = Object.keys(seriesDataMap).length === 1;
+  const dimensionSumMap: Record<string, number[]> = {};
+  yField.forEach(measureId => {
+    dimensionSumMap[measureId] = dimensionValues.map(dimension => {
+      const dimensionDataset = dimensionDataMap[dimension].map(d => d.dataItem);
+      return sumDimensionValues(dimensionDataset, measureId, onlyOneSeries ? v => v : undefined);
+    });
+  });
+  return { dataset, fieldInfo, chartType, dimensionDataMap, dimensionValues, dimensionSumMap, seriesDataMap, cell };
 };

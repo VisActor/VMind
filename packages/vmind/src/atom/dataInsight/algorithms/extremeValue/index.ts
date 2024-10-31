@@ -98,5 +98,5 @@ export const ExtremeValue: InsightAlgorithm = {
   insightType: InsightType.ExtremeValue,
   algorithmFunction: calcExtremeValue,
   supportStack: true,
-  supportPercent: true
+  supportPercent: false
 };

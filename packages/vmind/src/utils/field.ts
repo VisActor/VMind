@@ -1,4 +1,4 @@
-import { uniqArray } from '@visactor/vutils';
+import { isArray, uniqArray } from '@visactor/vutils';
 import type { Cell, DataItem, DataTable, FieldInfo } from '../types';
 import { DataType, ROLE } from '../types';
 import { sampleSize, validateDate } from './common';
@@ -145,4 +145,8 @@ export const getFieldInfoFromDataset = (dataset: DataItem[]): FieldInfo[] => {
 
 export const hasMeasureField = (fieldInfo: FieldInfo[]) => {
   return fieldInfo.some(f => f.role === ROLE.MEASURE);
+};
+
+export const getFieldIdInCell = (cellField: any): string => {
+  return isArray(cellField) ? cellField[0] : cellField;
 };

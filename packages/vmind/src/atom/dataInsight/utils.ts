@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { isArray, merge, uniqArray } from '@visactor/vutils';
-import type { Cell, DataCell, DataTable } from '../../types';
+import { isArray, isNumber, merge, uniqArray } from '@visactor/vutils';
+import type { Cell, DataCell, DataItem, DataTable } from '../../types';
 import { ChartType } from '../../types';
 
 /**
@@ -50,14 +50,14 @@ export const getChartTypeFromSpec = (spec: any, vchartType?: string): ChartType 
     return ChartType.BoxPlot;
   }
   if (type === 'common') {
-    //check if the common chart is dual-axis chart
     const { series } = spec;
-    if (series.length === 2 && series.every((s: any) => s.type === 'bar' || s.type === 'line')) {
-      return ChartType.DualAxisChart;
-    }
     const typeList = uniqArray(series.map((s: any) => s.type));
     if (typeList.length === 1) {
       return getChartTypeFromSpec(series[0], vchartType);
+    }
+    if (series.length > 1 && series.every((s: any) => s.type === 'bar' || s.type === 'line')) {
+      //check if the common chart is dual-axis chart
+      return ChartType.DualAxisChart;
     }
   }
   //unsupported spec
@@ -89,24 +89,25 @@ export const getFieldMappingFromSpec = (spec: any) => {
  * @param spec
  * @returns
  */
-export const getCellFromSpec = (spec: any, chartType?: string) => {
+export const getCellFromSpec = (spec: any, vmindChartType?: ChartType): Cell => {
   if (!spec) {
     return {};
   }
-  const { type } = spec;
+  const { type, direction } = spec;
+  const isTransposed = direction === 'horizontal';
   if (type === 'bar' && spec.player) {
     //dynamic bar chart
     const time = spec.timeField;
     const x = spec.yField;
     const y = spec.xField;
     const color = spec.seriesField;
-    return { time, x, y, color };
+    return { time, x, y, color, isTransposed };
   }
-  if (['bar', 'line'].includes(type)) {
+  if (['bar', 'line', 'area'].includes(type)) {
     const x = spec.xField;
     const y = spec.yField;
     const color = spec.seriesField;
-    return { x, y, color };
+    return { x, y, color, isTransposed };
   }
   if ('radar' === type) {
     return {
@@ -117,6 +118,8 @@ export const getCellFromSpec = (spec: any, chartType?: string) => {
   }
   if (['pie', 'rose'].includes(type)) {
     return {
+      x: spec.categoryField,
+      y: spec.valueField,
       color: spec.categoryField,
       angle: spec.valueField
     };
@@ -136,14 +139,27 @@ export const getCellFromSpec = (spec: any, chartType?: string) => {
     };
   }
   if ('common' === type) {
+    if ([ChartType.BarChart, ChartType.AreaChart, ChartType.LineChart].includes(vmindChartType)) {
+      // single-chart parsed by common type
+      return {
+        x: spec.series[0].xField,
+        y: spec.series[0].yField,
+        color: spec.series[0].seriesField,
+        isTransposed
+      };
+    }
     //dual-axis chart
     const series = spec.series ?? [];
-    const seriesField = uniqArray(series.map((s: any) => s?.seriesField).filter((v: string) => !!v));
-    return {
-      x: series[0]?.xField,
-      y: uniqArray([series[0]?.yField, series[1]?.yField].filter(Boolean)),
-      color: seriesField?.length === 1 ? seriesField[0] : undefined
-    };
+    if (vmindChartType === ChartType.DualAxisChart) {
+      const seriesField = uniqArray(series.map((s: any) => s?.seriesField).filter((v: string) => !!v));
+      return {
+        x: series[0]?.xField,
+        y: uniqArray([series[0]?.yField, series[1]?.yField].filter(Boolean)),
+        color: seriesField?.length === 1 ? seriesField[0] : undefined,
+        isTransposed
+      };
+    }
+    return getCellFromSpec(series[0], vmindChartType);
   }
   if (type === 'wordCloud') {
     return {
@@ -182,14 +198,43 @@ export const revisedCell = (cell: Cell, dataset: DataTable) => {
       cell.color = undefined;
     }
   }
+  if (cell.isTransposed) {
+    const temp = cell.x;
+    cell.x = cell.y;
+    cell.y = temp;
+  }
   return cell;
 };
 
-export const isStackChart = (spec: any) => {
-  const { stack, xField = [], seriesField } = spec || {};
-  return stack && !(isArray(xField) && xField.length === 2 && seriesField && xField[1] !== seriesField);
+export const isStackChart = (spec: any, chartType: ChartType, cell: Cell) => {
+  const { seriesField, type, series = [], stack } = spec || {};
+  if (type === 'common' && [ChartType.BarChart, ChartType.AreaChart, ChartType.LineChart].includes(chartType)) {
+    return series?.every((s: any) => !!s?.stack && !(isArray(cell.x) && cell.x.length > 1));
+  }
+  return (
+    ((stack !== false && chartType === ChartType.BarChart) || !!stack) &&
+    seriesField &&
+    !(isArray(cell.x) && cell.x.includes(seriesField))
+  );
 };
 
-export const isPercentChart = (spec: any) => {
-  return !!spec?.percent;
+export const isPercentChart = (spec: any, chartType: ChartType, cell: Cell) => {
+  const { type, series = [], seriesField } = spec || {};
+  if (type === 'common' && [ChartType.BarChart, ChartType.AreaChart, ChartType.LineChart].includes(chartType)) {
+    return series?.every((s: any) => !!s?.percent);
+  }
+  return !!spec?.percent && !(seriesField && isArray(cell.x) && cell.x.includes(seriesField));
+};
+
+export const sumDimensionValues = (
+  dataset: DataItem[],
+  measureId: string | number,
+  getValue = (v: number) => Math.abs(v)
+) => {
+  const sum = dataset.reduce((prev, cur) => {
+    const numValue = Number(cur[measureId]);
+    const value = isNumber(numValue) && !isNaN(numValue) ? getValue(numValue) : 0;
+    return prev + value;
+  }, 0);
+  return sum;
 };

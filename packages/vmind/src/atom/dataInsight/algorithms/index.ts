@@ -16,6 +16,7 @@ import { filterCorrelationInsight, filterInsightByType, mergePointInsight } from
 import { DifferenceAlg } from './outlier/difference';
 import { PageHinkleyAlg } from './drift';
 import { generateInsightTemplate } from './template';
+import { isPercentChart, isStackChart } from '../utils';
 
 const algorithmMapping = {
   [AlgorithmType.OverallTrending]: {
@@ -90,18 +91,30 @@ const revisedInsightByTypeMapping: Record<
 
 export const getInsights = (context: DataInsightExtractContext, options: DataInsightOptions) => {
   const { algorithms, maxNum, isLimitedbyChartType } = options;
-  const { chartType } = context;
+  const { chartType, cell, spec } = context;
   const insights: Insight[] = [];
   const insightAlgorithmContext = { ...context, insights };
+  const isStack = isStackChart(spec, chartType, cell);
+  const isPercent = isPercentChart(spec, chartType, cell);
 
   algorithms.sort((a, b) => algorithmMapping[a].priority - algorithmMapping[b].priority);
   algorithms.forEach(key => {
     const algoInfo = algorithmMapping[key].info;
-    const { chartType: algoSupportedChartType, algorithmFunction, forceChartType, name, canRun } = algoInfo;
+    const {
+      chartType: algoSupportedChartType,
+      algorithmFunction,
+      forceChartType,
+      name,
+      canRun,
+      supportPercent,
+      supportStack
+    } = algoInfo;
     if (
       (!forceChartType || forceChartType.includes(chartType)) &&
       (!isLimitedbyChartType || !algoSupportedChartType || algoSupportedChartType.includes(chartType)) &&
-      (!canRun || canRun(insightAlgorithmContext))
+      (!canRun || canRun(insightAlgorithmContext)) &&
+      ((isStack && supportStack !== false) || !isStack) &&
+      (!isPercent || (isPercent && supportPercent !== false))
     ) {
       const res = algorithmFunction(insightAlgorithmContext, options?.algorithmOptions?.[key]);
       insights.push(

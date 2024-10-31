@@ -4,6 +4,8 @@ import { isArray } from '@visactor/vutils';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
 import { ChartType, type DataItem } from '../../../../types';
+import { isValidData } from '../../../../utils/common';
+import { isPercentChart } from '../../utils';
 
 type knnItem = number[];
 type KnnMap = knnItem[][];
@@ -124,7 +126,7 @@ const lofAlgoFunc = (context: DataInsightExtractContext, options: LOFOptions) =>
   Object.keys(seriesDataMap).forEach(group => {
     const dataset: { index: number; dataItem: DataItem }[] = seriesDataMap[group];
     yField.forEach(field => {
-      const dataList = dataset.map(d => d.dataItem[field]) as number[];
+      const dataList = dataset.map(d => Number(d.dataItem[field]));
       const lofArray = LOF(dataList, threshold, k);
       lofArray.forEach(insight => {
         const { score, index } = insight;
@@ -152,8 +154,11 @@ export const LOFOutlier: InsightAlgorithm = {
     ChartType.BarChart,
     ChartType.AreaChart,
     ChartType.RadarChart,
+    ChartType.PieChart,
+    ChartType.RoseChart,
     ChartType.WaterFallChart
   ],
   insightType: InsightType.Outlier,
-  algorithmFunction: lofAlgoFunc
+  algorithmFunction: lofAlgoFunc,
+  supportPercent: false
 };

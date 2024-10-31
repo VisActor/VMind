@@ -3,16 +3,18 @@ export class PageHinkley {
   delta: number;
   lambda: number;
   alpha: number;
+  threshold: number;
   sum: number;
   minSum: number;
   xMean: number;
   num: number;
   changeDetected: boolean;
 
-  constructor(delta = 0.006, lambda = 0.8, alpha = 0.95) {
+  constructor(delta = 0.006, lambda = 0.6, alpha = 0.95, threshold = 0.3) {
     this.delta = delta;
     this.lambda = lambda;
     this.alpha = alpha;
+    this.threshold = threshold;
     this.sum = 0;
     this.xMean = 0;
     this.num = 0;
@@ -43,6 +45,7 @@ export class PageHinkley {
     this.changeDetected = this.sum - this.minSum > this.lambda;
     if (this.changeDetected) {
       this._resetParams();
+      this.changeDetected = x - this.xMean >= this.threshold;
     }
   }
 }

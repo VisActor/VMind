@@ -14,7 +14,7 @@ const breakpointVerifier = (next: any, prev: any): boolean => {
 };
 
 const bayesianDetection = (dataset: DataItem[], measureId: string | number) => {
-  const measureSet = dataset.filter(d => isNumber(d[measureId])).map(d => d[measureId]) as unknown as number[];
+  const measureSet = dataset.map(d => Number(d[measureId]));
 
   const detection = new BayesianChangePoint<number>({
     breakpointVerifier,
@@ -69,5 +69,6 @@ export const TurningPoint: InsightAlgorithm = {
     ChartType.WaterFallChart
   ],
   insightType: InsightType.TurningPoint,
-  algorithmFunction: turningPointAlgo
+  algorithmFunction: turningPointAlgo,
+  supportPercent: false
 };

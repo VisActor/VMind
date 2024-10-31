@@ -5,6 +5,8 @@ import type { Cell, FieldInfo } from '../../types';
 import { ChartType as VMindChartType } from '../../types';
 import type { ChartGeneratorCtx } from '../../types';
 
+export { getVChartTypeByVmind } from './spec/transformers';
+
 /**
  * Generate a vizSchema from fieldInfo
  * @param fieldInfo SimpleFieldInfo[] - An array of field information, each element contains the field name, description, type, and role, etc.
