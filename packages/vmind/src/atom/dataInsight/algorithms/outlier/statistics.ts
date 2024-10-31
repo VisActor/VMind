@@ -6,6 +6,8 @@ import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
 import { ChartType, type DataItem } from '../../../../types';
 import { getIntersection, isValidData } from '../../../../utils/common';
+import { getMeanAndstdDev } from '../statistics';
+import { isPercenSeries } from '../../utils';
 
 export interface DataPoint {
   index: number;
@@ -14,9 +16,7 @@ export interface DataPoint {
 }
 
 export function getAbnormalByZScores(data: DataPoint[], threshold = 3) {
-  const mean = data.reduce((sum, dataPoint) => sum + dataPoint.value, 0) / data.length;
-  const stdDev = Math.sqrt(data.reduce((sum, dataPoint) => sum + Math.pow(dataPoint.value - mean, 2), 0) / data.length);
-
+  const { mean, stdDev } = getMeanAndstdDev(data.map(v => v.value));
   return data.filter(v => Math.abs((v.value - mean) / stdDev) >= threshold).map(v => v.index);
 }
 
@@ -56,13 +56,16 @@ export interface StatisticsOptions {
 const zscoreIQRAlgoFunc = (context: DataInsightExtractContext, options: StatisticsOptions) => {
   const result: Insight[] = [];
   const { threshold = 3 } = options || {};
-  const { seriesDataMap, cell } = context;
+  const { seriesDataMap, cell, spec } = context;
   const { y: celly } = cell;
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
 
   Object.keys(seriesDataMap).forEach(group => {
     const dataset: { index: number; dataItem: DataItem }[] = seriesDataMap[group];
     yField.forEach(field => {
+      if (isPercenSeries(spec, field)) {
+        return;
+      }
       const dataList = dataset
         .map((d, index) => ({
           index: index,

@@ -7,6 +7,8 @@ import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
 import { ChartType, type DataItem } from '../../../../types';
 import { PageHinkley } from './pageHinkley';
+import { getMeanAndstdDev } from '../statistics';
+import { isPercenSeries } from '../../utils';
 
 export interface PageHinkleyOptions {
   delta?: number;
@@ -23,7 +25,7 @@ function difference(data: number[]) {
 
 export const pageHinkleyFunc = (context: DataInsightExtractContext, options: PageHinkleyOptions) => {
   const result: Insight[] = [];
-  const { seriesDataMap, cell } = context;
+  const { seriesDataMap, cell, spec } = context;
   const { delta, lambda, threshold } = options || {};
   const { y: celly } = cell;
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
@@ -31,9 +33,17 @@ export const pageHinkleyFunc = (context: DataInsightExtractContext, options: Pag
   Object.keys(seriesDataMap).forEach(group => {
     const dataset: { index: number; dataItem: DataItem }[] = seriesDataMap[group];
     yField.forEach(field => {
+      if (isPercenSeries(spec, field)) {
+        return;
+      }
       const pageHinkley = new PageHinkley(delta, lambda, threshold);
       /** normalize will amplify differences in small stdDev */
-      const normalizedDataset = normalize(dataset.map(v => v.dataItem[field] as number));
+      const dataList = dataset.map(v => Number(v.dataItem[field]));
+      const { mean, stdDev } = getMeanAndstdDev(dataList);
+
+      const normalizedDataset = normalize([...dataList, mean + 2 * stdDev, mean - 2 * stdDev]);
+      normalizedDataset.pop();
+      normalizedDataset.pop();
       const diffDataset = difference(normalizedDataset);
       diffDataset.forEach((d, index) => {
         const isDrift = pageHinkley.setInput(d);
@@ -57,5 +67,6 @@ export const PageHinkleyAlg: InsightAlgorithm = {
   name: 'pageHinkley',
   forceChartType: [ChartType.DualAxisChart, ChartType.LineChart],
   insightType: InsightType.Outlier,
-  algorithmFunction: pageHinkleyFunc
+  algorithmFunction: pageHinkleyFunc,
+  supportPercent: false
 };

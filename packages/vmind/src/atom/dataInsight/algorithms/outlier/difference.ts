@@ -8,6 +8,7 @@ import { ChartType, DataType, type DataItem } from '../../../../types';
 import { getIntersection } from '../../../../utils/common';
 import { getAbnormalByIQR, getAbnormalByZScores, type DataPoint } from './statistics';
 import { LOF } from './lof';
+import { isPercenSeries } from '../../utils';
 
 function getDistanceList(dataList: DataPoint[], isTimeSeries: boolean) {
   const res = [];
@@ -44,7 +45,7 @@ export interface DifferenceOptions {
 const difference = (context: DataInsightExtractContext, options: DifferenceOptions) => {
   const result: Insight[] = [];
   const { zScore = 3, lofThreshold = 3 } = options || {};
-  const { seriesDataMap, cell, fieldInfo } = context;
+  const { seriesDataMap, cell, fieldInfo, spec } = context;
   const { y: celly, x: cellx } = cell;
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
   const xField = isArray(cellx) ? cellx[0] : cellx;
@@ -57,6 +58,9 @@ const difference = (context: DataInsightExtractContext, options: DifferenceOptio
         index: index,
         value: d.dataItem[field] as number
       }));
+      if (isPercenSeries(spec, field)) {
+        return;
+      }
       const distanceList = getDistanceList(dataList, isTimeSeries);
       const zScoreResult = distanceList.length >= 30 ? getAbnormalByZScores(distanceList, zScore) : null;
       const iqrResult = distanceList.length >= 10 ? getAbnormalByIQR(distanceList) : [];
