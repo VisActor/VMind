@@ -5,7 +5,7 @@ import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
 import { ChartType, type DataItem } from '../../../../types';
 import { isValidData } from '../../../../utils/common';
-import { isPercentChart } from '../../utils';
+import { isPercenSeries, isPercentChart } from '../../utils';
 
 type knnItem = number[];
 type KnnMap = knnItem[][];
@@ -119,13 +119,16 @@ export interface LOFOptions {
 const lofAlgoFunc = (context: DataInsightExtractContext, options: LOFOptions) => {
   const result: Insight[] = [];
   const { k, threshold = 3 } = options || {};
-  const { seriesDataMap, cell } = context;
+  const { seriesDataMap, cell, spec } = context;
   const { y: celly } = cell;
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
 
   Object.keys(seriesDataMap).forEach(group => {
     const dataset: { index: number; dataItem: DataItem }[] = seriesDataMap[group];
     yField.forEach(field => {
+      if (isPercenSeries(spec, field)) {
+        return;
+      }
       const dataList = dataset.map(d => Number(d.dataItem[field]));
       const lofArray = LOF(dataList, threshold, k);
       lofArray.forEach(insight => {

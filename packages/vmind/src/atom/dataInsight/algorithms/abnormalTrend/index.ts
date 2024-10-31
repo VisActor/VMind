@@ -7,6 +7,7 @@ import type { DataCell } from '../../../../types';
 import { ChartType } from '../../../../types';
 import { overallTrendingAlgo } from '../overallTrending';
 import { isValidData } from '../.../../../../../utils/common';
+import { isPercenSeries, isStackSeries } from '../../utils';
 
 type TrendInfo = {
   trend: string;
@@ -24,7 +25,7 @@ export interface AbnormalTrendOptions {
 const abnormalTrendAlgo = (context: DataInsightExtractContext, options: AbnormalTrendOptions) => {
   const result: Insight[] = [];
   const { threshold = 0.2 } = options || {};
-  const { insights, seriesDataMap, cell } = context;
+  const { insights, seriesDataMap, cell, spec } = context;
   const { y: celly, color } = cell;
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
   const seriesField: string = isArray(color) ? color[0] : color;
@@ -34,6 +35,9 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
   const seriesTrendInfo: TrendInfo[] = [];
   Object.keys(seriesDataMap).forEach(series => {
     yField.forEach(measureId => {
+      if (isStackSeries(spec, measureId) || isPercenSeries(spec, measureId)) {
+        return;
+      }
       const seriesDataset: number[] = seriesDataMap[series]
         .map(d => Number(d.dataItem[measureId]))
         .filter(v => isValidData(v) && !isNaN(v));

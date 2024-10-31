@@ -41,7 +41,7 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
         AlgorithmType.LOFOutlier,
         AlgorithmType.DbscanOutlier,
         AlgorithmType.MajorityValue,
-        // AlgorithmType.PageHinkley,
+        AlgorithmType.PageHinkley,
         // AlgorithmType.DifferenceOutlier,
         AlgorithmType.TurningPoint
         // AlgorithmType.Volatility

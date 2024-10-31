@@ -4,6 +4,7 @@ import BayesianChangePoint from 'bayesian-changepoint';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
 import { ChartType, type DataItem } from '../../../../types';
+import { isPercenSeries } from '../../utils';
 
 const breakpointVerifier = (next: any, prev: any): boolean => {
   if (Math.abs(next.data - prev.data) >= 1) {
@@ -30,7 +31,7 @@ const bayesianDetection = (dataset: DataItem[], measureId: string | number) => {
 
 const turningPointAlgo = (context: DataInsightExtractContext): Insight[] => {
   const result: Insight[] = [];
-  const { seriesDataMap, cell } = context;
+  const { seriesDataMap, cell, spec } = context;
   const { y: celly } = cell;
 
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
@@ -38,6 +39,9 @@ const turningPointAlgo = (context: DataInsightExtractContext): Insight[] => {
   Object.keys(seriesDataMap).forEach(series => {
     const seriesDataset = seriesDataMap[series];
     yField.forEach(measureId => {
+      if (isPercenSeries(spec, measureId)) {
+        return;
+      }
       const bayesianResult = bayesianDetection(
         seriesDataset.map((d: any) => d.dataItem),
         measureId

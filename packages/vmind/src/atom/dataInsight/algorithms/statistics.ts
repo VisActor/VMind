@@ -191,3 +191,10 @@ export function longestTrendInterval(data: number[]) {
   }
   return { length: maxLength, start: maxStart, end: maxEnd };
 }
+
+export const getMeanAndstdDev = (data: number[]) => {
+  const validData = data.filter(v => !isNaN(v));
+  const mean = validData.reduce((sum, v) => sum + v, 0) / validData.length;
+  const stdDev = Math.sqrt(validData.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / validData.length);
+  return { mean, stdDev, max: Math.max(...validData), min: Math.min(...validData) };
+};

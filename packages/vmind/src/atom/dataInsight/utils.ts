@@ -226,6 +226,32 @@ export const isPercentChart = (spec: any, chartType: ChartType, cell: Cell) => {
   return !!spec?.percent && !(seriesField && isArray(cell.x) && cell.x.includes(seriesField));
 };
 
+const getYSeries = (series: any, yField: string) => {
+  return (series ?? []).find((s: any) => s.yField === yField || (isArray(s.yField) && s.yField.includes(yField)));
+};
+
+export const isStackSeries = (spec: any, yField: string) => {
+  const ySeries = getYSeries(spec?.series, yField);
+  if (ySeries) {
+    const { xField, seriesField, type, stack } = ySeries;
+    return (
+      ((stack !== false && type === 'bar') || !!stack) &&
+      seriesField &&
+      !(isArray(xField) && xField.includes(seriesField))
+    );
+  }
+  return false;
+};
+
+export const isPercenSeries = (spec: any, yField: string) => {
+  const ySeries = getYSeries(spec?.series, yField);
+  if (ySeries) {
+    const { percent, seriesField, xField } = ySeries;
+    return !!percent && !(seriesField && isArray(xField) && xField.includes(seriesField));
+  }
+  return false;
+};
+
 export const sumDimensionValues = (
   dataset: DataItem[],
   measureId: string | number,

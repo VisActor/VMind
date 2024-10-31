@@ -2,6 +2,7 @@ import { isArray, isNumber } from '@visactor/vutils';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
 import { type DataItem } from '../../../../types';
+import { isPercenSeries } from '../../utils';
 
 const getExtremeValue = (
   dataset: { index: number; dataItem: DataItem }[],
@@ -76,7 +77,7 @@ export interface ExtremeValueOptions {
 
 /** The rules are too simple, they are useless in cases with large variance. */
 const calcExtremeValue = (context: DataInsightExtractContext, options: ExtremeValueOptions): Insight[] => {
-  const { seriesDataMap, cell } = context;
+  const { seriesDataMap, cell, spec } = context;
   const { y: celly } = cell;
   const { upperThreshold, lowerThreshold } = options || {};
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
@@ -86,6 +87,9 @@ const calcExtremeValue = (context: DataInsightExtractContext, options: ExtremeVa
   Object.keys(seriesDataMap).forEach(series => {
     const dataset = seriesDataMap[series];
     yField.forEach(measure => {
+      if (isPercenSeries(spec, measure)) {
+        return;
+      }
       const insights = getExtremeValue(dataset, measure, series, lowerThreshold, upperThreshold);
       result.push(...insights);
     });
