@@ -5,6 +5,8 @@ import type { DataInsightExtractContext } from '../../type';
 import { InsightType, type Insight, type InsightAlgorithm } from '../../type';
 import type { DataCell } from '../../../../types';
 import { ChartType } from '../../../../types';
+import { overallTrendingAlgo } from '../overallTrending';
+import { isValidData } from '../.../../../../../utils/common';
 
 type TrendInfo = {
   trend: string;
@@ -32,7 +34,9 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
   const seriesTrendInfo: TrendInfo[] = [];
   Object.keys(seriesDataMap).forEach(series => {
     yField.forEach(measureId => {
-      const seriesDataset = seriesDataMap[series].map((d: { [x: string]: any }) => d.dataItem[measureId]);
+      const seriesDataset: number[] = seriesDataMap[series]
+        .map(d => Number(d.dataItem[measureId]))
+        .filter(v => isValidData(v) && !isNaN(v));
       const { trend, pValue, zScore } = originalMKTest(seriesDataset, 0.05, false);
       if (trend !== TrendType.NO_TREND) {
         const startValue = seriesDataset[0];
@@ -46,13 +50,17 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
           info: {
             startValue,
             endValue,
-            change: trend === TrendType.INCREASING ? endValue / startValue - 1 : 1 - endValue / startValue
+            change: endValue / startValue - 1
           }
         });
       }
     });
   });
 
+  let overallTrendInsights = insights.filter(v => v.type === InsightType.OverallTrend);
+  if (overallTrendInsights.length === 0) {
+    overallTrendInsights = overallTrendingAlgo(context, {});
+  }
   yField.forEach(measureId => {
     const measureOverallTrend = insights.find(
       (i: { type: InsightType; fieldId?: DataCell }) => i.type === InsightType.OverallTrend && i?.fieldId === measureId
@@ -75,12 +83,15 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
       );
       result.push(...seriesInsights);
     } else {
-      const increaseTrends = seriesTrendInfo.filter(t => t.trend === TrendType.INCREASING);
-      const decreasedTrends = seriesTrendInfo.filter(t => t.trend === TrendType.DECREASING);
+      const increaseTrends = seriesTrendInfo.filter(t => t.trend === TrendType.INCREASING && t.measureId === measureId);
+      const decreasedTrends = seriesTrendInfo.filter(
+        t => t.trend === TrendType.DECREASING && t.measureId === measureId
+      );
       if (increaseTrends.length > 0 && decreasedTrends.length > 0) {
         if (
           increaseTrends.length > decreasedTrends.length &&
-          decreasedTrends.length / (increaseTrends.length + decreasedTrends.length) < threshold
+          (decreasedTrends.length / (increaseTrends.length + decreasedTrends.length) < threshold ||
+            decreasedTrends.length === 1)
         ) {
           const decreaseInsights = decreasedTrends.map(
             dt =>
@@ -97,7 +108,8 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
           result.push(...decreaseInsights);
         } else if (
           increaseTrends.length < decreasedTrends.length &&
-          increaseTrends.length / (increaseTrends.length + decreasedTrends.length) < threshold
+          (increaseTrends.length / (increaseTrends.length + decreasedTrends.length) < threshold ||
+            increaseTrends.length === 1)
         ) {
           const increaseInsights = increaseTrends.map(
             it =>
@@ -122,5 +134,7 @@ export const AbnormalTrend: InsightAlgorithm = {
   name: 'abnormalTrend',
   chartType: [ChartType.DualAxisChart, ChartType.LineChart, ChartType.BarChart, ChartType.AreaChart],
   insightType: InsightType.AbnormalTrend,
-  algorithmFunction: abnormalTrendAlgo
+  algorithmFunction: abnormalTrendAlgo,
+  supportPercent: false,
+  supportStack: false
 };

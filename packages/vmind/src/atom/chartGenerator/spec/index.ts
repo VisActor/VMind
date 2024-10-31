@@ -4,7 +4,7 @@ import {
   axis,
   cartesianBar,
   cartesianLine,
-  chartType,
+  revisedVChartType,
   color,
   data,
   legend,
@@ -79,7 +79,7 @@ import {
 } from './transformers';
 
 const pipelineBar = [
-  chartType,
+  revisedVChartType,
   data,
   colorBar,
   cartesianBar,
@@ -91,7 +91,7 @@ const pipelineBar = [
   theme
 ];
 const pipelineLine = [
-  chartType,
+  revisedVChartType,
   data,
   colorLine,
   cartesianLine,
@@ -104,7 +104,7 @@ const pipelineLine = [
 ];
 const pipeAreaLine = [...pipelineLine];
 const pipelinePie = [
-  chartType,
+  revisedVChartType,
   data,
   color,
   pieField,
@@ -113,7 +113,7 @@ const pipelinePie = [
   theme
 ];
 const pipelineRankingBar = [
-  chartType,
+  revisedVChartType,
   sequenceData,
   colorDynamicBar,
   rankingBarField,
@@ -125,7 +125,7 @@ const pipelineRankingBar = [
 ];
 
 const pipelineWordCloud = [
-  chartType,
+  revisedVChartType,
   wordCloudData,
   color,
   wordCloudField,
@@ -135,7 +135,7 @@ const pipelineWordCloud = [
 ];
 
 const pipelineScatterPlot = [
-  chartType,
+  revisedVChartType,
   data,
   color,
   scatterField,
@@ -145,12 +145,12 @@ const pipelineScatterPlot = [
   theme
 ];
 
-const pipelineFunnel = [chartType, funnelData, color, funnelField, legend, theme];
+const pipelineFunnel = [revisedVChartType, funnelData, color, funnelField, legend, theme];
 
-const pipelineDualAxis = [chartType, data, color, dualAxisSeries, dualAxisAxes, legend, theme];
+const pipelineDualAxis = [revisedVChartType, data, color, dualAxisSeries, dualAxisAxes, legend, theme];
 
 const pipelineRose = [
-  chartType,
+  revisedVChartType,
   data,
   color,
   roseField,
@@ -161,7 +161,7 @@ const pipelineRose = [
 ];
 
 const pipelineRadar = [
-  chartType,
+  revisedVChartType,
   data,
   color,
   radarField,
@@ -172,16 +172,25 @@ const pipelineRadar = [
   theme
 ];
 
-const pipelineSankey = [chartType, sankeyData, color, sankeyField, sankeyLink, sankeyLabel, legend, theme];
+const pipelineSankey = [revisedVChartType, sankeyData, color, sankeyField, sankeyLink, sankeyLabel, legend, theme];
 
-const pipelineWaterfall = [chartType, data, color, waterfallField, waterfallAxes, waterfallStackLabel, legend, theme];
+const pipelineWaterfall = [
+  revisedVChartType,
+  data,
+  color,
+  waterfallField,
+  waterfallAxes,
+  waterfallStackLabel,
+  legend,
+  theme
+];
 
-const pipelineBoxPlot = [chartType, data, color, boxPlotField, boxPlotStyle, legend, theme];
+const pipelineBoxPlot = [revisedVChartType, data, color, boxPlotField, boxPlotStyle, legend, theme];
 
-const pipelineLiquid = [chartType, data, color, liquidField, liquidStyle, indicator, theme];
+const pipelineLiquid = [revisedVChartType, data, color, liquidField, liquidStyle, indicator, theme];
 
 const pipelineLinearProgress = [
-  chartType,
+  revisedVChartType,
   data,
   color,
   linearProgressField,
@@ -191,7 +200,7 @@ const pipelineLinearProgress = [
 ];
 
 const pipelineCircularProgress = [
-  chartType,
+  revisedVChartType,
   data,
   color,
   circularProgressField,
@@ -201,7 +210,7 @@ const pipelineCircularProgress = [
 ];
 
 const pipelineBubbleCirclePacking = [
-  chartType,
+  revisedVChartType,
   bubbleCirclePackingData,
   data,
   color,
@@ -210,13 +219,13 @@ const pipelineBubbleCirclePacking = [
   theme
 ];
 
-const pipelineMapChart = [chartType, basemap, color, arrayData, mapField, mapDisplayConf, theme];
-const pipelineRangeColumn = [chartType, data, color, rangeColumnField, rangeColumnDisplayConf, theme];
-const pipelineSunburst = [chartType, sunburstData, color, sunburstOrTreemapField, sunburstDisplayConf, theme];
-const pipelineTreemap = [chartType, treemapData, color, sunburstOrTreemapField, treemapDisplayConf, theme];
-const pipelineGauge = [chartType, arrayData, color, gaugeField, gaugeDisplayConf, theme];
+const pipelineMapChart = [revisedVChartType, basemap, color, arrayData, mapField, mapDisplayConf, theme];
+const pipelineRangeColumn = [revisedVChartType, data, color, rangeColumnField, rangeColumnDisplayConf, theme];
+const pipelineSunburst = [revisedVChartType, sunburstData, color, sunburstOrTreemapField, sunburstDisplayConf, theme];
+const pipelineTreemap = [revisedVChartType, treemapData, color, sunburstOrTreemapField, treemapDisplayConf, theme];
+const pipelineGauge = [revisedVChartType, arrayData, color, gaugeField, gaugeDisplayConf, theme];
 const pipelineBasicHeatMap = [
-  chartType,
+  revisedVChartType,
   arrayData,
   color,
   basicHeatMapSeries,
@@ -226,7 +235,7 @@ const pipelineBasicHeatMap = [
   basicHeatMapLegend,
   theme
 ];
-const pipelineVenn = [chartType, registerChart, vennData, color, vennField, legend, theme];
+const pipelineVenn = [revisedVChartType, registerChart, vennData, color, vennField, legend, theme];
 
 const pipelineMap: { [chartType: string]: any } = {
   [ChartType.BarChart.toUpperCase()]: pipelineBar,

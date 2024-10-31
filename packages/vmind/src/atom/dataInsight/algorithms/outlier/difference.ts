@@ -90,9 +90,10 @@ export const DifferenceAlg: InsightAlgorithm = {
     ChartType.LineChart,
     ChartType.BarChart,
     ChartType.AreaChart,
-    ChartType.RadarChart,
     ChartType.WaterFallChart
   ],
   insightType: InsightType.PairOutlier,
-  algorithmFunction: difference
+  algorithmFunction: difference,
+  supportPercent: false,
+  supportStack: false
 };

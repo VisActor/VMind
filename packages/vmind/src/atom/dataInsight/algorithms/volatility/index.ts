@@ -22,7 +22,7 @@ const volatilityAlgo = (context: DataInsightExtractContext, optioins: Volatility
   seriesNames.forEach(series => {
     const seriesDataset: DataTable = seriesDataMap[series].map((d: any) => d.dataItem);
     yField.forEach(measureId => {
-      const measureSet = seriesDataset.map(d => d[measureId]) as unknown as number[];
+      const measureSet = seriesDataset.map(d => Number(d[measureId]));
 
       const cv = coefficientVariation(measureSet);
       if (Math.abs(cv) > threshold) {
@@ -48,5 +48,6 @@ export const Volatility: InsightAlgorithm = {
   chartType: [ChartType.LineChart, ChartType.DualAxisChart, ChartType.BarChart, ChartType.AreaChart],
   insightType: InsightType.Volatility,
   algorithmFunction: volatilityAlgo,
-  supportStack: true
+  supportStack: true,
+  supportPercent: false
 };

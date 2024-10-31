@@ -76,7 +76,7 @@ const calcMajorityValue = (context: DataInsightExtractContext, options: Majority
 
 export const LineChartMajorityValue: InsightAlgorithm = {
   name: 'majorityValue',
-  forceChartType: [ChartType.BarChart, ChartType.AreaChart],
+  forceChartType: [ChartType.BarChart, ChartType.AreaChart, ChartType.WaterFallChart],
   insightType: InsightType.MajorityValue,
   algorithmFunction: calcMajorityValue
 };

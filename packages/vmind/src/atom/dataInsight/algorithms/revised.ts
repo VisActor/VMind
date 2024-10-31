@@ -33,7 +33,15 @@ const getBandInsightByOutliear = (context: DataInsightExtractContext, outliearFi
   const bandInsightKeys: string[] = [];
   const abnormalBand: Insight[] = [];
   const { dimensionValues, cell, chartType } = context;
-  if (![ChartType.DualAxisChart, ChartType.LineChart, ChartType.BarChart, ChartType.AreaChart].includes(chartType)) {
+  if (
+    ![
+      ChartType.DualAxisChart,
+      ChartType.LineChart,
+      ChartType.BarChart,
+      ChartType.AreaChart,
+      ChartType.WaterFallChart
+    ].includes(chartType)
+  ) {
     return {
       bandInsightKeys,
       abnormalBand
@@ -66,7 +74,12 @@ const getBandInsightByOutliear = (context: DataInsightExtractContext, outliearFi
             data: band.map(v => v.content.insight.data[0]),
             seriesName: fieldId,
             value: null,
-            significant: band.length
+            significant: band.length,
+            info: {
+              startValue: band[0].content.insight.data[0].dataItem[xField],
+              endValue: band[band.length - 1].content.insight.data[0].dataItem[xField],
+              xField
+            }
           });
           bandInsightKeys.push(...band.map(v => v.content.key));
         }
@@ -151,7 +164,9 @@ export const filterCorrelationInsight = (insightCtx: RevisedInsightParams) => {
   const abnormalTrend = filterInsight(insights, InsightType.AbnormalTrend);
   const trendFields = new Set(abnormalTrend.map(insight => insight.seriesName));
   const correlation = filterInsight(insights, InsightType.Correlation).filter(
-    insight => isArray(insight.seriesName) && !insight.seriesName.find(seriesName => trendFields.has(seriesName))
+    insight =>
+      insight.name === 'pearson-coefficient' ||
+      (isArray(insight.seriesName) && !insight.seriesName.find(seriesName => trendFields.has(seriesName)))
   );
   return {
     ...insightCtx,
@@ -162,6 +177,6 @@ export const filterCorrelationInsight = (insightCtx: RevisedInsightParams) => {
 export const filterInsightByType = (insightCtx: RevisedInsightParams, type: InsightType) => {
   return {
     ...insightCtx,
-    [type]: insightCtx?.[type]?.length ? insightCtx?.[type] : filterInsight(insightCtx.insights, type)
+    [type]: insightCtx?.[type] ? insightCtx?.[type] : filterInsight(insightCtx.insights, type)
   };
 };

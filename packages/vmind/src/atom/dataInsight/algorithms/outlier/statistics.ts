@@ -5,7 +5,7 @@ import { isArray } from '@visactor/vutils';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
 import { ChartType, type DataItem } from '../../../../types';
-import { getIntersection } from '../../../../utils/common';
+import { getIntersection, isValidData } from '../../../../utils/common';
 
 export interface DataPoint {
   index: number;
@@ -63,10 +63,12 @@ const zscoreIQRAlgoFunc = (context: DataInsightExtractContext, options: Statisti
   Object.keys(seriesDataMap).forEach(group => {
     const dataset: { index: number; dataItem: DataItem }[] = seriesDataMap[group];
     yField.forEach(field => {
-      const dataList = dataset.map((d, index) => ({
-        index: index,
-        value: d.dataItem[field] as number
-      }));
+      const dataList = dataset
+        .map((d, index) => ({
+          index: index,
+          value: Number(d.dataItem[field])
+        }))
+        .filter(v => isValidData(v.value) && !isNaN(v.value));
       const zScoreResult = dataList.length >= 30 ? getAbnormalByZScores(dataList, threshold) : null;
       const iqrResult = dataList.length >= 10 ? getAbnormalByIQR(dataList) : null;
       const finalResult = zScoreResult ? (getIntersection(zScoreResult, iqrResult) as number[]) : iqrResult;
@@ -95,8 +97,11 @@ export const StatisticsAlo: InsightAlgorithm = {
     ChartType.BarChart,
     ChartType.AreaChart,
     ChartType.RadarChart,
+    ChartType.PieChart,
+    ChartType.RoseChart,
     ChartType.WaterFallChart
   ],
   insightType: InsightType.Outlier,
-  algorithmFunction: zscoreIQRAlgoFunc
+  algorithmFunction: zscoreIQRAlgoFunc,
+  supportPercent: false
 };

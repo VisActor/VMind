@@ -11,27 +11,38 @@ import { PageHinkley } from './pageHinkley';
 export interface PageHinkleyOptions {
   delta?: number;
   lambda?: number;
+  threshold?: number;
 }
+function difference(data: number[]) {
+  const diff = [];
+  for (let i = 1; i < data.length; i++) {
+    diff.push(data[i] - data[i - 1]);
+  }
+  return diff;
+}
+
 export const pageHinkleyFunc = (context: DataInsightExtractContext, options: PageHinkleyOptions) => {
   const result: Insight[] = [];
   const { seriesDataMap, cell } = context;
-  const { delta, lambda } = options || {};
+  const { delta, lambda, threshold } = options || {};
   const { y: celly } = cell;
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
 
   Object.keys(seriesDataMap).forEach(group => {
     const dataset: { index: number; dataItem: DataItem }[] = seriesDataMap[group];
     yField.forEach(field => {
-      const pageHinkley = new PageHinkley(delta, lambda);
+      const pageHinkley = new PageHinkley(delta, lambda, threshold);
+      /** normalize will amplify differences in small stdDev */
       const normalizedDataset = normalize(dataset.map(v => v.dataItem[field] as number));
-      normalizedDataset.forEach((d, index) => {
+      const diffDataset = difference(normalizedDataset);
+      diffDataset.forEach((d, index) => {
         const isDrift = pageHinkley.setInput(d);
         if (isDrift) {
           result.push({
             type: InsightType.Outlier,
-            data: [dataset[index]],
+            data: [dataset[index + 1]],
             fieldId: field,
-            value: d,
+            value: dataset[index + 1].dataItem[field],
             significant: 1,
             seriesName: group
           } as unknown as Insight);

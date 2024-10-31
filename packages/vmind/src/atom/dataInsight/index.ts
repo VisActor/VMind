@@ -8,6 +8,7 @@ import { AlgorithmType } from './type';
 import { getInsights } from './algorithms';
 import type { LLMMessage } from '../../types/llm';
 import { getPolishPrompt } from './prompt';
+import { addPlainText } from './algorithms/template';
 
 export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions> {
   name = AtomName.DATA_INSIGHT;
@@ -46,7 +47,8 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
         // AlgorithmType.Volatility
       ],
       isLimitedbyChartType: true,
-      language: 'chinese'
+      language: 'chinese',
+      usePolish: true
     };
   }
 
@@ -88,10 +90,10 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
     }
     const newInsights = this.context.insights.map((insight, index) => ({
       ...insight,
-      textContent: {
+      textContent: addPlainText({
         content: results[index] || insight.textContent?.content,
         variables: insight.textContent?.variables
-      }
+      })
     }));
     return {
       ...this.context,
@@ -100,7 +102,7 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
   }
 
   protected runBeforeLLM(): DataInsightCtx {
-    this.isLLMAtom = true;
+    this.isLLMAtom = this.options?.usePolish !== false;
     const dataInfo = extractDataFromContext(this.context);
     const insights = getInsights(
       {

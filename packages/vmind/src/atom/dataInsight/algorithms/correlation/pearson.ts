@@ -8,11 +8,12 @@ import { ChartType, type DataItem } from '../../../../types';
 
 export interface PearsonOptions {
   threshold?: number;
+  withoutSeries?: boolean;
 }
 
 const pearsonAlgo = (context: DataInsightExtractContext, options: PearsonOptions) => {
   const { seriesDataMap, cell, insights } = context;
-  const { threshold: pearsonThreshold = 0.8 } = options || {};
+  const { threshold: pearsonThreshold = 0.8, withoutSeries = false } = options || {};
   const { y: celly, x: cellx, color } = cell;
   const yField: string = isArray(celly) ? celly[0] : celly;
   const xField: string = isArray(cellx) ? cellx[0] : cellx;
@@ -23,6 +24,9 @@ const pearsonAlgo = (context: DataInsightExtractContext, options: PearsonOptions
   const alpha = 0.05;
 
   const seriesNames = Object.keys(seriesDataMap);
+  if (withoutSeries && seriesNames.length > 1) {
+    return [];
+  }
   seriesNames.forEach(series => {
     let seriesDataset: DataTable = seriesDataMap[series].map((d: any) => d.dataItem);
     const outlierData: DataItem[] = insights

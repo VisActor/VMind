@@ -56,6 +56,8 @@ export interface DataInsightOptions extends BaseOptions {
   algorithmOptions?: AlgorithmOptions;
   /** insight limited by chartType, eg. cluster only in scatter chart */
   isLimitedbyChartType?: boolean;
+  /** polish insights by llm or not */
+  usePolish?: boolean;
 }
 
 export interface SchemaFieldInfo extends Pick<FieldInfo, 'description' | 'role' | 'location' | 'type'> {
