@@ -61,6 +61,7 @@ export interface InsightTextContent {
   value: DataCell;
   formatValue?: string;
   fieldName: string;
+  isMeasure?: boolean;
   color?: string;
   valueType?: 'ascendTrend' | 'descendTrend' | string;
   icon?: 'ratio' | 'ascendTrend' | 'descendTrend' | string;

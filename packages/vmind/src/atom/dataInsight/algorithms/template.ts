@@ -56,6 +56,7 @@ const getOutlierTemplate = (insight: Insight, ctx: DataInsightExtractContext) =>
       },
       c: {
         value,
+        isMeasure: true,
         fieldName: getFieldInfoById(fieldInfo, fieldId as string)?.alias ?? fieldId
       }
     }
