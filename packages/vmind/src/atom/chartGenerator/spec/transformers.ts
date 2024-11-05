@@ -909,7 +909,12 @@ export const rankingBarAxis = (context: GenerateChartCellContext) => {
 };
 
 export const axis = (context: GenerateChartCellContext) => {
-  const { spec } = context;
+  const { spec, cell, fieldInfo } = context;
+  const { y: celly } = cell;
+  const yFields = isArray(celly) ? celly : [celly];
+  const yFieldsInfo = yFields.map(field => fieldInfo.find(v => v.fieldName === field));
+  const isAllRatio = yFieldsInfo.every(v => !!v.ratioGranularity);
+  const isSameUnit = uniqArray(yFieldsInfo.map(v => v?.unit).filter(v => !!v)).length === 1;
 
   spec.axes = [
     {
@@ -933,8 +938,16 @@ export const axis = (context: GenerateChartCellContext) => {
       label: {
         style: {
           //fill: '#FFFFFF'
-        }
+        },
+        formatter: isAllRatio ? `{label:~%}` : undefined
       },
+      unit:
+        isSameUnit && !['%', '‰'].includes(yFieldsInfo[0]?.unit)
+          ? {
+              visible: true,
+              text: yFieldsInfo[0]?.unit
+            }
+          : undefined,
       title: {
         visible: false,
         style: {
@@ -943,6 +956,23 @@ export const axis = (context: GenerateChartCellContext) => {
       }
     }
   ];
+  return { spec };
+};
+
+export const commonLabel = (context: GenerateChartCellContext) => {
+  const { spec, fieldInfo, cell } = context;
+  const { y: celly } = cell;
+  spec.label = {
+    visible: true
+  };
+  if (isArray(celly) && celly.length > 1) {
+  } else if (celly) {
+    const field = isArray(celly) ? celly[0] : celly;
+    const info = fieldInfo.find(v => v.fieldName === field);
+    if (info.ratioGranularity) {
+      spec.label.formatter = `{${field}:~%}`;
+    }
+  }
   return { spec };
 };
 
@@ -1432,7 +1462,7 @@ export const indicator = (context: GenerateChartCellContext) => {
         style: {
           fontSize: 20,
           fill: '#000',
-          text: value >= 0 && value <= 1 ? `${(value * 100).toFixed(2)}%` : `${value}`
+          text: `${(value * 100).toFixed(1)}%`
         }
       }
     ]

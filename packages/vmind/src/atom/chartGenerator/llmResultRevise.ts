@@ -251,8 +251,8 @@ export const patchPieChart = (context: GenerateChartCellContext) => {
         const colorField = getFieldByRole(remainedFields, ROLE.DIMENSION);
         if (colorField) {
           cellNew.color = colorField.fieldName;
-        } else {
-          cellNew.color = remainedFields?.[0].fieldName;
+        } else if (remainedFields?.[0]) {
+          cellNew.color = remainedFields[0]?.fieldName;
         }
       }
       if (!cellNew.angle) {
@@ -301,8 +301,8 @@ export const patchWordCloud = (context: GenerateChartCellContext) => {
           const colorField = getFieldByRole(remainedFields, ROLE.DIMENSION);
           if (colorField) {
             cellNew.color = colorField.fieldName;
-          } else {
-            cellNew.color = remainedFields?.[0].fieldName;
+          } else if (remainedFields?.[0]) {
+            cellNew.color = remainedFields[0]?.fieldName;
           }
         }
       }
@@ -339,10 +339,13 @@ export const patchDynamicBarChart = (context: GenerateChartCellContext) => {
   }
   if (cellNew.time) {
     const timeData = getDataListByField(dataTable, cellNew.time);
-    if (timeData.length < 5 && !cellNew.color) {
+    if ((timeData.length < 7 && !cellNew.color) || cellNew.x === cellNew.time) {
       // transfer dynamic bar chart to bar chart
-      chartTypeNew = <ChartType>ChartType.BarChart.toUpperCase();
-      cellNew.color = cellNew.x;
+      chartTypeNew =
+        cellNew.x !== cellNew.time
+          ? <ChartType>ChartType.BarChart.toUpperCase()
+          : <ChartType>ChartType.LineChart.toUpperCase();
+      cellNew.color = cellNew.x !== cellNew.time ? cellNew.x : undefined;
       cellNew.x = cellNew.time;
       cellNew.time = undefined;
     }
@@ -391,8 +394,8 @@ export const patchNeedColor = (context: GenerateChartCellContext) => {
       const colorField = getFieldByRole(remainedFields, ROLE.DIMENSION);
       if (colorField) {
         cellNew.color = colorField.fieldName;
-      } else {
-        cellNew.color = remainedFields?.[0].fieldName;
+      } else if (remainedFields?.[0]) {
+        cellNew.color = remainedFields[0]?.fieldName;
       }
     }
   }

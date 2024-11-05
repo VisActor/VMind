@@ -20,37 +20,51 @@ const ChartAdvisorPromptEnglish = (
   visualChannels: string,
   constraints: string,
   examples: string
-) => `You are an expert in data visualization.
-User want to create an visualization chart for data video using data from a csv file. Ignore the duration in User Input.
-Your task is:
-1. Based on the user's input, infer the user's intention, such as comparison, ranking, trend display, proportion, distribution, etc. If user did not show their intention, just ignore and do the next steps.
-2. Select the single chart type that best suites the data from the list of supported charts. Supported chart types: ${JSON.stringify(
-  supportedChartList
-)}.
-3. Map all the fields in the data to the visual channels according to user input and the chart type you choose. Don't use non-existent fields. Only use existing fields without further processing. If the existing fields can't meet user's intention, just use the most related fields.
-${knowledge.length > 0 ? '\nKnowledge' : ''}
-${knowledge}
-
-Let's think step by step. ${showThoughts ? 'Fill your thoughts in {thought}.' : ''}
-
+) => `You are a data visualization expert with an in-depth understanding of visualization grammar. Your task is to provide the chart type and field visualization mapping based on the user's visualization needs and the existing field descriptions.
+# User Input
+User Input is Bellow:
+\`\`\`typescript
+{
+userInput: string; // User visualization instructions.
+fieldInfo: { // field information
+id: string; // id of this field, also the field's name
+role: 'measure' | 'dimension',
+type: 'numerical' | 'ratio' | 'string' | 'date', // 'ratio' means percentage data, 'string' means regular categorical text
+description?: string; // description of field
+}[],
+}
+\`\`\`
+# Response
 Response in the following format:
-
 \`\`\`
 {${showThoughts ? '\n"thought" : your thoughts' : ''}
-"CHART_TYPE": the chart type you choose. Supported chart types: ${JSON.stringify(supportedChartList)}.
-"FIELD_MAP": { // Visual channels and the fields mapped to them
+"CHART_TYPE": string; // The chart type you choose.
+"FIELD_MAP": { // Visualization channel mapping results
 ${visualChannels}
 }${showThoughts ? ',\n"Reason": the reason for selecting the chart type and visual mapping.' : ''}
 }
 \`\`\`
 
-Don't provide further explanations for your results.
+# Requirements
+1. CHART_TYPE MUST selected from ${JSON.stringify(supportedChartList)}
+2. All fields MUST be mapped to visual channels.
+3. The field names in FIELD_MAP MUST be CONSISTENT with the id in fieldInfo.
+4. The color field MUST be a dimension field
+5. The y-axis field MUST be a measure field.
+6. The x field and the time field MUST be different.
+7. Focus only on chart visualization tasks.
+8. Strictly define the type of return format, use JSON format to reply, do not include any extra content.
+${knowledge.length > 0 ? '\n# Knowledge' : ''}
+${knowledge}
 
-Constraints:
-${constraints}
+# Steps
+You should think step-by-step as follow, while ensuring all requirements are met during the process.
+1. Based on the user's input, infer the user's intention, such as comparison, ranking, trend display, proportion, distribution, etc. If user did not show their intention, just ignore and do the next steps.
+2. Select the SINGLE chart type that best suites the data from the Requirment 1.
+3. Map ALL the fields in the data to the visual channels according to user input and the chart type you choose.
+4. Check the results to ensure they meet all the requirements.
 
-Here are some examples:
-
+# Examples
 ${examples}
 `;
 
@@ -124,7 +138,8 @@ const patchUserInput = (userInput: string) => {
   if (!FULL_WIDTH_SYMBOLS.includes(lastCharacter) && !HALF_WIDTH_SYMBOLS.includes(lastCharacter)) {
     finalStr += '。';
   }
-  finalStr += 'Use the original fieldName and DO NOT change or translate any word of the data fields in the response.';
+  finalStr +=
+    'Use the original id in fieldInfo and DO NOT change or translate any word of the data fields in the response.';
   return finalStr;
 };
 
@@ -139,5 +154,8 @@ export const revisedUserInput = (query: string, vizSchema: VizSchema) => {
     .map(field => ({
       ...pick(field, ['id', 'description', 'type', 'role'])
     }));
-  return `User Input: ${userInput}\nData field description: ${JSON.stringify(filteredFields)}`;
+  return JSON.stringify({
+    userInput,
+    fieldInfo: filteredFields
+  });
 };

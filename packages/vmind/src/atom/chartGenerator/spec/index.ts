@@ -75,7 +75,8 @@ import {
   mapField,
   mapDisplayConf,
   registerChart,
-  seriesField
+  seriesField,
+  commonLabel
 } from './transformers';
 
 const pipelineBar = [
@@ -86,6 +87,7 @@ const pipelineBar = [
   seriesField,
   axis,
   legend,
+  commonLabel,
   displayConfBar,
   //animationCartesianBar,
   theme
@@ -98,6 +100,7 @@ const pipelineLine = [
   seriesField,
   axis,
   legend,
+  commonLabel,
   displayConfLine,
   //animationCartisianLine,
   theme
@@ -109,6 +112,7 @@ const pipelinePie = [
   color,
   pieField,
   legend,
+  commonLabel,
   // animationCartesianPie,
   theme
 ];
@@ -119,6 +123,7 @@ const pipelineRankingBar = [
   rankingBarField,
   rankingBarAxis,
   seriesField,
+  commonLabel,
   customMark,
   rankingBarLabel,
   theme
@@ -156,6 +161,7 @@ const pipelineRose = [
   roseField,
   roseAxis,
   legend,
+  commonLabel,
   //animationCartesianPie,
   theme
 ];
@@ -168,6 +174,7 @@ const pipelineRadar = [
   radarDisplayConf,
   radarAxis,
   legend,
+  commonLabel,
   //animationCartisianLine,
   theme
 ];

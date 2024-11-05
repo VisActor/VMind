@@ -144,7 +144,7 @@ export const chartKnowledgeDict: ChartKnowledge = {
     visualChannels: ['x', 'y', 'color', 'time'],
     examples: [dynamicBarChart1],
     knowledge: [
-      'Dynamic Bar Chart is a dynamic chart that is suitable for displaying changing data and can be used to show ranking, comparisons or data changes over time. It usually has a time field. It updates the data dynamically according to the time field.'
+      'Dynamic Bar Chart is a dynamic chart that is suitable for displaying changing data and can be used to show ranking, comparisons or data changes over time. The x field and the time field MUST be different. It updates the data dynamically according to the time field.'
     ]
   },
   [ChartType.LiquidChart]: {
