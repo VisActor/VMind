@@ -11,12 +11,18 @@ import {
   getCtxByFilterRowWithNonEmptyValues,
   getCtxByRangeValueTranser,
   getSplitDataViewOfDataTable,
-  transferFieldInfo
+  transferFieldInfo,
+  revisedUnMatchedFieldInfo
 } from './utils';
 
 /** The order of pipeline is meaningful   */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const pipelines: { key: string; func: (ctx: DataCleanCtx, ...args: any[]) => DataCleanCtx }[] = [
+  /** revised unmatched problem */
+  {
+    key: 'revisedUnMatchedInfo',
+    func: revisedUnMatchedFieldInfo
+  },
   /** convert the interval data */
   {
     key: 'rangeValueTransfer',

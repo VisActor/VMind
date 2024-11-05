@@ -3,7 +3,7 @@ import type { BaseOptions, DataExtractionOptions } from '../type';
 import { BaseAtom } from '../base';
 import { merge, pick } from '@visactor/vutils';
 import type { LLMMessage } from '../../types/llm';
-import { getBasePrompt, getFieldInfoPrompt } from './prompt/prompt';
+import { getBasePrompt, getFieldInfoPrompt, getUserQuery } from './prompt/prompt';
 import { getLanguageOfText } from '../../utils/text';
 import { formatFieldInfo, hasMeasureField } from '../../utils/field';
 import { getCtxBymeasureAutoTransfer } from '../dataClean/utils';
@@ -15,8 +15,30 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtracti
 
   isLLMAtom = true;
 
+  replaceData: {
+    template: string;
+    replace: string;
+  }[];
+
+  isTextReplaceStatus: boolean[];
+
   constructor(context: DataExtractionCtx, option: BaseOptions) {
     super(context, option);
+    const currentYear = new Date().getFullYear();
+    this.replaceData = [
+      {
+        template: '今年',
+        replace: `${currentYear}年`
+      },
+      {
+        template: '去年',
+        replace: `${currentYear - 1}年`
+      },
+      {
+        template: '前年',
+        replace: `${currentYear - 2}年`
+      }
+    ];
   }
 
   buildDefaultContext(context: DataExtractionCtx): DataExtractionCtx {
@@ -41,6 +63,16 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtracti
     return context.text !== this.context.text || context.fieldInfo !== this.context.fieldInfo;
   }
 
+  revisedText(text: string) {
+    let newText = text;
+    this.isTextReplaceStatus = [];
+    this.replaceData.forEach(v => {
+      newText = newText.replaceAll(v.template, v.replace);
+      this.isTextReplaceStatus.push(text.includes(v.template));
+    });
+    return `text: ${newText}`;
+  }
+
   getLLMMessages(query?: string): LLMMessage[] {
     const { fieldInfo, text } = this.context;
     const { showThoughts, reGenerateFieldInfo, llm, isCapcut } = this.options;
@@ -54,9 +86,9 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtracti
         },
         {
           role: 'user',
-          // content: `${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'}${text}`
-          content: `text: ${text}`
+          content: this.revisedText(text)
         },
+        ...getUserQuery(llm.options.model, language, isCapcut),
         ...addtionContent
       ];
     }
@@ -83,7 +115,7 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
 
   revisedFieldInfo(fieldInfo: any[]): FieldInfo[] {
     return fieldInfo.map(info => {
-      const { fieldName, type, isRatio, isDate, unit, ratioGranularity } = info;
+      const { fieldName, type, isRatio, isDate, unit } = info;
       let finalType = type === 'dimension' ? DataType.STRING : DataType.NUMERICAL;
       if (isRatio) {
         finalType = DataType.RATIO;
@@ -93,11 +125,26 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
       return {
         fieldName,
         unit,
-        ratioGranularity,
+        ratioGranularity: isRatio ? unit : null,
         type: finalType,
         role: type
       };
     });
+  }
+
+  parseSubText(text: string, textRange: [string, string]) {
+    const [start, end] = textRange ?? [];
+    if (!start || !end || !text) {
+      return text;
+    }
+    const pattern = new RegExp(start + '(.*?)' + end, 'gs');
+    let match;
+
+    // 使用正则表达式搜索匹配
+    if ((match = pattern.exec(text)) !== null) {
+      return `${start}${match[1]}${end}`;
+    }
+    return text;
   }
 
   private parseMultipleResult(dataset: DatasetFromText[]) {
@@ -105,6 +152,7 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
       .map(result => {
         return {
           ...result,
+          text: this.parseSubText(this.context.text, result.textRange),
           fieldInfo: formatFieldInfo(this.revisedFieldInfo(result.fieldInfo))
         };
       })

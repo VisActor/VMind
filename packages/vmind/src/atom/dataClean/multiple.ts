@@ -55,7 +55,8 @@ export class MultipleDataCleanAtom extends BaseAtom<MultipleDataCleanCtx, Multip
     datasets.forEach(dataset => {
       let newDataset: any = { ...dataset };
       pipelines.forEach(({ key, func }) => {
-        const currentOption = (this.options as any)[key];
+        const isMeasureAutoTransfer = key === 'measureAutoTransfer';
+        const currentOption = isMeasureAutoTransfer ? dataset?.text : (this.options as any)[key];
         if (currentOption !== false) {
           newDataset = {
             ...newDataset,
@@ -74,7 +75,13 @@ export class MultipleDataCleanAtom extends BaseAtom<MultipleDataCleanCtx, Multip
         } else if (clusterResult.length) {
           const maxValidCount = clusterResult[0].validCellCount;
           newDataset = clusterResult
-            .filter(dataView => dataView.validCellCount / maxValidCount >= filterRatioInDataset)
+            .filter(dataView => {
+              const { validCellCount, validMeasureCellCount, validColumnLength, validRowLength } = dataView;
+              return (
+                validCellCount / maxValidCount >= filterRatioInDataset ||
+                validMeasureCellCount === validColumnLength * validRowLength
+              );
+            })
             .map(dataView => ({
               ...newDataset,
               dataTable: dataView.dataTable,
@@ -87,9 +94,11 @@ export class MultipleDataCleanAtom extends BaseAtom<MultipleDataCleanCtx, Multip
       }
       if (isArray(newDataset)) {
         result.push(...newDataset);
-      } else if (canMergeDataTable(result[result.length - 1], newDataset)) {
-        result[result.length - 1] = mergeDataTable(result[result.length - 1], newDataset);
-      } else {
+      }
+      // else if (canMergeDataTable(result[result.length - 1], newDataset)) {
+      //   result[result.length - 1] = mergeDataTable(result[result.length - 1], newDataset);
+      // }
+      else if (newDataset.dataTable?.length > 0) {
         result.push(newDataset);
       }
     });
