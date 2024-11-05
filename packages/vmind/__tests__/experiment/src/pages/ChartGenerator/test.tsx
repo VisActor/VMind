@@ -5,6 +5,7 @@ import { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
 import { Button, Checkbox, Divider, Message, Select } from '@arco-design/web-react';
 import { getCurrentFormattedTime, getDataExtractionCaseData, sleep } from '../../utils';
 import type { DataExtractionDataSetResult } from '../DataExtraction/type';
+import { ChartType } from '../../../../../src/types';
 
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
@@ -133,7 +134,8 @@ export function ChartGenerationTask() {
         base: { llm }
       });
       const chartSchedule = new Schedule([AtomName.CHART_GENERATE], {
-        base: { llm }
+        base: { llm },
+        chartGenerate: { unsupportChartTypeList: [ChartType.DynamicBarChart] }
       });
       console.info('Begin Model: ', model);
       const currentModelDataExtractionRes = dataExtractionResult.find(v => v.llm === model)?.result || [];

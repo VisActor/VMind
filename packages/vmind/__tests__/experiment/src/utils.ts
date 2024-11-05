@@ -1,5 +1,6 @@
 // import { result as capcutResult } from './results/dataExtraction/result7';
-import { result as capcutResult, caseResult, capcutV2Result } from './results/dataExtraction/version1';
+// import { result as capcutResult, caseResult, capcutV2Result } from './results/dataExtraction/version1';
+import { result as capcutResult, capcutV2Result } from './results/dataExtraction/version2';
 // import { result as caseResult } from './results/dataExtraction/commonResult';
 import { result as doubaoResult } from './results/dataExtraction/doubao1';
 import { commonAnswer } from './data/dataExtractionData';
