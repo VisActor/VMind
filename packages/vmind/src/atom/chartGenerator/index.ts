@@ -32,7 +32,6 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
       {
         dataTable: [],
         fieldInfo: [],
-        chartTypeList: SUPPORTED_CHART_LIST,
         basemapOption: DEFAULT_MAP_OPTION
       },
       context
@@ -41,7 +40,9 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
 
   buildDefaultOptions(): ChartGeneratorOptions {
     return {
-      useChartAdvisor: false
+      useChartAdvisor: false,
+      chartTypeList: SUPPORTED_CHART_LIST,
+      unsupportChartTypeList: []
     };
   }
   updateContext(context: ChartGeneratorCtx) {
@@ -51,13 +52,15 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
   }
 
   getLLMMessages(query?: string): LLMMessage[] {
-    const { chartTypeList, command } = this.context;
+    const { command } = this.context;
+    const { chartTypeList, unsupportChartTypeList } = this.options;
     const { showThoughts } = this.options;
     const addtionContent = this.getHistoryLLMMessages(query);
+    const finalChartTypeList = chartTypeList.filter(v => !unsupportChartTypeList.includes(v));
     return [
       {
         role: 'system',
-        content: getPrompt(chartTypeList, showThoughts)
+        content: getPrompt(finalChartTypeList, showThoughts)
       },
       {
         role: 'user',

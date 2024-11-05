@@ -1,4 +1,4 @@
-import type { FieldInfo } from 'src/types';
+import type { ChartType, FieldInfo } from '../types';
 import type { LLMManage } from '../core/llm';
 import type { AlgorithmType, AlgorithmOptions } from './dataInsight/type';
 
@@ -45,6 +45,10 @@ export interface DataQueryOptions extends BaseOptions {
 
 export interface ChartGeneratorOptions extends BaseOptions {
   useChartAdvisor?: boolean;
+  /** supported chart list */
+  chartTypeList?: ChartType[];
+  /** un-supported chart list */
+  unsupportChartTypeList?: ChartType[];
 }
 
 export interface DataInsightOptions extends BaseOptions {
