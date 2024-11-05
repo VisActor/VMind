@@ -4,6 +4,7 @@ import '../DataExtraction/index.scss';
 import { Avatar, Input, Divider, Button, Select, Modal, Radio } from '@arco-design/web-react';
 import { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
 import { capcutMockV2Data as capcutMockData } from '../../constants/capcutData';
+import { ChartType } from '../../../../../src/types';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -72,7 +73,8 @@ export function DataInput(props: IPropsType) {
   const schedule = React.useRef(getScheduleByType(props.type));
   const chartSchedule = React.useRef(
     new Schedule([AtomName.CHART_GENERATE], {
-      base: { llm: llm.current, showThoughts: false }
+      base: { llm: llm.current, showThoughts: false },
+      chartGenerate: { unsupportChartTypeList: [ChartType.DynamicBarChart] }
     })
   );
   useEffect(() => {
@@ -246,10 +248,11 @@ export function DataInput(props: IPropsType) {
             // const preModel = v.split('-&&-')[0];
             chartSchedule.current = v.endsWith('-advisor')
               ? new Schedule([AtomName.CHART_GENERATE], {
-                  chartGenerate: { useChartAdvisor: true }
+                  chartGenerate: { useChartAdvisor: true, unsupportChartTypeList: [ChartType.DynamicBarChart] }
                 })
               : new Schedule([AtomName.CHART_GENERATE], {
-                  base: { llm: llm.current, showThoughts: false }
+                  base: { llm: llm.current, showThoughts: false },
+                  chartGenerate: { unsupportChartTypeList: [ChartType.DynamicBarChart] }
                 });
           }}
         >

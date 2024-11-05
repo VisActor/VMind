@@ -1,7 +1,7 @@
 import React from 'react';
-import type { DataTable, FieldInfo } from '../../../../../src/index';
+import { DataType, type DataTable, type FieldInfo } from '../../../../../src/index';
 import type { TableColumnProps } from '@arco-design/web-react';
-import { Card, Input, Spin, Table } from '@arco-design/web-react';
+import { Card, Input, Spin, Table, Tooltip } from '@arco-design/web-react';
 import { isArray } from '@visactor/vutils';
 
 const TextArea = Input.TextArea;
@@ -21,9 +21,17 @@ export const SimpleTable = (props: TableProps) => {
     const { dataTable, fieldInfo } = v;
     const columns: TableColumnProps[] = fieldInfo.map((info: FieldInfo) => {
       return {
-        title: info.fieldName,
+        title: (
+          <div className="column-title">
+            <Tooltip content={info.fieldName}>{info.fieldName}</Tooltip>
+            {info.role === 'measure' && info.unit && <span>{`(${info.unit})`}</span>}
+          </div>
+        ),
         dataIndex: info.fieldName,
         render: (col: any) => {
+          if (info.type === DataType.RATIO && info.ratioGranularity === '%') {
+            return isArray(col) ? col.map(v => v * 100).join('-') : `${Number(col) * 100}%`;
+          }
           return isArray(col) ? col.join('-') : col;
         }
       };

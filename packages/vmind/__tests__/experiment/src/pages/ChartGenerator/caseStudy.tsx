@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 import React from 'react';
-import type { FieldInfo } from '../../../../../src/index';
+import { DataType, type FieldInfo } from '../../../../../src/index';
 import type { TableColumnProps } from '@arco-design/web-react';
 import { Avatar, Card, Divider, Empty, Select, Table, Tooltip, Tabs, Typography } from '@arco-design/web-react';
-import { result } from '../../results/chartGeneration/capcutPromptResult';
+import { result } from '../../results/chartGeneration/capcutPromptResult2';
 import { IconInfoCircle } from '@arco-design/web-react/icon';
 import { isArray } from '@visactor/vutils';
 import { uniqBy } from '../../../../../src/utils/common';
@@ -157,15 +157,15 @@ export function ChartGeneratorResult() {
       return {
         title: (
           <div className="column-title">
-            <Tooltip content={info.type}>{info.type && <div>{`${info.type[0]}__`}</div>}</Tooltip>
             <Tooltip content={info.fieldName}>{info.fieldName}</Tooltip>
-            <Tooltip content={info?.description}>
-              <IconInfoCircle />
-            </Tooltip>
+            {info.role === 'measure' && info.unit && <span>{`(${info.unit})`}</span>}
           </div>
         ),
         dataIndex: info.fieldName,
         render: (col: any) => {
+          if (info.type === DataType.RATIO && info.ratioGranularity === '%') {
+            return isArray(col) ? col.map(v => v * 100).join('-') : `${Number(col) * 100}%`;
+          }
           return isArray(col) ? col.join('-') : col;
         }
       };
