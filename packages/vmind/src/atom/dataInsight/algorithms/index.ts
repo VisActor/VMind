@@ -73,6 +73,19 @@ const algorithmMapping = {
   }
 };
 
+const InsightSortMapping = {
+  [InsightType.Outlier]: 1,
+  [InsightType.PairOutlier]: 2,
+  [InsightType.AbnormalBand]: 10,
+  [InsightType.ExtremeValue]: 1,
+  [InsightType.TurningPoint]: 1,
+  [InsightType.MajorityValue]: 1,
+  [InsightType.AbnormalTrend]: 2,
+  [InsightType.OverallTrend]: 2,
+  [InsightType.Correlation]: 2,
+  [InsightType.Volatility]: 2
+};
+
 const revisedInsightByTypeMapping: Record<
   InsightType,
   (revisedInsights: RevisedInsightParams, type: InsightType, ctx: DataInsightExtractContext) => RevisedInsightParams
@@ -81,7 +94,7 @@ const revisedInsightByTypeMapping: Record<
   [InsightType.PairOutlier]: null,
   [InsightType.AbnormalBand]: null,
   [InsightType.ExtremeValue]: filterInsightByType,
-  [InsightType.TurningPoint]: filterInsightByType,
+  [InsightType.TurningPoint]: null,
   [InsightType.MajorityValue]: filterInsightByType,
   [InsightType.AbnormalTrend]: filterInsightByType,
   [InsightType.OverallTrend]: filterInsightByType,
@@ -143,7 +156,10 @@ export const getInsights = (context: DataInsightExtractContext, options: DataIns
   revisedInsights.sort((a, b) => {
     const significant1 = a.significant ?? -1;
     const significant2 = b.significant ?? -1;
-    return significant2 - significant1;
+    return InsightSortMapping[a.type] > InsightSortMapping[b.type] ||
+      (InsightSortMapping[a.type] === InsightSortMapping[b.type] && significant2 - significant1 >= 0)
+      ? -1
+      : 1;
   });
   const finalInsights = generateInsightTemplate(maxNum ? revisedInsights.slice(0, maxNum) : revisedInsights, context);
 
