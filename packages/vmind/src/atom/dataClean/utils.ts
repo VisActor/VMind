@@ -1,3 +1,4 @@
+import stringSimilarity from 'string-similarity';
 import { getRoleByFieldType } from '../../utils/field';
 import type { ClusterDataView, DatasetFromText } from '../../types/atom';
 import type { DataItem, DataTable } from '../../types';
@@ -126,7 +127,7 @@ export const getCtxBymeasureAutoTransfer = (context: DataCleanCtx, text?: string
           if (isStringText) {
             // revised wrong ratio value in extraction
             const ratioValue = value * 100;
-            if (text.includes(`${ratioValue}%`) && !text.includes(`${value}`)) {
+            if ((text.includes(`${ratioValue}%`) || text.includes(`${value}倍`)) && !text.includes(`${value}`)) {
               dataTable[i][info.fieldName] = ratioValue;
               value = ratioValue;
             }
@@ -150,10 +151,14 @@ export const getCtxBymeasureAutoTransfer = (context: DataCleanCtx, text?: string
  * @returns
  */
 export const getCtxByfilterSameDataItem = (context: DataCleanCtx) => {
-  const { dataTable = [] } = context || {};
+  const { dataTable = [], fieldInfo } = context || {};
+  let newDataTable = uniqBy(dataTable, item => JSON.stringify(item));
+  if (fieldInfo.length === 1) {
+    newDataTable = newDataTable.length > 0 ? [newDataTable[0]] : newDataTable;
+  }
   return {
     ...context,
-    dataTable: uniqBy(dataTable, item => JSON.stringify(item))
+    dataTable: newDataTable
   };
 };
 
@@ -212,6 +217,43 @@ export const getCtxByRangeValueTranser = (context: DataCleanCtx, type: RangeValu
   };
 };
 
+export const revisedUnMatchedFieldInfo = (context: DataCleanCtx) => {
+  const { dataTable, fieldInfo } = context;
+  const dataTableFieldSet = new Set<string>();
+  dataTable.forEach(item => {
+    Object.keys(item).forEach(key => dataTableFieldSet.add(key));
+  });
+  const fieldInfoMapping: Record<string, FieldInfo> = {};
+  fieldInfo.forEach(info => {
+    fieldInfoMapping[info.fieldName] = info;
+  });
+  const fieldNameSet = new Set(Object.keys(fieldInfoMapping));
+  const intersectionName = dataTableFieldSet.intersection(fieldNameSet);
+  if (intersectionName.size !== dataTableFieldSet.size) {
+    const dataTableUnMatch = dataTableFieldSet.difference(intersectionName);
+    const fieldNameUnMatch = fieldNameSet.difference(intersectionName);
+    if (dataTableUnMatch.size !== fieldNameUnMatch.size) {
+      return context;
+    }
+    fieldNameUnMatch.forEach(name => {
+      const candidateList = [...dataTableUnMatch];
+      let min = -1;
+      let matchedName = candidateList[0];
+      candidateList.forEach(v => {
+        const score = stringSimilarity.compareTwoStrings(name, v);
+        if (score > min) {
+          min = score;
+          matchedName = v;
+        }
+      });
+      fieldInfoMapping[name].fieldName = matchedName;
+      fieldInfoMapping[name].alias = name;
+      dataTableUnMatch.delete(matchedName);
+    });
+  }
+  return context;
+};
+
 /** Remove columns with a low effective percentage of values. */
 export const getCtxByValidColumnRatio = (context: DataCleanCtx, ratio = 0.2) => {
   const { dataTable = [], fieldInfo } = context || {};
@@ -248,7 +290,8 @@ export const canMergeDataTable = (ctxA: DatasetFromText, ctxB: DatasetFromText) 
         itemB.fieldName === item.fieldName &&
         itemB.type === item.type &&
         itemB?.unit === item?.unit &&
-        itemB?.ratioGranularity === item?.ratioGranularity
+        itemB?.ratioGranularity === item?.ratioGranularity &&
+        itemB?.alias === item?.alias
     );
   });
 };
@@ -283,9 +326,12 @@ export const getSplitDataViewOfDataTable = (context: DataCleanCtx, threshold = 0
       newContext = func(newContext);
     });
     let validCellCount = 0;
+    let validMeasureCellCount = 0;
     newContext.dataTable.forEach(item => {
       newContext.fieldInfo.forEach(info => {
-        validCellCount += isValidData(item[info.fieldName]) ? 1 : -1;
+        const isValid = isValidData(item[info.fieldName]);
+        validCellCount += isValid ? 1 : -1;
+        validMeasureCellCount += isValid && info.role === ROLE.MEASURE ? 1 : 0;
       });
     });
     const dataView = {
@@ -293,6 +339,7 @@ export const getSplitDataViewOfDataTable = (context: DataCleanCtx, threshold = 0
       dataTable: newContext.dataTable,
       validColumnLength: clusterIds.length,
       validRowLength: newContext.dataTable.length,
+      validMeasureCellCount,
       validCellCount
     };
     validCellCount > 0 && dataViewList.push(dataView);

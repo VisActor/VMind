@@ -9,6 +9,17 @@ export const matchJSONStr = (str: string) => {
   return result && result.length > 0 ? replaceAll(result, '\n', ' ') : str;
 };
 
+export const revisedJSONStr = (str: string) => {
+  let res = str;
+  if (str.includes('"unit":"%""')) {
+    res = res.replaceAll('"unit":"%""', "unit:'%'");
+  }
+  if (str.includes('"unit": "%""')) {
+    res = res.replaceAll('"unit": "%""', "unit:'%'");
+  }
+  return res;
+};
+
 export const parseLLMJson = (JsonStr: string, prefix?: string) => {
   const parseNoPrefixStr = (str: string) => {
     try {

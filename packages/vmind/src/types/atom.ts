@@ -42,6 +42,8 @@ export interface ClusterDataView {
   validRowLength: number;
   /** valid cell count */
   validCellCount: number;
+  /** valid measure cell count */
+  validMeasureCellCount: number;
 }
 
 /** Multiple Dataset */
@@ -137,8 +139,6 @@ export interface ChartGeneratorCtx extends BaseContext {
   chartType?: ChartType;
   /** field mapping result */
   cell: Cell;
-  /** supported chart list */
-  chartTypeList?: ChartType[];
   /** only use in map chart */
   basemapOption?: BasemapOption;
   /** vizSchema */

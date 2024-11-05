@@ -16,6 +16,7 @@ export const formatFieldInfo = (fieldInfo: FieldInfo[]) => {
   fieldInfo.forEach(info => {
     info.role = getRoleByFieldType(info.type);
     info.location = getRoleByFieldType(info.type) as any;
+    info.ratioGranularity = info?.type === DataType.RATIO ? info.ratioGranularity || '%' : null;
   });
   return fieldInfo;
 };

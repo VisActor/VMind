@@ -4,7 +4,7 @@ import type { BaseContext } from '../types/atom';
 import type { AtomName } from '../types/atom';
 import type { LLMResponse } from '../types/llm';
 import { Model, type ILLMOptions, type LLMMessage } from '../types/llm';
-import { matchJSONStr, parseLLMJson } from '../utils/json';
+import { matchJSONStr, parseLLMJson, revisedJSONStr } from '../utils/json';
 
 /** LLM Manager Class */
 export class LLMManage {
@@ -94,7 +94,7 @@ export class LLMManage {
     }
     try {
       const content = choices[0].message.content;
-      const jsonStr = matchJSONStr(content);
+      const jsonStr = revisedJSONStr(matchJSONStr(content));
 
       const resJson = parseLLMJson(jsonStr, '```');
       return resJson;
