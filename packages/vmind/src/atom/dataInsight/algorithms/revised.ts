@@ -126,9 +126,18 @@ export const mergePointInsight = (
   });
 
   const pairOutlier = filterPairInsight(insights, filterOutliearInsight);
+  const turnPointInsight = filterInsight(insights, InsightType.TurningPoint);
   const { abnormalBand, bandInsightKeys } = getBandInsightByOutliear(context, outliearFieldMapping);
   bandInsightKeys.forEach(key => {
     delete outliear[key];
+  });
+  turnPointInsight.forEach(insight => {
+    const { data } = insight;
+    const seriesName = insight?.seriesName as DataCell;
+    const key = `${data[0].index}-&&&-${seriesName}`;
+    if (outliear[key]) {
+      delete outliear[key];
+    }
   });
   const outliearInsight = Object.keys(outliear).map(key => ({
     ...outliear[key][0],
@@ -139,6 +148,7 @@ export const mergePointInsight = (
     ...insightCtx,
     [InsightType.Outlier]: outliearInsight,
     [InsightType.PairOutlier]: pairOutlier,
+    [InsightType.TurningPoint]: turnPointInsight,
     [InsightType.AbnormalBand]: abnormalBand,
     [InsightType.MajorityValue]: majorityValueInsight
   };
