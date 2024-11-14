@@ -14,7 +14,7 @@ const ModelConfigMap: any = {
   [Model.DOUBAO_PRO]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY }
 };
 const datasetList = ['capcut_cn', 'capcut_en', 'common', 'capcut_v2'];
-const dataExtractionResult = getDataExtractionCaseData();
+const dataExtractionResult = getDataExtractionCaseData(true);
 
 export function ChartGenerationTask() {
   const [selectedDataset, setSelectedDataset] = React.useState<string[]>(['capcut_v2']);
