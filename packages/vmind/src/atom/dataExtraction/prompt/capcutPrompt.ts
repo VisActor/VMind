@@ -117,6 +117,7 @@ The data tables are ultimately used for statistical chart display.
 5. FieldNames are very concise, without unit information or data change sign information.
 6. Only extract data for ratio data., eg., '95%' becomes '95'; 'reduce 20%' becomes '-20', '3/10' becomes '30'.
 7. Ensure data integrity, returning null for the values of unknown fields.
+8. Always ensure the chronological order of time series data is from earliest to latest.
 ## DataTable Requirements
 The number of dimensions and measures in a data table can ONLY BE ONE of the following scenarios:
 1. ONE measure, and ONE or TWO dimensions.
@@ -149,6 +150,6 @@ text: 现在有大约60%-70%的年轻人有入睡困难，而在两年前，入�
 
 Response:
 \`\`\`
-{"dataset":[{"summary":"年轻人入睡困难占比变化","textRange": ["现在有大约", "只有30%多"],"fieldInfo":[{"fieldName":"年份","type":"dimension"},{"fieldName":"入睡困难占比","type":"measure","isRatio":true, "unit": "%"}],"dataTable":[{"年份":"现在","占比":60},{"年份":"两年前","占比":30}]},{"summary":"入睡困难分布","textRange": ["在这30%多", "40%是男性"],"fieldInfo":[{"fieldName":"性别","type":"dimension"},{"fieldName":"占比","type":"measure","isRatio":true, "unit": "%"}],"dataTable":[{"性别":"男","占比":60},{"性别":"女","占比":40}]}]}
+{"dataset":[{"summary":"年轻人入睡困难占比变化","textRange": ["现在有大约", "只有30%多"],"fieldInfo":[{"fieldName":"年份","type":"dimension"},{"fieldName":"入睡困难占比","type":"measure","isRatio":true, "unit": "%"}],"dataTable":[{"年份":"两年前","占比":30},{"年份":"现在","占比":60}]},{"summary":"入睡困难分布","textRange": ["在这30%多", "40%是男性"],"fieldInfo":[{"fieldName":"性别","type":"dimension"},{"fieldName":"占比","type":"measure","isRatio":true, "unit": "%"}],"dataTable":[{"性别":"男","占比":60},{"性别":"女","占比":40}]}]}
 \`\`\``;
 };

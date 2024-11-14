@@ -12,6 +12,8 @@ import { checkChartTypeAndCell, getVizSchema } from './utils';
 import { getChartSpecWithContext } from './spec';
 import { getRuleLLMContent } from './spec/rule';
 import { getCellContextByAdvisor } from './advisor';
+import type { ChartType } from '../../types';
+import type { GenerateChartCellContext } from './type';
 
 export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGeneratorOptions> {
   name = AtomName.CHART_GENERATE;
@@ -22,8 +24,16 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
 
   useChartAdvisor: boolean;
 
+  finalChartTypeList: ChartType[];
+
   constructor(context: ChartGeneratorCtx, option: ChartGeneratorOptions) {
     super(context, option);
+    this.setFinalChartTypeList();
+  }
+
+  setFinalChartTypeList() {
+    const { chartTypeList, unsupportChartTypeList } = this.options;
+    this.finalChartTypeList = chartTypeList.filter(v => !unsupportChartTypeList.includes(v));
   }
 
   buildDefaultContext(context: ChartGeneratorCtx): ChartGeneratorCtx {
@@ -45,22 +55,26 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
       unsupportChartTypeList: []
     };
   }
+
   updateContext(context: ChartGeneratorCtx) {
     this.context = super.updateContext(context);
     this.context.vizSchema = getVizSchema(this.context);
     return this.context;
   }
 
+  updateOptions(options: ChartGeneratorOptions): void {
+    super.updateOptions(options);
+    this.setFinalChartTypeList();
+  }
+
   getLLMMessages(query?: string): LLMMessage[] {
     const { command } = this.context;
-    const { chartTypeList, unsupportChartTypeList } = this.options;
     const { showThoughts } = this.options;
     const addtionContent = this.getHistoryLLMMessages(query);
-    const finalChartTypeList = chartTypeList.filter(v => !unsupportChartTypeList.includes(v));
     return [
       {
         role: 'system',
-        content: getPrompt(finalChartTypeList, showThoughts)
+        content: getPrompt(this.finalChartTypeList, showThoughts)
       },
       {
         role: 'user',
@@ -72,7 +86,12 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
 
   parseLLMContent(resJson: any) {
     const { CHART_TYPE, FIELD_MAP } = resJson;
-    let newContext: ChartGeneratorCtx = { ...this.context, chartType: CHART_TYPE, cell: FIELD_MAP };
+    let newContext: GenerateChartCellContext = {
+      ...this.context,
+      chartType: CHART_TYPE,
+      cell: FIELD_MAP,
+      chartTypeList: this.finalChartTypeList
+    };
     newContext = getContextAfterRevised(newContext);
     const { error, chartType, fieldInfo, cell } = newContext as any;
     this.useChartAdvisor = false;
@@ -116,7 +135,10 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
     }
     if (!this.useRule && (this.useChartAdvisor || this.options.useChartAdvisor)) {
       // @todo
-      const { cell, dataset, chartType } = getCellContextByAdvisor(this.context);
+      const { cell, dataset, chartType } = getCellContextByAdvisor({
+        ...this.context,
+        chartTypeList: this.finalChartTypeList
+      });
       this.context = {
         ...this.context,
         cell,
@@ -126,7 +148,7 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
     }
     const newContext = {
       ...this.context,
-      ...getChartSpecWithContext(this.context)
+      ...getChartSpecWithContext({ ...this.context, chartTypeList: this.finalChartTypeList })
     };
     this.updateContext(newContext);
     return newContext;

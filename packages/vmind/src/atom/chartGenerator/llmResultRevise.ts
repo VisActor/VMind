@@ -17,6 +17,7 @@ import {
   NEED_COLOR_AND_SIZE_CHART_LIST
 } from './const';
 import type { GenerateChartCellContext } from './type';
+import { isValidData } from '../../utils/common';
 
 export const getContextAfterRevised = (context: GenerateChartCellContext) => {
   const revisedFuncList = [
@@ -127,12 +128,22 @@ export const patchYField = (context: GenerateChartCellContext) => {
     }
 
     if (
+      (chartTypeNew === ChartType.BarChart.toUpperCase() || chartTypeNew === ChartType.LineChart.toUpperCase()) &&
+      y.length === 2
+    ) {
+      return {
+        ...context,
+        chartType: ChartType.DualAxisChart.toUpperCase()
+      };
+    }
+    if (
       chartTypeNew === ChartType.BarChart.toUpperCase() ||
       chartTypeNew === ChartType.LineChart.toUpperCase() ||
       chartTypeNew === ChartType.DualAxisChart.toUpperCase() ||
       chartTypeNew === ChartType.RadarChart.toUpperCase()
     ) {
       //use fold to visualize more than 2 y fields
+      // @todo @czx fieldInfo adjust sync
       if (isValidDataTable(datasetNew)) {
         datasetNew = foldDataTableByYField(datasetNew, y, fieldInfo);
         cellNew.y = FOLD_VALUE.toString();
@@ -234,7 +245,7 @@ export const patchDualAxis = (context: GenerateChartCellContext) => {
 };
 
 export const patchPieChart = (context: GenerateChartCellContext) => {
-  const { chartType, cell, fieldInfo } = context;
+  const { chartType, cell, fieldInfo, dataTable } = context;
   const cellNew = { ...cell };
 
   if (chartType === ChartType.RoseChart.toUpperCase()) {
@@ -264,6 +275,22 @@ export const patchPieChart = (context: GenerateChartCellContext) => {
           cellNew.angle = remainedFields?.[0].fieldName;
         }
       }
+    }
+    const colorField = isArray(cellNew.color) ? cellNew.color[0] : cellNew.color;
+    const angleField = isArray(cellNew.angle) ? cellNew.angle[0] : cellNew.angle;
+    const validDataItem = dataTable.filter(dataItem => {
+      return isValidData(dataItem[colorField]) && isValidData(dataItem[angleField]) && Number(dataItem[angleField]) > 0;
+    });
+    if (validDataItem.length < 2) {
+      const colorFieldInfo = fieldInfo.find(info => info.fieldName === colorField);
+      return {
+        chartType:
+          colorFieldInfo?.type === DataType.DATE ? ChartType.LineChart.toUpperCase() : ChartType.BarChart.toUpperCase(),
+        cell: {
+          x: colorField,
+          y: angleField
+        }
+      };
     }
   }
   return {
