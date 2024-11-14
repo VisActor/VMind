@@ -1,0 +1,27 @@
+.qa-card {
+  margin: 8px 0;
+  height: 250px;
+  overflow: scroll;
+  .qa-div {
+    margin-bottom: 4px;
+  
+    .title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #222;
+      margin-left: 0;
+    }
+  
+    span {
+      margin-left: 12px;
+    }
+  }
+}
+
+.recall-content {
+  display: flex;
+  .one-content {
+    width: 33%;
+    margin: 0 0.3%;
+  }
+}

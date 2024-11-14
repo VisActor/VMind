@@ -62,7 +62,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
   }
 
   buildDefaultContext(context: Ctx) {
-    return this.context;
+    return context ?? this.context;
   }
 
   buildDefaultOptions(): O {

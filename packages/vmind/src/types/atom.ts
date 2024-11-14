@@ -14,7 +14,8 @@ export enum AtomName {
   CHART_COMMAND = 'chartCommand',
   MULTIPLE_CHART_COMMAND = 'multipleChartCommand',
   CHART_GENERATE = 'chartGenerate',
-  DATA_INSIGHT = 'dataInsight'
+  DATA_INSIGHT = 'dataInsight',
+  CHART_QA_EXTRACTION = 'chartQAExtraction'
 }
 
 /** Base LLM Context */
@@ -160,4 +161,12 @@ export interface DataInsightCtx extends BaseContext {
   vChartType?: string;
   /** chartType */
   chartType?: ChartType;
+}
+
+export interface ChartQAExtractionCtx extends BaseContext {
+  text: string;
+  question: string;
+  answer: string;
+  keyList: string[];
+  explanation: string;
 }
