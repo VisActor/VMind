@@ -30,7 +30,7 @@ export const SimpleTable = (props: TableProps) => {
         dataIndex: info.fieldName,
         render: (col: any) => {
           if (info.type === DataType.RATIO && info.ratioGranularity === '%') {
-            return isArray(col) ? col.map(v => v * 100).join('-') : `${Number(col) * 100}%`;
+            return isArray(col) ? col.map(v => v * 100).join('-') : `${(Number(col) * 100).toFixed(1)}%`;
           }
           return isArray(col) ? col.join('-') : col;
         }
