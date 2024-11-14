@@ -4,6 +4,8 @@ import { DataExtractionTask } from './DataExtraction/test';
 import { DataExtractionResult } from './DataExtraction/caseStudy';
 import { ChartGenerationTask } from './ChartGenerator/test';
 import { ChartGeneratorResult } from './ChartGenerator/caseStudy';
+import { ChartQAGenerator } from './ChartDialogueQA/test';
+import { QARag } from './ChartDialogueQA/qaPairRag';
 type MenuInfo = {
   menuItem: string;
   subItems: {
@@ -11,14 +13,15 @@ type MenuInfo = {
     name: string;
     component: any;
   }[];
-  icon: any;
+  icon?: any;
   slogan?: string;
 };
 
 export enum PLAYGROUND_PAGES {
   CHART_GENERATION = 'chart-generation',
   SMART_INSIGHT = 'smart-insight',
-  DATA_EXTRACTION = 'data-extraction'
+  DATA_EXTRACTION = 'data-extraction',
+  CHART_DIALOG_QA = 'chart-dialog-qa'
 }
 
 export const PLAYGROUND_MENU_INFO: {
@@ -53,6 +56,21 @@ export const PLAYGROUND_MENU_INFO: {
         key: '1',
         name: 'Case Study',
         component: <ChartGeneratorResult />
+      }
+    ]
+  },
+  [PLAYGROUND_PAGES.CHART_DIALOG_QA]: {
+    menuItem: 'Chart Dialogue QA',
+    subItems: [
+      {
+        key: '0',
+        name: 'Run Case',
+        component: <ChartQAGenerator />
+      },
+      {
+        key: '1',
+        name: 'QA Rag',
+        component: <QARag />
       }
     ]
   }
