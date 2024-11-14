@@ -5,9 +5,10 @@ import type { DataItem, DataTable } from '../../types';
 import { DataType, ROLE, type DataCleanCtx, type FieldInfo } from '../../types';
 import { isArray, isNumber, isString, pick } from '@visactor/vutils';
 import { extractFirstNumberInString } from '../../utils/text';
-import { isValidData, uniqBy, average } from '../../utils/common';
+import { isValidData, uniqBy, average, convertStringToDateValue } from '../../utils/common';
 import type { RangeValueTransferType } from '../type';
 import { agglomerativeHierarchicalClustering, type ClusterDataItem } from '../../utils/cluster';
+import dayjs from 'dayjs';
 
 const removeFieldInfoInCtx = (context: DataCleanCtx, cleanFieldKey: string[]) => {
   if (!cleanFieldKey.length) {
@@ -88,6 +89,22 @@ export const getCtxByneedNumericalFields = (context: DataCleanCtx) => {
       dataTable: [],
       fieldInfo: []
     };
+  }
+  return context;
+};
+
+export const sortDataTableByDate = (context: DataCleanCtx) => {
+  const { dataTable, fieldInfo } = context;
+  const dateField = fieldInfo.find(info => info.role === ROLE.DIMENSION && info.type === DataType.DATE);
+  if (dateField) {
+    dataTable.sort((a, b) => {
+      const dateA = dayjs(convertStringToDateValue(`${a[dateField.fieldName]}`));
+      const dateB = dayjs(convertStringToDateValue(`${b[dateField.fieldName]}`));
+      if (dateA.isValid() && dateB.isValid()) {
+        return dateA.isBefore(dateB) ? -1 : 1;
+      }
+      return 0;
+    });
   }
   return context;
 };

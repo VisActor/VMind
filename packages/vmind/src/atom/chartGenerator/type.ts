@@ -1,5 +1,5 @@
 import type { ITheme as ChartTheme } from '@visactor/vchart';
-import type { ChartGeneratorCtx } from '../../types';
+import type { ChartGeneratorCtx, ChartType } from '../../types';
 import type { VizSchema } from '../type';
 
 export type VisualChannel = 'x' | 'y' | 'color' | 'angle' | 'radius' | 'size' | 'value' | 'source' | 'target' | 'time';
@@ -17,5 +17,6 @@ export interface GenerateChartCellContext extends ChartGeneratorCtx {
   colors?: string[];
   chartTheme?: ChartTheme | string;
   vizSchema: VizSchema;
+  chartTypeList: ChartType[];
   totalTime?: number;
 }

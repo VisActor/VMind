@@ -51,7 +51,7 @@ export const getFieldDomain = (dataset: DataItem[], column: string, role: ROLE) 
 };
 
 export const detectFieldType = (dataset: DataItem[], column: string): FieldInfo => {
-  let fieldType: DataType | undefined;
+  let fieldType: DataType | undefined = ['年份', 'date'].includes(column) ? DataType.DATE : undefined;
   //detect field type based on rules
   //The data types have the following inclusion relationships:
   //date=>string

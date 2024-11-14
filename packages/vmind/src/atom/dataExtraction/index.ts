@@ -5,9 +5,9 @@ import { merge, pick } from '@visactor/vutils';
 import type { LLMMessage } from '../../types/llm';
 import { getBasePrompt, getFieldInfoPrompt, getUserQuery } from './prompt/prompt';
 import { getLanguageOfText } from '../../utils/text';
-import { formatFieldInfo, hasMeasureField } from '../../utils/field';
+import { formatFieldInfo, getFieldInfoFromDataset, getRoleByFieldType, hasMeasureField } from '../../utils/field';
 import { getCtxBymeasureAutoTransfer } from '../dataClean/utils';
-import type { DatasetFromText, FieldInfo } from '../../types';
+import type { DatasetFromText, DataTable, FieldInfo } from '../../types';
 import { DataType } from '../../types';
 
 export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtractionOptions> {
@@ -113,21 +113,30 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
     ];
   }
 
-  revisedFieldInfo(fieldInfo: any[]): FieldInfo[] {
+  revisedFieldInfo(dataTable: DataTable, fieldInfo: any[]): FieldInfo[] {
+    const fieldInfoByData = getFieldInfoFromDataset(dataTable);
+    const fieldMapping: Record<string, FieldInfo> = fieldInfoByData.reduce(
+      (prev, curV) => ({
+        ...prev,
+        [curV.fieldName]: curV
+      }),
+      {}
+    );
     return fieldInfo.map(info => {
-      const { fieldName, type, isRatio, isDate, unit } = info;
+      const { fieldName, type, isRatio, unit } = info;
+      const mapInfo = fieldMapping?.[fieldName];
       let finalType = type === 'dimension' ? DataType.STRING : DataType.NUMERICAL;
       if (isRatio) {
         finalType = DataType.RATIO;
-      } else if (isDate) {
-        finalType = DataType.DATE;
+      } else {
+        finalType = mapInfo?.type ?? finalType;
       }
       return {
         fieldName,
         unit,
         ratioGranularity: isRatio ? unit : null,
         type: finalType,
-        role: type
+        role: getRoleByFieldType(finalType)
       };
     });
   }
@@ -153,7 +162,7 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
         return {
           ...result,
           text: this.parseSubText(this.context.text, result.textRange),
-          fieldInfo: formatFieldInfo(this.revisedFieldInfo(result.fieldInfo))
+          fieldInfo: formatFieldInfo(this.revisedFieldInfo(result.dataTable, result.fieldInfo))
         };
       })
       .filter(result => hasMeasureField(result.fieldInfo));
@@ -172,7 +181,7 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
         datasets: this.parseMultipleResult(dataset)
       };
     }
-    const llmFieldInfo = this.revisedFieldInfo(fieldInfo);
+    const llmFieldInfo = this.revisedFieldInfo(dataTable, fieldInfo);
     return {
       ...this.context,
       fieldInfo: formatFieldInfo(

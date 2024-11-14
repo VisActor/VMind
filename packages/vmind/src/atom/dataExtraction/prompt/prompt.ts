@@ -23,7 +23,7 @@ export const getUserQuery = (model: string, language: 'chinese' | 'english', isC
     return [
       {
         role: 'user',
-        content: language === 'chinese' ? '提取所有数据' : 'Extract all data'
+        content: 'Extract all data'
       }
     ];
   }

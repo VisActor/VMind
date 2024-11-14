@@ -12,7 +12,8 @@ import {
   getCtxByRangeValueTranser,
   getSplitDataViewOfDataTable,
   transferFieldInfo,
-  revisedUnMatchedFieldInfo
+  revisedUnMatchedFieldInfo,
+  sortDataTableByDate
 } from './utils';
 
 /** The order of pipeline is meaningful   */
@@ -52,6 +53,10 @@ export const pipelines: { key: string; func: (ctx: DataCleanCtx, ...args: any[])
   {
     key: 'needNumericalFields',
     func: getCtxByneedNumericalFields
+  },
+  {
+    key: 'sortByDate',
+    func: sortDataTableByDate
   }
 ];
 
