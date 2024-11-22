@@ -70,14 +70,12 @@ export class LLMManage {
         id
       });
       if (res.error) {
-        console.error(res.error);
         return {
           error: res.error
         };
       }
       return res;
     } catch (err: any) {
-      console.error(err);
       return {
         error: err
       };
@@ -88,8 +86,7 @@ export class LLMManage {
     const { choices, error } = res;
     if (error) {
       return {
-        error: true,
-        message: error
+        error
       };
     }
     try {
@@ -99,10 +96,8 @@ export class LLMManage {
       const resJson = parseLLMJson(jsonStr, '```');
       return resJson;
     } catch (err: any) {
-      console.error(err);
       return {
-        error: true,
-        message: err.message
+        error: err
       };
     }
   }

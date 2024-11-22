@@ -245,10 +245,13 @@ export const revisedUnMatchedFieldInfo = (context: DataCleanCtx) => {
     fieldInfoMapping[info.fieldName] = info;
   });
   const fieldNameSet = new Set(Object.keys(fieldInfoMapping));
-  const intersectionName = dataTableFieldSet.intersection(fieldNameSet);
+  // @ts-ignore
+  const intersectionName: Set<string> = dataTableFieldSet.intersection(fieldNameSet);
   if (intersectionName.size !== dataTableFieldSet.size) {
-    const dataTableUnMatch = dataTableFieldSet.difference(intersectionName);
-    const fieldNameUnMatch = fieldNameSet.difference(intersectionName);
+    // @ts-ignore
+    const dataTableUnMatch: Set<string> = dataTableFieldSet.difference(intersectionName);
+    // @ts-ignore
+    const fieldNameUnMatch: Set<string> = fieldNameSet.difference(intersectionName);
     if (dataTableUnMatch.size !== fieldNameUnMatch.size) {
       return context;
     }
