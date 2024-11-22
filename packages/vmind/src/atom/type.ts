@@ -64,6 +64,11 @@ export interface DataInsightOptions extends BaseOptions {
   usePolish?: boolean;
 }
 
+export interface CustomPromptOptions extends BaseOptions {
+  /** prompt template */
+  promptTemplate: string;
+}
+
 export interface SchemaFieldInfo extends Pick<FieldInfo, 'description' | 'role' | 'location' | 'type'> {
   id: string;
   /** aliasName */

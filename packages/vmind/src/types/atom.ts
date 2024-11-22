@@ -15,7 +15,8 @@ export enum AtomName {
   MULTIPLE_CHART_COMMAND = 'multipleChartCommand',
   CHART_GENERATE = 'chartGenerate',
   DATA_INSIGHT = 'dataInsight',
-  CHART_QA_EXTRACTION = 'chartQAExtraction'
+  CHART_QA_EXTRACTION = 'chartQAExtraction',
+  CUSTOM_PROMPT = 'custom_prompt'
 }
 
 /** Base LLM Context */
@@ -30,6 +31,12 @@ export interface BaseContext {
   response?: string;
   /** error info */
   error?: string;
+  /** prompt usage */
+  usage?: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  };
 }
 
 export interface ClusterDataView {
@@ -169,4 +176,9 @@ export interface ChartQAExtractionCtx extends BaseContext {
   answer: string;
   keyList: string[];
   explanation: string;
+}
+
+export interface DialogueChartCtx extends BaseContext {
+  spec: any;
+  oneSpec: any;
 }
