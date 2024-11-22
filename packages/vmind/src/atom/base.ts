@@ -122,13 +122,15 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
         const messages = this.getLLMMessages();
         const data = await this.options.llm.run(this.name, messages);
         const resJson = this.options.llm.parseJson(data);
-        if (resJson.error) {
-          console.error(resJson.error);
-          this.updateContext({ error: resJson.error } as any);
+        if (resJson.error || data?.error) {
+          this.updateContext({ error: resJson.error ?? data?.error } as any);
           return this.context;
         }
         this.recordLLMResponse(data);
-        this.setNewContext(this.parseLLMContent(resJson, data));
+        this.setNewContext({
+          ...this.parseLLMContent(resJson, data),
+          usage: (data as LLMResponse)?.usage
+        });
         this._runWithOutLLM();
       } else {
         this._runWithOutLLM();
@@ -154,7 +156,9 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     const resJson = this.options.llm.parseJson(data);
     if (!resJson.error) {
       this.recordLLMResponse(data, query);
-      this.setNewContext(this.parseLLMContent(resJson));
+      this.setNewContext({ ...this.parseLLMContent(resJson), usage: (data as LLMResponse)?.usage });
+    } else {
+      this.updateContext({ error: resJson.error } as any);
     }
     return this.context;
   }
