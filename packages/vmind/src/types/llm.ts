@@ -58,7 +58,6 @@ export interface LLMResponse extends BaseContext {
     index: number;
     message: any;
   }[];
-  usage?: any;
   error?: string;
   [key: string]: any;
 }

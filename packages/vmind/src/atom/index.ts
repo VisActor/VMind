@@ -6,4 +6,5 @@ export { ChartCommandAtom } from './chartCommand';
 export { MultipleChartCommandAtom } from './chartCommand/multiple';
 export { ChartGeneratorAtom } from './chartGenerator';
 export { ChartQAExtraction } from './chartQAExtraction';
+export { CustomPrompt } from './customAtom';
 export { BaseAtom } from './base';

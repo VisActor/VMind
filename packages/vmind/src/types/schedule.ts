@@ -8,7 +8,8 @@ import type {
   ChartCommandCtx,
   DataInsightCtx,
   MultipleDataCleanCtx,
-  MultipleChartCommandsCtx
+  MultipleChartCommandsCtx,
+  ChartQAExtractionCtx
 } from './atom';
 
 export interface Tasks {
@@ -31,6 +32,8 @@ export type AtomTypeMap = {
   [AtomName.CHART_COMMAND]: ChartCommandCtx;
   [AtomName.MULTIPLE_CHART_COMMAND]: MultipleChartCommandsCtx;
   [AtomName.CHART_GENERATE]: ChartGeneratorCtx;
+  [AtomName.CHART_QA_EXTRACTION]: ChartQAExtractionCtx;
+  [AtomName.CUSTOM_PROMPT]: any;
 };
 
 export type MapAtomTypes<T extends (keyof AtomTypeMap)[]> = {

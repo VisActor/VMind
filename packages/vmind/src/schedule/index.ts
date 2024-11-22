@@ -10,7 +10,9 @@ import {
   ChartCommandAtom,
   DataInsightAtom,
   MultipleDataCleanAtom,
-  MultipleChartCommandAtom
+  MultipleChartCommandAtom,
+  CustomPrompt,
+  ChartQAExtraction
 } from '../atom';
 import type { CombineAll, MapAtomTypes, TaskMapping } from '../types/schedule';
 import { DataCleanAtom } from '../atom/dataClean/dataClean';
@@ -20,7 +22,8 @@ import type {
   ChartGeneratorOptions,
   DataCleanOptions,
   DataExtractionOptions,
-  DataInsightOptions
+  DataInsightOptions,
+  CustomPromptOptions
 } from '../atom/type';
 
 export interface ScheduleOptions {
@@ -33,6 +36,8 @@ export interface ScheduleOptions {
   [AtomName.CHART_GENERATE]?: ChartGeneratorOptions;
   [AtomName.CHART_COMMAND]?: ChartCommandOptions;
   [AtomName.MULTIPLE_CHART_COMMAND]?: ChartCommandOptions;
+  [AtomName.CHART_QA_EXTRACTION]?: BaseOptions;
+  [AtomName.CUSTOM_PROMPT]?: CustomPromptOptions;
 }
 
 export class Schedule<T extends AtomName[]> {
@@ -95,6 +100,10 @@ export class Schedule<T extends AtomName[]> {
         return new MultipleChartCommandAtom(this.context, options);
       case AtomName.CHART_GENERATE:
         return new ChartGeneratorAtom(this.context, options);
+      case AtomName.CHART_QA_EXTRACTION:
+        return new ChartQAExtraction(this.context, options);
+      case AtomName.CUSTOM_PROMPT:
+        return new CustomPrompt(this.context, options);
       default:
         return new BaseAtom(this.context, options);
     }
