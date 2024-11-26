@@ -103,7 +103,7 @@ const revisedInsightByTypeMapping: Record<
 };
 
 export const getInsights = (context: DataInsightExtractContext, options: DataInsightOptions) => {
-  const { algorithms, maxNum, isLimitedbyChartType } = options;
+  const { algorithms, maxNum, isLimitedbyChartType, detailMaxNum = [] } = options;
   const { chartType, cell, spec } = context;
   const insights: Insight[] = [];
   const insightAlgorithmContext = { ...context, insights };
@@ -161,7 +161,16 @@ export const getInsights = (context: DataInsightExtractContext, options: DataIns
       ? -1
       : 1;
   });
-  const finalInsights = generateInsightTemplate(maxNum ? revisedInsights.slice(0, maxNum) : revisedInsights, context);
+  const afterLimitsInsights: Insight[] = [];
+  detailMaxNum.forEach(item => {
+    const { types, maxNum } = item;
+    const filteredInsights = revisedInsights.filter(insight => types.includes(insight.type)).slice(0, maxNum);
+    afterLimitsInsights.push(...filteredInsights);
+  });
+  const finalInsights = generateInsightTemplate(
+    maxNum ? afterLimitsInsights.slice(0, maxNum) : afterLimitsInsights,
+    context
+  );
 
   return finalInsights;
 };
