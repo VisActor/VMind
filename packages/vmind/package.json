@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vmind",
-  "version": "1.2.13",
+  "version": "2.0.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -47,6 +47,7 @@
     "postpublish": "npm run clear",
     "release-minor": "npm version minor && npm publish && git commit -a -m 'chore: release minor version for vmind' && git push",
     "release-alpha": "npm version prerelease --preid alpha && npm publish --tag alpha && git commit -a -m 'chore: release alpha version for vmind' && git push",
+    "release-beta": "npm version prerelease --preid beta && npm publish --tag beta && git commit -a -m 'chore: release beta version for vmind' && git push",
     "release": "npm version patch && npm publish && git commit -a -m 'chore: release patch version for vmind' && git push"
   },
   "devDependencies": {
