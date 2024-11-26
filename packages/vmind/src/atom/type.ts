@@ -1,6 +1,6 @@
 import type { ChartType, FieldInfo } from '../types';
 import type { LLMManage } from '../core/llm';
-import type { AlgorithmType, AlgorithmOptions } from './dataInsight/type';
+import type { AlgorithmType, AlgorithmOptions, InsightType } from './dataInsight/type';
 
 export interface BaseOptions {
   /** llm manage instance */
@@ -54,6 +54,11 @@ export interface ChartGeneratorOptions extends BaseOptions {
 export interface DataInsightOptions extends BaseOptions {
   /** max number of insight */
   maxNum?: number;
+  /** detail number limits of insight, higher priority than maxNum */
+  detailMaxNum?: {
+    types: InsightType[];
+    maxNum: number;
+  }[];
   /** using algorithms list */
   algorithms?: AlgorithmType[];
   /** options of each algorithms */

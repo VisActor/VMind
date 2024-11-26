@@ -18,7 +18,7 @@ const getOutlierTemplate = (insight: Insight, ctx: DataInsightExtractContext) =>
   const seriesField = getFieldIdInCell(cell?.color);
   if ([ChartType.ScatterPlot].includes(chartType)) {
     return {
-      content: isEmptySeries(seriesName) ? '(${b}, ${c})上存在异常点' : '${a}在(${b}, ${c})上存在异常点',
+      content: isEmptySeries(seriesName) ? '(${b}, ${c})上显著异常' : '${a}在(${b}, ${c})上显著异常',
       variables: {
         ...(isEmptySeries(seriesName)
           ? {}
@@ -40,7 +40,7 @@ const getOutlierTemplate = (insight: Insight, ctx: DataInsightExtractContext) =>
     };
   }
   return {
-    content: isEmptySeries(seriesName) ? '${b}上有异常值,值为${c}' : '${a}在${b}上有异常值，值为${c}',
+    content: isEmptySeries(seriesName) ? '${b}上显著异常,值为${c}' : '${a}在${b}上显著异常，值为${c}',
     variables: {
       ...(isEmptySeries(seriesName)
         ? {}
@@ -66,7 +66,7 @@ const getOutlierTemplate = (insight: Insight, ctx: DataInsightExtractContext) =>
 const getTurnPointTemplate = (insight: Insight, ctx: DataInsightExtractContext) => {
   const res = getOutlierTemplate(insight, ctx);
   return {
-    content: res.content.replaceAll('异常值', '拐点'),
+    content: res.content.replaceAll('上显著异常', '是个拐点'),
     variables: res.variables
   };
 };
@@ -74,7 +74,7 @@ const getTurnPointTemplate = (insight: Insight, ctx: DataInsightExtractContext) 
 const getExtremeTemplate = (insight: Insight, ctx: DataInsightExtractContext) => {
   const res = getOutlierTemplate(insight, ctx);
   return {
-    content: res.content.replaceAll('异常值', '极值'),
+    content: res.content.replaceAll('上显著异常', '是极值'),
     variables: res.variables
   };
 };
