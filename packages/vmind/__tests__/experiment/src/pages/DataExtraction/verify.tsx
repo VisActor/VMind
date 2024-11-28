@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
-import stringSimilarity from 'string-similarity';
+import { stringSimilarity } from 'string-similarity-js';
 import { DataType } from '../../../../../src';
 import type { DataCell, DataExtractionCtx, FieldInfo, DataTable } from '../../../../../src';
 import { getRoleByFieldType } from '../../../../../src/utils/field';
@@ -9,7 +9,7 @@ import type { DataExtractionCase, DataExtractionResult, ScoreDetail } from './ty
 import { isNumber } from '@visactor/vutils';
 
 function cosineSimilarity(text1: string, text2: string): number {
-  return stringSimilarity.compareTwoStrings(text1, text2);
+  return stringSimilarity(text1, text2);
 }
 
 function getFieldTypeScore(typeA: DataType, typeB: DataType) {

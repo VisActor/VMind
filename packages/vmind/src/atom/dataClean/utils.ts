@@ -1,4 +1,4 @@
-import stringSimilarity from 'string-similarity';
+import stringSimilarity from 'string-similarity-js';
 import { getRoleByFieldType } from '../../utils/field';
 import type { ClusterDataView, DatasetFromText } from '../../types/atom';
 import type { DataItem, DataTable } from '../../types';
@@ -260,7 +260,7 @@ export const revisedUnMatchedFieldInfo = (context: DataCleanCtx) => {
       let min = -1;
       let matchedName = candidateList[0];
       candidateList.forEach(v => {
-        const score = stringSimilarity.compareTwoStrings(name, v);
+        const score = stringSimilarity(name, v);
         if (score > min) {
           min = score;
           matchedName = v;
