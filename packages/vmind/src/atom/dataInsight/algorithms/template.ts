@@ -9,7 +9,7 @@ import { getFieldIdInCell } from '../../../utils/field';
 const getFieldInfoById = (fieldInfo: FieldInfo[], fieldId: string) => {
   return fieldInfo.find(info => info.fieldName === fieldId);
 };
-const isEmptySeries = (seriesName: any) => !seriesName || seriesName === DEFAULT_SERIES_NAME;
+export const isEmptySeries = (seriesName: any) => !seriesName || seriesName === DEFAULT_SERIES_NAME;
 
 const getOutlierTemplate = (insight: Insight, ctx: DataInsightExtractContext) => {
   const { seriesName, data, value, fieldId } = insight;

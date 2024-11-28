@@ -176,7 +176,8 @@ export const getCellFromSpec = (spec: any, vmindChartType?: ChartType): Cell => 
   if ('waterfall' === type) {
     return {
       x: spec.xField,
-      y: spec.yField
+      y: spec.yField,
+      color: spec?.seriesField
     };
   }
   if (type === 'sankey') {

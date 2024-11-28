@@ -50,7 +50,7 @@ export interface MajorityValueOptions {
 /** The rules are too simple */
 const calcMajorityValue = (context: DataInsightExtractContext, options: MajorityValueOptions): Insight[] => {
   const result: Insight[] = [];
-  const { cell, dimensionDataMap } = context;
+  const { cell, dimensionDataMap, seriesDataMap } = context;
   const { threshold } = options || {};
   const { y: celly, x: cellx, color } = cell;
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
@@ -62,6 +62,9 @@ const calcMajorityValue = (context: DataInsightExtractContext, options: Majority
     groupField = isArray(color) ? color[0] : color;
   }
   if (!groupField || !xField) {
+    return [];
+  }
+  if (Object.keys(seriesDataMap).length <= 1) {
     return [];
   }
 

@@ -161,11 +161,11 @@ export const getInsights = (context: DataInsightExtractContext, options: DataIns
       ? -1
       : 1;
   });
-  const afterLimitsInsights: Insight[] = [];
+  let afterLimitsInsights: Insight[] = [...revisedInsights];
   detailMaxNum.forEach(item => {
     const { types, maxNum } = item;
-    const filteredInsights = revisedInsights.filter(insight => types.includes(insight.type)).slice(0, maxNum);
-    afterLimitsInsights.push(...filteredInsights);
+    const filteredInsights = revisedInsights.filter(insight => types.includes(insight.type)).slice(maxNum);
+    afterLimitsInsights = afterLimitsInsights.filter(insight => !filteredInsights.includes(insight));
   });
   const finalInsights = generateInsightTemplate(
     maxNum ? afterLimitsInsights.slice(0, maxNum) : afterLimitsInsights,
