@@ -161,11 +161,10 @@ importers:
       '@types/node': '*'
       '@types/react': ^18.0.0
       '@types/react-dom': ^18.0.0
-      '@types/string-similarity': ~4.0.2
       '@typescript-eslint/eslint-plugin': 5.30.0
       '@typescript-eslint/parser': 5.30.0
-      '@visactor/calculator': workspace:1.2.13
-      '@visactor/chart-advisor': workspace:1.2.13
+      '@visactor/calculator': 1.2.13
+      '@visactor/chart-advisor': 1.2.13
       '@visactor/vchart': ^1.12.4
       '@visactor/vchart-theme': ^1.11.2
       '@visactor/vdataset': ~0.17.4
@@ -198,16 +197,15 @@ importers:
       react: ^18.0.0
       react-dom: ^18.0.0
       react-router-dom: 6.9.0
-      string-similarity: ~4.0.4
+      string-similarity-js: ~2.1.4
       typescript: 4.9.5
       vite: 3.2.6
       vite-plugin-css: ~1.0.4
       vite-plugin-libcss: ~1.1.1
     dependencies:
       '@stdlib/stats-base-dists-t-quantile': 0.2.1
-      '@types/string-similarity': 4.0.2
-      '@visactor/calculator': link:../calculator
-      '@visactor/chart-advisor': link:../chart-advisor
+      '@visactor/calculator': 1.2.13
+      '@visactor/chart-advisor': 1.2.13
       '@visactor/vchart-theme': 1.11.5_@visactor+vchart@1.12.7
       '@visactor/vdataset': 0.17.5
       '@visactor/vutils': 0.17.5
@@ -222,7 +220,7 @@ importers:
       json5: 2.2.3
       jsonrepair: 3.8.1
       jstat: 1.9.6
-      string-similarity: 4.0.4
+      string-similarity-js: 2.1.4
     devDependencies:
       '@arco-design/web-react': 2.46.1_xf5tafcwmz3mrkdht7bbxbjgqa
       '@ffmpeg/ffmpeg': 0.11.6
@@ -4774,10 +4772,6 @@ packages:
       '@types/node': 20.12.12
     dev: true
 
-  /@types/string-similarity/4.0.2:
-    resolution: {integrity: sha512-LkJQ/jsXtCVMK+sKYAmX/8zEq+/46f1PTQw7YtmQwb74jemS1SlNLmARM2Zml9DgdDTWKAtc5L13WorpHPDjDA==}
-    dev: false
-
   /@types/terser/3.12.0:
     resolution: {integrity: sha512-J0Wy8A7ULEqVJftkWhrXZbH0iBk4tYuTj0gBiiveKaY9deNi6cCsxl0ApJ27ojqwYv51bvEw85lOb8Wt4ng9zA==}
     deprecated: This is a stub types definition. terser provides its own type definitions, so you do not need this installed.
@@ -5034,6 +5028,20 @@ packages:
   /@ungap/promise-all-settled/1.1.2:
     resolution: {integrity: sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==}
     dev: true
+
+  /@visactor/calculator/1.2.13:
+    resolution: {integrity: sha512-wMXa69pGLyewsz59qomkIlK3uq5Xo8j6ZLWa8W+VPK4mtW78Zw9zKagCxvRjhOQ712154HyO1H5b+zisRo010Q==}
+    dependencies:
+      '@visactor/vutils': 0.17.5
+      node-sql-parser: 4.17.0
+      ts-pattern: 4.1.4
+    dev: false
+
+  /@visactor/chart-advisor/1.2.13:
+    resolution: {integrity: sha512-eOOYRBlmP3b7WC6nMWHpgSsFNMH/wuyPs3LP0KHQx8PpkPhSIxnQPdG5/lbxSo2KyIdiLOMbNSEs24OuIH0Nhw==}
+    dependencies:
+      '@visactor/vutils': 0.17.5
+    dev: false
 
   /@visactor/vchart-theme/1.11.5_@visactor+vchart@1.12.7:
     resolution: {integrity: sha512-scHPV7Gxm7v51fpR+Mv2B9T2vJtOZqwjAaY4CLHu0UE1JZ1REMLC0t/EhxJIfTZAc4ErsTANJ8gYdpi76mCoTw==}
@@ -13606,9 +13614,8 @@ packages:
       strip-ansi: 6.0.1
     dev: true
 
-  /string-similarity/4.0.4:
-    resolution: {integrity: sha512-/q/8Q4Bl4ZKAPjj8WerIBJWALKkaPRfrvhfF8k/B23i4nzrlRj2/go1m90In7nG/3XDSbOo0+pu6RvCTM9RGMQ==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+  /string-similarity-js/2.1.4:
+    resolution: {integrity: sha512-uApODZNjCHGYROzDSAdCmAHf60L/pMDHnP/yk6TAbvGg7JSPZlSto/ceCI7hZEqzc53/juU2aOJFkM2yUVTMTA==}
     dev: false
 
   /string-width/1.0.2:
