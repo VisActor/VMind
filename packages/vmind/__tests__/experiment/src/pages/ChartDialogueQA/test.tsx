@@ -139,7 +139,8 @@ export function ChartQAGenerator() {
         question: title || fileName,
         answer,
         keyList,
-        explanation
+        explanation,
+        description: descriptionContent
       });
       console.info(result);
       await sleep(5000);

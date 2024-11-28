@@ -80,7 +80,14 @@ export function DataInput(props: IPropsType) {
     new Schedule([AtomName.DATA_INSIGHT], {
       base: { llm: llm.current },
       dataInsight: {
-        maxNum: numLimits
+        maxNum: numLimits,
+        detailMaxNum: [
+          { types: ['outlier', 'pair_outlier', 'extreme_value', 'turning_point', 'majority_value'], maxNum: 3 },
+          { types: ['abnormal_band'], maxNum: 3 },
+          { types: ['correlation'], maxNum: 2 },
+          { types: ['overall_trend'], maxNum: 2 },
+          { types: ['abnormal_trend'], maxNum: 3 }
+        ] as any
       }
     })
   );
