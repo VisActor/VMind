@@ -23,8 +23,8 @@ export interface RecallOptions {
 
 export interface RecallResult {
   scores: number;
-  labelLower64: number;
-  labelUpper64: number;
+  label_upper64: number;
+  label_lower64: number;
   attrs: string;
   extraInfos: string;
 }

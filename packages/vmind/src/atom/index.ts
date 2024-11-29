@@ -8,3 +8,4 @@ export { ChartGeneratorAtom } from './chartGenerator';
 export { ChartQAExtraction } from './chartQAExtraction';
 export { CustomPrompt } from './customAtom';
 export { BaseAtom } from './base';
+export * from './type';
