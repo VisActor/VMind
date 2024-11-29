@@ -34,8 +34,7 @@ export class RAGManage {
       vector,
       missAsEmpty,
       sparseVector,
-      sparseLogitAlpha,
-      manualChunk
+      sparseLogitAlpha
     } = options;
     try {
       const res = await axios(url + 'recall', {
@@ -62,7 +61,6 @@ export class RAGManage {
             .filter(item => item !== null),
           sparse_logit_alpha: sparseLogitAlpha,
           miss_as_empty: missAsEmpty
-          // manualChunk
         }
       }).then(response => response.data);
 
