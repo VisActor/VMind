@@ -52,7 +52,7 @@ export const extractDataFromContext = (context: DataInsightCtx) => {
   if (seriesField && ![ChartType.PieChart, ChartType.RoseChart].includes(chartType)) {
     dataset.forEach((dataItem, index) => {
       const groupBy = dataItem[seriesField];
-      if (!groupBy) {
+      if (!groupBy || (chartType === ChartType.WaterFallChart && groupBy === 'total')) {
         return;
       }
       if (!seriesDataMap[groupBy]) {
