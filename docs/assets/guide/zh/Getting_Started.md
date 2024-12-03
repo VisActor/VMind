@@ -184,24 +184,57 @@ const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset)
 ## 导出 GIF 和视频
 
 VMind 支持将生成的图表导出为 GIF 格式的动画和视频，随时随地进行分享。
-为了实现视频导出功能，你需要在项目中额外引入VChart和FFMPEG，并将其作为对象传入VMind。下面将展示如何获得图表 GIF 和视频的 ObjectURL：
+为了实现视频导出功能，你需要在项目中额外引入`VChart, FFMPEG, canvas`相关内容，并将其作为对象传入VMind。下面将展示如何获得图表 GIF 和视频的 ObjectURL：
 
-首先安装VChart和FFMPEG：
+首先安装VChart,FFMPEG以及canvas相关内容：
 ```bash
 # 使用 npm 安装
 npm install @visactor/vchart
-npm install @ffmpeg/ffmpeg
-npm install @ffmpeg/util
+npm install @visactor/vrender-core
+npm install @ffmpeg/ffmpeg^0.11.6
+npm install canvas^2.11.2
 ```
+同时确保vrender-core版本与vchart依赖版本一致，如：`"@visactor/vchart": "1.12.7"`对应的版本应该为，`"@visactor/vrender-core": "0.20.7"`
+具体使用如下：
 
 ```typescript
-import VChart from '@visactor/vchart';
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile } from "@ffmpeg/util";
+import VChart from "@visactor/vchart";
+import { ManualTicker, defaultTimeline } from "@visactor/vrender-core";
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg/dist/ffmpeg.min.js'
+import { createCanvas } from "canvas";
+import VMind from "@visactor/vmind";
+
+// 初始化vmind和ffmpeg
+const vmind = new VMind({});
+const ffmpeg = createFFmpeg({
+  log: true,
+});
+const loadFFmpeg = async () => {
+  if (!ffmpeg.isLoaded()) {
+    await ffmpeg.load();
+  }
+};
+// 确保在使用导出功能前已经加载了ffmpeg
+await loadFFmpeg();
 //导出视频
-const videoSrc = await vmind.exportVideo(spec, time, VChart, FFmpeg, fetchFile); //传入图表spec和视频时长，返回ObjectURL
+//传入图表spec，视频时长和视频化必要参数，返回ObjectURL
+const videoSrc = await vmind.exportVideo(spec, time, {
+      VChart,
+      FFmpeg: ffmpeg,
+      fetchFile,
+      ManualTicker,
+      defaultTimeline,
+      createCanvas,
+    });
 //导出GIF图片
-const gifSrc = await vmind.exportGIF(spec, time, VChart, FFmpeg, fetchFile); //传入图表spec和GIF时长，返回ObjectURL
+const gifSrc = await vmind.exportGIF(spec, time, {
+      VChart,
+      FFmpeg: ffmpeg,
+      fetchFile,
+      ManualTicker,
+      defaultTimeline,
+      createCanvas
+    });
 ```
 
 一旦获得图表的 ObjectURL，我们可以将其保存为文件。以保存视频文件为例：

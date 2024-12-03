@@ -184,24 +184,56 @@ The generated chart is as follows:
 ## Export GIF and Video
 
 VMind supports exporting the generated chart as a GIF animation and video, which can be shared anytime and anywhere.
-In order to implement the video export function, you need to additionally introduce VChart and FFMPEG into the project and pass them in as objects to VMind. The following will show how to get the ObjectURL of the chart GIF and video:
+In order to implement the video export function,you need to additionally include VChart, FFMPEG, canvas related content in your project and pass them as objects to VMind. The following will show how to get the ObjectURL of the chart GIF and video:
 
-First install VChart and FFMPEG:
+First, install VChart, FFMPEG, and canvas-related content:
 ```bash
 # Install with npm
 npm install @visactor/vchart
-npm install @ffmpeg/ffmpeg
-npm install @ffmpeg/util
+npm install @visactor/vrender-core
+npm install @ffmpeg/ffmpeg^0.11.6
+npm install canvas^2.11.2
 ```
-
+Ensure that the vrender-core version matches the vchart dependency version, for example: `"@visactor/vchart": "1.12.7"` should correspond to `"@visactor/vrender-core": "0.20.7"`.
+Usage is as follows:
 ```typescript
-import VChart from '@visactor/vchart';
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile } from "@ffmpeg/util";
-//Export video
-const videoSrc = await vmind.exportVideo(spec, time, VChart, FFmpeg, fetchFile); //Pass in chart spec and video duration, return ObjectURL
-//Export GIF image
-const gifSrc = await vmind.exportGIF(spec, time, VChart, FFmpeg, fetchFile); //Pass in chart spec and GIF duration, return ObjectURL
+import VChart from "@visactor/vchart";
+import { ManualTicker, defaultTimeline } from "@visactor/vrender-core";
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg/dist/ffmpeg.min.js'
+import { createCanvas } from "canvas";
+import VMind from "@visactor/vmind";
+
+// Initialize vmind and ffmpeg
+const vmind = new VMind({});
+const ffmpeg = createFFmpeg({
+  log: true,
+});
+const loadFFmpeg = async () => {
+  if (!ffmpeg.isLoaded()) {
+    await ffmpeg.load();
+  }
+};
+// Ensure ffmpeg is loaded before using the export feature
+await loadFFmpeg();
+// Export video
+// Pass in the chart spec, video duration, and necessary parameters for video creation, and return the ObjectURL
+const videoSrc = await vmind.exportVideo(spec, time, {
+      VChart,
+      FFmpeg: ffmpeg,
+      fetchFile,
+      ManualTicker,
+      defaultTimeline,
+      createCanvas,
+    });
+// Export GIF image
+const gifSrc = await vmind.exportGIF(spec, time, {
+      VChart,
+      FFmpeg: ffmpeg,
+      fetchFile,
+      ManualTicker,
+      defaultTimeline,
+      createCanvas
+    });
 ```
 
 Once you get the ObjectURL of the chart, we can save it as a file. Take saving the video file as an example:
