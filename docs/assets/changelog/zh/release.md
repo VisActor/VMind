@@ -1,3 +1,11 @@
+# v1.3.2
+
+2024-12-03
+
+Fix wrong publish version of v1.3.0/1.3.1
+
+[更多详情请查看 v1.3.2](https://github.com/VisActor/VMind/releases/tag/v1.3.2)
+
 # v1.2.12
 
 2024-06-17
