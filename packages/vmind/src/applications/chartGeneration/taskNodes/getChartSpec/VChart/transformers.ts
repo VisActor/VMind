@@ -1347,7 +1347,7 @@ export const linearProgressAxes: Transformer<Context, GetChartSpecOutput> = (con
       domainLine: { visible: false },
       tick: { visible: false },
       label: {
-        formatMethod: hasSingleData ? val => `${cell.x}: ${val}` : null,
+        formatMethod: hasSingleData ? (val: string | number) => `${cell.x}: ${val}` : null,
         style: {
           fontSize: 16
         }
