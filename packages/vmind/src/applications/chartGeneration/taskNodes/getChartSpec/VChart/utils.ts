@@ -23,7 +23,7 @@ export const getColorInterpolation = (interpolation: Interpolation) => {
   if (interpolation.type === InterpolationType.Linear) {
     return chroma.scale(colorList).colors(interpolation.num);
   }
-  const positionList = interpolation.colors.map(interpolationColor => interpolationColor.position);
+  const positionList = interpolation.colors.map(interpolationColor => interpolationColor.position) as any;
   return chroma.scale(colorList).domain(positionList).colors(interpolation.num);
 };
 
