@@ -184,7 +184,7 @@ The generated chart is as follows:
 ## Export GIF and Video
 
 VMind supports exporting the generated chart as a GIF animation and video, which can be shared anytime and anywhere.
-In order to implement the video export function,you need to additionally include VChart, FFMPEG, canvas related content in your project and pass them as objects to VMind. The following will show how to get the ObjectURL of the chart GIF and video:
+In order to implement the video export function, you need to additionally include VChart, FFMPEG, canvas related content in your project and pass them as objects to VMind. The following will show how to get the ObjectURL of the chart GIF and video:
 
 First, install VChart, FFMPEG, and canvas-related content:
 ```bash
