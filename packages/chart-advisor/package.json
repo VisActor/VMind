@@ -1,6 +1,6 @@
 {
   "name": "@visactor/chart-advisor",
-  "version": "1.2.13",
+  "version": "1.3.1",
   "description": "图表推荐模块",
   "main": "lib",
   "module": "es",
