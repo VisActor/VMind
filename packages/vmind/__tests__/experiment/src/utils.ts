@@ -1,8 +1,8 @@
 // import { result as capcutResult } from './results/dataExtraction/result7';
 // import { result as capcutResult, caseResult, capcutV2Result } from './results/dataExtraction/version1';
-import { result as capcutResult, capcutV2Result } from './results/dataExtraction/version2';
+import { capcutResult, capcutV2Result } from './results/dataExtraction/dataResult';
 // import { result as caseResult } from './results/dataExtraction/commonResult';
-import { result as doubaoResult } from './results/dataExtraction/doubao1';
+// import { result as doubaoResult } from './results/dataExtraction/doubao1';
 import { commonAnswer } from './data/dataExtractionData';
 import { mergeResult, updateScoreInDataExtraction } from './pages/DataExtraction/verify';
 import { AtomName, Schedule, type FieldInfo } from '../../../src';
