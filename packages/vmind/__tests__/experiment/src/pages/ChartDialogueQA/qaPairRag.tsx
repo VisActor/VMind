@@ -15,6 +15,7 @@ import {
 } from '@arco-design/web-react/icon';
 import VChart from '@visactor/vchart';
 import { isArray } from '@visactor/vutils';
+import { VChartSpec } from '../../../../../src';
 
 const globalVariables = (import.meta as any).env;
 const url = globalVariables.VITE_VCHART_EDITOR_URL || 'http://localhost/';
@@ -56,6 +57,7 @@ const baseSpec = {
     position: 'start'
   }
 };
+const vchartSpecAtom = new VChartSpec({ spec: baseSpec }, {});
 export function QARag() {
   const [query, setQuery] = React.useState('');
   const [topK, setTopK] = React.useState(5);
@@ -115,6 +117,8 @@ export function QARag() {
     setQueryRes(res.data);
     const { keyPathRes = [], qaRes = [], topKeys = [], dslRes, nerPrompt, parentKeyPath, error } = res.data;
     // @todo @xile611 spec update
+    // vchartSpecAtom.updateContext({});
+    // const { spec: newSpec } = await vchartSpecAtom.run();
     setLoading(false);
     if (error) {
       setDialog([...newDialg, { role: 'assistant', content: error }]);

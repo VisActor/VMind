@@ -16,7 +16,8 @@ export enum AtomName {
   CHART_GENERATE = 'chartGenerate',
   DATA_INSIGHT = 'dataInsight',
   CHART_QA_EXTRACTION = 'chartQAExtraction',
-  CUSTOM_PROMPT = 'custom_prompt'
+  CUSTOM_PROMPT = 'custom_prompt',
+  VCHART_SPEC = 'vchart_spec'
 }
 
 /** Base LLM Context */
@@ -176,6 +177,11 @@ export interface ChartQAExtractionCtx extends BaseContext {
   answer: string;
   keyList: string[];
   explanation: string;
+}
+
+// @todo @xile611
+export interface VChartSpecCtx extends BaseContext {
+  spec: any;
 }
 
 export interface DialogueChartCtx extends BaseContext {
