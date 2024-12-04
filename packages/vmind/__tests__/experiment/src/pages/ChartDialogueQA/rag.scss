@@ -1,3 +1,104 @@
+.rag-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+  #chart {
+    height: 300px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+}
+
+.vchart-container {
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column; 
+
+  .log {
+    overflow: scroll;
+    width: 100%;;
+  }
+
+  .recall-content {
+    display: flex;
+    padding-right: 10px;
+    .one-content {
+      width: 49%;
+      margin: 0 0.3%;
+    }
+  }
+}
+
+.query-container {
+  width: 50%;
+  height: 100%;
+  background: #f5f5f5;
+  display: flex;
+  flex-direction: column-reverse;
+
+  .query-input {
+    flex-shrink: 0;
+    display: flex;
+    position: relative;
+    padding: 12px;
+    border-top: 1px #e5e5e5 solid;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      color: #00000073;
+    }
+    svg:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.dialog {
+  padding: 12px;
+  overflow: scroll;
+}
+
+.dialog-item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin: 8px 0;
+  align-items: center;
+
+  .diaglog-content {
+    background: #fff;
+    font-size: 12px;
+    line-height: 18px;;
+    border: 1px solid #eee;
+    padding: 8px;
+    border-radius: 8px;;
+  }
+
+  .feedback {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    svg {
+      margin: 0 4px;
+      width: 16px;
+      height: 16px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &.user {
+    flex-direction: row-reverse;
+  }
+}
+
 .qa-card {
   margin: 8px 0;
   height: 220px;
@@ -15,13 +116,5 @@
     span {
       margin-left: 12px;
     }
-  }
-}
-
-.recall-content {
-  display: flex;
-  .one-content {
-    width: 49.5%;
-    margin: 0 0.3%;
   }
 }
