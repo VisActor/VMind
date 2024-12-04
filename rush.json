@@ -90,11 +90,6 @@
       "tags": [
         "package"
       ]
-    },
-    {
-      "packageName": "vmind-api",
-      "projectFolder": "packages/node-api",
-      "reviewCategory": "production"
     }
   ]
 }
