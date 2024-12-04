@@ -8,9 +8,7 @@ const SubMenu = Menu.SubMenu;
 
 const LOCAL_STORAGE_MENU_KEY = 'VMind_playground_menu_key';
 export const Home: React.FC = props => {
-  const [selectedPage, setSelectedPage] = React.useState(
-    localStorage.getItem(LOCAL_STORAGE_MENU_KEY) ?? `${PLAYGROUND_PAGES.DATA_EXTRACTION}_0`
-  );
+  const [selectedPage, setSelectedPage] = React.useState(`${PLAYGROUND_PAGES.CHART_DIALOG_QA}_1`);
   const [collapsed, setCollapsed] = React.useState(false);
   const component = React.useMemo(() => {
     const [menu, index] = selectedPage.split('_');

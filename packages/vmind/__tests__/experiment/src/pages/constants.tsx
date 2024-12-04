@@ -28,38 +28,38 @@ export enum PLAYGROUND_PAGES {
 export const PLAYGROUND_MENU_INFO: {
   [key: string]: MenuInfo;
 } = {
-  [PLAYGROUND_PAGES.DATA_EXTRACTION]: {
-    menuItem: 'Data Extraction',
-    icon: <IconLanguage />,
-    subItems: [
-      {
-        key: '0',
-        name: 'Run Case',
-        component: <DataExtractionTask />
-      },
-      {
-        key: '1',
-        name: 'Case Study',
-        component: <DataExtractionResult />
-      }
-    ]
-  },
-  [PLAYGROUND_PAGES.CHART_GENERATION]: {
-    menuItem: 'Chart Generation',
-    icon: <IconBgColors />,
-    subItems: [
-      {
-        key: '0',
-        name: 'Run Case',
-        component: <ChartGenerationTask />
-      },
-      {
-        key: '1',
-        name: 'Case Study',
-        component: <ChartGeneratorResult />
-      }
-    ]
-  },
+  // [PLAYGROUND_PAGES.DATA_EXTRACTION]: {
+  //   menuItem: 'Data Extraction',
+  //   icon: <IconLanguage />,
+  //   subItems: [
+  //     {
+  //       key: '0',
+  //       name: 'Run Case',
+  //       component: <DataExtractionTask />
+  //     },
+  //     {
+  //       key: '1',
+  //       name: 'Case Study',
+  //       component: <DataExtractionResult />
+  //     }
+  //   ]
+  // },
+  // [PLAYGROUND_PAGES.CHART_GENERATION]: {
+  //   menuItem: 'Chart Generation',
+  //   icon: <IconBgColors />,
+  //   subItems: [
+  //     {
+  //       key: '0',
+  //       name: 'Run Case',
+  //       component: <ChartGenerationTask />
+  //     },
+  //     {
+  //       key: '1',
+  //       name: 'Case Study',
+  //       component: <ChartGeneratorResult />
+  //     }
+  //   ]
+  // },
   [PLAYGROUND_PAGES.CHART_DIALOG_QA]: {
     menuItem: 'Chart Dialogue QA',
     subItems: [
