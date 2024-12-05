@@ -110,7 +110,8 @@ export function QARag() {
       data: {
         chartType: 'bar',
         query,
-        topK
+        topK,
+        spec
       }
     });
     console.log('res: ', res.data);
@@ -146,13 +147,18 @@ export function QARag() {
           },
           null,
           2
-        )
+        ),
+        res: {
+          query,
+          ...res.data
+          // spec: newSpec,
+        }
       }
     ]);
     setQAResult(qaRes);
     setKeyPathResult(keyPathRes);
     setLLmTopKey(topKeys);
-  }, [dialog, query, topK]);
+  }, [dialog, query, spec, topK]);
 
   const handleFeedback = React.useCallback(
     (type: 'up' | 'down', index: number) => {
