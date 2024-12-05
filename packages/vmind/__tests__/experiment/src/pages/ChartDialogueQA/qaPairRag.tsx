@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 import React from 'react';
 import axios from 'axios';
-import { Input, Card } from '@arco-design/web-react';
+import { Input, Card, Message } from '@arco-design/web-react';
 import './rag.scss';
 import {
   IconLoading,
@@ -68,6 +68,7 @@ export function QARag() {
     {
       role: string;
       content: string | string[];
+      res?: any;
     }[]
   >([
     {
@@ -91,7 +92,6 @@ export function QARag() {
       key: string;
     }[]
   >([]);
-  const [queryRes, setQueryRes] = React.useState<any>({});
   const dialogRef = React.useRef<HTMLDivElement>(null);
 
   const handleQuery = React.useCallback(async () => {
@@ -114,28 +114,39 @@ export function QARag() {
       }
     });
     console.log('res: ', res.data);
-    setQueryRes(res.data);
-    const { keyPathRes = [], qaRes = [], topKeys = [], dslRes, nerPrompt, parentKeyPath, error } = res.data;
+    const { keyPathRes = [], qaRes = [], topKeys = [], dslRes, parentKeyPath, aliasKeyPath, error } = res.data;
     // @todo @xile611 spec update
     // vchartSpecAtom.updateContext({});
     // const { spec: newSpec } = await vchartSpecAtom.run();
     setLoading(false);
     if (error) {
-      setDialog([...newDialg, { role: 'assistant', content: error }]);
+      setDialog([
+        ...newDialg,
+        {
+          role: 'assistant',
+          content: error,
+          res: {
+            query,
+            ...res.data
+            // spec: newSpec,
+          }
+        }
+      ]);
       return;
     }
     setDialog([
       ...newDialg,
       {
         role: 'assistant',
-        content: [
-          JSON.stringify({
-            keyPath: parentKeyPath
-          }),
-          JSON.stringify({
+        content: JSON.stringify(
+          {
+            keyPath: parentKeyPath,
+            aliasKeyPath: aliasKeyPath,
             spec: dslRes
-          })
-        ]
+          },
+          null,
+          2
+        )
       }
     ]);
     setQAResult(qaRes);
@@ -144,17 +155,18 @@ export function QARag() {
   }, [dialog, query, topK]);
 
   const handleFeedback = React.useCallback(
-    (type: 'up' | 'down') => {
+    (type: 'up' | 'down', index: number) => {
+      Message.success('Thansk for your feedback!');
+      const currentDialog = dialog[index];
       axios(`${url}feedback`, {
         method: 'POST',
         data: {
-          query,
           type,
-          queryRes
+          ...currentDialog?.res
         }
       });
     },
-    [query, queryRes]
+    [dialog]
   );
 
   React.useEffect(() => {
@@ -253,14 +265,24 @@ export function QARag() {
               <div key={index} className="assistant dialog-item">
                 <IconRobot style={{ width: 25, height: 25, marginRight: 4 }} />
                 <div className="assistant-content diaglog-content">
-                  {isArray(content) ? content.map(v => <div key={v}>{v}</div>) : content}
+                  {isArray(content) ? (
+                    content.map(v => (
+                      <pre key={v}>
+                        <code>{v}</code>
+                      </pre>
+                    ))
+                  ) : (
+                    <pre>
+                      <code>{content}</code>
+                    </pre>
+                  )}
                 </div>
                 <div
                   className="feedback"
                   style={{ visibility: index === dialog.length - 1 && index > 0 ? 'visible' : 'hidden' }}
                 >
-                  <IconThumbUpFill style={{ color: '#28a745' }} onClick={() => handleFeedback('up')} />
-                  <IconThumbDownFill style={{ color: '#dc3545' }} onClick={() => handleFeedback('down')} />
+                  <IconThumbUpFill style={{ color: '#28a745' }} onClick={() => handleFeedback('up', index)} />
+                  <IconThumbDownFill style={{ color: '#dc3545' }} onClick={() => handleFeedback('down', index)} />
                 </div>
               </div>
             );
