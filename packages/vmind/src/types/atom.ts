@@ -197,6 +197,13 @@ export interface VChartSpecCtx extends BaseContext {
      */
     aliasKeyPath?: string;
   };
+
+  /**
+   * 新增spec操作的结果
+   * 0 - 成功
+   * 1 - 不成功
+   */
+  appendCode?: number;
 }
 
 export interface DialogueChartCtx extends BaseContext {

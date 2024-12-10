@@ -4,75 +4,7 @@ import { BaseAtom } from '../base';
 import type { VChartSpecCtx } from '../../types';
 import { merge } from '@visactor/vutils';
 import { set } from '../../utils/set';
-
-const parseRealPath = (path: string, aliasKeyPath: string, spec: any) => {
-  let appendSpec: any;
-
-  if (aliasKeyPath) {
-    const topKeyPath = aliasKeyPath.split('.')[0];
-    const subPaths = path.split('.');
-
-    if (subPaths[0] === 'axes[0]' || subPaths[0] === 'axes') {
-      if (topKeyPath === 'xAxis') {
-        appendSpec = { orient: 'bottom', aliasName: topKeyPath };
-      } else if (topKeyPath === 'yAxis') {
-        appendSpec = { orient: 'left', aliasName: topKeyPath };
-      } else if (topKeyPath === 'radiusAxis') {
-        appendSpec = { orient: 'radius', aliasName: topKeyPath };
-      } else if (topKeyPath === 'angleAxis') {
-        appendSpec = { orient: 'angle', aliasName: topKeyPath };
-      } else if (topKeyPath === 'leftAxis') {
-        appendSpec = { orient: 'left', aliasName: topKeyPath };
-      } else if (topKeyPath === 'rightAxis') {
-        appendSpec = { orient: 'right', aliasName: topKeyPath };
-      } else if (topKeyPath === 'topAxis') {
-        appendSpec = { orient: 'top', aliasName: topKeyPath };
-      } else if (topKeyPath === 'bottomAxis') {
-        appendSpec = { orient: 'bottom', aliasName: topKeyPath };
-      }
-
-      if (spec.axes) {
-        let specifiedAxis = spec.axes.find((axis: any) => axis.aliasName === topKeyPath);
-
-        if (!specifiedAxis) {
-          if (topKeyPath === 'xAxis') {
-            specifiedAxis = spec.axes.find((axis: any) => axis.orient === 'bottom');
-          } else if (topKeyPath === 'yAxis') {
-            specifiedAxis = spec.axes.find((axis: any) => axis.orient === 'left');
-          } else if (topKeyPath === 'radiusAxis') {
-            specifiedAxis = spec.axes.find((axis: any) => axis.orient === 'radius');
-          } else if (topKeyPath === 'angleAxis') {
-            specifiedAxis = spec.axes.find((axis: any) => axis.orient === 'angle');
-          } else if (topKeyPath === 'leftAxis') {
-            specifiedAxis = spec.axes.find((axis: any) => axis.orient === 'left');
-          } else if (topKeyPath === 'rightAxis') {
-            specifiedAxis = spec.axes.find((axis: any) => axis.orient === 'right');
-          } else if (topKeyPath === 'topAxis') {
-            specifiedAxis = spec.axes.find((axis: any) => axis.orient === 'top');
-          } else if (topKeyPath === 'bottomAxis') {
-            specifiedAxis = spec.axes.find((axis: any) => axis.orient === 'bottom');
-          }
-        }
-
-        if (specifiedAxis) {
-          const index = spec.axes.indexOf(specifiedAxis);
-
-          subPaths[0] = `axes[${index}]`;
-        } else {
-          subPaths[0] = `axes[${spec.axes.length}]`;
-        }
-      }
-    }
-
-    return {
-      appendPath: subPaths[0],
-      appendSpec,
-      path: subPaths.join('.')
-    };
-  }
-
-  return { path };
-};
+import { parseRealPath } from './utils';
 
 export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
   name = AtomName.VCHART_SPEC;
@@ -113,8 +45,11 @@ export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
       }
 
       set(newSpec, aliasResult.path ?? parentKeyPath, leafSpec);
+
+      this.context.appendCode = 0;
     } else {
-      newSpec = leafSpec;
+      newSpec = merge(newSpec, leafSpec);
+      this.context.appendCode = 0;
     }
     this.context.prevSpec = this.context.spec;
     this.context.spec = newSpec;
