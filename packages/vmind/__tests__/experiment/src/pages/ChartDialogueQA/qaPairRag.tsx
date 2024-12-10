@@ -14,7 +14,7 @@ import {
   IconUser
 } from '@arco-design/web-react/icon';
 import VChart from '@visactor/vchart';
-import { isArray } from '@visactor/vutils';
+import { isArray, isEmpty, merge } from '@visactor/vutils';
 import { VChartSpec } from '../../../../../src';
 
 const globalVariables = (import.meta as any).env;
@@ -59,6 +59,7 @@ const baseSpec = {
 };
 const vchartSpecAtom = new VChartSpec({ spec: baseSpec }, {});
 export function QARag() {
+  const vchartInstance = React.useRef<any>(null);
   const [query, setQuery] = React.useState('');
   const [topK, setTopK] = React.useState(5);
   const [llmTopKey, setLLmTopKey] = React.useState('');
@@ -115,9 +116,18 @@ export function QARag() {
     });
     console.log('res: ', res.data);
     const { keyPathRes = [], qaRes = [], topKeys = [], dslRes, parentKeyPath, aliasKeyPath, error } = res.data;
-    // @todo @xile611 spec update
-    // vchartSpecAtom.updateContext({});
-    // const { spec: newSpec } = await vchartSpecAtom.run();
+
+    vchartSpecAtom.updateContext({
+      spec: spec,
+      appendSpec: {
+        leafSpec: dslRes,
+        parentKeyPath,
+        aliasKeyPath
+      }
+    });
+    const { spec: newSpec } = await vchartSpecAtom.run();
+    console.log('newSpec', newSpec);
+    setSpec(newSpec);
     setLoading(false);
     if (error) {
       setDialog([
@@ -177,14 +187,20 @@ export function QARag() {
   }, [dialog]);
 
   React.useEffect(() => {
-    if (spec) {
+    if (spec && !vchartInstance.current) {
       (document.getElementById('chart') as HTMLElement).innerHTML = '';
+      console.log('new vchart', spec);
+
       const chart = new VChart(spec, {
         dom: document.getElementById('chart') as HTMLElement
       });
       chart.renderAsync();
+
+      vchartInstance.current = chart;
+    } else if (spec && vchartInstance.current) {
+      vchartInstance.current.updateSpecSync(spec);
     }
-  }, [spec]);
+  }, [spec, vchartInstance]);
 
   return (
     <div className="rag-container">
