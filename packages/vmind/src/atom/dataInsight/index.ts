@@ -72,6 +72,17 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
             type: insight.type,
             content: insight.textContent?.content,
             variables: insight.textContent?.variables
+              ? Object.keys(insight.textContent.variables).reduce<Record<string, any>>((acc, key) => {
+                  return {
+                    ...acc,
+                    [key]: {
+                      ...insight.textContent?.variables[key],
+                      value: null,
+                      formatValue: null
+                    }
+                  };
+                }, {})
+              : {}
           }))
         })
       },

@@ -103,7 +103,7 @@ const revisedInsightByTypeMapping: Record<
 };
 
 export const getInsights = (context: DataInsightExtractContext, options: DataInsightOptions) => {
-  const { algorithms, maxNum, isLimitedbyChartType, detailMaxNum = [] } = options;
+  const { algorithms, maxNum, isLimitedbyChartType, detailMaxNum = [], language } = options;
   const { chartType, cell, spec } = context;
   const insights: Insight[] = [];
   const insightAlgorithmContext = { ...context, insights };
@@ -169,7 +169,8 @@ export const getInsights = (context: DataInsightExtractContext, options: DataIns
   });
   const finalInsights = generateInsightTemplate(
     maxNum ? afterLimitsInsights.slice(0, maxNum) : afterLimitsInsights,
-    context
+    context,
+    language
   );
 
   return finalInsights;
