@@ -3,9 +3,10 @@
 /* eslint-disable no-console */
 import React from 'react';
 import axios from 'axios';
-import { Input, Card, Message, Checkbox, Select } from '@arco-design/web-react';
+import { Input, Card, Message, Checkbox, Select, Tooltip } from '@arco-design/web-react';
 import './rag.scss';
 import {
+  IconDelete,
   IconLoading,
   IconRobot,
   IconSend,
@@ -66,9 +67,11 @@ export function QARag() {
     type: 'qa' | 'code';
     useTopKey: boolean;
     topK: number;
+    useSpec: boolean;
   }>({
     topK: 5,
     useTopKey: true,
+    useSpec: false,
     type: 'qa'
   });
   const [llmTopKey, setLLmTopKey] = React.useState('');
@@ -99,6 +102,7 @@ export function QARag() {
       scores: number;
       index: string;
       text: string;
+      answer?: string;
       key: string;
     }[]
   >([]);
@@ -261,7 +265,10 @@ export function QARag() {
           <Option value={5}>5</Option>
         </Select>
         <Checkbox checked={ragOption.useTopKey} onChange={v => setRagOptions({ ...ragOption, useTopKey: v })}>
-          Use Top Key
+          Use Top Key(先用大模型找到topKey)
+        </Checkbox>
+        <Checkbox checked={ragOption.useSpec} onChange={v => setRagOptions({ ...ragOption, useSpec: v })}>
+          Use Spec(传递关联的spec给大模型)
         </Checkbox>
       </div>
       <div className="rag-container">
@@ -306,6 +313,12 @@ export function QARag() {
                       <div className="title">content:</div>
                       <span>{item.text}</span>
                     </div>
+                    {ragOption.type === 'qa' && (
+                      <div className="qa-div">
+                        <div className="title">Answer:</div>
+                        <span>{item.answer}</span>
+                      </div>
+                    )}
                     <div className="qa-div">
                       <div className="title">key:</div>
                       <span>{item.key}</span>
@@ -326,6 +339,28 @@ export function QARag() {
               style={{ minHeight: 40, margin: 12, marginLeft: 0, background: '#fff', border: '1px solid #eee' }}
               suffix={<IconSend onClick={handleQuery} />}
             />
+            <Tooltip content="Reset ALL">
+              <IconDelete
+                style={{
+                  cursor: 'pointer',
+                  color: '#999',
+                  fontSize: 16,
+                  alignSelf: 'center'
+                }}
+                onClick={() => {
+                  setDialog([
+                    {
+                      role: 'assistant',
+                      content: 'Hello! How can I help you today?'
+                    }
+                  ]);
+                  setSpec(baseSpec);
+                  setKeyPathResult([]);
+                  setQAResult([]);
+                  setQuery('');
+                }}
+              />
+            </Tooltip>
           </div>
           <div className="dialog" ref={dialogRef}>
             {dialog.map((item, index) => {
