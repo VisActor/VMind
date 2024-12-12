@@ -115,17 +115,35 @@ export function QARag() {
     setQuery('');
     setDialog(newDialg);
     setLoading(true);
-    const res = await axios(`${url}queryKeyPath`, {
-      method: 'POST',
-      data: {
-        chartType: 'bar',
-        query,
-        spec,
-        ...ragOption
-      }
-    });
+    let res: any;
+    try {
+      res = await axios(`${url}queryKeyPath`, {
+        method: 'POST',
+        data: {
+          chartType: 'bar',
+          query,
+          spec,
+          ...ragOption
+        }
+      });
+    } catch (e: any) {
+      console.error(e);
+      setLoading(false);
+      setDialog([
+        ...newDialg,
+        {
+          role: 'assistant',
+          content: 'Some thing wrong with network!',
+          res: {
+            query,
+            spec
+          }
+        }
+      ]);
+      return;
+    }
     console.log('res: ', res.data);
-    const { keyPathRes = [], qaRes = [], topKeys = [], dslRes, parentKeyPath, aliasKeyPath, error } = res.data;
+    const { keyPathRes = [], qaRes = [], topKeys = [], dslRes, parentKeyPath, aliasKeyPath, error } = res?.data;
 
     vchartSpecAtom.updateContext({
       spec: spec,
@@ -202,18 +220,22 @@ export function QARag() {
   }, [dialog]);
 
   React.useEffect(() => {
-    if (spec && !vchartInstance.current) {
-      (document.getElementById('chart') as HTMLElement).innerHTML = '';
-      console.log('new vchart', spec);
+    try {
+      if (spec && !vchartInstance.current) {
+        (document.getElementById('chart') as HTMLElement).innerHTML = '';
+        console.log('new vchart', spec);
 
-      const chart = new VChart(spec, {
-        dom: document.getElementById('chart') as HTMLElement
-      });
-      chart.renderAsync();
+        const chart = new VChart(spec, {
+          dom: document.getElementById('chart') as HTMLElement
+        });
+        chart.renderAsync();
 
-      vchartInstance.current = chart;
-    } else if (spec && vchartInstance.current) {
-      vchartInstance.current.updateSpecSync(spec);
+        vchartInstance.current = chart;
+      } else if (spec && vchartInstance.current) {
+        vchartInstance.current.updateSpecSync(spec);
+      }
+    } catch (e) {
+      console.error(e);
     }
   }, [spec, vchartInstance]);
 
