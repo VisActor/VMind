@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 import React from 'react';
 import axios from 'axios';
-import { Input, Card, Message } from '@arco-design/web-react';
+import { Input, Card, Message, Checkbox, Select } from '@arco-design/web-react';
 import './rag.scss';
 import {
   IconLoading,
@@ -17,6 +17,7 @@ import VChart from '@visactor/vchart';
 import { isArray, isEmpty, merge } from '@visactor/vutils';
 import { VChartSpec } from '../../../../../src';
 
+const { Option } = Select;
 const globalVariables = (import.meta as any).env;
 const url = globalVariables.VITE_VCHART_EDITOR_URL || 'http://localhost/';
 const baseSpec = {
@@ -61,7 +62,15 @@ const vchartSpecAtom = new VChartSpec({ spec: baseSpec }, {});
 export function QARag() {
   const vchartInstance = React.useRef<any>(null);
   const [query, setQuery] = React.useState('');
-  const [topK, setTopK] = React.useState(5);
+  const [ragOption, setRagOptions] = React.useState<{
+    type: 'qa' | 'code';
+    useTopKey: boolean;
+    topK: number;
+  }>({
+    topK: 5,
+    useTopKey: true,
+    type: 'qa'
+  });
   const [llmTopKey, setLLmTopKey] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [spec, setSpec] = React.useState<any>(baseSpec);
@@ -111,8 +120,8 @@ export function QARag() {
       data: {
         chartType: 'bar',
         query,
-        topK,
-        spec
+        spec,
+        ...ragOption
       }
     });
     console.log('res: ', res.data);
@@ -138,8 +147,8 @@ export function QARag() {
           content: error,
           res: {
             query,
-            ...res.data
-            // spec: newSpec,
+            ...res.data,
+            spec: newSpec
           }
         }
       ]);
@@ -160,15 +169,15 @@ export function QARag() {
         ),
         res: {
           query,
-          ...res.data
-          // spec: newSpec,
+          ...res.data,
+          spec: newSpec
         }
       }
     ]);
     setQAResult(qaRes);
     setKeyPathResult(keyPathRes);
     setLLmTopKey(topKeys);
-  }, [dialog, query, spec, topK]);
+  }, [dialog, query, spec, ragOption]);
 
   const handleFeedback = React.useCallback(
     (type: 'up' | 'down', index: number) => {
@@ -209,114 +218,139 @@ export function QARag() {
   }, [spec, vchartInstance]);
 
   return (
-    <div className="rag-container">
-      <div className="vchart-container">
-        <div id="chart" />
-        <div className="log">
-          <div>LLM Result: Key: {JSON.stringify(llmTopKey)}</div>
-          <div className="recall-content">
-            <div className="one-content">
-              <div>QA Recall:</div>
-              {qaResult.map((item, index) => (
-                <Card key={index} className="qa-card">
-                  <div className="qa-div">
-                    <span className="title">Score:</span>
-                    <span>{item.scores.toFixed(2)}</span>
-                  </div>
-                  <div className="qa-div">
-                    <div className="title">Question:</div>
-                    <span>{item.question}</span>
-                  </div>
-                  <div className="qa-div">
-                    <div className="title">Explanation:</div>
-                    <span>{item.explanation}</span>
-                  </div>
-                  <div className="qa-div">
-                    <div className="title">Answer:</div>
-                    <span>{item.answer}</span>
-                  </div>
-                </Card>
-              ))}
-            </div>
+    <div className="rag-panel">
+      <div className="rag-options">
+        <Select
+          style={{ width: 200, marginRight: 12 }}
+          value={ragOption.type}
+          onChange={v => setRagOptions({ ...ragOption, type: v })}
+        >
+          <Option value="qa">KeyPath of QA</Option>
+          <Option value="code">KeyPath of Code</Option>
+        </Select>
+        <Select
+          style={{ width: 200, marginRight: 12 }}
+          prefix="Top K"
+          value={ragOption.topK}
+          onChange={v => setRagOptions({ ...ragOption, topK: v })}
+        >
+          <Option value={3}>3</Option>
+          <Option value={4}>4</Option>
+          <Option value={5}>5</Option>
+        </Select>
+        <Checkbox checked={ragOption.useTopKey} onChange={v => setRagOptions({ ...ragOption, useTopKey: v })}>
+          Use Top Key
+        </Checkbox>
+      </div>
+      <div className="rag-container">
+        <div className="vchart-container">
+          <div id="chart" />
+          <div className="log">
+            {ragOption.useTopKey && <div>TOP KEY RESULT: {JSON.stringify(llmTopKey)}</div>}
+            <div className="recall-content">
+              <div className="one-content">
+                <div>QA Recall:</div>
+                {qaResult.map((item, index) => (
+                  <Card key={index} className="qa-card">
+                    <div className="qa-div">
+                      <span className="title">Score:</span>
+                      <span>{item.scores.toFixed(2)}</span>
+                    </div>
+                    <div className="qa-div">
+                      <div className="title">Question:</div>
+                      <span>{item.question}</span>
+                    </div>
+                    <div className="qa-div">
+                      <div className="title">Explanation:</div>
+                      <span>{item.explanation}</span>
+                    </div>
+                    <div className="qa-div">
+                      <div className="title">Answer:</div>
+                      <span>{item.answer}</span>
+                    </div>
+                  </Card>
+                ))}
+              </div>
 
-            <div className="one-content">
-              <div>KeyPath Recall:</div>
-              {keyPathResult.map((item, index) => (
-                <Card key={index} className="qa-card">
-                  <div className="qa-div">
-                    <span className="title">Score:</span>
-                    <span>{item.scores.toFixed(2)}</span>
-                  </div>
-                  <div className="qa-div">
-                    <div className="title">content:</div>
-                    <span>{item.text}</span>
-                  </div>
-                  <div className="qa-div">
-                    <div className="title">key:</div>
-                    <span>{item.key}</span>
-                  </div>
-                </Card>
-              ))}
+              <div className="one-content">
+                <div>KeyPath Recall:</div>
+                {keyPathResult.map((item, index) => (
+                  <Card key={index} className="qa-card">
+                    <div className="qa-div">
+                      <span className="title">Score:</span>
+                      <span>{item.scores.toFixed(2)}</span>
+                    </div>
+                    <div className="qa-div">
+                      <div className="title">content:</div>
+                      <span>{item.text}</span>
+                    </div>
+                    <div className="qa-div">
+                      <div className="title">key:</div>
+                      <span>{item.key}</span>
+                    </div>
+                  </Card>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="query-container">
-        <div className="query-input">
-          <Input
-            placeholder="Input Your Query"
-            value={query}
-            onChange={v => setQuery(v)}
-            onPressEnter={handleQuery}
-            style={{ minHeight: 40, margin: 12, marginLeft: 0, background: '#fff', border: '1px solid #eee' }}
-            suffix={<IconSend onClick={handleQuery} />}
-          />
-        </div>
-        <div className="dialog" ref={dialogRef}>
-          {dialog.map((item, index) => {
-            const { role, content } = item;
-            if (role === 'user') {
+        <div className="query-container">
+          <div className="query-input">
+            <Input
+              placeholder="Input Your Query"
+              value={query}
+              onChange={v => setQuery(v)}
+              onPressEnter={handleQuery}
+              style={{ minHeight: 40, margin: 12, marginLeft: 0, background: '#fff', border: '1px solid #eee' }}
+              suffix={<IconSend onClick={handleQuery} />}
+            />
+          </div>
+          <div className="dialog" ref={dialogRef}>
+            {dialog.map((item, index) => {
+              const { role, content } = item;
+              if (role === 'user') {
+                return (
+                  <div key={index} className="user dialog-item">
+                    <IconUser style={{ width: 25, height: 25, marginLeft: 4 }} />
+                    <div className="user-content diaglog-content">{content}</div>
+                  </div>
+                );
+              }
               return (
-                <div key={index} className="user dialog-item">
-                  <IconUser style={{ width: 25, height: 25, marginLeft: 4 }} />
-                  <div className="user-content diaglog-content">{content}</div>
+                <div key={index} className="assistant dialog-item">
+                  <IconRobot style={{ width: 25, height: 25, marginRight: 4 }} />
+                  <div className="assistant-content diaglog-content">
+                    {isArray(content) ? (
+                      content.map(v => (
+                        <pre key={v}>
+                          <code>{v}</code>
+                        </pre>
+                      ))
+                    ) : (
+                      <pre>
+                        <code>{content}</code>
+                      </pre>
+                    )}
+                  </div>
+                  <div
+                    className="feedback"
+                    style={{ visibility: index === dialog.length - 1 && index > 0 ? 'visible' : 'hidden' }}
+                  >
+                    <IconThumbUpFill style={{ color: '#28a745' }} onClick={() => handleFeedback('up', index)} />
+                    <IconThumbDownFill style={{ color: '#dc3545' }} onClick={() => handleFeedback('down', index)} />
+                  </div>
                 </div>
               );
-            }
-            return (
-              <div key={index} className="assistant dialog-item">
-                <IconRobot style={{ width: 25, height: 25, marginRight: 4 }} />
+            })}
+            {loading && (
+              <div className="assistant dialog-item">
+                <IconRobot style={{ width: 25, height: 25, marginTop: 4, marginRight: 4 }} />
                 <div className="assistant-content diaglog-content">
-                  {isArray(content) ? (
-                    content.map(v => (
-                      <pre key={v}>
-                        <code>{v}</code>
-                      </pre>
-                    ))
-                  ) : (
-                    <pre>
-                      <code>{content}</code>
-                    </pre>
-                  )}
-                </div>
-                <div
-                  className="feedback"
-                  style={{ visibility: index === dialog.length - 1 && index > 0 ? 'visible' : 'hidden' }}
-                >
-                  <IconThumbUpFill style={{ color: '#28a745' }} onClick={() => handleFeedback('up', index)} />
-                  <IconThumbDownFill style={{ color: '#dc3545' }} onClick={() => handleFeedback('down', index)} />
+                  <IconLoading />
                 </div>
               </div>
-            );
-          })}
-          {loading && (
-            <div className="assistant dialog-item">
-              <IconRobot style={{ width: 25, height: 25, marginTop: 4, marginRight: 4 }} />
-              <div className="assistant-content diaglog-content">
-                <IconLoading />
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

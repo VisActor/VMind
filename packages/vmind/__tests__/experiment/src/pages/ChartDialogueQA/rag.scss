@@ -1,12 +1,28 @@
+.rag-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;;
+
+  .rag-options {
+    padding: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid #e8e8e8;
+  }
+}
+
 .rag-container {
   display: flex;
   flex-direction: row;
-  height: 100%;
+  flex: 1;
+  overflow: hidden;
 
   #chart {
     height: 300px;
     width: 100%;
     flex-shrink: 0;
+    border-bottom: 1px solid #e8e8e8;
   }
 }
 
@@ -16,10 +32,12 @@
   overflow: hidden;
   display: flex;
   flex-direction: column; 
+  padding: 8px;
 
   .log {
     overflow: scroll;
-    width: 100%;;
+    width: 100%;
+    margin-top: 12px;
   }
 
   .recall-content {
