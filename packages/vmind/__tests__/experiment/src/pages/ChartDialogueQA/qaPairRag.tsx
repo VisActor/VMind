@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 import React from 'react';
 import axios from 'axios';
-import { Input, Card, Message, Checkbox, Select, Tooltip } from '@arco-design/web-react';
+import { Input, Card, Message, Checkbox, Select, Tooltip, Modal, Form } from '@arco-design/web-react';
 import './rag.scss';
 import {
   IconDelete,
@@ -15,10 +15,11 @@ import {
   IconUser
 } from '@arco-design/web-react/icon';
 import VChart from '@visactor/vchart';
-import { isArray, isEmpty, merge } from '@visactor/vutils';
+import { isArray } from '@visactor/vutils';
 import { VChartSpec } from '../../../../../src';
 
 const { Option } = Select;
+const FormItem = Form.Item;
 const globalVariables = (import.meta as any).env;
 const url = globalVariables.VITE_VCHART_EDITOR_URL || 'http://localhost/';
 const baseSpec = {
@@ -106,7 +107,11 @@ export function QARag() {
       key: string;
     }[]
   >([]);
+  const [feedbackVisible, setFeedbackVisible] = React.useState(false);
+  const [confirmLoading, setConfirmLoading] = React.useState(false);
+  const [form] = Form.useForm();
   const dialogRef = React.useRef<HTMLDivElement>(null);
+  const currentFeedbackIndex = React.useRef<number>(0);
 
   const handleQuery = React.useCallback(async () => {
     const newDialg = [
@@ -203,18 +208,47 @@ export function QARag() {
 
   const handleFeedback = React.useCallback(
     (type: 'up' | 'down', index: number) => {
-      Message.success('Thansk for your feedback!');
-      const currentDialog = dialog[index];
-      axios(`${url}feedback`, {
-        method: 'POST',
-        data: {
-          type,
-          ...currentDialog?.res
-        }
-      });
+      if (type === 'up') {
+        Message.success('Thansk for your feedback!');
+        const currentDialog = dialog[index];
+        axios(`${url}feedback`, {
+          method: 'POST',
+          data: {
+            type,
+            ragOption,
+            ...currentDialog?.res
+          }
+        });
+      } else {
+        currentFeedbackIndex.current = index;
+        setFeedbackVisible(true);
+      }
     },
-    [dialog]
+    [dialog, ragOption]
   );
+
+  const handleDownFeedback = React.useCallback(() => {
+    setConfirmLoading(true);
+    form
+      .validate()
+      .then(res => {
+        const currentDialog = dialog[currentFeedbackIndex.current];
+        axios(`${url}feedback`, {
+          method: 'POST',
+          data: {
+            type: 'down',
+            ragOption,
+            ...currentDialog?.res,
+            ...res
+          }
+        });
+      })
+      .finally(() => {
+        setConfirmLoading(false);
+        setFeedbackVisible(false);
+        Message.success('Thansk for your feedback!');
+      });
+  }, [dialog, form, ragOption]);
 
   React.useEffect(() => {
     dialogRef.current?.scrollTo({
@@ -245,6 +279,41 @@ export function QARag() {
 
   return (
     <div className="rag-panel">
+      <Modal
+        title="Add User"
+        visible={feedbackVisible}
+        onOk={handleDownFeedback}
+        confirmLoading={confirmLoading}
+        onCancel={() => setFeedbackVisible(false)}
+      >
+        <Form
+          {...{
+            labelCol: {
+              span: 4
+            },
+            wrapperCol: {
+              span: 20
+            }
+          }}
+          form={form}
+          labelCol={{
+            style: { flexBasis: 150 }
+          }}
+          wrapperCol={{
+            style: { flexBasis: 'calc(100% - 160px)' }
+          }}
+        >
+          <FormItem label="Type" required field="wrongType" rules={[{ required: true }]}>
+            <Select options={['DSL', 'VChart Render', 'Not sure']} />
+          </FormItem>
+          <FormItem label="TopKeyPath" field="topKeyAnswer" rules={[{ required: true }]}>
+            <Input placeholder="" />
+          </FormItem>
+          <FormItem label="Answer DSL" field="keyPathAnswer">
+            <Input placeholder="" />
+          </FormItem>
+        </Form>
+      </Modal>
       <div className="rag-options">
         <Select
           style={{ width: 200, marginRight: 12 }}
@@ -391,7 +460,7 @@ export function QARag() {
                   </div>
                   <div
                     className="feedback"
-                    style={{ visibility: index === dialog.length - 1 && index > 0 ? 'visible' : 'hidden' }}
+                    // style={{ visibility: index === dialog.length - 1 && index > 0 ? 'visible' : 'hidden' }}
                   >
                     <IconThumbUpFill style={{ color: '#28a745' }} onClick={() => handleFeedback('up', index)} />
                     <IconThumbDownFill style={{ color: '#dc3545' }} onClick={() => handleFeedback('down', index)} />
