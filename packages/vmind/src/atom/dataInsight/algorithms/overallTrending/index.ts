@@ -4,6 +4,7 @@ import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
 import { ChartType } from '../../../../types';
 import { isPercentChart, isStackChart } from '../../utils';
+import { findLastIndex } from '../../../../utils/common';
 
 export interface OverallTrendingOptions {
   alpha?: number;
@@ -21,7 +22,7 @@ export const overallTrendingAlgo = (context: DataInsightExtractContext, options:
     const { trend, pValue, zScore, slope, intercept } = originalMKTest(overallDataset, alpha, calcScope);
     if (trend !== TrendType.NO_TREND) {
       const { length, start, end, maxTrend } = longestTrendInterval(overallDataset, trend);
-      const overallEndIndex = overallDataset.findLastIndex(v => isValidNumber(v));
+      const overallEndIndex = findLastIndex(overallDataset, v => isValidNumber(v));
       const onverallStartIndex = overallDataset.findIndex(v => isValidNumber(v));
       const overallChange =
         overallDataset[onverallStartIndex] === 0
