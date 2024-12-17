@@ -139,3 +139,13 @@ export function getIntersection(array1: DataCell[], array2: DataCell[]) {
 const KNOWLEDGE_START_INDEX = 1;
 export const getStrFromArray = (array: string[]) =>
   array.map((item, index) => `${index + KNOWLEDGE_START_INDEX}. ${item}`).join('\n');
+
+// Function to find the last index based on a condition
+export function findLastIndex(arr: any[], predicate: (value: any, index: number, array: any[]) => boolean) {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (predicate(arr[i], i, arr)) {
+      return i;
+    }
+  }
+  return -1;
+}
