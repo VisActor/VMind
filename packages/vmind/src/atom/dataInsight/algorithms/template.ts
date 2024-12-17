@@ -170,7 +170,7 @@ const getAbnormalBandTemplate = (insight: Insight, ctx: DataInsightExtractContex
 const getOverallTrendTemplate = (insight: Insight, ctx: DataInsightExtractContext, language: 'chinese' | 'english') => {
   const { value, info } = insight;
   const { fieldInfo, cell } = ctx;
-  const { startDimValue, endDimValue, change, overallChange } = info;
+  const { startDimValue, endDimValue, change, overall } = info;
   const xFieldId = getFieldIdInCell(cell.x);
   const isChinese = language === 'chinese';
   return {
@@ -202,8 +202,8 @@ const getOverallTrendTemplate = (insight: Insight, ctx: DataInsightExtractContex
         fieldName: getFieldInfoById(fieldInfo, xFieldId)?.alias ?? xFieldId
       },
       d: {
-        formatValue: (Math.abs(overallChange) * 100).toFixed(1) + '%',
-        value: overallChange,
+        formatValue: (Math.abs(overall.change) * 100).toFixed(1) + '%',
+        value: overall.change,
         valueType: value === TrendType.INCREASING ? 'ascendTrend' : 'descendTrend',
         fieldName: null as any
       }
