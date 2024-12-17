@@ -20,7 +20,7 @@ export const overallTrendingAlgo = (context: DataInsightExtractContext, options:
     const overallDataset = dimensionSumMap[measureId];
     const { trend, pValue, zScore, slope, intercept } = originalMKTest(overallDataset, alpha, calcScope);
     if (trend !== TrendType.NO_TREND) {
-      const { length, start, end } = longestTrendInterval(overallDataset);
+      const { length, start, end, maxTrend } = longestTrendInterval(overallDataset, trend);
       result.push({
         type: InsightType.OverallTrend,
         fieldId: measureId,
@@ -32,6 +32,8 @@ export const overallTrendingAlgo = (context: DataInsightExtractContext, options:
           length,
           start,
           end,
+          overallChange: overallDataset[overallDataset.length - 1] / overallDataset[0] - 1,
+          maxTrend,
           change: overallDataset[end] / overallDataset[start] - 1,
           startDimValue: dimensionValues[start],
           endDimValue: dimensionValues[end],

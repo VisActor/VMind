@@ -170,17 +170,17 @@ const getAbnormalBandTemplate = (insight: Insight, ctx: DataInsightExtractContex
 const getOverallTrendTemplate = (insight: Insight, ctx: DataInsightExtractContext, language: 'chinese' | 'english') => {
   const { value, info } = insight;
   const { fieldInfo, cell } = ctx;
-  const { startDimValue, endDimValue, change } = info;
+  const { startDimValue, endDimValue, change, overallChange } = info;
   const xFieldId = getFieldIdInCell(cell.x);
   const isChinese = language === 'chinese';
   return {
     content: isChinese
-      ? '数据整体呈${a}趋势，其中在${b}至${c}间连续${a},数据' +
-        (value === TrendType.INCREASING ? '增长了' : '下降了') +
-        '${d}'
-      : 'The data overall shows a ${a} trend, with continuous ${a} between ${b} and ${c}, ' +
-        (value === TrendType.INCREASING ? 'increasing' : 'decreasing') +
-        'by ${d}',
+      ? `数据整体呈${'${a}'}趋势，整体${
+          value === TrendType.INCREASING ? '增长了' : '下降了'
+        }${'${d}'}。其中在${'${b}'}至${'${c}'}间连续${'${a}'}。`
+      : `The overall data shows a ${'{a}'} trend, with an overall ${
+          value === TrendType.INCREASING ? 'increase ' : 'decrease '
+        }of ${'{d}'}. Notably, from ${'{b}'} to ${'{c}'}, there was a continuous ${'${a}'} trend.`,
     variables: {
       a: {
         value: isChinese
@@ -202,8 +202,8 @@ const getOverallTrendTemplate = (insight: Insight, ctx: DataInsightExtractContex
         fieldName: getFieldInfoById(fieldInfo, xFieldId)?.alias ?? xFieldId
       },
       d: {
-        formatValue: (Math.abs(change) * 100).toFixed(1) + '%',
-        value: change,
+        formatValue: (Math.abs(overallChange) * 100).toFixed(1) + '%',
+        value: overallChange,
         valueType: value === TrendType.INCREASING ? 'ascendTrend' : 'descendTrend',
         fieldName: null as any
       }
