@@ -36,10 +36,12 @@ const getOutlierTemplate = (insight: Insight, ctx: DataInsightExtractContext, la
               }
             }),
         b: {
+          isDimValue: true,
           value: data?.[0]?.dataItem?.[fieldId[0]],
           fieldName: getFieldInfoById(fieldInfo, fieldId[0])?.alias ?? fieldId[0]
         },
         c: {
+          isDimValue: true,
           value: data?.[0]?.dataItem?.[fieldId[1]],
           fieldName: getFieldInfoById(fieldInfo, fieldId[1])?.alias ?? fieldId[1]
         }
@@ -64,6 +66,7 @@ const getOutlierTemplate = (insight: Insight, ctx: DataInsightExtractContext, la
             }
           }),
       b: {
+        isDimValue: true,
         value: data?.[0]?.dataItem?.[xFieldId],
         fieldName: getFieldInfoById(fieldInfo, xFieldId)?.alias ?? xFieldId
       },
@@ -120,6 +123,7 @@ const getMajorityTemplate = (insight: Insight, ctx: DataInsightExtractContext, l
       },
       b: {
         value: dimensionName,
+        isDimValue: true,
         fieldName: getFieldInfoById(fieldInfo, xFieldId)?.alias ?? xFieldId
       },
       c: {
@@ -156,10 +160,12 @@ const getAbnormalBandTemplate = (insight: Insight, ctx: DataInsightExtractContex
             }
           }),
       b: {
+        isDimValue: true,
         value: data[0].dataItem[xFieldId],
         fieldName: getFieldInfoById(fieldInfo, xFieldId)?.alias ?? xFieldId
       },
       c: {
+        isDimValue: true,
         value: data[data.length - 1].dataItem[xFieldId],
         fieldName: getFieldInfoById(fieldInfo, xFieldId)?.alias ?? xFieldId
       }
@@ -194,10 +200,12 @@ const getOverallTrendTemplate = (insight: Insight, ctx: DataInsightExtractContex
         icon: value === TrendType.INCREASING ? 'ascendTrend' : 'descendTrend'
       },
       b: {
+        isDimValue: true,
         value: startDimValue,
         fieldName: getFieldInfoById(fieldInfo, xFieldId)?.alias ?? xFieldId
       },
       c: {
+        isDimValue: true,
         value: endDimValue,
         fieldName: getFieldInfoById(fieldInfo, xFieldId)?.alias ?? xFieldId
       },

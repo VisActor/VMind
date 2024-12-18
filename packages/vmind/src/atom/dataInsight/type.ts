@@ -65,6 +65,7 @@ export interface InsightTextContent {
   color?: string;
   valueType?: 'ascendTrend' | 'descendTrend' | string;
   icon?: 'ratio' | 'ascendTrend' | 'descendTrend' | string;
+  isDimValue?: boolean;
 }
 
 export interface Insight {
