@@ -26,7 +26,7 @@ export const transferMeasureInTable = (dataTable: DataItem[], fieldInfo: FieldIn
       const newRow = { ...row };
       measureFields.forEach(field => {
         const value = Number(row[field.fieldName]);
-        if (isNumber(value)) {
+        if (isNumber(value) && row[field.fieldName] !== '') {
           newRow[field.fieldName] = value;
         }
       });
