@@ -258,10 +258,16 @@ export const sumDimensionValues = (
   measureId: string | number,
   getValue = (v: number) => Math.abs(v)
 ) => {
+  let validCount = 0;
   const sum = dataset.reduce((prev, cur) => {
     const numValue = Number(cur[measureId]);
-    const value = isNumber(numValue) && !isNaN(numValue) ? getValue(numValue) : 0;
+    const isValidNumber = isNumber(numValue) && !isNaN(numValue) && cur[measureId] !== '';
+    const value = isValidNumber ? getValue(numValue) : 0;
+    if (isValidNumber) {
+      validCount++;
+    }
     return prev + value;
   }, 0);
-  return sum;
+  // if all of value is invalid number, return null
+  return validCount > 0 ? sum : null;
 };
