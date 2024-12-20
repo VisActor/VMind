@@ -16,7 +16,8 @@ import {
   SalesLineChart3,
   SalesScatterChart,
   ScatterClusterChart,
-  ScatterPlotChart
+  ScatterPlotChart,
+  ScatterIrisData
 } from './data';
 import JSON5 from 'json5';
 
@@ -40,7 +41,8 @@ const demoDataList: { [key: string]: any } = {
   MultiLineChart2: MultiLineChart2,
   ScatterPlotChart: ScatterPlotChart,
   ScatterClusterChart: ScatterClusterChart,
-  ScatterSalesChart: SalesScatterChart
+  ScatterSalesChart: SalesScatterChart,
+  ScatterIrisData: ScatterIrisData
 };
 
 const globalVariables = (import.meta as any).env;
