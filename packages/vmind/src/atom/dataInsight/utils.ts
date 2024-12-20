@@ -142,10 +142,20 @@ export const getCellFromSpec = (spec: any, vmindChartType?: ChartType): Cell => 
     if ([ChartType.BarChart, ChartType.AreaChart, ChartType.LineChart].includes(vmindChartType)) {
       // single-chart parsed by common type
       return {
-        x: spec.series[0].xField,
-        y: spec.series[0].yField,
+        x: uniqArray(
+          spec.series
+            .map((s: any) => s.xField)
+            .filter((xField: string) => !!xField)
+            .flat()
+        ),
+        y: uniqArray(
+          spec.series
+            .map((s: any) => s.yField)
+            .filter((yField: string) => !!yField)
+            .flat()
+        ),
         color: spec.series[0].seriesField,
-        isTransposed
+        isTransposed: isTransposed || spec.series.every((s: any) => s.direction === 'horizontal')
       };
     }
     //dual-axis chart
