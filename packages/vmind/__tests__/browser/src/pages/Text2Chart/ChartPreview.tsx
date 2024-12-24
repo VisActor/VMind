@@ -93,7 +93,7 @@ export function ChartPreview(props: IPropsType) {
                     {spec && (
                       <div
                         id={`chart-${index}`}
-                        style={{ height: 250, width: 450, marginRight: 12, flexShrink: 0 }}
+                        style={{ height: 280, width: 550, marginRight: 12, flexShrink: 0 }}
                         key={index}
                       ></div>
                     )}
