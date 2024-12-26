@@ -69,11 +69,13 @@ export function QARag() {
     useTopKey: boolean;
     topK: number;
     useSpec: boolean;
+    useQueryTransfer: boolean;
   }>({
     topK: 5,
     useTopKey: true,
     useSpec: false,
-    type: 'qa'
+    type: 'qa',
+    useQueryTransfer: true
   });
   const [llmTopKey, setLLmTopKey] = React.useState('');
   const [loading, setLoading] = React.useState(false);
@@ -332,9 +334,17 @@ export function QARag() {
           <Option value={3}>3</Option>
           <Option value={4}>4</Option>
           <Option value={5}>5</Option>
+          <Option value={6}>6</Option>
+          <Option value={7}>7</Option>
+          <Option value={8}>8</Option>
+          <Option value={9}>9</Option>
+          <Option value={10}>10</Option>
         </Select>
-        <Checkbox checked={ragOption.useTopKey} onChange={v => setRagOptions({ ...ragOption, useTopKey: v })}>
-          Use Top Key(先用大模型找到topKey)
+        <Checkbox
+          checked={ragOption.useQueryTransfer}
+          onChange={v => setRagOptions({ ...ragOption, useQueryTransfer: v })}
+        >
+          Use Query Transfer(问题黑话转译)
         </Checkbox>
         <Checkbox checked={ragOption.useSpec} onChange={v => setRagOptions({ ...ragOption, useSpec: v })}>
           Use Spec(传递关联的spec给大模型)
