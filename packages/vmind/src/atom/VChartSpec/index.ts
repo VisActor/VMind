@@ -2,9 +2,7 @@ import { AtomName } from '../../types/atom';
 import type { BaseOptions } from '../type';
 import { BaseAtom } from '../base';
 import type { VChartSpecCtx } from '../../types';
-import { merge } from '@visactor/vutils';
-import { set } from '../../utils/set';
-import { parseRealPath, reduceDuplicatedPath } from './utils';
+import { mergeAppendSpec } from './utils';
 
 export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
   name = AtomName.VCHART_SPEC;
@@ -34,25 +32,10 @@ export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
     if (!appendSpec || !appendSpec.leafSpec) {
       return this.context;
     }
-    const { leafSpec, parentKeyPath = '', aliasKeyPath = '' } = appendSpec;
-    let newSpec = merge({}, this.context.spec);
 
-    if (parentKeyPath) {
-      const aliasResult = parseRealPath(parentKeyPath, aliasKeyPath, newSpec);
+    const { newSpec, code } = mergeAppendSpec(this.context.spec, appendSpec);
 
-      if (aliasResult.appendSpec && aliasResult.appendPath) {
-        set(newSpec, aliasResult.appendPath, aliasResult.appendSpec);
-      }
-
-      const finalParentKeyPath = aliasResult.path ?? parentKeyPath;
-
-      set(newSpec, finalParentKeyPath, reduceDuplicatedPath(finalParentKeyPath, leafSpec));
-
-      this.context.appendCode = 0;
-    } else {
-      newSpec = merge(newSpec, leafSpec);
-      this.context.appendCode = 0;
-    }
+    this.context.appendCode = code;
     this.context.prevSpec = this.context.spec;
     this.context.spec = newSpec;
 
