@@ -1,4 +1,6 @@
-import { isArray, isNil } from '@visactor/vutils';
+import { isArray, isNil, isPlainObject, merge } from '@visactor/vutils';
+import type { AppendSpecInfo } from '../../types/atom';
+import { set } from '../../utils/set';
 
 export const aliasByComponentType: Record<
   string,
@@ -257,23 +259,87 @@ export const parseRealPath = (path: string, aliasKeyPath: string, spec: any) => 
 
   return {
     appendSpec,
+    aliasName: topKeyPath,
     appendPath: subPaths[0],
     path: subPaths.join('.')
   };
 };
 
-export const reduceDuplicatedPath = (parentPath: string, spec: any) => {
-  const keys = Object.keys(spec);
+const checkDuplicatedKey = (parentPath: string, key: string) => {
+  let isDuplicated = false;
 
-  if (keys.length === 1) {
-    return parentPath.includes(keys[0]) ? spec[keys[0]] : spec;
-  } else if (keys.length > 1) {
-    const fixedKey = keys.find(k => parentPath.includes(k));
+  if (/^\d$/.exec(key)) {
+    const indexString = `[${key}]`;
 
-    if (fixedKey) {
-      return spec[fixedKey];
+    if (parentPath.startsWith(indexString)) {
+      isDuplicated = true;
+
+      if (isDuplicated) {
+        return {
+          remainKeyPath: parentPath.substring(indexString.length + 1)
+        };
+      }
     }
   }
 
-  return parentPath;
+  if (parentPath.startsWith(key)) {
+    return {
+      remainKeyPath: parentPath.substring(key.length + 1)
+    };
+  }
+
+  return null;
+};
+
+export const reduceDuplicatedPath = (parentPath: string, spec: any): any => {
+  if (isPlainObject(spec) && parentPath) {
+    const keys = Object.keys(spec);
+
+    if (keys.length === 1) {
+      const res = checkDuplicatedKey(parentPath, keys[0]);
+
+      return res ? reduceDuplicatedPath(res.remainKeyPath, (spec as any)[keys[0]]) : spec;
+    } else if (keys.length > 1) {
+      const fixedKey = keys.find(k => checkDuplicatedKey(parentPath, k));
+
+      if (fixedKey) {
+        const res = checkDuplicatedKey(parentPath, fixedKey);
+
+        return reduceDuplicatedPath(res.remainKeyPath, (spec as any)[fixedKey]);
+      }
+    }
+  }
+
+  return spec;
+};
+
+export const mergeAppendSpec = (prevSpec: any, appendSpec: AppendSpecInfo) => {
+  const { leafSpec, parentKeyPath = '', aliasKeyPath = '' } = appendSpec;
+  let newSpec = merge({}, prevSpec);
+
+  if (parentKeyPath) {
+    const aliasResult = parseRealPath(parentKeyPath, aliasKeyPath, newSpec);
+
+    if (aliasResult.appendSpec && aliasResult.appendPath) {
+      set(newSpec, aliasResult.appendPath, aliasResult.appendSpec);
+    }
+
+    const finalParentKeyPath = aliasResult.path ?? parentKeyPath;
+
+    set(
+      newSpec,
+      finalParentKeyPath,
+      reduceDuplicatedPath(
+        finalParentKeyPath,
+        aliasResult.aliasName ? reduceDuplicatedPath(aliasResult.aliasName, leafSpec) : leafSpec
+      )
+    );
+  } else {
+    newSpec = merge(newSpec, leafSpec);
+  }
+
+  return {
+    newSpec,
+    code: 0
+  };
 };

@@ -179,24 +179,26 @@ export interface ChartQAExtractionCtx extends BaseContext {
   explanation: string;
 }
 
+export interface AppendSpecInfo {
+  /**
+   * 大模型返回的叶子节点的配置内容
+   */
+  leafSpec: any;
+  /**
+   * 配置父路径
+   */
+  parentKeyPath: string;
+  /**
+   * 父路径的别名
+   */
+  aliasKeyPath?: string;
+}
+
 export interface VChartSpecCtx extends BaseContext {
   spec: any;
   prevSpec?: any;
   // 新增的spec相关配置
-  appendSpec?: {
-    /**
-     * 大模型返回的叶子节点的配置内容
-     */
-    leafSpec: any;
-    /**
-     * 配置父路径
-     */
-    parentKeyPath: string;
-    /**
-     * 父路径的别名
-     */
-    aliasKeyPath?: string;
-  };
+  appendSpec?: AppendSpecInfo;
 
   /**
    * 新增spec操作的结果
