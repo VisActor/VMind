@@ -261,3 +261,19 @@ export const parseRealPath = (path: string, aliasKeyPath: string, spec: any) => 
     path: subPaths.join('.')
   };
 };
+
+export const reduceDuplicatedPath = (parentPath: string, spec: any) => {
+  const keys = Object.keys(spec);
+
+  if (keys.length === 1) {
+    return parentPath.includes(keys[0]) ? spec[keys[0]] : spec;
+  } else if (keys.length > 1) {
+    const fixedKey = keys.find(k => parentPath.includes(k));
+
+    if (fixedKey) {
+      return spec[fixedKey];
+    }
+  }
+
+  return parentPath;
+};

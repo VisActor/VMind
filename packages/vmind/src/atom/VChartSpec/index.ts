@@ -4,7 +4,7 @@ import { BaseAtom } from '../base';
 import type { VChartSpecCtx } from '../../types';
 import { merge } from '@visactor/vutils';
 import { set } from '../../utils/set';
-import { parseRealPath } from './utils';
+import { parseRealPath, reduceDuplicatedPath } from './utils';
 
 export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
   name = AtomName.VCHART_SPEC;
@@ -44,7 +44,9 @@ export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
         set(newSpec, aliasResult.appendPath, aliasResult.appendSpec);
       }
 
-      set(newSpec, aliasResult.path ?? parentKeyPath, leafSpec);
+      const finalParentKeyPath = aliasResult.path ?? parentKeyPath;
+
+      set(newSpec, finalParentKeyPath, reduceDuplicatedPath(finalParentKeyPath, leafSpec));
 
       this.context.appendCode = 0;
     } else {
