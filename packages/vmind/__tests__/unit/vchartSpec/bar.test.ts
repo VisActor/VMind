@@ -295,4 +295,22 @@ describe('mergeAppendSpec of barchart', () => {
       }
     ]);
   });
+
+  it('should contain all spec when spec has more than one path', () => {
+    const append = {
+      leafSpec: {
+        mark: {
+          maxLineCount: 20
+        },
+        dimension: {
+          maxLineCount: 20
+        }
+      },
+      parentKeyPath: 'tooltip',
+      aliasKeyPath: 'tooltip'
+    };
+
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    expect(newSpec.tooltip).toEqual(append.leafSpec);
+  });
 });
