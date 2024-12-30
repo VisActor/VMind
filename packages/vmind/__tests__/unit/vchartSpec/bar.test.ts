@@ -200,4 +200,99 @@ describe('mergeAppendSpec of barchart', () => {
       }
     ]);
   });
+
+  it('should parse complicated path when `parentKeyPath` > spec ', () => {
+    const append = {
+      leafSpec: {
+        grid: {
+          style: {
+            strokeOpacity: 1
+          }
+        }
+      },
+      parentKeyPath: 'axes[0].grid.style'
+    };
+
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+
+    expect(newSpec.axes).toEqual([
+      {
+        grid: {
+          style: {
+            strokeOpacity: 1
+          }
+        }
+      }
+    ]);
+
+    const { newSpec: newSpec2 } = mergeAppendSpec(merge({}, newSpec), {
+      aliasKeyPath: 'xAxis',
+      parentKeyPath: 'axes',
+      leafSpec: {
+        axes: [
+          {
+            title: {
+              text: '城市'
+            }
+          }
+        ]
+      }
+    });
+
+    expect(newSpec2.axes).toEqual([
+      {
+        grid: {
+          style: {
+            strokeOpacity: 1
+          }
+        }
+      },
+      {
+        title: {
+          text: '城市'
+        },
+        _alias_name: 'xAxis',
+        orient: 'bottom'
+      }
+    ]);
+  });
+
+  it('should handle function', () => {
+    const append = {
+      aliasKeyPath: 'xAxis.label.style.fill',
+      leafSpec: {
+        bar: {
+          style: {
+            fill: "(datum, index) => index === 0 ? 'red' : null"
+          }
+        }
+      },
+      parentKeyPath: 'bar'
+    };
+
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+
+    expect(newSpec.bar.style.fill).toBeDefined();
+    expect(newSpec.bar.style.fill('test', 0)).toBe('red');
+    expect(newSpec.bar.style.fill('test', 1)).toBeNull();
+  });
+
+  it('should not not add series when has only one series', () => {
+    const append = {
+      leafSpec: {
+        'series[0].extensionMark[0].style.size': 10
+      },
+      parentKeyPath: 'series[0].extensionMark[0].style.size',
+      aliasKeyPath: 'bar.extensionMark[0].style.size'
+    };
+
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    expect(newSpec.extensionMark).toEqual([
+      {
+        style: {
+          size: 10
+        }
+      }
+    ]);
+  });
 });
