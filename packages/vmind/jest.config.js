@@ -2,7 +2,7 @@ module.exports = {
   preset: 'ts-jest',
   runner: 'jest-electron/runner',
   testEnvironment: 'jest-electron/environment',
-  testMatch: ['<rootDir>/__tests__/unit/*.test.(js|ts)'],
+  testMatch: ['<rootDir>/__tests__/unit/**/*.test.(js|ts)'],
   silent: true,
   globals: {
     'ts-jest': {
