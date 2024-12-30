@@ -69,9 +69,15 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     return {} as O;
   }
 
-  updateContext(context: Ctx) {
+  updateContext(context: Ctx, replace?: boolean) {
     if (context) {
-      this.context = merge({}, this.context, context);
+      if (replace) {
+        Object.keys(context).forEach(k => {
+          (this.context as any)[k] = (context as any)[k];
+        });
+      } else {
+        this.context = merge({}, this.context, context);
+      }
     }
     return this.context;
   }
