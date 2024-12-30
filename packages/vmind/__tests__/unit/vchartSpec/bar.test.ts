@@ -171,4 +171,33 @@ describe('mergeAppendSpec of barchart', () => {
       }
     ]);
   });
+
+  it('should parse complicated path of `axes[0].label.style.lineWidth`', () => {
+    const append = {
+      leafSpec: {
+        axes: [
+          {
+            label: {
+              style: {
+                lineWidth: 2
+              }
+            }
+          }
+        ]
+      },
+      parentKeyPath: 'axes[0].label.style.lineWidth'
+    };
+
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+
+    expect(newSpec.axes).toEqual([
+      {
+        label: {
+          style: {
+            lineWidth: 2
+          }
+        }
+      }
+    ]);
+  });
 });
