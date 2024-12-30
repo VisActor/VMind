@@ -1,4 +1,4 @@
-import { isArray, isNil, isPlainObject, merge } from '@visactor/vutils';
+import { isArray, isNil, isObject, isPlainObject, isString, isValid, merge } from '@visactor/vutils';
 import type { AppendSpecInfo } from '../../types/atom';
 import { set } from '../../utils/set';
 
@@ -288,13 +288,26 @@ export const checkDuplicatedKey = (parentPath: string, key: string) => {
     }
   }
 
-  if (parentPath.startsWith(`${key}.`)) {
+  if (parentPath.startsWith(`${key}`)) {
+    let remainKeyPath = parentPath.substring(key.length);
+
+    if (remainKeyPath[0] === '.') {
+      remainKeyPath = remainKeyPath.substring(1);
+    }
+
     return {
-      remainKeyPath: parentPath.substring(key.length + 1)
+      remainKeyPath
     };
-  } else if (parentPath.startsWith(`${key}[`)) {
+  } else if (parentPath.includes(`.${key}`)) {
+    const str = `.${key}`;
+    let remainKeyPath = parentPath.substring(parentPath.indexOf(str) + str.length);
+
+    if (remainKeyPath[0] === '.') {
+      remainKeyPath = remainKeyPath.substring(1);
+    }
+
     return {
-      remainKeyPath: parentPath.substring(key.length)
+      remainKeyPath
     };
   }
 
@@ -321,10 +334,43 @@ export const reduceDuplicatedPath = (parentPath: string, spec: any): any => {
   } else if (isArray(spec) && parentPath) {
     const res = /^\[((\d)+)\]/.exec(parentPath);
 
-    if (res && +res[1] < spec.length) {
+    if (res) {
       const remainPath = parentPath.substring(res[0].length + 1);
+      const val = spec[+res[1]] ?? spec[spec.length - 1];
 
-      return remainPath ? reduceDuplicatedPath(remainPath, spec[+res[1]]) : spec[+res[1]];
+      return remainPath ? reduceDuplicatedPath(remainPath, val) : val;
+    }
+  }
+
+  return spec;
+};
+
+/**
+ * 将大模型返回的spec中的函数字符串转换成函数
+ * @param spec 转换后的spec
+ * @returns
+ */
+export const convertFunctionString = (spec: any): any => {
+  if (isPlainObject(spec)) {
+    const newSpec: any = {};
+
+    Object.keys(spec).forEach(key => {
+      newSpec[key] = convertFunctionString((spec as any)[key]);
+    });
+
+    return newSpec;
+  } else if (isArray(spec)) {
+    return spec.map(convertFunctionString);
+  }
+
+  if (isString(spec)) {
+    if (spec.includes('=>') || spec.includes('function')) {
+      try {
+        // 将函数自浮窗转换成可执行的函数
+        return new Function(`return (${spec})`)();
+      } catch (e) {
+        return spec;
+      }
     }
   }
 
@@ -332,14 +378,28 @@ export const reduceDuplicatedPath = (parentPath: string, spec: any): any => {
 };
 
 export const mergeAppendSpec = (prevSpec: any, appendSpec: AppendSpecInfo) => {
-  const { leafSpec, parentKeyPath = '', aliasKeyPath = '' } = appendSpec;
+  const { aliasKeyPath = '' } = appendSpec;
+  let { parentKeyPath = '', leafSpec } = appendSpec;
   let newSpec = merge({}, prevSpec);
 
   if (parentKeyPath) {
-    const aliasResult = parseRealPath(parentKeyPath, aliasKeyPath, newSpec);
+    let aliasResult = parseRealPath(parentKeyPath, aliasKeyPath, newSpec);
 
     if (aliasResult.appendSpec && aliasResult.appendPath) {
-      set(newSpec, aliasResult.appendPath, aliasResult.appendSpec);
+      if (aliasResult.appendPath.includes('series') && !newSpec.series) {
+        // 系列比较特殊，默认是打平在第一层的
+        leafSpec = leafSpec.series
+          ? isArray(leafSpec.series)
+            ? leafSpec.series[0]
+            : leafSpec.series
+          : parentKeyPath in leafSpec
+          ? leafSpec[parentKeyPath]
+          : leafSpec;
+        parentKeyPath = parentKeyPath.slice(parentKeyPath.indexOf('.') + 1);
+        aliasResult = { path: parentKeyPath };
+      } else {
+        set(newSpec, aliasResult.appendPath, aliasResult.appendSpec);
+      }
     }
 
     const finalParentKeyPath = aliasResult.path ?? parentKeyPath;
@@ -347,9 +407,11 @@ export const mergeAppendSpec = (prevSpec: any, appendSpec: AppendSpecInfo) => {
     set(
       newSpec,
       finalParentKeyPath,
-      reduceDuplicatedPath(
-        finalParentKeyPath,
-        aliasResult.aliasName ? reduceDuplicatedPath(aliasResult.aliasName, leafSpec) : leafSpec
+      convertFunctionString(
+        reduceDuplicatedPath(
+          finalParentKeyPath,
+          aliasResult.aliasName ? reduceDuplicatedPath(aliasResult.aliasName, leafSpec) : leafSpec
+        )
       )
     );
   } else {
