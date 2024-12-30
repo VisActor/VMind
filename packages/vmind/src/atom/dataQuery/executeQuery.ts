@@ -1,5 +1,5 @@
 import alasql from 'alasql';
-import type { DataQueryCtx, DataTable, FieldInfo } from 'src/types';
+import type { DataQueryCtx, DataTable, FieldInfo } from '../../types';
 import {
   matchColumnName,
   parseRespondField,

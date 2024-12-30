@@ -17,51 +17,42 @@
     "defaultBranch": "main",
     "defaultRemote": "origin"
   },
-  "allowedProjectTags": [
-    "tool",
-    "share",
-    "package",
-    "doc"
-  ],
+  "allowedProjectTags": ["tool", "share", "package", "doc"],
   "projects": [
     {
       "packageName": "@internal/bundler",
       "projectFolder": "tools/bundler",
-      "tags": [
-        "tool"
-      ],
+      "tags": ["tool"],
       "shouldPublish": false
     },
     {
       "packageName": "@internal/typescript-json-schema",
       "projectFolder": "tools/typescript-json-schema",
-      "tags": [
-        "tool"
-      ],
+      "tags": ["tool"],
       "shouldPublish": false
     },
     {
       "packageName": "@internal/eslint-config",
       "projectFolder": "share/eslint-config",
-      "tags": [
-        "share"
-      ],
+      "tags": ["share"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@internal/jest-config",
+      "projectFolder": "share/jest-config",
+      "tags": ["share"],
       "shouldPublish": false
     },
     {
       "packageName": "@internal/ts-config",
       "projectFolder": "share/ts-config",
-      "tags": [
-        "share"
-      ],
+      "tags": ["share"],
       "shouldPublish": false
     },
     {
       "packageName": "@internal/docs",
       "projectFolder": "docs",
-      "tags": [
-        "doc"
-      ],
+      "tags": ["doc"],
       "shouldPublish": false
     },
     {
@@ -69,27 +60,21 @@
       "projectFolder": "packages/vmind",
       "shouldPublish": true,
       "versionPolicyName": "vmindMin",
-      "tags": [
-        "package"
-      ]
+      "tags": ["package"]
     },
     {
       "packageName": "@visactor/calculator",
       "projectFolder": "packages/calculator",
       "shouldPublish": true,
       "versionPolicyName": "vmindMin",
-      "tags": [
-        "package"
-      ]
+      "tags": ["package"]
     },
     {
       "packageName": "@visactor/chart-advisor",
       "projectFolder": "packages/chart-advisor",
       "shouldPublish": true,
       "versionPolicyName": "vmindMin",
-      "tags": [
-        "package"
-      ]
+      "tags": ["package"]
     }
   ]
 }
