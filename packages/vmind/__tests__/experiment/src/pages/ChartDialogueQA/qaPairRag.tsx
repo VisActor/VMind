@@ -156,14 +156,17 @@ export function QARag() {
     console.log('res: ', res.data);
     const { keyPathRes = [], qaRes = [], topKeys = [], dslRes, parentKeyPath, aliasKeyPath, error } = res?.data;
 
-    vchartSpecAtom.updateContext({
-      spec: spec,
-      appendSpec: {
-        leafSpec: dslRes,
-        parentKeyPath,
-        aliasKeyPath
-      }
-    });
+    vchartSpecAtom.updateContext(
+      {
+        spec: spec,
+        appendSpec: {
+          leafSpec: dslRes,
+          parentKeyPath,
+          aliasKeyPath
+        }
+      },
+      true
+    );
     const { spec: newSpec } = await vchartSpecAtom.run();
     console.log('newSpec', newSpec);
     setSpec(newSpec);
