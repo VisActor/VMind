@@ -265,8 +265,14 @@ export const parseRealPath = (path: string, aliasKeyPath: string, spec: any) => 
   };
 };
 
-const checkDuplicatedKey = (parentPath: string, key: string) => {
+export const checkDuplicatedKey = (parentPath: string, key: string) => {
   let isDuplicated = false;
+
+  if (parentPath === key) {
+    return {
+      remainKeyPath: ''
+    };
+  }
 
   if (/^\d$/.exec(key)) {
     const indexString = `[${key}]`;
@@ -282,9 +288,13 @@ const checkDuplicatedKey = (parentPath: string, key: string) => {
     }
   }
 
-  if (parentPath.startsWith(key)) {
+  if (parentPath.startsWith(`${key}.`)) {
     return {
       remainKeyPath: parentPath.substring(key.length + 1)
+    };
+  } else if (parentPath.startsWith(`${key}[`)) {
+    return {
+      remainKeyPath: parentPath.substring(key.length)
     };
   }
 
@@ -307,6 +317,14 @@ export const reduceDuplicatedPath = (parentPath: string, spec: any): any => {
 
         return reduceDuplicatedPath(res.remainKeyPath, (spec as any)[fixedKey]);
       }
+    }
+  } else if (isArray(spec) && parentPath) {
+    const res = /^\[((\d)+)\]/.exec(parentPath);
+
+    if (res && +res[1] < spec.length) {
+      const remainPath = parentPath.substring(res[0].length + 1);
+
+      return remainPath ? reduceDuplicatedPath(remainPath, spec[+res[1]]) : spec[+res[1]];
     }
   }
 
