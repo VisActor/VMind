@@ -1,4 +1,8 @@
+const path = require('path');
+const baseJestConfig = require('@internal/jest-config/jest.base');
+
 module.exports = {
+<<<<<<< Updated upstream
   preset: 'ts-jest',
   runner: 'jest-electron/runner',
   testEnvironment: 'jest-electron/environment',
@@ -29,4 +33,10 @@ module.exports = {
     '!**/interface.ts',
     '!**/vite/**'
   ]
+=======
+  ...baseJestConfig,
+  moduleNameMapper: {
+    ...baseJestConfig.moduleNameMapper
+  }
+>>>>>>> Stashed changes
 };
