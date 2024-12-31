@@ -361,52 +361,56 @@ export function QARag() {
             <div className="recall-content">
               <div className="one-content">
                 <div>QA Recall:</div>
-                {qaResult.map((item, index) => (
-                  <Card key={index} className="qa-card">
-                    <div className="qa-div">
-                      <span className="title">Score:</span>
-                      <span>{item.scores.toFixed(2)}</span>
-                    </div>
-                    <div className="qa-div">
-                      <div className="title">Question:</div>
-                      <span>{item.question}</span>
-                    </div>
-                    <div className="qa-div">
-                      <div className="title">Explanation:</div>
-                      <span>{item.explanation}</span>
-                    </div>
-                    <div className="qa-div">
-                      <div className="title">Answer:</div>
-                      <span>{item.answer}</span>
-                    </div>
-                  </Card>
-                ))}
+                {qaResult && qaResult.length
+                  ? qaResult.map((item, index) => (
+                      <Card key={index} className="qa-card">
+                        <div className="qa-div">
+                          <span className="title">Score:</span>
+                          <span>{item.scores.toFixed(2)}</span>
+                        </div>
+                        <div className="qa-div">
+                          <div className="title">Question:</div>
+                          <span>{item.question}</span>
+                        </div>
+                        <div className="qa-div">
+                          <div className="title">Explanation:</div>
+                          <span>{item.explanation}</span>
+                        </div>
+                        <div className="qa-div">
+                          <div className="title">Answer:</div>
+                          <span>{`${item.answer}`}</span>
+                        </div>
+                      </Card>
+                    ))
+                  : null}
               </div>
 
               <div className="one-content">
                 <div>KeyPath Recall:</div>
-                {keyPathResult.map((item, index) => (
-                  <Card key={index} className="qa-card">
-                    <div className="qa-div">
-                      <span className="title">Score:</span>
-                      <span>{item.scores.toFixed(2)}</span>
-                    </div>
-                    <div className="qa-div">
-                      <div className="title">content:</div>
-                      <span>{item.text}</span>
-                    </div>
-                    {ragOption.type === 'qa' && (
-                      <div className="qa-div">
-                        <div className="title">Answer:</div>
-                        <span>{item.answer}</span>
-                      </div>
-                    )}
-                    <div className="qa-div">
-                      <div className="title">key:</div>
-                      <span>{item.key}</span>
-                    </div>
-                  </Card>
-                ))}
+                {keyPathResult && keyPathResult.length
+                  ? keyPathResult.map((item, index) => (
+                      <Card key={index} className="qa-card">
+                        <div className="qa-div">
+                          <span className="title">Score:</span>
+                          <span>{item.scores.toFixed(2)}</span>
+                        </div>
+                        <div className="qa-div">
+                          <div className="title">content:</div>
+                          <span>{item.text}</span>
+                        </div>
+                        {ragOption.type === 'qa' ? (
+                          <div className="qa-div">
+                            <div className="title">Answer:</div>
+                            <span>{`${item.answer}`}</span>
+                          </div>
+                        ) : null}
+                        <div className="qa-div">
+                          <div className="title">key:</div>
+                          <span>{item.key}</span>
+                        </div>
+                      </Card>
+                    ))
+                  : null}
               </div>
             </div>
           </div>

@@ -354,4 +354,35 @@ describe('mergeAppendSpec of barchart', () => {
     const { newSpec } = mergeAppendSpec(merge({}, spec), append);
     expect(newSpec.tooltip).toEqual(append.leafSpec);
   });
+
+  it('should not create legends array when only one legend', () => {
+    const { newSpec } = mergeAppendSpec(merge({}, spec), {
+      parentKeyPath: 'legends[0]',
+      aliasKeyPath: '',
+      leafSpec: {
+        'legends[0]': {
+          orient: 'left'
+        }
+      }
+    });
+    expect(newSpec.legends).toEqual({
+      position: 'start',
+      visible: true,
+      orient: 'left'
+    });
+    const { newSpec: newSpec2 } = mergeAppendSpec(merge({}, spec), {
+      parentKeyPath: 'legends',
+      aliasKeyPath: '',
+      leafSpec: {
+        'legends[0]': {
+          orient: 'left'
+        }
+      }
+    });
+    expect(newSpec2.legends).toEqual({
+      position: 'start',
+      visible: true,
+      orient: 'left'
+    });
+  });
 });
