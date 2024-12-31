@@ -313,16 +313,6 @@ export const removeUnneedArrayInSpec = (leafSpec: any, compKey: string, parentKe
     : leafSpec;
 };
 
-export const addArrayInSpec = (leafSpec: any, compKey: string, parentKeyPath: string) => {
-  return leafSpec[compKey]
-    ? isArray(leafSpec[compKey])
-      ? leafSpec[compKey][0]
-      : leafSpec[compKey]
-    : parentKeyPath in leafSpec
-    ? leafSpec[parentKeyPath]
-    : leafSpec;
-};
-
 const ALIAS_NAME_KEY = '_alias_name';
 
 export const parseAliasOfPath = (parentKeyPath: string, aliasKeyPath: string, chartSpec: any, leafSpec: any) => {
@@ -341,7 +331,7 @@ export const parseAliasOfPath = (parentKeyPath: string, aliasKeyPath: string, ch
         }
         return {
           parentKeyPath: subPaths.join('.'),
-          leafSpec: addArrayInSpec(leafSpec, compKey, parentKeyPath)
+          leafSpec: removeUnneedArrayInSpec(leafSpec, compKey, parentKeyPath)
         };
       }
 
@@ -359,7 +349,7 @@ export const parseAliasOfPath = (parentKeyPath: string, aliasKeyPath: string, ch
       }
       return {
         parentKeyPath: subPaths.join('.'),
-        leafSpec: addArrayInSpec(leafSpec, compKey, parentKeyPath)
+        leafSpec: removeUnneedArrayInSpec(leafSpec, compKey, parentKeyPath)
       };
     }
 

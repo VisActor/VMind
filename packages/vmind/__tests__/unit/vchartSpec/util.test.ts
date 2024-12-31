@@ -1,4 +1,4 @@
-import { checkDuplicatedKey, convertFunctionString } from '../../../src/atom/VChartSpec/utils';
+import { checkDuplicatedKey, convertFunctionString, removeUnneedArrayInSpec } from '../../../src/atom/VChartSpec/utils';
 
 describe('checkDuplicatedKey', () => {
   it('should return null when not match', () => {
@@ -93,5 +93,49 @@ describe('convertFunctionString', () => {
     const spec = { a: () => 1 };
     const obj1 = convertFunctionString(spec);
     expect(obj1.a).toEqual(spec.a);
+  });
+});
+
+describe('removeUnneedArrayInSpec', () => {
+  it('should remove unneed array in spec', () => {
+    expect(
+      removeUnneedArrayInSpec(
+        {
+          legends: [{ orient: 'left' }]
+        },
+        'legends',
+        'legends'
+      )
+    ).toEqual({ orient: 'left' });
+
+    expect(
+      removeUnneedArrayInSpec(
+        {
+          legends: [{ orient: 'left' }]
+        },
+        'legends',
+        'legends[0]'
+      )
+    ).toEqual({ orient: 'left' });
+
+    expect(
+      removeUnneedArrayInSpec(
+        {
+          'legends[0]': { orient: 'left' }
+        },
+        'legends',
+        'legends[0]'
+      )
+    ).toEqual({ orient: 'left' });
+
+    expect(
+      removeUnneedArrayInSpec(
+        {
+          'legends[0]': { orient: 'left' }
+        },
+        'legends',
+        'legends'
+      )
+    ).toEqual({ orient: 'left' });
   });
 });
