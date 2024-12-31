@@ -301,41 +301,75 @@ export const aliasByComponentType: Record<
   }
 };
 
+export const removeUnneedArrayInSpec = (leafSpec: any, compKey: string, parentKeyPath: string) => {
+  return leafSpec[compKey]
+    ? isArray(leafSpec[compKey])
+      ? leafSpec[compKey][0]
+      : leafSpec[compKey]
+    : parentKeyPath in leafSpec
+    ? leafSpec[parentKeyPath]
+    : `${compKey}[0]` in leafSpec
+    ? leafSpec[`${compKey}[0]`]
+    : leafSpec;
+};
+
+export const addArrayInSpec = (leafSpec: any, compKey: string, parentKeyPath: string) => {
+  return leafSpec[compKey]
+    ? isArray(leafSpec[compKey])
+      ? leafSpec[compKey][0]
+      : leafSpec[compKey]
+    : parentKeyPath in leafSpec
+    ? leafSpec[parentKeyPath]
+    : leafSpec;
+};
+
 const ALIAS_NAME_KEY = '_alias_name';
 
-export const parseAliasOfPath = (parentKeyPath: string, aliasKeyPath: string, chartSpec: any) => {
-  if (!aliasKeyPath) {
-    return { parentKeyPath };
-  }
-
-  const topKeyPath = aliasKeyPath.split('.')[0];
+export const parseAliasOfPath = (parentKeyPath: string, aliasKeyPath: string, chartSpec: any, leafSpec: any) => {
+  const aliasName = aliasKeyPath ? aliasKeyPath.split('.')[0] : null;
   const subPaths = parentKeyPath.split('.');
   const compKey = subPaths[0].replace(/\[\d\]/, '');
-
-  if (!aliasByComponentType[compKey]) {
-    return { parentKeyPath };
-  }
   const aliasOptions = aliasByComponentType[compKey];
-  const isValidAlias = !!aliasOptions.aliasMap[topKeyPath];
+  const isValidAlias = aliasOptions && aliasName && !!aliasOptions.aliasMap[aliasName];
 
   if (!isValidAlias) {
     if (chartSpec[compKey]) {
       // 组件配置没有固定为数组类型的时候
-      if (!aliasOptions.isArray && !isArray(chartSpec[compKey])) {
-        subPaths[0] = compKey;
+      if (isArray(chartSpec[compKey])) {
+        if (subPaths[0] === compKey) {
+          subPaths[0] = `${compKey}[0]`;
+        }
         return {
-          path: subPaths.join('.')
+          parentKeyPath: subPaths.join('.'),
+          leafSpec: addArrayInSpec(leafSpec, compKey, parentKeyPath)
         };
       }
+
+      if (subPaths[0] !== compKey) {
+        subPaths[0] = compKey;
+      }
+      return {
+        parentKeyPath: subPaths.join('.'),
+        leafSpec: removeUnneedArrayInSpec(leafSpec, compKey, parentKeyPath)
+      };
+    } else if (aliasOptions && aliasOptions.isArray) {
+      // 像系列这种只支持数组类型的，需要扩展成数组
+      if (subPaths[0] === compKey) {
+        subPaths[0] = `${compKey}[0]`;
+      }
+      return {
+        parentKeyPath: subPaths.join('.'),
+        leafSpec: addArrayInSpec(leafSpec, compKey, parentKeyPath)
+      };
     }
 
     return { parentKeyPath };
   }
-  const appendSpec = { ...aliasOptions.aliasMap[topKeyPath].appendSpec, [ALIAS_NAME_KEY]: topKeyPath };
+  const appendSpec = { ...aliasOptions.aliasMap[aliasName].appendSpec, [ALIAS_NAME_KEY]: aliasName };
 
   if (chartSpec[compKey]) {
     const isMatchComp = (comp: any) => {
-      const aliasEntry = aliasOptions.aliasMap[topKeyPath];
+      const aliasEntry = aliasOptions.aliasMap[aliasName];
 
       if (aliasEntry.filter) {
         return aliasEntry.filter(comp);
@@ -350,7 +384,7 @@ export const parseAliasOfPath = (parentKeyPath: string, aliasKeyPath: string, ch
 
     if (isArray(chartSpec[compKey])) {
       // 固定为array类型
-      let specifiedComp = chartSpec[compKey].find((comp: any) => comp[ALIAS_NAME_KEY] === topKeyPath);
+      let specifiedComp = chartSpec[compKey].find((comp: any) => comp[ALIAS_NAME_KEY] === aliasName);
 
       if (!specifiedComp) {
         specifiedComp = chartSpec[compKey].find(isMatchComp);
@@ -377,7 +411,7 @@ export const parseAliasOfPath = (parentKeyPath: string, aliasKeyPath: string, ch
 
   return {
     appendSpec,
-    aliasName: topKeyPath,
+    aliasName: aliasName,
     appendPath: subPaths[0],
     parentKeyPath: subPaths.join('.')
   };
@@ -502,17 +536,11 @@ export const mergeAppendSpec = (prevSpec: any, appendSpec: AppendSpecInfo) => {
 
   if (parentKeyPath) {
     if (parentKeyPath.startsWith('series') && newSpec.type !== 'common' && !newSpec.series) {
-      leafSpec = leafSpec.series
-        ? isArray(leafSpec.series)
-          ? leafSpec.series[0]
-          : leafSpec.series
-        : parentKeyPath in leafSpec
-        ? leafSpec[parentKeyPath]
-        : leafSpec;
+      leafSpec = removeUnneedArrayInSpec(leafSpec, 'series', parentKeyPath);
 
       parentKeyPath = parentKeyPath.indexOf('.') > 0 ? parentKeyPath.slice(parentKeyPath.indexOf('.') + 1) : '';
     } else {
-      const aliasResult = parseAliasOfPath(parentKeyPath, aliasKeyPath, newSpec);
+      const aliasResult = parseAliasOfPath(parentKeyPath, aliasKeyPath, newSpec, leafSpec);
 
       if (aliasResult.appendSpec && aliasResult.appendPath) {
         set(newSpec, aliasResult.appendPath, aliasResult.appendSpec);
@@ -520,6 +548,10 @@ export const mergeAppendSpec = (prevSpec: any, appendSpec: AppendSpecInfo) => {
 
       if (isValid(aliasResult.parentKeyPath)) {
         parentKeyPath = aliasResult.parentKeyPath;
+      }
+
+      if (isValid(aliasResult.leafSpec)) {
+        leafSpec = aliasResult.leafSpec;
       }
 
       leafSpec = convertFunctionString(
