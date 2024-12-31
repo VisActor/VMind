@@ -296,6 +296,47 @@ describe('mergeAppendSpec of barchart', () => {
     ]);
   });
 
+  it('should not not add series when has only one series when alias is empty', () => {
+    const append = {
+      leafSpec: {
+        'series[0].extensionMark[0].style.size': 10
+      },
+      parentKeyPath: 'series[0].extensionMark[0].style.size'
+    };
+
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    expect(newSpec.extensionMark).toEqual([
+      {
+        style: {
+          size: 10
+        }
+      }
+    ]);
+  });
+
+  it('should not not add series when has only one series in bar chart', () => {
+    const append = {
+      leafSpec: {
+        series: [
+          {
+            label: {
+              overlap: true
+            }
+          }
+        ]
+      },
+
+      parentKeyPath: 'series',
+      aliasKeyPath: 'bar'
+    };
+
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    expect(newSpec.label).toEqual({
+      overlap: true
+    });
+    expect(newSpec.series).toBeUndefined();
+  });
+
   it('should contain all spec when spec has more than one path', () => {
     const append = {
       leafSpec: {
