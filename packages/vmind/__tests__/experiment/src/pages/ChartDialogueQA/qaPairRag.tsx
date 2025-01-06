@@ -19,6 +19,7 @@ import { isArray } from '@visactor/vutils';
 import { VChartSpec } from '../../../../../src';
 
 const { Option } = Select;
+const TextArea = Input.TextArea;
 const FormItem = Form.Item;
 const globalVariables = (import.meta as any).env;
 const url = globalVariables.VITE_VCHART_EDITOR_URL || 'http://localhost/';
@@ -60,6 +61,89 @@ const baseSpec = {
     position: 'start'
   }
 };
+const topKeys = [
+  'type',
+  'series',
+  'axes',
+  'crosshair',
+  'data',
+  'width',
+  'height',
+  'autoFit',
+  'color',
+  'seriesStyle',
+  'animationThreshold',
+  'hover',
+  'select',
+  'region',
+  'title',
+  'layout',
+  'legends',
+  'tooltip',
+  'player',
+  'dataZoom',
+  'scrollBar',
+  'brush',
+  'scales',
+  'customMark',
+  'theme',
+  'background',
+  'stackInverse',
+  'stackSort',
+  'media',
+  'autoBandSize',
+  'direction',
+  'markLine',
+  'markArea',
+  'markPoint',
+  'padding',
+  'percent',
+  'name',
+  'id',
+  'animation',
+  'stack',
+  'animationEnter',
+  'animationUpdate',
+  'animationExit',
+  'dataIndex',
+  'sampling',
+  'animationState',
+  'large',
+  'largeThreshold',
+  'progressiveStep',
+  'progressiveThreshold',
+  'support3d',
+  'regionIndex',
+  'regionId',
+  'totalLabel',
+  'animationAppear',
+  'animationDisappear',
+  'animationNormal',
+  'xField',
+  'yField',
+  'label',
+  'bar',
+  'barBackground',
+  'barWidth',
+  'barMinWidth',
+  'barMaxWidth',
+  'barGapInGroup',
+  'barMinHeight',
+  'stackCornerRadius',
+  'x2Field',
+  'y2Field',
+  'zField',
+  'sortDataByAxis',
+  'dataId',
+  'dataKey',
+  'seriesField',
+  'stackOffsetSilhouette',
+  'invalidType',
+  'extensionMark',
+  'interactions',
+  'activePoint',
+  'samplingFactor'
+];
 const vchartSpecAtom = new VChartSpec({ spec: baseSpec }, {});
 export function QARag() {
   const vchartInstance = React.useRef<any>(null);
@@ -290,6 +374,9 @@ export function QARag() {
         onOk={handleDownFeedback}
         confirmLoading={confirmLoading}
         onCancel={() => setFeedbackVisible(false)}
+        style={{
+          width: 650
+        }}
       >
         <Form
           {...{
@@ -302,20 +389,26 @@ export function QARag() {
           }}
           form={form}
           labelCol={{
-            style: { flexBasis: 150 }
+            style: { flexBasis: 220 }
           }}
           wrapperCol={{
-            style: { flexBasis: 'calc(100% - 160px)' }
+            style: { flexBasis: 'calc(100% - 230px)' }
           }}
         >
-          <FormItem label="Type" required field="wrongType" rules={[{ required: true }]}>
-            <Select options={['DSL', 'VChart Render', 'Not sure']} />
+          <FormItem label="哪里错了" required field="wrongType" rules={[{ required: true }]}>
+            <Select
+              options={[
+                { label: 'Only DSL', value: 'DSL' },
+                { label: 'Only VChart Render', value: 'VChart' },
+                { label: 'Not sure/Both', value: 'Not sure' }
+              ]}
+            />
           </FormItem>
-          <FormItem label="TopKeyPath" field="topKeyAnswer" rules={[{ required: true }]}>
-            <Input placeholder="" />
+          <FormItem label="正确答案对应的topKey是什么" field="topKeyAnswer" rules={[{ required: true }]}>
+            <Select options={topKeys} showSearch />
           </FormItem>
-          <FormItem label="Answer DSL" field="keyPathAnswer">
-            <Input placeholder="" />
+          <FormItem label="正确的DSL是啥" field="keyPathAnswer">
+            <TextArea placeholder={`{"label": {"visible": true}}`} />
           </FormItem>
         </Form>
       </Modal>
@@ -377,7 +470,7 @@ export function QARag() {
                     </div>
                     <div className="qa-div">
                       <div className="title">Answer:</div>
-                      <span>{item.answer}</span>
+                      <span>{JSON.stringify(item.answer)}</span>
                     </div>
                   </Card>
                 ))}
