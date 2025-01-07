@@ -232,6 +232,7 @@ describe('mergeAppendSpec of barchart', () => {
         }
       }
     };
+
     const { newSpec: newSpec2 } = mergeAppendSpec(merge({}, spec), append2);
 
     expect(newSpec2.axes).toEqual([
@@ -409,6 +410,88 @@ describe('mergeAppendSpec of barchart', () => {
       position: 'start',
       visible: true,
       orient: 'left'
+    });
+  });
+
+  it('should not handle result of color', () => {
+    const { newSpec } = mergeAppendSpec(merge({}, spec), {
+      spec: {
+        color: ['red']
+      }
+    });
+    expect(newSpec.color).toEqual(['red']);
+  });
+
+  it('should add default axes when return `allAxis`', () => {
+    const { newSpec } = mergeAppendSpec(merge({}, spec), {
+      spec: {
+        allAxis: {
+          label: {
+            autoHide: false,
+            autoLimit: true
+          }
+        }
+      }
+    });
+    expect(newSpec.axes).toEqual([
+      {
+        label: {
+          autoHide: false,
+          autoLimit: true
+        },
+        orient: 'bottom'
+      },
+      {
+        label: {
+          autoHide: false,
+          autoLimit: true
+        },
+        orient: 'left'
+      }
+    ]);
+  });
+
+  it('should filter yaxis when axes is not empty', () => {
+    const { newSpec } = mergeAppendSpec(
+      merge({}, spec, {
+        axes: [
+          {
+            orient: 'bottom',
+            label: {
+              style: {
+                fill: 'red'
+              }
+            }
+          },
+          {
+            orient: 'left',
+            label: {
+              style: {
+                fill: 'red'
+              }
+            }
+          }
+        ]
+      }),
+      {
+        spec: {
+          yAxis: {
+            label: {
+              autoWrap: true
+            }
+          }
+        }
+      }
+    );
+    expect(newSpec.axes[1]).toEqual({
+      _alias_name: 'yAxis',
+      orient: 'left',
+      label: {
+        autoWrap: true,
+        style: {
+          fill: 'red'
+        }
+      }
     });
   });
 });
