@@ -118,6 +118,34 @@ export const validSeriesForChart: Record<
   }
 };
 
+export const getChartAxisType = (chartSpec: any) => {
+  if (
+    [
+      'bar',
+      'bar3d',
+      'line',
+      'scatter',
+      'area',
+      'boxPlot',
+      'histogram',
+      'histogram3d',
+      'mosaic',
+      'rangeArea',
+      'rangeColumn',
+      'rangeColumn3d',
+      'waterfall'
+    ].includes(chartSpec.type)
+  ) {
+    return 'cartesian';
+  }
+
+  if (['radar', 'rose'].includes(chartSpec.type)) {
+    return 'polar';
+  }
+
+  return 'none';
+};
+
 export const aliasByComponentType: Record<
   string,
   {
@@ -151,6 +179,11 @@ export const aliasByComponentType: Record<
       },
       bottomAxis: {
         appendSpec: { orient: 'bottom' }
+      },
+      allAxis: {
+        filter: (entry: any) => {
+          return true;
+        }
       }
     }
   },
@@ -447,6 +480,10 @@ const ALIAS_NAME_KEY = '_alias_name';
 export const parseAliasOfPath = (parentKeyPath: string, compKey: string, chartSpec: any, leafSpec: any) => {
   const subPaths = parentKeyPath.split('.');
   const aliasOptions = aliasByComponentType[compKey];
+
+  if (!aliasOptions) {
+    return { parentKeyPath };
+  }
   const aliasName = subPaths[0].replace(/\[\d\]/, '');
   const isValidAlias = aliasOptions && aliasName && !!aliasOptions.aliasMap?.[aliasName];
   let newLeafSpec = leafSpec;
@@ -476,6 +513,7 @@ export const parseAliasOfPath = (parentKeyPath: string, compKey: string, chartSp
     return { parentKeyPath: subPaths.join('.'), leafSpec: newLeafSpec };
   }
   const appendSpec = { ...aliasOptions.aliasMap[aliasName].appendSpec, [ALIAS_NAME_KEY]: aliasName };
+  const appendPath: string[][] = [];
 
   if (chartSpec[compKey]) {
     const isMatchComp = (comp: any) => {
@@ -494,35 +532,99 @@ export const parseAliasOfPath = (parentKeyPath: string, compKey: string, chartSp
 
     if (isArray(chartSpec[compKey])) {
       // 固定为array类型
-      let specifiedComp = chartSpec[compKey].find((comp: any) => comp[ALIAS_NAME_KEY] === aliasName);
+      let specifiedComps = chartSpec[compKey].filter((comp: any) => comp[ALIAS_NAME_KEY] === aliasName);
 
-      if (!specifiedComp) {
-        specifiedComp = chartSpec[compKey].find(isMatchComp);
+      if (!specifiedComps.length) {
+        specifiedComps = chartSpec[compKey].filter(isMatchComp);
       }
 
-      if (specifiedComp) {
-        const index = chartSpec[compKey].indexOf(specifiedComp);
+      if (specifiedComps.length) {
+        specifiedComps.forEach((comp: any) => {
+          const index = chartSpec[compKey].indexOf(comp);
 
-        subPaths[0] = `${compKey}[${index}]`;
+          const appended = [...subPaths];
+
+          appended[0] = `${compKey}[${index}]`;
+
+          appendPath.push(appended);
+        });
       } else if (isValidAlias) {
-        subPaths[0] = `${compKey}[${chartSpec[compKey].length}]`;
+        const appended = [...subPaths];
+
+        appended[0] = `${compKey}[${chartSpec[compKey].length}]`;
+
+        appendPath.push(appended);
       }
     } else {
       // 单个组件的配置，判断是否符合条件
       if (isMatchComp(chartSpec[compKey])) {
-        subPaths[0] = `${compKey}`;
+        const appended = [...subPaths];
+
+        appended[0] = `${compKey}`;
+
+        appendPath.push(appended);
       } else {
         // 扩展成数组
         chartSpec[compKey] = [chartSpec[compKey]];
-        subPaths[0] = `${compKey}[1]`;
+        const appended = [...subPaths];
+
+        appended[0] = `${compKey}[1]`;
+
+        appendPath.push(appended);
       }
     }
+  } else if (aliasName === 'allAxis') {
+    // 这种情况需要特殊处理
+    const axisType = getChartAxisType(chartSpec);
+
+    if (axisType === 'cartesian') {
+      return {
+        aliasName: aliasName,
+        appendContent: [
+          {
+            appendPath: 'axes[0]',
+            appendSpec: { ...aliasByComponentType.axes.aliasMap.xAxis.appendSpec },
+            parentKeyPath: ['axes[0]', ...subPaths.slice(1)].join('.')
+          },
+          {
+            appendPath: 'axes[1]',
+            appendSpec: { ...aliasByComponentType.axes.aliasMap.yAxis.appendSpec },
+            parentKeyPath: ['axes[1]', ...subPaths.slice(1)].join('.')
+          }
+        ],
+        parentKeyPath: subPaths.join('.')
+      };
+    } else if (axisType === 'polar') {
+      return {
+        aliasName: aliasName,
+        appendContent: [
+          {
+            appendPath: 'axes[0]',
+            appendSpec: { ...aliasByComponentType.axes.aliasMap.radiusAxis.appendSpec },
+            parentKeyPath: ['axes[0]', ...subPaths.slice(1)].join('.')
+          },
+          {
+            appendPath: 'axes[1]',
+            appendSpec: { ...aliasByComponentType.axes.aliasMap.angleAxis.appendSpec },
+            parentKeyPath: ['axes[1]', ...subPaths.slice(1)].join('.')
+          }
+        ],
+        parentKeyPath: subPaths.join('.')
+      };
+    }
+  } else {
+    appendPath.push(subPaths);
   }
 
   return {
-    appendSpec,
     aliasName: aliasName,
-    appendPath: subPaths[0],
+    appendContent: appendPath.map(path => {
+      return {
+        appendPath: path[0],
+        appendSpec,
+        parentKeyPath: path.join('.')
+      };
+    }),
     parentKeyPath: subPaths.join('.')
   };
 };
@@ -645,7 +747,8 @@ export const mergeAppendSpec = (prevSpec: any, appendSpec: AppendSpecInfo) => {
 
   if (isPlainObject(spec)) {
     Object.keys(spec).forEach(key => {
-      let parentKeyPath = key;
+      let parentKeyPath: string = key;
+      let updatedKeyPaths: string[] = null;
       let leafSpec = (spec as any)[key];
       const aliasName = parentKeyPath.split('.')[0].replace(/\[\d\]/, '');
       const compKey = findComponentNameByAlias(aliasName);
@@ -657,8 +760,14 @@ export const mergeAppendSpec = (prevSpec: any, appendSpec: AppendSpecInfo) => {
       } else {
         const aliasResult = parseAliasOfPath(parentKeyPath, compKey, newSpec, leafSpec);
 
-        if (aliasResult.appendSpec && aliasResult.appendPath) {
-          set(newSpec, aliasResult.appendPath, aliasResult.appendSpec);
+        if (aliasResult.appendContent) {
+          aliasResult.appendContent.forEach(entry => {
+            set(newSpec, entry.appendPath, entry.appendSpec);
+          });
+
+          if (aliasResult.appendContent.length) {
+            updatedKeyPaths = aliasResult.appendContent.map(entry => entry.parentKeyPath);
+          }
         }
 
         if (isValid(aliasResult.parentKeyPath)) {
@@ -676,11 +785,14 @@ export const mergeAppendSpec = (prevSpec: any, appendSpec: AppendSpecInfo) => {
           )
         );
       }
-      if (parentKeyPath) {
-        set(newSpec, parentKeyPath, leafSpec);
-      } else {
-        merge(newSpec, leafSpec);
-      }
+
+      (updatedKeyPaths ?? [parentKeyPath]).forEach(kp => {
+        if (kp) {
+          set(newSpec, kp, leafSpec);
+        } else {
+          merge(newSpec, leafSpec);
+        }
+      });
     });
   }
 
