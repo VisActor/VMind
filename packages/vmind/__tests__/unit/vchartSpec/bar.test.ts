@@ -123,7 +123,7 @@ const spec = {
 describe('mergeAppendSpec of barchart', () => {
   it('should reduce duplicated code', () => {
     const newSpec = mergeAppendSpec(merge({}, spec), {
-      leafSpec: {
+      spec: {
         scales: [
           {
             domain: [
@@ -133,19 +133,19 @@ describe('mergeAppendSpec of barchart', () => {
             ]
           }
         ]
-      },
-      parentKeyPath: 'scales'
+      }
     });
 
     expect(newSpec).toEqual(
       mergeAppendSpec(spec, {
-        parentKeyPath: 'scales[0]',
-        leafSpec: {
-          domain: [
-            {
-              fields: ['yourFieldName']
-            }
-          ]
+        spec: {
+          'scales[0]': {
+            domain: [
+              {
+                fields: ['yourFieldName']
+              }
+            ]
+          }
         }
       })
     );
@@ -153,10 +153,9 @@ describe('mergeAppendSpec of barchart', () => {
 
   it('should parse complicated path', () => {
     const append = {
-      leafSpec: {
+      spec: {
         'scales[0].domain[0].fields': 'yourFieldName'
-      },
-      parentKeyPath: 'scales[0].domain[0].fields'
+      }
     };
 
     const { newSpec } = mergeAppendSpec(merge({}, spec), append);
@@ -172,9 +171,9 @@ describe('mergeAppendSpec of barchart', () => {
     ]);
   });
 
-  it('should parse complicated path of `axes[0].label.style.lineWidth`', () => {
+  it('should parse complicated path of axes', () => {
     const append = {
-      leafSpec: {
+      spec: {
         axes: [
           {
             label: {
@@ -184,10 +183,8 @@ describe('mergeAppendSpec of barchart', () => {
             }
           }
         ]
-      },
-      parentKeyPath: 'axes[0].label.style.lineWidth'
+      }
     };
-
     const { newSpec } = mergeAppendSpec(merge({}, spec), append);
 
     expect(newSpec.axes).toEqual([
@@ -199,75 +196,112 @@ describe('mergeAppendSpec of barchart', () => {
         }
       }
     ]);
-  });
 
-  it('should parse complicated path when `parentKeyPath` > spec ', () => {
-    const append = {
-      leafSpec: {
-        grid: {
-          style: {
-            strokeOpacity: 1
+    const append1 = {
+      spec: {
+        axes: {
+          label: {
+            style: {
+              lineWidth: 2
+            }
           }
         }
-      },
-      parentKeyPath: 'axes[0].grid.style'
+      }
     };
 
-    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    const { newSpec: newSpec1 } = mergeAppendSpec(merge({}, spec), append1);
 
-    expect(newSpec.axes).toEqual([
+    expect(newSpec1.axes).toEqual([
       {
-        grid: {
+        label: {
           style: {
-            strokeOpacity: 1
+            lineWidth: 2
           }
         }
       }
     ]);
 
-    const { newSpec: newSpec2 } = mergeAppendSpec(merge({}, newSpec), {
-      aliasKeyPath: 'xAxis',
-      parentKeyPath: 'axes',
-      leafSpec: {
-        axes: [
-          {
-            title: {
-              text: '城市'
+    const append2 = {
+      spec: {
+        yAxis: {
+          label: {
+            style: {
+              lineWidth: 2
             }
           }
-        ]
+        }
       }
-    });
+    };
+    const { newSpec: newSpec2 } = mergeAppendSpec(merge({}, spec), append2);
 
     expect(newSpec2.axes).toEqual([
       {
-        grid: {
+        _alias_name: 'yAxis',
+        orient: 'left',
+        label: {
           style: {
-            strokeOpacity: 1
+            lineWidth: 2
           }
         }
-      },
+      }
+    ]);
+
+    const append3 = {
+      spec: {
+        'yAxis[0]': {
+          label: {
+            style: {
+              lineWidth: 2
+            }
+          }
+        }
+      }
+    };
+
+    const { newSpec: newSpec3 } = mergeAppendSpec(merge({}, spec), append3);
+
+    expect(newSpec3.axes).toEqual([
       {
-        title: {
-          text: '城市'
-        },
-        _alias_name: 'xAxis',
-        orient: 'bottom'
+        _alias_name: 'yAxis',
+        orient: 'left',
+        label: {
+          style: {
+            lineWidth: 2
+          }
+        }
+      }
+    ]);
+
+    const append4 = {
+      spec: {
+        'yAxis[0].label.style.lineWidth': 2
+      }
+    };
+
+    const { newSpec: newSpec4 } = mergeAppendSpec(merge({}, spec), append4);
+
+    expect(newSpec4.axes).toEqual([
+      {
+        _alias_name: 'yAxis',
+        orient: 'left',
+        label: {
+          style: {
+            lineWidth: 2
+          }
+        }
       }
     ]);
   });
 
   it('should handle function', () => {
     const append = {
-      aliasKeyPath: 'xAxis.label.style.fill',
-      leafSpec: {
+      spec: {
         bar: {
           style: {
             fill: "(datum, index) => index === 0 ? 'red' : null"
           }
         }
-      },
-      parentKeyPath: 'bar'
+      }
     };
 
     const { newSpec } = mergeAppendSpec(merge({}, spec), append);
@@ -279,11 +313,9 @@ describe('mergeAppendSpec of barchart', () => {
 
   it('should not not add series when has only one series', () => {
     const append = {
-      leafSpec: {
+      spec: {
         'series[0].extensionMark[0].style.size': 10
-      },
-      parentKeyPath: 'series[0].extensionMark[0].style.size',
-      aliasKeyPath: 'bar.extensionMark[0].style.size'
+      }
     };
 
     const { newSpec } = mergeAppendSpec(merge({}, spec), append);
@@ -298,10 +330,9 @@ describe('mergeAppendSpec of barchart', () => {
 
   it('should not not add series when has only one series when alias is empty', () => {
     const append = {
-      leafSpec: {
+      spec: {
         'series[0].extensionMark[0].style.size': 10
-      },
-      parentKeyPath: 'series[0].extensionMark[0].style.size'
+      }
     };
 
     const { newSpec } = mergeAppendSpec(merge({}, spec), append);
@@ -316,7 +347,7 @@ describe('mergeAppendSpec of barchart', () => {
 
   it('should not not add series when has only one series in bar chart', () => {
     const append = {
-      leafSpec: {
+      spec: {
         series: [
           {
             label: {
@@ -324,10 +355,7 @@ describe('mergeAppendSpec of barchart', () => {
             }
           }
         ]
-      },
-
-      parentKeyPath: 'series',
-      aliasKeyPath: 'bar'
+      }
     };
 
     const { newSpec } = mergeAppendSpec(merge({}, spec), append);
@@ -339,12 +367,14 @@ describe('mergeAppendSpec of barchart', () => {
 
   it('should contain all spec when spec has more than one path', () => {
     const append = {
-      leafSpec: {
-        mark: {
-          maxLineCount: 20
-        },
-        dimension: {
-          maxLineCount: 20
+      spec: {
+        tooltip: {
+          mark: {
+            maxLineCount: 20
+          },
+          dimension: {
+            maxLineCount: 20
+          }
         }
       },
       parentKeyPath: 'tooltip',
@@ -352,14 +382,12 @@ describe('mergeAppendSpec of barchart', () => {
     };
 
     const { newSpec } = mergeAppendSpec(merge({}, spec), append);
-    expect(newSpec.tooltip).toEqual(append.leafSpec);
+    expect(newSpec.tooltip).toEqual(append.spec.tooltip);
   });
 
   it('should not create legends array when only one legend', () => {
     const { newSpec } = mergeAppendSpec(merge({}, spec), {
-      parentKeyPath: 'legends[0]',
-      aliasKeyPath: '',
-      leafSpec: {
+      spec: {
         'legends[0]': {
           orient: 'left'
         }
@@ -371,9 +399,7 @@ describe('mergeAppendSpec of barchart', () => {
       orient: 'left'
     });
     const { newSpec: newSpec2 } = mergeAppendSpec(merge({}, spec), {
-      parentKeyPath: 'legends',
-      aliasKeyPath: '',
-      leafSpec: {
+      spec: {
         'legends[0]': {
           orient: 'left'
         }

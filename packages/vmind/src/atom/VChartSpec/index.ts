@@ -30,7 +30,7 @@ export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
       return this.context;
     }
 
-    if (appendSpec && 'leafSpec' in appendSpec) {
+    if (appendSpec && 'spec' in appendSpec) {
       const { newSpec, code } = mergeAppendSpec(this.context.spec, appendSpec);
 
       this.context.appendCode = code;

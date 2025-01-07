@@ -98,44 +98,7 @@ describe('convertFunctionString', () => {
 
 describe('removeUnneedArrayInSpec', () => {
   it('should remove unneed array in spec', () => {
-    expect(
-      removeUnneedArrayInSpec(
-        {
-          legends: [{ orient: 'left' }]
-        },
-        'legends',
-        'legends'
-      )
-    ).toEqual({ orient: 'left' });
-
-    expect(
-      removeUnneedArrayInSpec(
-        {
-          legends: [{ orient: 'left' }]
-        },
-        'legends',
-        'legends[0]'
-      )
-    ).toEqual({ orient: 'left' });
-
-    expect(
-      removeUnneedArrayInSpec(
-        {
-          'legends[0]': { orient: 'left' }
-        },
-        'legends',
-        'legends[0]'
-      )
-    ).toEqual({ orient: 'left' });
-
-    expect(
-      removeUnneedArrayInSpec(
-        {
-          'legends[0]': { orient: 'left' }
-        },
-        'legends',
-        'legends'
-      )
-    ).toEqual({ orient: 'left' });
+    expect(removeUnneedArrayInSpec([{ orient: 'left' }], 'legends', 'legends')).toEqual({ orient: 'left' });
+    expect(removeUnneedArrayInSpec({ orient: 'left' }, 'legends', 'legends[0]')).toEqual({ orient: 'left' });
   });
 });

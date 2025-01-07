@@ -122,10 +122,11 @@ export const aliasByComponentType: Record<
   string,
   {
     isArray?: boolean;
-    aliasMap: Record<string, { appendSpec?: any; filter?: (entry: any) => boolean }>;
+    aliasMap?: Record<string, { appendSpec?: any; filter?: (entry: any) => boolean }>;
   }
 > = {
   axes: {
+    isArray: true,
     aliasMap: {
       xAxis: {
         appendSpec: { orient: 'bottom' }
@@ -208,152 +209,271 @@ export const aliasByComponentType: Record<
   series: {
     isArray: true,
     aliasMap: {
-      line: {
-        appendSpec: { type: 'line' }
+      lineSeries: {
+        appendSpec: {
+          type: 'line'
+        }
       },
-      area: {
-        appendSpec: { type: 'area' }
+      areaSeries: {
+        appendSpec: {
+          type: 'area'
+        }
       },
-      bar: {
-        appendSpec: { type: 'bar' }
+      barSeries: {
+        appendSpec: {
+          type: 'bar'
+        }
       },
-      bar3d: {
-        appendSpec: { type: 'bar3d' }
+      bar3dSeries: {
+        appendSpec: {
+          type: 'bar3d'
+        }
       },
-      pie: {
-        appendSpec: { type: 'pie' }
+      pieSeries: {
+        appendSpec: {
+          type: 'pie'
+        }
       },
-      pie3d: {
-        appendSpec: { type: 'pie3d' }
+      pie3dSeries: {
+        appendSpec: {
+          type: 'pie3d'
+        }
       },
-      scatter: {
-        appendSpec: { type: 'scatter' }
+      scatterSeries: {
+        appendSpec: {
+          type: 'scatter'
+        }
       },
-      funnel: {
-        appendSpec: { type: 'funnel' }
+      funnelSeries: {
+        appendSpec: {
+          type: 'funnel'
+        }
       },
-      funnel3d: {
-        appendSpec: { type: 'funnel3d' }
+      funnel3dSeries: {
+        appendSpec: {
+          type: 'funnel3d'
+        }
       },
-      map: {
-        appendSpec: { type: 'map' }
+      mapSeries: {
+        appendSpec: {
+          type: 'map'
+        }
       },
-      radar: {
-        appendSpec: { type: 'radar' }
+      radarSeries: {
+        appendSpec: {
+          type: 'radar'
+        }
       },
-      wordCloud: {
-        appendSpec: { type: 'wordCloud' }
+      wordCloudSeries: {
+        appendSpec: {
+          type: 'wordCloud'
+        }
       },
-      wordCloud3d: {
-        appendSpec: { type: 'wordCloud3d' }
+      wordCloud3dSeries: {
+        appendSpec: {
+          type: 'wordCloud3d'
+        }
       },
-      heatmap: {
-        appendSpec: { type: 'heatmap' }
+      heatmapSeries: {
+        appendSpec: {
+          type: 'heatmap'
+        }
       },
-      treemap: {
-        appendSpec: { type: 'treemap' }
+      treemapSeries: {
+        appendSpec: {
+          type: 'treemap'
+        }
       },
-      gauge: {
-        appendSpec: { type: 'gauge' }
+      gaugeSeries: {
+        appendSpec: {
+          type: 'gauge'
+        }
       },
-      rangeColumn: {
-        appendSpec: { type: 'rangeColumn' }
+      rangeColumnSeries: {
+        appendSpec: {
+          type: 'rangeColumn'
+        }
       },
-      rangeColumn3d: {
-        appendSpec: { type: 'rangeColumn3d' }
+      rangeColumn3dSeries: {
+        appendSpec: {
+          type: 'rangeColumn3d'
+        }
       },
-      rangeArea: {
-        appendSpec: { type: 'rangeArea' }
+      rangeAreaSeries: {
+        appendSpec: {
+          type: 'rangeArea'
+        }
       },
-      dot: {
-        appendSpec: { type: 'dot' }
+      dotSeries: {
+        appendSpec: {
+          type: 'dot'
+        }
       },
-      geo: {
-        appendSpec: { type: 'geo' }
+      geoSeries: {
+        appendSpec: {
+          type: 'geo'
+        }
       },
-
-      link: {
-        appendSpec: { type: 'link' }
+      linkSeries: {
+        appendSpec: {
+          type: 'link'
+        }
       },
-
-      rose: {
+      roseSeries: {
         appendSpec: {
           type: 'rose'
         }
       },
-      circularProgress: {
+      circularProgressSeries: {
         appendSpec: {
           type: 'circularProgress'
         }
       },
-      linearProgress: { appendSpec: { type: 'linearProgress' } },
-      boxPlot: { appendSpec: { type: 'boxPlot' } },
-      sankey: { appendSpec: { type: 'sankey' } },
-      gaugePointer: { appendSpec: { type: 'gaugePointer' } },
-      sunburst: { appendSpec: { type: 'sunburst' } },
-      circlePacking: { appendSpec: { type: 'circlePacking' } },
-      waterfall: { appendSpec: { type: 'waterfall' } },
-      correlation: { appendSpec: { type: 'correlation' } },
-      liquid: { appendSpec: { type: 'liquid' } },
-      venn: { appendSpec: { type: 'venn' } },
-      mosaic: { appendSpec: { type: 'mosaic' } }
+      linearProgressSeries: {
+        appendSpec: {
+          type: 'linearProgress'
+        }
+      },
+      boxPlotSeries: {
+        appendSpec: {
+          type: 'boxPlot'
+        }
+      },
+      sankeySeries: {
+        appendSpec: {
+          type: 'sankey'
+        }
+      },
+      gaugePointerSeries: {
+        appendSpec: {
+          type: 'gaugePointer'
+        }
+      },
+      sunburstSeries: {
+        appendSpec: {
+          type: 'sunburst'
+        }
+      },
+      circlePackingSeries: {
+        appendSpec: {
+          type: 'circlePacking'
+        }
+      },
+      waterfallSeries: {
+        appendSpec: {
+          type: 'waterfall'
+        }
+      },
+      correlationSeries: {
+        appendSpec: {
+          type: 'correlation'
+        }
+      },
+      liquidSeries: {
+        appendSpec: {
+          type: 'liquid'
+        }
+      },
+      vennSeries: {
+        appendSpec: {
+          type: 'venn'
+        }
+      },
+      mosaicSeries: {
+        appendSpec: {
+          type: 'mosaic'
+        }
+      }
     }
+  },
+
+  scales: {
+    isArray: true
+  },
+  customMark: {
+    isArray: true
+  },
+  background: {
+    isArray: false
+  },
+  player: {
+    isArray: false
+  },
+  crosshair: {},
+  region: {
+    isArray: true
+  },
+  title: {},
+  markLine: {},
+  markArea: {},
+  markPoint: {},
+  seriesStyle: {
+    isArray: true
+  },
+  tooltip: {
+    isArray: false
+  },
+  brush: {
+    isArray: false
   }
 };
 
 export const removeUnneedArrayInSpec = (leafSpec: any, compKey: string, parentKeyPath: string) => {
-  return leafSpec[compKey]
-    ? isArray(leafSpec[compKey])
-      ? leafSpec[compKey][0]
-      : leafSpec[compKey]
-    : parentKeyPath in leafSpec
-    ? leafSpec[parentKeyPath]
-    : `${compKey}[0]` in leafSpec
-    ? leafSpec[`${compKey}[0]`]
-    : leafSpec;
+  if (compKey === parentKeyPath) {
+    return isArray(leafSpec) ? leafSpec[0] : leafSpec;
+  }
+
+  return leafSpec;
+};
+
+export const findComponentNameByAlias = (alias: string) => {
+  if (aliasByComponentType[alias]) {
+    return alias;
+  }
+
+  const comp = Object.keys(aliasByComponentType).find(key => {
+    return !!aliasByComponentType[key]?.aliasMap?.[alias];
+  });
+
+  if (comp) {
+    return comp;
+  }
+
+  return alias;
 };
 
 const ALIAS_NAME_KEY = '_alias_name';
 
-export const parseAliasOfPath = (parentKeyPath: string, aliasKeyPath: string, chartSpec: any, leafSpec: any) => {
-  const aliasName = aliasKeyPath ? aliasKeyPath.split('.')[0] : null;
+export const parseAliasOfPath = (parentKeyPath: string, compKey: string, chartSpec: any, leafSpec: any) => {
   const subPaths = parentKeyPath.split('.');
-  const compKey = subPaths[0].replace(/\[\d\]/, '');
   const aliasOptions = aliasByComponentType[compKey];
-  const isValidAlias = aliasOptions && aliasName && !!aliasOptions.aliasMap[aliasName];
+  const aliasName = subPaths[0].replace(/\[\d\]/, '');
+  const isValidAlias = aliasOptions && aliasName && !!aliasOptions.aliasMap?.[aliasName];
+  let newLeafSpec = leafSpec;
+
+  if (subPaths.length === 1) {
+    newLeafSpec = isArray(leafSpec) ? leafSpec[0] : leafSpec;
+  }
+  const isTargetArray = (chartSpec[compKey] && isArray(chartSpec[compKey])) || aliasOptions?.isArray;
+
+  if (/\[\d\]/.exec(subPaths[0])) {
+    // 路径中包含了序号
+    if (!isTargetArray) {
+      subPaths[0] = compKey;
+    } else {
+      subPaths[0] = subPaths[0].replace(aliasName, compKey);
+    }
+  } else {
+    // 路径中没包含序号
+    if (isTargetArray) {
+      subPaths[0] = `${compKey}[0]`;
+    } else {
+      subPaths[0] = subPaths[0].replace(aliasName, compKey);
+    }
+  }
 
   if (!isValidAlias) {
-    if (chartSpec[compKey]) {
-      // 组件配置没有固定为数组类型的时候
-      if (isArray(chartSpec[compKey])) {
-        if (subPaths[0] === compKey) {
-          subPaths[0] = `${compKey}[0]`;
-        }
-        return {
-          parentKeyPath: subPaths.join('.'),
-          leafSpec: removeUnneedArrayInSpec(leafSpec, compKey, parentKeyPath)
-        };
-      }
-
-      if (subPaths[0] !== compKey) {
-        subPaths[0] = compKey;
-      }
-      return {
-        parentKeyPath: subPaths.join('.'),
-        leafSpec: removeUnneedArrayInSpec(leafSpec, compKey, parentKeyPath)
-      };
-    } else if (aliasOptions && aliasOptions.isArray) {
-      // 像系列这种只支持数组类型的，需要扩展成数组
-      if (subPaths[0] === compKey) {
-        subPaths[0] = `${compKey}[0]`;
-      }
-      return {
-        parentKeyPath: subPaths.join('.'),
-        leafSpec: removeUnneedArrayInSpec(leafSpec, compKey, parentKeyPath)
-      };
-    }
-
-    return { parentKeyPath };
+    return { parentKeyPath: subPaths.join('.'), leafSpec: newLeafSpec };
   }
   const appendSpec = { ...aliasOptions.aliasMap[aliasName].appendSpec, [ALIAS_NAME_KEY]: aliasName };
 
@@ -520,45 +640,48 @@ export const convertFunctionString = (spec: any): any => {
 };
 
 export const mergeAppendSpec = (prevSpec: any, appendSpec: AppendSpecInfo) => {
-  const { aliasKeyPath = '' } = appendSpec;
-  let { parentKeyPath = '', leafSpec } = appendSpec;
-  let newSpec = merge({}, prevSpec);
+  const { spec } = appendSpec;
+  const newSpec = merge({}, prevSpec);
 
-  if (parentKeyPath) {
-    if (parentKeyPath.startsWith('series') && newSpec.type !== 'common' && !newSpec.series) {
-      leafSpec = removeUnneedArrayInSpec(leafSpec, 'series', parentKeyPath);
+  if (isPlainObject(spec)) {
+    Object.keys(spec).forEach(key => {
+      let parentKeyPath = key;
+      let leafSpec = (spec as any)[key];
+      const aliasName = parentKeyPath.split('.')[0].replace(/\[\d\]/, '');
+      const compKey = findComponentNameByAlias(aliasName);
 
-      parentKeyPath = parentKeyPath.indexOf('.') > 0 ? parentKeyPath.slice(parentKeyPath.indexOf('.') + 1) : '';
-    } else {
-      const aliasResult = parseAliasOfPath(parentKeyPath, aliasKeyPath, newSpec, leafSpec);
+      if (compKey.startsWith('series') && newSpec.type !== 'common' && !newSpec.series) {
+        leafSpec = removeUnneedArrayInSpec((spec as any)[key], 'series', key);
 
-      if (aliasResult.appendSpec && aliasResult.appendPath) {
-        set(newSpec, aliasResult.appendPath, aliasResult.appendSpec);
+        parentKeyPath = parentKeyPath.indexOf('.') > 0 ? parentKeyPath.slice(parentKeyPath.indexOf('.') + 1) : '';
+      } else {
+        const aliasResult = parseAliasOfPath(parentKeyPath, compKey, newSpec, leafSpec);
+
+        if (aliasResult.appendSpec && aliasResult.appendPath) {
+          set(newSpec, aliasResult.appendPath, aliasResult.appendSpec);
+        }
+
+        if (isValid(aliasResult.parentKeyPath)) {
+          parentKeyPath = aliasResult.parentKeyPath;
+        }
+
+        if (isValid(aliasResult.leafSpec)) {
+          leafSpec = aliasResult.leafSpec;
+        }
+
+        leafSpec = convertFunctionString(
+          reduceDuplicatedPath(
+            parentKeyPath,
+            aliasResult.aliasName ? reduceDuplicatedPath(aliasResult.aliasName, leafSpec) : leafSpec
+          )
+        );
       }
-
-      if (isValid(aliasResult.parentKeyPath)) {
-        parentKeyPath = aliasResult.parentKeyPath;
+      if (parentKeyPath) {
+        set(newSpec, parentKeyPath, leafSpec);
+      } else {
+        merge(newSpec, leafSpec);
       }
-
-      if (isValid(aliasResult.leafSpec)) {
-        leafSpec = aliasResult.leafSpec;
-      }
-
-      leafSpec = convertFunctionString(
-        reduceDuplicatedPath(
-          parentKeyPath,
-          aliasResult.aliasName ? reduceDuplicatedPath(aliasResult.aliasName, leafSpec) : leafSpec
-        )
-      );
-    }
-
-    if (parentKeyPath) {
-      set(newSpec, parentKeyPath, leafSpec);
-    } else {
-      merge(newSpec, leafSpec);
-    }
-  } else {
-    newSpec = merge(newSpec, leafSpec);
+    });
   }
 
   return {

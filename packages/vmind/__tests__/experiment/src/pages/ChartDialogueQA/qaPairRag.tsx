@@ -160,9 +160,7 @@ export function QARag() {
       {
         spec: spec,
         appendSpec: {
-          leafSpec: dslRes,
-          parentKeyPath,
-          aliasKeyPath
+          spec: dslRes
         }
       },
       true
