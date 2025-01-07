@@ -1,4 +1,4 @@
-import { isArray, isNil, isObject, isPlainObject, isString, isValid, merge } from '@visactor/vutils';
+import { isArray, isNil, isPlainObject, isString, isValid, merge } from '@visactor/vutils';
 import type { AppendSpecInfo } from '../../types/atom';
 import { set } from '../../utils/set';
 
@@ -677,7 +677,9 @@ export const checkDuplicatedKey = (parentPath: string, key: string) => {
 
   return null;
 };
-
+/**
+ * 去除spec中包裹的`parentPath`
+ */
 export const reduceDuplicatedPath = (parentPath: string, spec: any): any => {
   if (isPlainObject(spec) && parentPath) {
     const keys = Object.keys(spec);
@@ -778,12 +780,7 @@ export const mergeAppendSpec = (prevSpec: any, appendSpec: AppendSpecInfo) => {
           leafSpec = aliasResult.leafSpec;
         }
 
-        leafSpec = convertFunctionString(
-          reduceDuplicatedPath(
-            parentKeyPath,
-            aliasResult.aliasName ? reduceDuplicatedPath(aliasResult.aliasName, leafSpec) : leafSpec
-          )
-        );
+        leafSpec = convertFunctionString(leafSpec);
       }
 
       (updatedKeyPaths ?? [parentKeyPath]).forEach(kp => {
