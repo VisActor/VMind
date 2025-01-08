@@ -68,7 +68,11 @@ function baseSet(object: any, pathString: string, value: any) {
     }
 
     if (isValid(nested[key])) {
-      merge(nested[key], newValue);
+      if ('object' !== typeof newValue) {
+        merge(nested, { [key]: newValue });
+      } else {
+        merge(nested[key], newValue);
+      }
     } else {
       nested[key] = newValue;
     }

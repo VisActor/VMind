@@ -123,7 +123,7 @@ const spec = {
 describe('mergeAppendSpec of barchart', () => {
   it('should reduce duplicated code', () => {
     const newSpec = mergeAppendSpec(merge({}, spec), {
-      leafSpec: {
+      spec: {
         scales: [
           {
             domain: [
@@ -133,19 +133,19 @@ describe('mergeAppendSpec of barchart', () => {
             ]
           }
         ]
-      },
-      parentKeyPath: 'scales'
+      }
     });
 
     expect(newSpec).toEqual(
       mergeAppendSpec(spec, {
-        parentKeyPath: 'scales[0]',
-        leafSpec: {
-          domain: [
-            {
-              fields: ['yourFieldName']
-            }
-          ]
+        spec: {
+          'scales[0]': {
+            domain: [
+              {
+                fields: ['yourFieldName']
+              }
+            ]
+          }
         }
       })
     );
@@ -153,10 +153,9 @@ describe('mergeAppendSpec of barchart', () => {
 
   it('should parse complicated path', () => {
     const append = {
-      leafSpec: {
+      spec: {
         'scales[0].domain[0].fields': 'yourFieldName'
-      },
-      parentKeyPath: 'scales[0].domain[0].fields'
+      }
     };
 
     const { newSpec } = mergeAppendSpec(merge({}, spec), append);
@@ -170,5 +169,329 @@ describe('mergeAppendSpec of barchart', () => {
         ]
       }
     ]);
+  });
+
+  it('should parse complicated path of axes', () => {
+    const append = {
+      spec: {
+        axes: [
+          {
+            label: {
+              style: {
+                lineWidth: 2
+              }
+            }
+          }
+        ]
+      }
+    };
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+
+    expect(newSpec.axes).toEqual([
+      {
+        label: {
+          style: {
+            lineWidth: 2
+          }
+        }
+      }
+    ]);
+
+    const append1 = {
+      spec: {
+        axes: {
+          label: {
+            style: {
+              lineWidth: 2
+            }
+          }
+        }
+      }
+    };
+
+    const { newSpec: newSpec1 } = mergeAppendSpec(merge({}, spec), append1);
+
+    expect(newSpec1.axes).toEqual([
+      {
+        label: {
+          style: {
+            lineWidth: 2
+          }
+        }
+      }
+    ]);
+
+    const append2 = {
+      spec: {
+        yAxis: {
+          label: {
+            style: {
+              lineWidth: 2
+            }
+          }
+        }
+      }
+    };
+
+    const { newSpec: newSpec2 } = mergeAppendSpec(merge({}, spec), append2);
+
+    expect(newSpec2.axes).toEqual([
+      {
+        _alias_name: 'yAxis',
+        orient: 'left',
+        label: {
+          style: {
+            lineWidth: 2
+          }
+        }
+      }
+    ]);
+
+    const append3 = {
+      spec: {
+        'yAxis[0]': {
+          label: {
+            style: {
+              lineWidth: 2
+            }
+          }
+        }
+      }
+    };
+
+    const { newSpec: newSpec3 } = mergeAppendSpec(merge({}, spec), append3);
+
+    expect(newSpec3.axes).toEqual([
+      {
+        _alias_name: 'yAxis',
+        orient: 'left',
+        label: {
+          style: {
+            lineWidth: 2
+          }
+        }
+      }
+    ]);
+
+    const append4 = {
+      spec: {
+        'yAxis[0].label.style.lineWidth': 2
+      }
+    };
+
+    const { newSpec: newSpec4 } = mergeAppendSpec(merge({}, spec), append4);
+
+    expect(newSpec4.axes).toEqual([
+      {
+        _alias_name: 'yAxis',
+        orient: 'left',
+        label: {
+          style: {
+            lineWidth: 2
+          }
+        }
+      }
+    ]);
+  });
+
+  it('should handle function', () => {
+    const append = {
+      spec: {
+        bar: {
+          style: {
+            fill: "(datum, index) => index === 0 ? 'red' : null"
+          }
+        }
+      }
+    };
+
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+
+    expect(newSpec.bar.style.fill).toBeDefined();
+    expect(newSpec.bar.style.fill('test', 0)).toBe('red');
+    expect(newSpec.bar.style.fill('test', 1)).toBeNull();
+  });
+
+  it('should not not add series when has only one series', () => {
+    const append = {
+      spec: {
+        'series[0].extensionMark[0].style.size': 10
+      }
+    };
+
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    expect(newSpec.extensionMark).toEqual([
+      {
+        style: {
+          size: 10
+        }
+      }
+    ]);
+  });
+
+  it('should not not add series when has only one series when alias is empty', () => {
+    const append = {
+      spec: {
+        'series[0].extensionMark[0].style.size': 10
+      }
+    };
+
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    expect(newSpec.extensionMark).toEqual([
+      {
+        style: {
+          size: 10
+        }
+      }
+    ]);
+  });
+
+  it('should not not add series when has only one series in bar chart', () => {
+    const append = {
+      spec: {
+        series: [
+          {
+            label: {
+              overlap: true
+            }
+          }
+        ]
+      }
+    };
+
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    expect(newSpec.label).toEqual({
+      overlap: true
+    });
+    expect(newSpec.series).toBeUndefined();
+  });
+
+  it('should contain all spec when spec has more than one path', () => {
+    const append = {
+      spec: {
+        tooltip: {
+          mark: {
+            maxLineCount: 20
+          },
+          dimension: {
+            maxLineCount: 20
+          }
+        }
+      },
+      parentKeyPath: 'tooltip',
+      aliasKeyPath: 'tooltip'
+    };
+
+    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    expect(newSpec.tooltip).toEqual(append.spec.tooltip);
+  });
+
+  it('should not create legends array when only one legend', () => {
+    const { newSpec } = mergeAppendSpec(merge({}, spec), {
+      spec: {
+        'legends[0]': {
+          orient: 'left'
+        }
+      }
+    });
+    expect(newSpec.legends).toEqual({
+      position: 'start',
+      visible: true,
+      orient: 'left'
+    });
+    const { newSpec: newSpec2 } = mergeAppendSpec(merge({}, spec), {
+      spec: {
+        'legends[0]': {
+          orient: 'left'
+        }
+      }
+    });
+    expect(newSpec2.legends).toEqual({
+      position: 'start',
+      visible: true,
+      orient: 'left'
+    });
+  });
+
+  it('should not handle result of color', () => {
+    const { newSpec } = mergeAppendSpec(merge({}, spec), {
+      spec: {
+        color: ['red']
+      }
+    });
+    expect(newSpec.color).toEqual(['red']);
+  });
+
+  it('should add default axes when return `allAxis`', () => {
+    const { newSpec } = mergeAppendSpec(merge({}, spec), {
+      spec: {
+        allAxis: {
+          label: {
+            autoHide: false,
+            autoLimit: true
+          }
+        }
+      }
+    });
+    expect(newSpec.axes).toEqual([
+      {
+        label: {
+          autoHide: false,
+          autoLimit: true
+        },
+        orient: 'bottom'
+      },
+      {
+        label: {
+          autoHide: false,
+          autoLimit: true
+        },
+        orient: 'left'
+      }
+    ]);
+  });
+
+  it('should filter yaxis when axes is not empty', () => {
+    const { newSpec } = mergeAppendSpec(
+      merge({}, spec, {
+        axes: [
+          {
+            orient: 'bottom',
+            label: {
+              style: {
+                fill: 'red'
+              }
+            }
+          },
+          {
+            orient: 'left',
+            label: {
+              style: {
+                fill: 'red'
+              }
+            }
+          }
+        ]
+      }),
+      {
+        spec: {
+          yAxis: {
+            label: {
+              autoWrap: true
+            }
+          }
+        }
+      }
+    );
+    expect(newSpec.axes[1]).toEqual({
+      _alias_name: 'yAxis',
+      orient: 'left',
+      label: {
+        autoWrap: true,
+        style: {
+          fill: 'red'
+        }
+      }
+    });
   });
 });
