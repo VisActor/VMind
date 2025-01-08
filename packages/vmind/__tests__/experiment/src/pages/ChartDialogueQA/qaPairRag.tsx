@@ -62,6 +62,7 @@ const baseSpec = {
   }
 };
 const topKeys = [
+  'NotSure',
   'type',
   'series',
   'axes',
@@ -333,6 +334,7 @@ export function QARag() {
       .finally(() => {
         setConfirmLoading(false);
         setFeedbackVisible(false);
+        form.clearFields();
         Message.success('Thansk for your feedback!');
       });
   }, [dialog, form, ragOption]);
@@ -396,17 +398,20 @@ export function QARag() {
           <FormItem label="哪里错了" required field="wrongType" rules={[{ required: true }]}>
             <Select
               options={[
-                { label: 'Only DSL', value: 'DSL' },
-                { label: 'Only VChart Render', value: 'VChart' },
-                { label: 'Not sure/Both', value: 'Not sure' }
+                { label: 'DSL', value: 'DSL' },
+                { label: 'VChart', value: 'VChart' },
+                { label: 'Not sure', value: 'Not sure' }
               ]}
             />
           </FormItem>
           <FormItem label="正确答案对应的topKey是什么" field="topKeyAnswer" rules={[{ required: true }]}>
-            <Select options={topKeys} showSearch />
+            <Select options={topKeys} showSearch mode="multiple" />
           </FormItem>
-          <FormItem label="正确的DSL是啥" field="keyPathAnswer">
+          <FormItem label="正确的DSL是啥" field="dslAnswer">
             <TextArea placeholder={`{"label": {"visible": true}}`} />
+          </FormItem>
+          <FormItem label="正确的dsl路径是啥" field="keyPathAnswer">
+            <TextArea placeholder={'label.text.fill'} />
           </FormItem>
         </Form>
       </Modal>
