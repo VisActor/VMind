@@ -490,7 +490,7 @@ export function QARag() {
                         {ragOption.type === 'qa' ? (
                           <div className="qa-div">
                             <div className="title">Answer:</div>
-                            <span>{JSON.stringify(item.answer）}</span>
+                            <span>{JSON.stringify(item.answer)}</span>
                           </div>
                         ) : null}
                         <div className="qa-div">
