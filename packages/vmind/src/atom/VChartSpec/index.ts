@@ -3,6 +3,7 @@ import type { BaseOptions } from '../type';
 import { BaseAtom } from '../base';
 import type { VChartSpecCtx } from '../../types';
 import { mergeAppendSpec } from './utils';
+import { isNil } from '@visactor/vutils';
 
 export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
   name = AtomName.VCHART_SPEC;
@@ -29,15 +30,13 @@ export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
       return this.context;
     }
 
-    if (!appendSpec || !appendSpec.leafSpec) {
-      return this.context;
+    if (appendSpec && 'spec' in appendSpec) {
+      const { newSpec, code } = mergeAppendSpec(this.context.spec, appendSpec);
+
+      this.context.appendCode = code;
+      this.context.prevSpec = this.context.spec;
+      this.context.spec = newSpec;
     }
-
-    const { newSpec, code } = mergeAppendSpec(this.context.spec, appendSpec);
-
-    this.context.appendCode = code;
-    this.context.prevSpec = this.context.spec;
-    this.context.spec = newSpec;
 
     return this.context;
   }

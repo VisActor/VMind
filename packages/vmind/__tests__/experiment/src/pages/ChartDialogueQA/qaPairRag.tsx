@@ -244,9 +244,7 @@ export function QARag() {
       {
         spec: spec,
         appendSpec: {
-          leafSpec: dslRes,
-          parentKeyPath,
-          aliasKeyPath
+          spec: dslRes
         }
       },
       true
@@ -478,28 +476,30 @@ export function QARag() {
 
               <div className="one-content">
                 <div>KeyPath Recall:</div>
-                {keyPathResult.map((item, index) => (
-                  <Card key={index} className="qa-card">
-                    <div className="qa-div">
-                      <span className="title">Score:</span>
-                      <span>{item.scores.toFixed(2)}</span>
-                    </div>
-                    <div className="qa-div">
-                      <div className="title">content:</div>
-                      <span>{item.text}</span>
-                    </div>
-                    {ragOption.type === 'qa' && (
-                      <div className="qa-div">
-                        <div className="title">Answer:</div>
-                        <span>{item.answer}</span>
-                      </div>
-                    )}
-                    <div className="qa-div">
-                      <div className="title">key:</div>
-                      <span>{item.key}</span>
-                    </div>
-                  </Card>
-                ))}
+                {keyPathResult && keyPathResult.length
+                  ? keyPathResult.map((item, index) => (
+                      <Card key={index} className="qa-card">
+                        <div className="qa-div">
+                          <span className="title">Score:</span>
+                          <span>{item.scores.toFixed(2)}</span>
+                        </div>
+                        <div className="qa-div">
+                          <div className="title">content:</div>
+                          <span>{item.text}</span>
+                        </div>
+                        {ragOption.type === 'qa' ? (
+                          <div className="qa-div">
+                            <div className="title">Answer:</div>
+                            <span>{JSON.stringify(item.answer）}</span>
+                          </div>
+                        ) : null}
+                        <div className="qa-div">
+                          <div className="title">key:</div>
+                          <span>{item.key}</span>
+                        </div>
+                      </Card>
+                    ))
+                  : null}
               </div>
             </div>
           </div>
