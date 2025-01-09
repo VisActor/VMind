@@ -413,6 +413,9 @@ export function QARag() {
           <FormItem label="正确的dsl路径是啥" field="keyPathAnswer">
             <TextArea placeholder={'label.text.fill'} />
           </FormItem>
+          <FormItem label="针对这次问答的其他想法与反馈" field="info">
+            <TextArea placeholder="我觉得主要问题是xxxxx" />
+          </FormItem>
         </Form>
       </Modal>
       <div className="rag-options">
