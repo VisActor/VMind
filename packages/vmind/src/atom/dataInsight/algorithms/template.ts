@@ -11,6 +11,74 @@ const getFieldInfoById = (fieldInfo: FieldInfo[], fieldId: string) => {
 };
 export const isEmptySeries = (seriesName: any) => !seriesName || seriesName === DEFAULT_SERIES_NAME;
 
+const getMinMaxTemplate = (insight: Insight, ctx: DataInsightExtractContext, language: 'chinese' | 'english') => {
+  const { value, info, type } = insight;
+  const { fieldInfo, cell } = ctx;
+  const xFieldId = getFieldIdInCell(cell.x);
+  const yFieldId = getFieldIdInCell(cell.y);
+  const isChinese = language === 'chinese';
+  const placeholderValue =
+    type === InsightType.Min ? (isChinese ? '最小值' : 'minimum') : isChinese ? '最大值' : 'maximum';
+  return {
+    content: info?.isAxesArea
+      ? isChinese
+        ? `\${a}的${placeholderValue}位于\${b}，值为\${c}`
+        : `The ${placeholderValue} value of \${a} at \${b}, with a value of \${c}`
+      : isChinese
+      ? `${placeholderValue}位于\${b}，值为\${c}`
+      : `The ${placeholderValue} value at \${b} with a value of \${c}`,
+    variables: {
+      ...(info?.isAxesArea
+        ? {
+            a: {
+              value: info?.titleName || getFieldInfoById(fieldInfo, yFieldId)?.alias || yFieldId,
+              fieldName: getFieldInfoById(fieldInfo, yFieldId)?.alias ?? yFieldId
+            }
+          }
+        : {}),
+      b: {
+        isDimValue: true,
+        value: info.dimValue,
+        fieldName: getFieldInfoById(fieldInfo, xFieldId)?.alias ?? xFieldId
+      },
+      c: {
+        value,
+        fieldName: null as any
+      }
+    }
+  };
+};
+
+const getAvgTemplate = (insight: Insight, ctx: DataInsightExtractContext, language: 'chinese' | 'english') => {
+  const { value, info } = insight;
+  const { fieldInfo, cell } = ctx;
+  const yFieldId = getFieldIdInCell(cell.y);
+  const isChinese = language === 'chinese';
+  return {
+    content: info?.isAxesArea
+      ? isChinese
+        ? '${a}的平均值为${b}'
+        : 'The average value of ${a} is ${b}'
+      : isChinese
+      ? '平均值为${b}'
+      : 'The average value is ${b}',
+    variables: {
+      ...(info?.isAxesArea
+        ? {
+            a: {
+              value: info?.titleName || getFieldInfoById(fieldInfo, yFieldId)?.alias || yFieldId,
+              fieldName: getFieldInfoById(fieldInfo, yFieldId)?.alias ?? yFieldId
+            }
+          }
+        : {}),
+      b: {
+        value,
+        fieldName: null as any
+      }
+    }
+  };
+};
+
 const getOutlierTemplate = (insight: Insight, ctx: DataInsightExtractContext, language: 'chinese' | 'english') => {
   const { seriesName, data, value, fieldId } = insight;
   const { fieldInfo, cell, chartType } = ctx;
@@ -380,6 +448,13 @@ export const generateInsightTemplate = (
         break;
       case InsightType.ExtremeValue:
         textContent = getExtremeTemplate(insights[i], ctx, language);
+        break;
+      case InsightType.Min:
+      case InsightType.Max:
+        textContent = getMinMaxTemplate(insights[i], ctx, language);
+        break;
+      case InsightType.Avg:
+        textContent = getAvgTemplate(insights[i], ctx, language);
         break;
       default:
         textContent = {

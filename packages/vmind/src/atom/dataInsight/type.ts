@@ -12,6 +12,7 @@ import type { VolatilityOptions } from './algorithms/volatility';
 import type { StatisticsOptions } from './algorithms/outlier/statistics';
 import type { DifferenceOptions } from './algorithms/outlier/difference';
 import type { PageHinkleyOptions } from './algorithms/drift';
+import type { BaseStatisticsOptions } from './algorithms/base/baseStatistics';
 
 export enum AlgorithmType {
   OverallTrending = 'overallTrend',
@@ -21,6 +22,7 @@ export enum AlgorithmType {
   ExtremeValue = 'extremeValue',
   MajorityValue = 'majorityValue',
   StatisticsAbnormal = 'statisticsAbnormal',
+  StatisticsBase = 'statisticsBase',
   DbscanOutlier = 'dbscanOutlier',
   LOFOutlier = 'lofOutlier',
   TurningPoint = 'turningPoint',
@@ -43,8 +45,12 @@ export interface AlgorithmOptions {
   [AlgorithmType.PageHinkley]?: PageHinkleyOptions;
   [AlgorithmType.DbscanOutlier]: DbscanOptions;
   [AlgorithmType.Volatility]: VolatilityOptions;
+  [AlgorithmType.StatisticsBase]?: BaseStatisticsOptions;
 }
 export enum InsightType {
+  Min = 'min',
+  Max = 'max',
+  Avg = 'avg',
   Outlier = 'outlier',
   PairOutlier = 'pair_outlier',
   ExtremeValue = 'extreme_value',
@@ -127,6 +133,17 @@ export interface ChartDataItem {
 
 export type DimValueDataMap = Record<string | number, ChartDataItem[]>;
 
+export interface AxesDataInfo {
+  dataset: DataTable;
+  seriesNames: string[];
+  series: any[];
+  dimensionDataMap: DimValueDataMap;
+  dimensionValues: DataCell[];
+  dimensionSumMap: Record<string, number[]>;
+  axisTitle: string | string[];
+  yField: string | string[];
+}
+
 export interface DataInsightExtractContext {
   dataset: DataTable;
   fieldInfo: FieldInfo[];
@@ -138,4 +155,6 @@ export interface DataInsightExtractContext {
   cell: Cell;
   spec: any;
   insights?: Insight[];
+  leftAxesDataList?: AxesDataInfo;
+  rightAxesDataList?: AxesDataInfo;
 }

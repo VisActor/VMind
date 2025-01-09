@@ -43,7 +43,8 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
         AlgorithmType.MajorityValue,
         AlgorithmType.PageHinkley,
         // AlgorithmType.DifferenceOutlier,
-        AlgorithmType.TurningPoint
+        AlgorithmType.TurningPoint,
+        AlgorithmType.StatisticsBase
         // AlgorithmType.Volatility
       ],
       isLimitedbyChartType: true,

@@ -55,7 +55,7 @@ export const getChartTypeFromSpec = (spec: any, vchartType?: string): ChartType 
     if (typeList.length === 1) {
       return getChartTypeFromSpec(series[0], vchartType);
     }
-    if (series.length > 1 && series.every((s: any) => s.type === 'bar' || s.type === 'line')) {
+    if (series.length > 1 && series.every((s: any) => s.type === 'bar' || s.type === 'line' || s.type === 'area')) {
       //check if the common chart is dual-axis chart
       return ChartType.DualAxisChart;
     }
@@ -217,10 +217,25 @@ export const revisedCell = (cell: Cell, dataset: DataTable) => {
   return cell;
 };
 
+export const isStackChartInAxes = (series: any[], chartType: ChartType) => {
+  if (chartType !== ChartType.DualAxisChart || !series.length) {
+    return false;
+  }
+  return series.every(
+    (s: any) =>
+      s?.type === series[0]?.type &&
+      ((s.stack !== false && s.type === 'bar') || !!s.stack) &&
+      s?.seriesField &&
+      !(isArray(s.xField) && s.xField.includes(s.seriesField))
+  );
+};
+
 export const isStackChart = (spec: any, chartType: ChartType, cell: Cell) => {
   const { seriesField, type, series = [], stack } = spec || {};
   if (type === 'common' && [ChartType.BarChart, ChartType.AreaChart, ChartType.LineChart].includes(chartType)) {
-    return series?.every((s: any) => !!s?.stack && !(isArray(cell.x) && cell.x.length > 1));
+    return series?.every(
+      (s: any) => ((s?.stack !== false && s.type === 'bar') || !!s?.stack) && !(isArray(cell.x) && cell.x.length > 1)
+    );
   }
   return (
     ((stack !== false && chartType === ChartType.BarChart) || !!stack) &&

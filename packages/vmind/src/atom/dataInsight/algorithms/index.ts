@@ -17,6 +17,7 @@ import { DifferenceAlg } from './outlier/difference';
 import { PageHinkleyAlg } from './drift';
 import { generateInsightTemplate } from './template';
 import { isPercentChart, isStackChart } from '../utils';
+import { BaseStatistics } from './base/baseStatistics';
 
 const algorithmMapping = {
   [AlgorithmType.OverallTrending]: {
@@ -70,10 +71,17 @@ const algorithmMapping = {
   [AlgorithmType.Volatility]: {
     info: Volatility,
     priority: 12
+  },
+  [AlgorithmType.StatisticsBase]: {
+    info: BaseStatistics,
+    priority: 13
   }
 };
 
 const InsightSortMapping = {
+  [InsightType.Min]: 0,
+  [InsightType.Max]: 0,
+  [InsightType.Avg]: 0,
   [InsightType.Outlier]: 1,
   [InsightType.PairOutlier]: 2,
   [InsightType.AbnormalBand]: 10,
@@ -99,7 +107,10 @@ const revisedInsightByTypeMapping: Record<
   [InsightType.AbnormalTrend]: filterInsightByType,
   [InsightType.OverallTrend]: filterInsightByType,
   [InsightType.Correlation]: filterCorrelationInsight,
-  [InsightType.Volatility]: filterInsightByType
+  [InsightType.Volatility]: filterInsightByType,
+  [InsightType.Min]: filterInsightByType,
+  [InsightType.Max]: filterInsightByType,
+  [InsightType.Avg]: filterInsightByType
 };
 
 export const getInsights = (context: DataInsightExtractContext, options: DataInsightOptions) => {
