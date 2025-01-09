@@ -4,8 +4,7 @@ import { isArray } from '@visactor/vutils';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
 import { ChartType, type DataItem } from '../../../../types';
-import { isValidData } from '../../../../utils/common';
-import { isPercenSeries, isPercentChart } from '../../utils';
+import { isPercenSeries } from '../../utils';
 
 type knnItem = number[];
 type KnnMap = knnItem[][];

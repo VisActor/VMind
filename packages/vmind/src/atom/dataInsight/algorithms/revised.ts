@@ -7,6 +7,9 @@ import { ChartType } from '../../../types';
 
 export interface RevisedInsightParams {
   insights: Insight[];
+  [InsightType.Min]?: Insight[];
+  [InsightType.Max]?: Insight[];
+  [InsightType.Avg]?: Insight[];
   [InsightType.Outlier]?: Insight[];
   [InsightType.PairOutlier]?: Insight[];
   [InsightType.AbnormalBand]?: Insight[];
