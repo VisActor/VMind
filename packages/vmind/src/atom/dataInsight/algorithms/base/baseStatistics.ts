@@ -42,6 +42,7 @@ const getBaseInsightByDataset = (
     measureId: string | string[];
     isStack: boolean;
     isAxesArea?: boolean;
+    axesDirection?: 'left' | 'right';
   }
 ) => {
   const {
@@ -52,7 +53,8 @@ const getBaseInsightByDataset = (
     dimensionSumMap,
     dimensionValues,
     axisTitle = [],
-    isAxesArea = false
+    isAxesArea = false,
+    axesDirection
   } = context;
   const dataList = dataset.map((d, index) => ({
     index: index,
@@ -117,7 +119,8 @@ const getBaseInsightByDataset = (
       data: [],
       info: {
         isAxesArea,
-        titleName
+        titleName,
+        axesDirection
       }
     });
   return result;
@@ -146,7 +149,8 @@ const BaseStatisticsFunction = (context: DataInsightExtractContext, options: Bas
         isAxesArea: true,
         measureId: leftAxesDataList?.yField,
         axisTitle: leftAxesDataList.axisTitle || options?.defaultLeftAxisName,
-        isStack: isStackChartInAxes(leftAxesDataList.series, chartType)
+        isStack: isStackChartInAxes(leftAxesDataList.series, chartType),
+        axesDirection: 'left'
       })
     );
   rightAxesDataList &&
@@ -157,7 +161,8 @@ const BaseStatisticsFunction = (context: DataInsightExtractContext, options: Bas
         isAxesArea: true,
         measureId: rightAxesDataList?.yField,
         axisTitle: rightAxesDataList.axisTitle || options?.defaultRightAxisName,
-        isStack: isStackChartInAxes(rightAxesDataList.series, chartType)
+        isStack: isStackChartInAxes(rightAxesDataList.series, chartType),
+        axesDirection: 'right'
       })
     );
   !leftAxesDataList &&

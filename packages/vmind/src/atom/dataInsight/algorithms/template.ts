@@ -43,6 +43,7 @@ const getMinMaxTemplate = (insight: Insight, ctx: DataInsightExtractContext, lan
       },
       c: {
         value,
+        isMeasure: true,
         fieldName: null as any
       }
     }
@@ -73,6 +74,7 @@ const getAvgTemplate = (insight: Insight, ctx: DataInsightExtractContext, langua
         : {}),
       b: {
         value,
+        isMeasure: true,
         fieldName: null as any
       }
     }
