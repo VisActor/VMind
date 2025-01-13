@@ -45,17 +45,21 @@ const getDimensionDataInfo = (context: {
     dimensionDataMap[groupBy].push({ index, dataItem });
   });
 
+  const dimensionStackSumMap: Record<string, number[]> = {};
   const dimensionSumMap: Record<string, number[]> = {};
   yField.forEach(measureId => {
+    dimensionStackSumMap[measureId] = [];
     dimensionSumMap[measureId] = dimensionValues.map(dimension => {
       const dimensionDataset = dimensionDataMap[dimension].map(d => d.dataItem);
+      dimensionStackSumMap[measureId].push(sumDimensionValues(dimensionDataset, measureId, v => v));
       return sumDimensionValues(dimensionDataset, measureId, onlyOneSeries ? v => v : undefined);
     });
   });
   return {
     dimensionDataMap,
     dimensionValues,
-    dimensionSumMap
+    dimensionSumMap,
+    dimensionStackSumMap
   };
 };
 
