@@ -140,6 +140,7 @@ export interface AxesDataInfo {
   dimensionDataMap: DimValueDataMap;
   dimensionValues: DataCell[];
   dimensionSumMap: Record<string, number[]>;
+  dimensionStackSumMap: Record<string, number[]>;
   axisTitle: string | string[];
   yField: string | string[];
 }
@@ -149,6 +150,7 @@ export interface DataInsightExtractContext {
   fieldInfo: FieldInfo[];
   dimensionDataMap: DimValueDataMap;
   dimensionSumMap: Record<string, number[]>;
+  dimensionStackSumMap: Record<string, number[]>;
   dimensionValues: DataCell[];
   seriesDataMap: DimValueDataMap;
   chartType: ChartType;

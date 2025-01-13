@@ -37,7 +37,7 @@ const getMinMaxAvg = (data: number[]) => {
 };
 
 const getBaseInsightByDataset = (
-  context: Pick<AxesDataInfo, 'dataset' | 'dimensionSumMap' | 'dimensionValues' | 'axisTitle'> & {
+  context: Pick<AxesDataInfo, 'dataset' | 'dimensionStackSumMap' | 'dimensionValues' | 'axisTitle'> & {
     xField: string;
     measureId: string | string[];
     isStack: boolean;
@@ -50,8 +50,8 @@ const getBaseInsightByDataset = (
     measureId,
     dataset,
     isStack,
-    dimensionSumMap,
     dimensionValues,
+    dimensionStackSumMap,
     axisTitle = [],
     isAxesArea = false,
     axesDirection
@@ -62,7 +62,7 @@ const getBaseInsightByDataset = (
   }));
   const result: Insight[] = [];
   const yField = isArray(measureId) ? measureId[0] : measureId;
-  const valueList = isStack ? dimensionSumMap[yField] : dataList.map(d => Number(d.dataItem[yField]));
+  const valueList = isStack ? dimensionStackSumMap[yField] : dataList.map(d => Number(d.dataItem[yField]));
   const { min, max, avg } = getMinMaxAvg(valueList);
   const titleName = (isArray(axisTitle) ? axisTitle?.[0] : axisTitle) || '';
   min.index !== -1 &&
