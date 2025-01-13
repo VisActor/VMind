@@ -29,7 +29,7 @@
   "dependencies": {
     "ts-pattern": "~4.1.4",
     "node-sql-parser": "~4.17.0",
-    "@visactor/vutils": "~0.17.4"
+    "@visactor/vutils": "~0.19.3"
   },
   "devDependencies": {
     "@internal/jest-config": "workspace:*",
