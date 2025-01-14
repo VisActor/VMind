@@ -254,9 +254,9 @@ const getOverallTrendTemplate = (insight: Insight, ctx: DataInsightExtractContex
       ? `数据整体呈${'${a}'}趋势，整体${
           value === TrendType.INCREASING ? '增长了' : '下降了'
         }${'${d}'}。其中在${'${b}'}至${'${c}'}间连续${'${a}'}。`
-      : `The overall data shows a ${'{a}'} trend, with an overall ${
+      : `The overall data shows a ${'${a}'} trend, with an overall ${
           value === TrendType.INCREASING ? 'increase ' : 'decrease '
-        }of ${'{d}'}. Notably, from ${'{b}'} to ${'{c}'}, there was a continuous ${'${a}'} trend.`,
+        }of ${'${d}'}. Notably, from ${'${b}'} to ${'${c}'}, there was a continuous ${'${a}'} trend.`,
     variables: {
       a: {
         value: isChinese
