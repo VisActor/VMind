@@ -118,7 +118,16 @@ export const getStrFromDict = (dict: Record<string, string>) =>
     .map(key => `${key}: ${dict[key]}`)
     .join('\n');
 
-export const uniqBy = (array: any, key: string | ((item: any) => string)) => {
+export const getYAMLArrayStrFromDict = (dict: Record<string, string>) =>
+  '-' +
+  Object.keys(dict)
+    .map(key => `  ${key}: ${dict[key]}`)
+    .join('\n')
+    .substring(1);
+
+export const getYAMLStrFromArray = (array: string[]) => Object.values(array).join('\n');
+
+export const uniqBy = (array: any, key: string) => {
   const seen = new Set();
   return array.filter((item: any) => {
     const k = isFunction(key) ? key(item) : item[key];

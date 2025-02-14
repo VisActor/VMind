@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 
 import { ChartType } from '../../../../../../common/typings';
+import { COMBINATION_BASIC_CHART_LIST } from '../../../../constants';
 
 type ChartKnowledgeBase = {
   [chartType: string]: {
@@ -73,5 +74,77 @@ export const chartKnowledgeBase: ChartKnowledgeBase = {
   [ChartType.LiquidChart]: {
     knowledge: ['Liquid chart show a percent value'],
     constraints: ['Use Liquid Chart if user want to show a percent value']
+  },
+  [ChartType.BubbleCirclePacking]: {
+    knowledge: [
+      'Bubble Circle Packing is useful for visualizing hierarchical data with circles representing nodes, where the size and color can convey additional information about the data points.'
+    ]
+  },
+  [ChartType.MapChart]: {
+    knowledge: [
+      'Map Charts are used to visualize geographical data, allowing for the identification of spatial patterns and trends.'
+    ]
+  },
+  [ChartType.RangeColumnChart]: {
+    knowledge: [
+      'Range Column Charts are designed to show data that has a minimum and a maximum value, making them effective for displaying variability or uncertainty within data sets.'
+    ]
+  },
+  [ChartType.SunburstChart]: {
+    knowledge: [
+      'Sunburst Charts are excellent for visualizing hierarchical data, allowing users to see relationships between categories and subcategories at varying levels of detail.'
+    ]
+  },
+  [ChartType.TreemapChart]: {
+    knowledge: [
+      'Treemap Charts are effective for displaying large amounts of hierarchical data in a compact space, where areas represent the size of each category.'
+    ]
+  },
+  [ChartType.Gauge]: {
+    knowledge: [
+      'Gauge Charts are useful for displaying performance metrics against a target.',
+      'If you want to display a dashboard, use a Gauge Chart.'
+    ]
+  },
+  [ChartType.BasicHeatMap]: {
+    knowledge: [
+      'Basic Heat Maps are great for visualizing data intensity over two dimensions, helping to identify patterns through color coding.'
+    ]
+  },
+  [ChartType.VennChart]: {
+    knowledge: [
+      'Venn Charts are useful for displaying the relationships between different groups, emphasizing similarities and differences visually.'
+    ]
+  },
+  [ChartType.SingleColumnCombinationChart]: {
+    knowledge: ['Single column combination charts can be combined with a variety of different basic chart types'],
+    constraints: [`subChartType cannot be empty, it is an array of values in ${COMBINATION_BASIC_CHART_LIST}.`]
+  },
+  [ChartType.DynamicScatterPlotChart]: {
+    knowledge: [
+      'Dynamic Scatter Plot Chart can highlight changes in the correlation between variables as time progresses.',
+      'It can display the distribution of data points and trends, along with movement or growth of specific categories over time.'
+    ],
+    constraints: [
+      'Use a dynamic scatter plot chart when you want to visualize the relationship between two or three quantitative variables and observe how that relationship evolves over time.'
+    ]
+  },
+  [ChartType.DynamicRoseChart]: {
+    knowledge: [
+      'Dynamic Rose Chart is used to display cyclical or seasonal data over time, with values represented by the length of radial bars.'
+    ],
+    constraints: [
+      'Use Dynamic Rose Chart if you want to show cyclical data and observe changes in multiple categories over time.'
+    ]
+  },
+  [ChartType.SequenceChart]: {
+    knowledge: [
+      'Sequence Chart visualizes events in chronological order along a time axis.',
+      'Sequence Chart is ideal for showing the progression of time-based events.'
+    ],
+    constraints: [
+      'Use Sequence Chart when the data contains a sequence of events that are ordered by time.',
+      'Sequence Chart requires a continuous time field in the data for accurate rendering.'
+    ]
   }
 };

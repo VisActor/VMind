@@ -1,5 +1,7 @@
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
 import { isArray, isNil } from '@visactor/vutils';
+import ChartGenerationTaskNodeGPTMeta from '../index';
+import type { Cell } from '../../../../types';
 
 import type { Transformer } from '../../../../../../base/tools/transformer';
 import {
@@ -10,6 +12,7 @@ import {
   getFieldsByDataType,
   getRemainedFields
 } from '../../../../../../common/utils/utils';
+import type { CombinationBasicChartType, VMindDataset } from '../../../../../../common/typings';
 import { ChartType, DataType, ROLE } from '../../../../../../common/typings';
 import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../../types';
 import { isValidDataset } from '../../../../../../common/dataProcess';
@@ -17,16 +20,21 @@ import {
   NEED_COLOR_FIELD_CHART_LIST,
   NEED_SIZE_FIELD_CHART_LIST,
   CARTESIAN_CHART_LIST,
-  NEED_COLOR_AND_SIZE_CHART_LIST
+  NEED_COLOR_AND_SIZE_CHART_LIST,
+  COMBINATION_CHART_LIST
 } from '../../../../constants';
+import { getCell, isCombinationChartType } from '../../../utils';
 
 export const patchAxisField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { cell } = context;
+  const { cells, chartType } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
 
-  const cellNew: any = { ...cell };
+  const cellNew: any = { ...getCell(cells) };
 
   // patch the "axis" field to x
   if (cellNew.axis && (!cellNew.x || !cellNew.y)) {
@@ -39,7 +47,7 @@ export const patchAxisField: Transformer<
 
   return {
     //...context,
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -47,12 +55,15 @@ export const patchColorField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { cell } = context;
-  const cellNew = { ...cell, color: cell.color ?? cell.category };
+  const { cells, chartType } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew = { ...getCell(cells), color: getCell(cells).color ?? getCell(cells).category };
 
   return {
     //...context,
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -60,9 +71,12 @@ export const patchLabelField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { cell } = context;
+  const { cells, chartType } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
 
-  const cellNew: any = { ...cell };
+  const cellNew: any = { ...getCell(cells) };
   //patch the "label" fields to color
   if (cellNew.label && (!cellNew.color || cellNew.color.length === 0)) {
     cellNew.color = cellNew.label;
@@ -70,7 +84,7 @@ export const patchLabelField: Transformer<
 
   return {
     //...context,
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -78,8 +92,11 @@ export const patchYField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { chartType, cell, dataset, fieldInfo } = context;
-  let cellNew = { ...cell };
+  const { chartType, cells, dataset, fieldInfo } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  let cellNew = { ...getCell(cells) };
   const { x, y } = cellNew;
   let chartTypeNew = chartType;
   let datasetNew = dataset;
@@ -93,7 +110,8 @@ export const patchYField: Transformer<
     if (
       chartTypeNew === ChartType.BoxPlot.toUpperCase() ||
       (chartTypeNew === ChartType.DualAxisChart.toUpperCase() && y.length === 2) ||
-      (chartTypeNew === ChartType.RangeColumnChart.toUpperCase() && y.length === 2)
+      (chartTypeNew === ChartType.RangeColumnChart.toUpperCase() && y.length === 2) ||
+      (chartTypeNew === ChartType.DynamicScatterPlotChart.toUpperCase() && y.length >= 2)
     ) {
       return {
         ...context
@@ -115,7 +133,7 @@ export const patchYField: Transformer<
     } else {
       chartTypeNew = <ChartType>ChartType.ScatterPlot.toUpperCase();
       cellNew = {
-        ...cell,
+        ...getCell(cells),
         x: y[0],
         y: y[1],
         color: typeof x === 'string' ? x : x[0]
@@ -126,7 +144,7 @@ export const patchYField: Transformer<
   return {
     //...context,
     chartType: chartTypeNew,
-    cell: cellNew,
+    cells: [cellNew],
     dataset: datasetNew
   };
 };
@@ -135,9 +153,12 @@ export const patchBoxPlot: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { chartType, cell } = context;
+  const { chartType, cells } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
   const cellNew = {
-    ...cell
+    ...getCell(cells)
   };
   const { y } = cellNew;
   if (chartType === ChartType.BoxPlot.toUpperCase()) {
@@ -194,7 +215,7 @@ export const patchBoxPlot: Transformer<
 
   return {
     //...context,
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -202,8 +223,11 @@ export const patchDualAxis: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { chartType, cell } = context;
-  const cellNew: any = { ...cell };
+  const { chartType, cells } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew: any = { ...getCell(cells) };
   //Dual-axis drawing yLeft and yRight
 
   if (chartType === ChartType.DualAxisChart.toUpperCase()) {
@@ -212,7 +236,7 @@ export const patchDualAxis: Transformer<
 
   return {
     //...context,
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -220,8 +244,11 @@ export const patchPieChart: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { chartType, cell, fieldInfo } = context;
-  const cellNew = { ...cell };
+  const { chartType, cells, fieldInfo } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew = { ...getCell(cells) };
 
   if (chartType === ChartType.RoseChart.toUpperCase()) {
     cellNew.angle = cellNew.radius ?? cellNew.size ?? cellNew.angle;
@@ -254,7 +281,7 @@ export const patchPieChart: Transformer<
   }
   return {
     //...context,
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -263,8 +290,11 @@ export const patchWordCloud: Transformer<
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
   //Word cloud must have color fields and size fields
-  const { chartType, cell, fieldInfo } = context;
-  const cellNew = { ...cell };
+  const { chartType, cells, fieldInfo } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew = { ...getCell(cells) };
 
   if (chartType === ChartType.WordCloud.toUpperCase()) {
     if (!cellNew.size || !cellNew.color || cellNew.color === cellNew.size) {
@@ -300,7 +330,7 @@ export const patchWordCloud: Transformer<
   }
   return {
     //...context,
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -308,12 +338,15 @@ export const patchDynamicBarChart: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { chartType, cell, fieldInfo, dataset } = context;
-  const cellNew = { ...cell };
+  const { chartType, cells, fieldInfo, dataset } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew = { ...getCell(cells) };
   let chartTypeNew = chartType;
 
   if (chartType === ChartType.DynamicBarChart.toUpperCase()) {
-    if (!cell.time || cell.time === '' || cell.time.length === 0) {
+    if (!cellNew.time || cellNew.time === '' || cellNew.time.length === 0) {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
 
       //Dynamic bar chart does not have a time field, choose a discrete field as time.
@@ -344,7 +377,7 @@ export const patchDynamicBarChart: Transformer<
 
   return {
     //...context,
-    cell: cellNew,
+    cells: [cellNew],
     chartType: chartTypeNew
   };
 };
@@ -353,8 +386,11 @@ export const patchCartesianXField: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { chartType, cell, fieldInfo } = context;
-  const cellNew = { ...cell };
+  const { chartType, cells, fieldInfo } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew = { ...getCell(cells) };
 
   //Cartesian chart must have X field
   if (CARTESIAN_CHART_LIST.map(chart => chart.toUpperCase()).includes(chartType)) {
@@ -371,7 +407,7 @@ export const patchCartesianXField: Transformer<
   }
   return {
     //...context,
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -379,8 +415,11 @@ export const patchNeedColor: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { chartType, cell, fieldInfo } = context;
-  const cellNew: any = { ...cell };
+  const { chartType, cells, fieldInfo } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew: any = { ...getCell(cells) };
   if (
     NEED_COLOR_FIELD_CHART_LIST.some(needColorFieldChartType => needColorFieldChartType.toUpperCase() === chartType) ||
     NEED_COLOR_AND_SIZE_CHART_LIST.some(needColorFieldChartType => needColorFieldChartType.toUpperCase() === chartType)
@@ -394,12 +433,12 @@ export const patchNeedColor: Transformer<
       if (colorField) {
         cellNew.color = colorField.fieldName;
       } else {
-        cellNew.color = remainedFields[0].fieldName;
+        cellNew.color = remainedFields[0] ? remainedFields[0].fieldName : null;
       }
     }
   }
   return {
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -407,8 +446,11 @@ export const patchNeedSize: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { chartType, cell, fieldInfo } = context;
-  const cellNew: any = { ...cell };
+  const { chartType, cells, fieldInfo } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew: any = { ...getCell(cells) };
   if (
     NEED_SIZE_FIELD_CHART_LIST.some(needSizeFieldChartType => needSizeFieldChartType.toUpperCase() === chartType) ||
     NEED_COLOR_AND_SIZE_CHART_LIST.some(needSizeFieldChartType => needSizeFieldChartType.toUpperCase() === chartType)
@@ -422,12 +464,12 @@ export const patchNeedSize: Transformer<
       if (sizeField) {
         cellNew.size = sizeField.fieldName;
       } else {
-        cellNew.size = remainedFields[0].fieldName;
+        cellNew.size = remainedFields[0] ? remainedFields[0].fieldName : null;
       }
     }
   }
   return {
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -436,8 +478,11 @@ export const patchRangeColumnChart: Transformer<
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
   // Range Column Chart's y field must length == 2
-  const { chartType, cell, fieldInfo } = context;
-  const cellNew = { ...cell };
+  const { chartType, cells, fieldInfo } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew = { ...getCell(cells) };
   const remainedFields = getRemainedFields(cellNew, fieldInfo);
   const numericFields = getFieldsByDataType(remainedFields, [DataType.FLOAT, DataType.INT]);
   if (chartType === ChartType.RangeColumnChart.toUpperCase()) {
@@ -455,7 +500,7 @@ export const patchRangeColumnChart: Transformer<
   }
   return {
     //...context,
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -463,8 +508,11 @@ export const patchLinearProgressChart: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { chartType, cell, fieldInfo } = context;
-  const cellNew = { ...cell };
+  const { chartType, cells, fieldInfo } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew = { ...getCell(cells) };
   if (chartType === ChartType.LinearProgress.toUpperCase()) {
     const xField = [cellNew.x, cellNew.color].filter(Boolean).flat();
     if (xField.length !== 0) {
@@ -494,7 +542,7 @@ export const patchLinearProgressChart: Transformer<
   }
   return {
     //...context,
-    cell: cellNew
+    cells: [cellNew]
   };
 };
 
@@ -502,8 +550,11 @@ export const patchBasicHeatMapChart: Transformer<
   GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
   Partial<GenerateChartAndFieldMapOutput>
 > = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
-  const { chartType, cell, fieldInfo } = context;
-  const cellNew: any = { ...cell };
+  const { chartType, cells, fieldInfo } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew: any = { ...getCell(cells) };
   if (chartType === ChartType.BasicHeatMap.toUpperCase()) {
     const colorField = [cellNew.x, cellNew.y, cellNew.label, cellNew.color].filter(Boolean).flat();
     if (colorField.length >= 2) {
@@ -522,6 +573,113 @@ export const patchBasicHeatMapChart: Transformer<
     }
   }
   return {
-    cell: cellNew
+    cells: [cellNew]
+  };
+};
+
+export const patchSingleColumnCombinationChart: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cells, subChartType } = context;
+  if (
+    COMBINATION_CHART_LIST.some(combinationChartType => {
+      return chartType.toUpperCase() === combinationChartType.toUpperCase();
+    })
+  ) {
+    const cellsNew: Cell[] = [...cells];
+    const subChartTypeNew: CombinationBasicChartType[] = [...subChartType];
+    const datasetNew: VMindDataset[] = [];
+
+    const patchers = ChartGenerationTaskNodeGPTMeta.patcher.filter(patch => {
+      return patch.name !== 'patchSingleColumnCombinationChart';
+    });
+
+    const minLength = Math.min(cells.length, subChartType.length);
+    for (let index = 0; index < minLength; index++) {
+      const input = {
+        ...context,
+        chartType: subChartType[index].toString() as ChartType,
+        cells: [getCell(cells, index)]
+      };
+      const result = patchers.reduce((pre, pipeline) => {
+        const res = pipeline(pre);
+        return { ...pre, ...res } as any;
+      }, input);
+      subChartTypeNew[index] = result.chartType.toString() as CombinationBasicChartType;
+      cellsNew[index] = getCell(result.cells);
+      datasetNew[index] = result.dataset;
+    }
+
+    return {
+      subChartType: subChartTypeNew,
+      cells: cellsNew,
+      datasetsForCombinationChart: datasetNew
+    };
+  }
+  return {};
+};
+
+export const patchDynamicScatterPlotChart: Transformer<
+  GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput,
+  Partial<GenerateChartAndFieldMapOutput>
+> = (context: GenerateChartAndFieldMapContext & GenerateChartAndFieldMapOutput) => {
+  const { chartType, cells, fieldInfo } = context;
+  if (isCombinationChartType(chartType)) {
+    return {};
+  }
+  const cellNew = { ...getCell(cells) };
+  let chartTypeNew = chartType;
+
+  if (chartType === ChartType.DynamicScatterPlotChart.toUpperCase()) {
+    if (cellNew.y && isArray(cellNew.y)) {
+      cellNew.y = cellNew.y[0];
+    }
+    if (cellNew.color && isArray(cellNew.color)) {
+      cellNew.color = cellNew.color[0];
+    }
+    if (!cellNew.time || cellNew.time === '' || cellNew.time.length === 0) {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+
+      //Dynamic scatter plot chart does not have a time field, choose a discrete field as time.
+      const timeField = getFieldByDataType(remainedFields, [DataType.DATE]);
+      if (timeField) {
+        cellNew.time = timeField.fieldName;
+      } else {
+        const stringField = getFieldByDataType(remainedFields, [DataType.STRING]);
+        if (stringField) {
+          cellNew.time = stringField.fieldName;
+        } else {
+          //no available field, set chart type to scatter plot chart
+          chartTypeNew = <ChartType>ChartType.ScatterPlot.toUpperCase();
+          return {
+            //...context,
+            cells: [cellNew],
+            chartType: chartTypeNew
+          };
+        }
+      }
+    }
+    if (!cellNew.x || cellNew.x === cellNew.time) {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const xField = getFieldByDataType(remainedFields, [DataType.INT, DataType.FLOAT]);
+      if (xField) {
+        cellNew.x = xField.fieldName;
+      }
+    }
+
+    if (!cellNew.size || cellNew.size === cellNew.time) {
+      const remainedFields = getRemainedFields(cellNew, fieldInfo);
+      const sizeField = getFieldByDataType(remainedFields, [DataType.INT, DataType.FLOAT]);
+      if (sizeField) {
+        cellNew.size = sizeField.fieldName;
+      }
+    }
+  }
+
+  return {
+    //...context,
+    cells: [cellNew],
+    chartType: chartTypeNew
   };
 };

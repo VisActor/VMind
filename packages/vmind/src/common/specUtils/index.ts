@@ -173,7 +173,7 @@ export const fillSpecTemplateWithData = (
   const context: any = {
     spec: template,
     dataset: datasetNew,
-    cell: cellNew,
+    cells: [cellNew],
     totalTime
   };
 
@@ -205,7 +205,7 @@ export const fillSpecTemplateWithData = (
     const contextNew: any = {
       spec: template,
       dataset: datasetNew,
-      cell: cellNew,
+      cells: [cellNew],
       totalTime
     };
     const { spec: spec1 } = data(contextNew);
@@ -233,7 +233,7 @@ export const fillSpecTemplateWithData = (
     const contextNew: any = {
       spec: template,
       dataset: datasetNew,
-      cell: cellNew,
+      cells: [cellNew],
       totalTime
     };
     const { spec } = data(contextNew);

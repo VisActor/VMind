@@ -76,7 +76,23 @@ import {
   mapField,
   mapDisplayConf,
   registerChart,
-  seriesField
+  seriesField,
+  commonSingleColumnRegion,
+  commonSingleColumnSeries,
+  commonSingleColumnLegend,
+  commonSingleColumnAxes,
+  commonSingleColumnLayout,
+  dynamicScatterPlotAxes,
+  dynamicScatterPlotSeries,
+  dynamicScatterPlotAnimation,
+  colorDynamicScatterPlot,
+  dynamicScatterPlotTooltip,
+  dynamicRoseAnimation,
+  dynamicRoseField,
+  dynamicRoseDisplayConf,
+  sequenceChartData,
+  sequenceChartSeries,
+  sequenceChartAxes
 } from './transformers';
 
 const pipelineBar = [
@@ -227,6 +243,36 @@ const pipelineBasicHeatMap = [
   theme
 ];
 const pipelineVenn = [chartType, registerChart, vennData, color, vennField, legend, theme];
+const pipelineSingleColumnCombinationChart = [
+  chartType,
+  commonSingleColumnRegion,
+  commonSingleColumnSeries,
+  commonSingleColumnLegend,
+  commonSingleColumnAxes,
+  commonSingleColumnLayout,
+  theme
+];
+const pipelineDynamicScatterPlotChart = [
+  chartType,
+  sequenceData,
+  colorDynamicScatterPlot,
+  dynamicScatterPlotAnimation,
+  dynamicScatterPlotAxes,
+  dynamicScatterPlotSeries,
+  customMark,
+  dynamicScatterPlotTooltip,
+  theme
+];
+const pipelineDynamicRoseChart = [
+  chartType,
+  sequenceData,
+  dynamicRoseAnimation,
+  dynamicRoseField,
+  dynamicRoseDisplayConf,
+  customMark,
+  theme
+];
+const pipelineSequenceChart = [chartType, sequenceChartData, sequenceChartSeries, sequenceChartAxes, theme];
 
 const pipelineMap: { [chartType: string]: any } = {
   [ChartType.BarChart.toUpperCase()]: pipelineBar,
@@ -252,7 +298,11 @@ const pipelineMap: { [chartType: string]: any } = {
   [ChartType.TreemapChart.toUpperCase()]: pipelineTreemap,
   [ChartType.Gauge.toUpperCase()]: pipelineGauge,
   [ChartType.BasicHeatMap.toUpperCase()]: pipelineBasicHeatMap,
-  [ChartType.VennChart.toUpperCase()]: pipelineVenn
+  [ChartType.VennChart.toUpperCase()]: pipelineVenn,
+  [ChartType.SingleColumnCombinationChart.toUpperCase()]: pipelineSingleColumnCombinationChart,
+  [ChartType.DynamicScatterPlotChart.toUpperCase()]: pipelineDynamicScatterPlotChart,
+  [ChartType.DynamicRoseChart.toUpperCase()]: pipelineDynamicRoseChart,
+  [ChartType.SequenceChart.toUpperCase()]: pipelineSequenceChart
 };
 
 export const beforePipe: Transformer<GetChartSpecContext & GetChartSpecOutput, GetChartSpecOutput> = (

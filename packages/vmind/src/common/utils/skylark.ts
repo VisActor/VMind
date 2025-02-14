@@ -44,7 +44,7 @@ export const requestSkyLark = async (prompt: string, message: string, options: I
 };
 
 const startsWithTextAndColon = (str: string) => {
-  const regex = /^.+\:/;
+  const regex = /^(.+:| +\-)/;
   return regex.test(str);
 };
 
@@ -71,7 +71,7 @@ export const parseSkylarkResponse = (larkResponse: LLMResponse): Record<string, 
       //remove lines that is not start with text and colon
       .filter((str: string) => startsWithTextAndColon(str))
       //remove blank space at the start of each line
-      .map((str: string) => str.replace(/^\s+/, ''))
+      // .map((str: string) => str.replace(/^\s+/, ''))
       //wrap string list with []
       .map((str: string) => {
         if (isStringArray(str)) {

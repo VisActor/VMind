@@ -3,12 +3,15 @@ import type { Parser } from '../../../../../base/tools/parser';
 import type { Requester } from '../../../../../base/tools/requester';
 import { parseGPTResponse, requestGPT } from '../../../../../common/utils/gpt';
 import type { ChartType } from '../../../../../common/typings';
+import { COMBINATION_CHART_LIST } from '../../../constants';
 import type { GenerateChartAndFieldMapContext, GenerateChartAndFieldMapOutput } from '../types';
+import type { CombinationBasicChartType } from '../../../../../common/typings';
 
 type GPTChartAdvisorResult = {
   CHART_TYPE: ChartType;
+  SUB_CHART_TYPE: CombinationBasicChartType[];
   DOUBLE_CHECK: string;
-  FIELD_MAP: Cell;
+  FIELD_MAP: Cell[];
   THOUGHT: string;
   VIDEO_DURATION?: number;
   COLOR_PALETTE?: string[];
@@ -25,9 +28,13 @@ export const parseChartGenerationResponse: Parser<
     throw Error((advisorResJson as any).message);
   }
 
-  const { CHART_TYPE, FIELD_MAP } = advisorResJson;
-
-  return { chartType: CHART_TYPE as ChartType, cell: FIELD_MAP, usage: advisorRes.usage };
+  const { CHART_TYPE, FIELD_MAP, SUB_CHART_TYPE } = advisorResJson;
+  return {
+    chartType: CHART_TYPE as ChartType,
+    cells: FIELD_MAP,
+    subChartType: SUB_CHART_TYPE,
+    usage: advisorRes.usage
+  };
 };
 
 export const chartGenerationRequestLLM: Requester<GenerateChartAndFieldMapContext> = async (
