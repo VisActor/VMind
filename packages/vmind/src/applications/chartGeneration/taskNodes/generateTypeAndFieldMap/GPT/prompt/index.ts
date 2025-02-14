@@ -12,13 +12,14 @@ import {
   visualChannelInfoMap
 } from './knowledges';
 import { uniqArray } from '@visactor/vutils';
+import { COMBINATION_BASIC_CHART_LIST, COMBINATION_CHART_LIST } from '../../../../constants';
 
 const patchUserInput = (userInput: string) => {
   const FULL_WIDTH_SYMBOLS = ['，', '。'];
   const HALF_WIDTH_SYMBOLS = [',', '.'];
 
   const BANNED_WORD_LIST = ['动态'];
-  const ALLOWED_WORD_LIST = ['动态条形图', '动态柱状图', '动态柱图'];
+  const ALLOWED_WORD_LIST = ['动态条形图', '动态柱状图', '动态柱图', '动态散点图', '动态玫瑰图', '动态饼图'];
   const PLACEHOLDER = '_USER_INPUT_PLACE_HOLDER';
   const tempStr1 = ALLOWED_WORD_LIST.reduce((prev, cur, index) => {
     return prev.split(cur).join(PLACEHOLDER + '_' + index);
@@ -67,8 +68,25 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
     }, []);
 
     const visualChannelsStr = uniqArray(visualChannels)
-      .map((channel: string) => `"${channel}": ${visualChannelInfoMap[channel](sortedChartTypeList)}`)
-      .join('\n');
+      .map((channel: string) => {
+        const visualChannelInfo = visualChannelInfoMap[channel](sortedChartTypeList);
+        if (visualChannelInfo.multipleFieldsInfo) {
+          return `"${channel}": {
+            "oneOf": [
+              {"type": "string", "description": "${visualChannelInfo.singleFieldInfo}"},
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "description": "${visualChannelInfo.multipleFieldsInfo}"
+                }
+              }
+            ]
+          }`;
+        }
+        return `"${channel}": {"type": "string", "description": "${visualChannelInfo.singleFieldInfo}"}`;
+      })
+      .join(',\n          ');
 
     const constraintsStr = getStrFromArray(chartGenerationConstraints);
 
@@ -85,6 +103,8 @@ export class GPTChartGenerationPrompt extends Prompt<GenerateChartAndFieldMapCon
     const QueryDatasetPrompt = ChartAdvisorPromptEnglish(
       showThoughts,
       chartTypeList,
+      COMBINATION_BASIC_CHART_LIST,
+      COMBINATION_CHART_LIST,
       knowledgeStr,
       visualChannelsStr,
       constraintsStr,

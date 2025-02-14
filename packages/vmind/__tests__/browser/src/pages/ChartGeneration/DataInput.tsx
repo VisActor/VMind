@@ -49,7 +49,15 @@ import {
   linearProgressChartData,
   basicHeatMapChartData,
   vennChartData,
-  mapChartData
+  mapChartData,
+  singleColumnLineCombinationChartData,
+  singleColumnLineCombinationChartData1,
+  singleColumnBarCombinationChartData1,
+  singleColumnBarCombinationChartData,
+  dynamicScatterPlotData,
+  dynamicRoseData,
+  dynamicRoseData1,
+  sequenceData
 } from '../../constants/mockData';
 import VMind, { ArcoTheme, builtinThemeMap, BuiltinThemeType } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
@@ -106,7 +114,15 @@ const demoDataList: { [key: string]: any } = {
   Gauge: gaugeChartData,
   LinearProgress: linearProgressChartData,
   BasicHeatMap: basicHeatMapChartData,
-  Venn: vennChartData
+  Venn: vennChartData,
+  SingleColumnLineCommon: singleColumnLineCombinationChartData,
+  SingleColumnLineCommon1: singleColumnLineCombinationChartData1,
+  SingleColumnBarCommon: singleColumnBarCombinationChartData,
+  SingleColumnBarCommon1: singleColumnBarCombinationChartData1,
+  dynamicScatterPlotData: dynamicScatterPlotData,
+  dynamicRoseData: dynamicRoseData,
+  dynamicRoseData1: dynamicRoseData1,
+  sequenceData: sequenceData
 };
 
 const globalVariables = (import.meta as any).env;
@@ -187,14 +203,14 @@ export function DataInput(props: IPropsType) {
     console.log(chartGenerationRes);
     if (isArray(chartGenerationRes)) {
       const resNew = chartGenerationRes.map(res => {
-        const { spec, cell } = res;
+        const { spec, cells } = res;
         specTemplateTest && (spec.data = undefined);
-        const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset, cell) : spec;
+        const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset, cells) : spec;
         return finalSpec;
       });
       props.onSpecListGenerate(resNew);
     } else {
-      const { spec, time, cell } = chartGenerationRes;
+      const { spec, time, cells } = chartGenerationRes;
 
       const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset) : spec;
 

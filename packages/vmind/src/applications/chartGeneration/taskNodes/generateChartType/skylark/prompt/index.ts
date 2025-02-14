@@ -3,6 +3,7 @@ import type { GenerateChartTypeContext } from '../../types';
 import { getChartRecommendPrompt } from './template';
 import { getStrFromArray } from '../../../../../../common/utils/utils';
 import { chartKnowledgeBase } from './knowledge';
+import { COMBINATION_CHART_LIST } from '../../../../constants';
 
 export class ChartTypeGenerationPrompt extends Prompt<GenerateChartTypeContext> {
   constructor() {
@@ -25,6 +26,7 @@ export class ChartTypeGenerationPrompt extends Prompt<GenerateChartTypeContext> 
 
     const chartRecommendPrompt = getChartRecommendPrompt(
       chartTypeList,
+      COMBINATION_CHART_LIST,
       chartRecommendKnowledgeStr,
       chartRecommendConstraintsStr,
       llmOptions.showThoughts ?? true

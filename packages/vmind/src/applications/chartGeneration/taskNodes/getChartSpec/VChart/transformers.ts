@@ -20,11 +20,18 @@ import {
 import { getFieldByDataType } from '../../../../../common/utils/utils';
 import { array, isArray, uniqArray } from '@visactor/vutils';
 import { isValidDataset } from '../../../../../common/dataProcess';
-import { DataType, ChartType, ROLE } from '../../../../../common/typings';
-import { builtinThemeMap } from '../../../../../common/builtinTheme';
 import type { VMindDataset } from '../../../../../common/typings';
-import { COLOR_FIELD } from '@visactor/chart-advisor';
 import type { DataCell } from '../../../../../types';
+import type { DataItem } from '../../../../../common/typings';
+
+import { ChartType, CombinationBasicChartType, DataType, ROLE } from '../../../../../common/typings';
+import { builtinThemeMap } from '../../../../../common/builtinTheme';
+import { FOLD_NAME, FOLD_VALUE, COLOR_FIELD } from '@visactor/chart-advisor';
+import { CARTESIAN_CHART_LIST } from '../../../constants';
+import { getCell } from '../../utils';
+import { fillColorForData, sortArray, SortOrder } from './utils';
+
+const CARTESIAN_CHART_LIST_UPPER = CARTESIAN_CHART_LIST.map(chartType => chartType.toUpperCase() as ChartType);
 
 type Context = GetChartSpecContext & GetChartSpecOutput;
 
@@ -52,7 +59,11 @@ const chartTypeMap: { [chartName: string]: string } = {
   [ChartType.TreemapChart.toUpperCase()]: 'treemap',
   [ChartType.Gauge.toUpperCase()]: 'gauge',
   [ChartType.BasicHeatMap.toUpperCase()]: 'common',
-  [ChartType.VennChart.toUpperCase()]: 'venn'
+  [ChartType.VennChart.toUpperCase()]: 'venn',
+  [ChartType.SingleColumnCombinationChart.toUpperCase()]: 'common',
+  [ChartType.DynamicScatterPlotChart.toUpperCase()]: 'common',
+  [ChartType.DynamicRoseChart.toUpperCase()]: 'rose',
+  [ChartType.SequenceChart.toUpperCase()]: 'sequence'
 };
 
 export const chartType: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
@@ -84,7 +95,8 @@ export const arrayData: Transformer<Context, GetChartSpecOutput> = (context: Con
 };
 
 export const funnelData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { dataset, cell, spec } = context;
+  const { dataset, cells, spec } = context;
+  const cell = getCell(cells);
   // spec.data = [dataset]
   spec.data = {
     id: 'data',
@@ -107,9 +119,19 @@ export const wordCloudData: Transformer<Context, GetChartSpecOutput> = (context:
 export const sequenceData: Transformer<Context & { totalTime: number }, GetChartSpecOutput> = (
   context: Context & { totalTime: number }
 ) => {
-  const { dataset, cell, totalTime, spec } = context;
+  const { dataset, cells, totalTime, spec, chartType } = context;
+  const cell = getCell(cells);
   const timeField = cell.time as string;
-  const latestData = isValidDataset(dataset) ? dataset : [];
+  let latestData = isValidDataset(dataset) ? dataset : [];
+  if (chartType.toUpperCase() === ChartType.DynamicRoseChart.toUpperCase()) {
+    latestData = fillColorForData(
+      sortArray(latestData, [
+        { field: timeField, order: SortOrder.ASC },
+        { field: cell.radius, order: SortOrder.DESC }
+      ]),
+      cell.color as string
+    );
+  }
 
   //add the time field into spec, although it has no use for chart rendering.
   //it can be used in getCellFromSpec.
@@ -236,7 +258,8 @@ export const sequenceData: Transformer<Context & { totalTime: number }, GetChart
 };
 
 export const sankeyData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { dataset, cell, spec } = context;
+  const { dataset, cells, spec } = context;
+  const cell = getCell(cells);
   const { source, target } = cell;
   const linkData = isValidDataset(dataset) ? dataset : [];
   const nodes = [
@@ -375,8 +398,8 @@ export const colorLine: Transformer<Context, GetChartSpecOutput> = (context: Con
 };
 
 export const seriesField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec, fieldInfo, dataset, cell } = context;
-  const cellNew: any = { ...cell };
+  const { spec, fieldInfo, dataset, cells } = context;
+  const cellNew: any = { ...cells };
   const { seriesField, xField } = spec;
   const colorField = isArray(seriesField) ? seriesField[0] : seriesField;
   const colorFieldInfo = fieldInfo.find(v => v.fieldName === colorField);
@@ -411,7 +434,8 @@ export const seriesField: Transformer<Context, GetChartSpecOutput> = (context: C
 
 export const cartesianLine: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign field in spec according to cell
-  const { cell, spec, fieldInfo } = context;
+  const { cells, spec, fieldInfo } = context;
+  const cell = getCell(cells);
   const cellNew = { ...cell };
   spec.xField = cell.x;
   spec.yField = cell.y;
@@ -428,12 +452,13 @@ export const cartesianLine: Transformer<Context, GetChartSpecOutput> = (context:
       cellNew.color = colorField.fieldName;
     }
   }
-  return { spec, cell: cellNew };
+  return { spec, cells: [cellNew] };
 };
 
 export const pieField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   spec.valueField = cell.angle || cell.value;
   if (cell.color || (cell as any).category) {
     spec.categoryField = cell.color || (cell as any).category;
@@ -443,7 +468,8 @@ export const pieField: Transformer<Context, GetChartSpecOutput> = (context: Cont
 
 export const scatterField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   spec.xField = cell.x;
   spec.yField = cell.y;
   if (cell.color) {
@@ -461,7 +487,8 @@ export const scatterField: Transformer<Context, GetChartSpecOutput> = (context: 
 
 export const wordCloudField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   spec.nameField = cell.color;
 
   if (cell.size) {
@@ -475,7 +502,8 @@ export const wordCloudField: Transformer<Context, GetChartSpecOutput> = (context
 
 export const funnelField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   spec.categoryField = cell.color || cell.x;
   spec.valueField = cell.value || cell.y;
 
@@ -484,7 +512,8 @@ export const funnelField: Transformer<Context, GetChartSpecOutput> = (context: C
 
 export const waterfallField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   spec.xField = cell.x;
   spec.yField = cell.y;
   spec.total = {
@@ -533,7 +562,8 @@ export const waterfallStackLabel: Transformer<Context, GetChartSpecOutput> = (co
 
 export const dualAxisSeries: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign series in dual-axis chart
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   const { color } = cell;
   const dataValues = spec.data.values;
 
@@ -630,7 +660,8 @@ export const wordCloudDisplayConf: Transformer<Context, GetChartSpecOutput> = (c
 };
 
 export const radarField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   if (cell.x || cell.angle) {
     spec.categoryField = cell.x ?? cell.angle;
   }
@@ -705,7 +736,8 @@ export const radarAxis: Transformer<Context, GetChartSpecOutput> = (context: Con
 };
 
 export const sankeyField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   spec.sourceField = cell.source;
   spec.targetField = cell.target;
   spec.valueField = cell.value;
@@ -716,7 +748,8 @@ export const sankeyField: Transformer<Context, GetChartSpecOutput> = (context: C
 };
 
 export const boxPlotField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { cell, dataset, spec } = context;
+  const { cells, dataset, spec } = context;
+  const cell = getCell(cells);
   const { x, y } = cell;
   const data = isValidDataset(dataset) ? (dataset as { [key: string]: number }[]) : [];
   // assign x field
@@ -783,7 +816,8 @@ export const sankeyLink: Transformer<Context, GetChartSpecOutput> = (context: Co
 
 export const cartesianBar: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign fields according to cell
-  const { cell, fieldInfo, spec } = context;
+  const { cells, fieldInfo, spec } = context;
+  const cell = getCell(cells);
   const cellNew = { ...cell };
   const flattenedXField = Array.isArray(cell.x) ? cell.x : [cell.x];
   if (cell.color && cell.color.length > 0 && cell.color !== cell.x) {
@@ -805,12 +839,13 @@ export const cartesianBar: Transformer<Context, GetChartSpecOutput> = (context: 
       cellNew.color = colorField.fieldName;
     }
   }
-  return { spec, cell: cellNew };
+  return { spec, cells: [cellNew] };
 };
 
 export const rankingBarField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //折线图根据cell分配字段
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   spec.xField = cell.y;
   spec.yField = cell.x;
   if (cell.color) {
@@ -823,7 +858,8 @@ export const rankingBarField: Transformer<Context, GetChartSpecOutput> = (contex
 };
 
 export const roseField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   spec.valueField = cell.radius || cell.angle;
   if (cell.color) {
     spec.categoryField = cell.color;
@@ -949,7 +985,8 @@ export const axis: Transformer<Context, GetChartSpecOutput> = (context: Context)
 };
 
 export const legend: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   if (!(cell.color || cell.category) && !spec.seriesField && spec.type !== 'common') {
     return { spec };
   }
@@ -1189,7 +1226,7 @@ export const animationCartesianPie: Transformer<Context, GetChartSpecOutput> = (
   const { spec } = context;
 
   const totalTime = context.totalTime ?? DEFAULT_PIE_VIDEO_LENGTH;
-  const groupKey = context.cell.color as string;
+  const groupKey = getCell(context.cells).color as string;
   const dataValues = spec.data.values as any[];
   const groupNum = dataValues.map(d => d[groupKey!]).filter(onlyUnique).length;
   //const delay = totalTime / groupNum - 1000;
@@ -1302,9 +1339,10 @@ export const theme: Transformer<Context, GetChartSpecOutput> = (context: Context
 };
 
 export const liquidField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { cell, dataset, spec } = context;
+  const { cells, dataset, spec } = context;
+  const cell = getCell(cells);
 
-  spec.valueField = cell.value;
+  spec.valueField = (cell.value ?? cell.y ?? cell.size) as string;
   spec.indicatorSmartInvert = true;
 
   return { spec };
@@ -1321,7 +1359,8 @@ export const liquidStyle: Transformer<Context, GetChartSpecOutput> = (context: C
 
 export const linearProgressField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
 
   spec.xField = cell.y;
   spec.yField = cell.x;
@@ -1335,7 +1374,8 @@ export const linearProgressField: Transformer<Context, GetChartSpecOutput> = (co
 
 export const linearProgressAxes: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   const hasSingleData = spec.data.values && spec.data.values.length === 1;
 
   spec.axes = [
@@ -1381,10 +1421,11 @@ export const linearProgressStyle: Transformer<Context, GetChartSpecOutput> = (co
 
 export const circularProgressField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
 
   spec.categoryField = cell.color;
-  spec.valueField = cell.value;
+  spec.valueField = (cell.value ?? cell.size) as string;
   spec.seriesField = cell.color;
 
   spec.radius = 0.8;
@@ -1405,12 +1446,13 @@ export const circularProgressStyle: Transformer<Context, GetChartSpecOutput> = (
 };
 
 export const indicator: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec, cell } = context;
+  const { spec, cells } = context;
+  const cell = getCell(cells);
   const firstEntry = spec.data.values[0];
   if (!firstEntry) {
     return { spec };
   }
-  const valueField = (cell.value ?? cell.y) as string;
+  const valueField = (cell.value ?? cell.y ?? cell.size) as string;
   const value = firstEntry[valueField];
   const cat = firstEntry[cell.radius ?? cell.x];
 
@@ -1443,7 +1485,8 @@ export const indicator: Transformer<Context, GetChartSpecOutput> = (context: Con
 };
 
 export const bubbleCirclePackingData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { dataset, spec, cell } = context;
+  const { dataset, spec, cells } = context;
+  const cell = getCell(cells);
   if (cell.size) {
     dataset.forEach(data => {
       data.value = data[cell.size];
@@ -1455,7 +1498,8 @@ export const bubbleCirclePackingData: Transformer<Context, GetChartSpecOutput> =
 
 export const bubbleCirclePackingField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   spec.categoryField = cell.color || cell.x;
 
   if (cell.size) {
@@ -1483,7 +1527,8 @@ export const bubbleCirclePackingDisplayConf: Transformer<Context, GetChartSpecOu
 
 export const rangeColumnField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { cells, spec } = context;
+  const cell = getCell(cells);
   spec.yField = cell.x;
 
   spec.xField = [cell.y[0], cell.y[1]];
@@ -1501,7 +1546,8 @@ export const rangeColumnDisplayConf: Transformer<Context, GetChartSpecOutput> = 
 };
 
 export const sunburstData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { dataset, cell, spec } = context;
+  const { dataset, cells, spec } = context;
+  const cell = getCell(cells);
   spec.data = { id: 'data', values: getSunburstData(dataset, cell.color, 0, cell.size) };
   return { spec };
 };
@@ -1597,11 +1643,9 @@ export const sunburstDisplayConf: Transformer<Context, GetChartSpecOutput> = (co
 };
 
 export const treemapData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { dataset, cell, spec } = context;
-  spec.data = {
-    id: 'data',
-    values: getTreemapData(dataset, isArray(cell.color) ? cell.color : [cell.color], 0, cell.size)
-  };
+  const { dataset, cells, spec } = context;
+  const cell = getCell(cells);
+  spec.data = { id: 'data', values: getTreemapData(dataset, cell.color, 0, cell.size) };
   return { spec };
 };
 
@@ -1651,7 +1695,8 @@ export const treemapDisplayConf: Transformer<Context, GetChartSpecOutput> = (con
 };
 
 export const gaugeField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec, cell } = context;
+  const { spec, cells } = context;
+  const cell = getCell(cells);
   spec.valueField = cell.size;
   spec.categoryField = cell.color;
   return { spec };
@@ -1667,7 +1712,8 @@ export const gaugeDisplayConf: Transformer<Context, GetChartSpecOutput> = (conte
 };
 
 export const vennData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { dataset, spec, cell } = context;
+  const { dataset, spec, cells } = context;
+  const cell = getCell(cells);
   const id2dataMap = {};
   const setsField = cell.color[0];
   const nameField = cell.color[1];
@@ -1701,7 +1747,8 @@ export const registerChart: Transformer<Context, GetChartSpecOutput> = (context:
 };
 
 export const basicHeatMapSeries: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec, cell } = context;
+  const { spec, cells } = context;
+  const cell = getCell(cells);
   spec.series = [
     {
       type: 'heatmap',
@@ -1736,7 +1783,8 @@ export const basicHeatMapRegion: Transformer<Context, GetChartSpecOutput> = (con
   return { spec };
 };
 export const basicHeatMapColor: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec, cell } = context;
+  const { spec, cells } = context;
+  const cell = getCell(cells);
   spec.color = {
     type: 'linear',
     domain: [
@@ -1833,7 +1881,8 @@ export const basemap: Transformer<Context, GetChartSpecOutput> = (context: Conte
 };
 
 export const mapField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec, cell } = context;
+  const { spec, cells } = context;
+  const cell = getCell(cells);
 
   spec.nameField = cell.color;
   spec.valueField = cell.size;
@@ -1842,7 +1891,8 @@ export const mapField: Transformer<Context, GetChartSpecOutput> = (context: Cont
 };
 
 export const mapDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
-  const { spec, cell } = context;
+  const { spec, cells } = context;
+  const cell = getCell(cells);
   spec.legends = [
     {
       visible: true,
@@ -1860,6 +1910,582 @@ export const mapDisplayConf: Transformer<Context, GetChartSpecOutput> = (context
         changeDomain: 'replace'
       }
     }
+  };
+  return { spec };
+};
+
+export const commonSingleColumnRegion: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { cells, spec, datasetsForCombinationChart, subChartType } = context;
+
+  const regionList: string[] = [];
+
+  cells.forEach((cell, index) => {
+    if (subChartType[index] === undefined) {
+      return;
+    }
+    const sizeField = [cell.y, cell.size, cell.angle, cell.radius, cell.value].filter(Boolean).flat();
+    const dataset = datasetsForCombinationChart[index];
+    if (sizeField.length !== 0) {
+      if (sizeField[0] === FOLD_VALUE.toString()) {
+        const sizeFieldName = [...new Set(dataset.map(data => data[FOLD_NAME.toString()]))];
+        regionList.push(sizeFieldName.join(' & ') + '-' + subChartType[index]);
+      } else {
+        regionList.push(sizeField[0] + '-' + subChartType[index]);
+      }
+    }
+  });
+
+  spec.region = regionList.map((region, index) => {
+    return { id: region };
+  });
+  spec.regionList = regionList;
+  return { spec };
+};
+
+export const commonSingleColumnSeries: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { cells, spec, datasetsForCombinationChart, subChartType, fieldInfo } = context;
+  const commonData = {};
+  spec.seriesField = 'type';
+  spec.region.forEach((region: { [id: string]: string }) => {
+    commonData[region.id] = [];
+  });
+  cells.forEach((cell, index) => {
+    if (subChartType[index] === undefined) {
+      return;
+    }
+    const regionId = spec.regionList[index];
+    const dataset = datasetsForCombinationChart[index];
+    dataset.forEach(data => {
+      const subData = {
+        type: regionId
+      };
+      for (const visualChannel in cell) {
+        subData[cell[visualChannel]] = data[cell[visualChannel]];
+      }
+      commonData[regionId].push(subData);
+    });
+  });
+
+  spec.series = spec.region.map((region: { [id: string]: string }, index: number) => {
+    const regionId = region.id;
+    const seriesSubset = {
+      id: regionId,
+      regionId: regionId,
+      type: chartTypeMap[subChartType[index].toUpperCase()],
+      data: { id: regionId, values: commonData[regionId] }
+    };
+    let specNew: { spec: any };
+
+    switch (subChartType[index].toUpperCase()) {
+      case CombinationBasicChartType.BarChart.toUpperCase():
+        specNew = cartesianBar({ ...context, cells: [getCell(cells, index)], spec: {}, fieldInfo: fieldInfo });
+
+        return {
+          ...seriesSubset,
+          ...specNew.spec
+        };
+      case CombinationBasicChartType.LineChart.toUpperCase():
+        specNew = cartesianLine({ ...context, cells: [getCell(cells, index)], spec: {}, fieldInfo: fieldInfo });
+        return {
+          ...seriesSubset,
+          ...specNew.spec
+        };
+      default:
+        return {
+          ...seriesSubset,
+          xField: getCell(cells, index).x,
+          yField: getCell(cells, index).y
+        };
+    }
+  });
+
+  return { spec };
+};
+
+export const commonSingleColumnLegend: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.legends = {
+    padding: {
+      top: 10
+    },
+    visible: true,
+    orient: 'bottom',
+    id: 'legend',
+    regionId: spec.region.map((region: { [id: string]: string }) => {
+      return region.id;
+    })
+  };
+  return { spec };
+};
+export const commonSingleColumnAxes: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, subChartType } = context;
+
+  const cartesianRegion: string[] = spec.legends.regionId.filter((item: string, index: number) => {
+    return CARTESIAN_CHART_LIST_UPPER.includes(subChartType[index].toUpperCase() as ChartType);
+  });
+
+  const leftAxesCommonSpec = {
+    expand: { max: 0.2 },
+    label: { flush: true, visible: true },
+    tick: { visible: false },
+    forceTickCount: 3
+  };
+  if (cartesianRegion.length !== 0) {
+    // Y-axes
+    spec.axes = cartesianRegion.map((region: string) => {
+      return {
+        id: region + '-left',
+        regionId: region,
+        orient: 'left',
+        title: { visible: true, text: region },
+        ...leftAxesCommonSpec
+      };
+    });
+
+    // X-axes
+    spec.axes.push({
+      id: 'bottom',
+      regionId: cartesianRegion,
+      orient: 'bottom',
+      label: {
+        firstVisible: true,
+        lastVisible: true,
+        visible: true
+      },
+      tick: { visible: false }
+    });
+  }
+  return { spec };
+};
+export const commonSingleColumnLayout: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, subChartType } = context;
+  const regionLength = spec.legends.regionId.length;
+  const elements = [];
+
+  const existCartesianChart = subChartType.some(chartType =>
+    CARTESIAN_CHART_LIST_UPPER.includes(chartType.toUpperCase() as ChartType)
+  );
+
+  spec.region.forEach((region: { [id: string]: string }, index: number) => {
+    if (CARTESIAN_CHART_LIST_UPPER.includes(subChartType[index].toUpperCase() as ChartType)) {
+      elements.push({
+        modelId: region.id + '-left',
+        col: 0,
+        row: index
+      });
+      elements.push({
+        modelId: region.id,
+        col: 1,
+        row: index
+      });
+    } else if (!existCartesianChart) {
+      elements.push({
+        modelId: region.id,
+        col: 0,
+        row: index
+      });
+    } else {
+      elements.push({
+        modelId: region.id,
+        col: 0,
+        colSpan: 2,
+        row: index
+      });
+    }
+  });
+  if (
+    subChartType.some(item => {
+      return CARTESIAN_CHART_LIST_UPPER.includes(item.toUpperCase() as ChartType);
+    })
+  ) {
+    elements.push({
+      modelId: 'legend',
+      col: 0,
+      colSpan: 2,
+      row: regionLength + 1
+    });
+    elements.push({
+      modelId: 'bottom',
+      col: 1,
+      row: regionLength
+    });
+    spec.layout = { type: 'grid', col: 2, row: regionLength + 2, elements: elements };
+  } else {
+    elements.push({
+      modelId: 'legend',
+      col: 0,
+      row: regionLength
+    });
+    spec.layout = { type: 'grid', col: 1, row: regionLength + 1, elements: elements };
+  }
+  return { spec };
+};
+
+export const colorDynamicScatterPlot: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { colors, spec, cells, fieldInfo } = context;
+  const cell = getCell(cells);
+  const colorThemes = COLOR_THEMES.default;
+  if (colors && colors.length > 0) {
+    spec.color = colors;
+  } else {
+    spec.color = {
+      type: 'ordinal',
+      domain: fieldInfo.filter(fieldInfo => {
+        return fieldInfo.fieldName === cell.color;
+      })?.[0].domain,
+      range: colorThemes
+    };
+  }
+
+  return { spec };
+};
+
+export const dynamicScatterPlotAxes: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cells, fieldInfo } = context;
+  const cell = getCell(cells);
+  const xFieldInfo = fieldInfo.filter(fieldInfo => {
+    return fieldInfo.fieldName === cell.x;
+  })?.[0];
+  const yFieldInfo = fieldInfo.filter(fieldInfo => {
+    return fieldInfo.fieldName === cell.y;
+  })?.[0];
+
+  spec.axes = [
+    {
+      orient: 'left',
+      nice: true,
+      zero: false,
+      type: 'linear',
+      range: { min: yFieldInfo.domain[0], max: yFieldInfo.domain[1] },
+      tick: {
+        tickCount: 10
+      },
+      grid: {
+        visible: true,
+        style: {
+          lineDash: [0]
+        }
+      }
+    },
+    {
+      orient: 'bottom',
+      nice: true,
+      label: { visible: true },
+      type: 'linear',
+      range: { min: xFieldInfo.domain[0], max: xFieldInfo.domain[1] },
+      tick: {
+        tickCount: 10
+      },
+      grid: {
+        visible: true,
+        style: {
+          lineDash: [0]
+        }
+      }
+    }
+  ];
+  return { spec };
+};
+
+export const dynamicScatterPlotSeries: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cells } = context;
+  const cell = getCell(cells);
+  spec.series = [
+    {
+      type: 'scatter',
+      // 通过数据中的 index 进行数据匹配
+      dataKey: cell.color,
+      // 声明点半径大小
+      sizeField: cell.size,
+      size: {
+        type: 'linear',
+        range: [5, 30]
+      },
+      seriesField: cell.color,
+      point: {
+        style: {}
+      },
+      xField: cell.x,
+      yField: cell.y,
+      animationAppear: {
+        duration: 300,
+        easing: 'linear'
+      },
+      animationUpdate: {
+        duration: 300,
+        easing: 'linear'
+      }
+    }
+  ];
+  return { spec };
+};
+
+export const dynamicScatterPlotAnimation: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  const duration = spec.animationUpdate.bar[0].duration;
+  spec.animationUpdate = {
+    point: [
+      {
+        type: 'update',
+        options: {
+          excludeChannels: ['x', 'y']
+        },
+        duration: duration,
+        easing: 'cubicInOut'
+      },
+      {
+        channel: ['x', 'y'],
+        options: {
+          excludeChannels: ['width']
+        },
+        duration: duration,
+        easing: 'cubicInOut'
+      }
+    ],
+    axis: {
+      duration: duration,
+      easing: 'cubicInOut'
+    }
+  };
+  return { spec };
+};
+
+export const dynamicScatterPlotTooltip: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cells } = context;
+  const cell = getCell(cells);
+  spec.tooltip = {
+    mark: {
+      title: {
+        key: cell.color,
+        value: (datum: any) => datum[cell.color as string]
+      },
+      content: [
+        {
+          key: cell.x,
+          value: (datum: any) => datum[cell.x]
+        },
+        {
+          key: cell.y,
+          value: (datum: any) => datum[cell.y as string]
+        },
+        {
+          key: cell.size,
+          value: (datum: any) => datum[cell.size]
+        }
+      ]
+    }
+  };
+  return { spec };
+};
+
+export const dynamicRoseAnimation: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  const duration = 1000;
+  const exchangeDuration = 600;
+  spec.animationUpdate = {
+    rose: [
+      {
+        type: 'update',
+        options: { excludeChannels: ['startAngle', 'endAngle'] },
+        easing: 'linear',
+        duration
+      },
+      {
+        channel: ['startAngle', 'endAngle'],
+        easing: 'circInOut',
+        duration: exchangeDuration
+      }
+    ]
+  };
+  spec.animationEnter = {
+    easing: 'linear',
+    duration: exchangeDuration
+  };
+  spec.animationExit = {
+    easing: 'linear',
+    duration: exchangeDuration
+  };
+  return { spec };
+};
+export const dynamicRoseField: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec, cells } = context;
+  const cell = getCell(cells);
+  spec.categoryField = cell.color;
+  spec.valueField = cell.radius;
+  spec.seriesField = cell.color;
+  return { spec };
+};
+export const dynamicRoseDisplayConf: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { spec } = context;
+  spec.outerRadius = 1;
+  spec.innerRadius = 0.2;
+  spec.rose = {
+    style: {
+      fill: (datum: any) => datum.fill
+    }
+  };
+  spec.axes = [
+    {
+      orient: 'angle',
+      label: {
+        visible: false
+      }
+    },
+    {
+      orient: 'radius'
+    }
+  ];
+  spec.label = {
+    visible: true,
+    position: 'outside'
+  };
+  spec.startAngle = -90;
+  return { spec };
+};
+
+export const sequenceChartData: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { cells, dataset, spec } = context;
+  const cell = getCell(cells);
+  const timeField = cell.time as string;
+  const groupField = cell.group;
+  const colorField = cell.color as string;
+  const dataMap: { [key: string]: DataItem[] } = {};
+  dataset.forEach(data => {
+    dataMap[data[groupField]]
+      ? dataMap[data[groupField]].push({ ...data })
+      : (dataMap[data[groupField]] = [{ ...data }]);
+  });
+  const dataDot: { [key: string]: DataItem[] | string }[] = [];
+  const dataLink: { [key: string]: string | number }[] = [];
+  Object.keys(dataMap).forEach(key => {
+    const dotList = sortArray(dataMap[key], [{ field: timeField, order: SortOrder.ASC }]).map((data, index, array) => {
+      const newData = { ...data };
+      newData.node_name = `${data[groupField]}_${Math.floor(index / 2).toString()}_${data[colorField]}_node`;
+      return newData;
+    });
+    dataDot.push({
+      [cell.group]: key,
+      dots: dotList
+    });
+    dotList.forEach((dot, index, array) => {
+      if (index % 2 !== 0) {
+        dataLink.push({
+          from: array[index - 1].node_name,
+          to: dot.node_name
+        });
+      }
+    });
+  });
+  spec.data = [
+    { id: 'dataDotSeries', values: dataDot },
+    { id: 'dataLinkSeries', values: dataLink }
+  ];
+  return { spec };
+};
+
+export const sequenceChartSeries: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { cells, spec } = context;
+  const cell = getCell(cells);
+
+  spec.series = [
+    {
+      type: 'link',
+      dataId: 'dataLinkSeries',
+      dotSeriesIndex: 1,
+      fromField: 'from',
+      toField: 'to',
+      arrow: {
+        style: {
+          visible: false
+        }
+      }
+    },
+    {
+      type: 'dot',
+      dataId: 'dataDotSeries',
+      xField: cell.time as string,
+      yField: cell.group,
+      dotTypeField: cell.color as string,
+      titleField: cell.group,
+      highLightSeriesGroup: '',
+      height: 500,
+      clipHeight: 800,
+      title: {
+        style: {
+          fill: 'rgba(46, 47, 50)'
+        }
+      },
+      subTitle: {
+        style: {
+          fill: 'rgba(46, 47, 50)',
+          dy: 7
+        }
+      },
+      grid: {
+        style: {
+          visible: false
+        }
+      },
+      symbol: {
+        style: {
+          visible: false
+        }
+      },
+      tooltip: {
+        mark: {
+          title: {
+            key: 'event 信息',
+            value: 'event 信息'
+          },
+          content: [
+            {
+              hasShape: true,
+              shapeType: 'square',
+              key: (datum: any) => datum[cell.group]
+            },
+            {
+              hasShape: false,
+              key: 'event_time_stamp',
+              value: (datum: any) => datum[cell.group as string]
+            }
+          ]
+        }
+      }
+    }
+  ];
+  return { spec };
+};
+export const sequenceChartAxes: Transformer<Context, GetChartSpecOutput> = (context: Context) => {
+  const { cells, spec, fieldInfo } = context;
+  const cell = getCell(cells);
+
+  spec.axes = [
+    {
+      orient: 'top',
+      type: 'time',
+      range: {
+        min: fieldInfo.filter(fieldInfo => {
+          return fieldInfo.fieldName === cell.time;
+        })[0].domain[0],
+        max: fieldInfo.filter(fieldInfo => {
+          return fieldInfo.fieldName === cell.time;
+        })[0].domain[1]
+      },
+      layers: [
+        {
+          tickStep: 28800,
+          timeFormat: '%Y%m%d'
+        },
+        {
+          tickStep: 28800,
+          timeFormat: '%H:%M'
+        }
+      ]
+    }
+  ];
+  spec.appendPadding = {
+    left: 80,
+    right: 80
   };
   return { spec };
 };

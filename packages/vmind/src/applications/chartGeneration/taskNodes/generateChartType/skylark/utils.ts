@@ -23,7 +23,7 @@ export const parseChartTypeResponse: Parser<GenerateChartTypeContext, Partial<Ge
     throw Error(chartRecommendResJSON.message);
   }
 
-  const { charttype: chartType } = chartRecommendResJSON;
+  const { charttype: chartType, subcharttype: subChartType } = chartRecommendResJSON;
 
-  return { chartType: chartType, chartTypeTokenUsage: chartRecommendResJSON.usage };
+  return { chartType: chartType, subChartType: subChartType, chartTypeTokenUsage: chartRecommendResJSON.usage };
 };
