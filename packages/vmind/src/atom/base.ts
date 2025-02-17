@@ -208,4 +208,8 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
       );
     }
   }
+
+  clearHistory() {
+    this.responses.length = 0;
+  }
 }

@@ -143,6 +143,7 @@ export class Schedule<T extends AtomName[]> {
     this.updateContext(context);
     this.atomInstaces.forEach(atom => {
       atom.reset(this.context);
+      atom.clearHistory();
     });
   }
 
