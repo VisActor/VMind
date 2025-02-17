@@ -41,8 +41,7 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
       {},
       {
         dataTable: [],
-        fieldInfo: [],
-        basemapOption: DEFAULT_MAP_OPTION
+        fieldInfo: []
       },
       context
     );
@@ -52,6 +51,7 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
     return {
       useChartAdvisor: false,
       chartTypeList: SUPPORTED_CHART_LIST,
+      basemapOption: DEFAULT_MAP_OPTION,
       unsupportChartTypeList: []
     };
   }

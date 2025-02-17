@@ -1,22 +1,7 @@
 import { _chatToVideoWasm } from '../chart-to-video';
-import type { TimeType, SimpleFieldInfo, OuterPackages, VMindDataset, ChartTheme } from '../common/typings';
-import { Model, ModelType } from '../common/typings';
+import type { TimeType, OuterPackages, VMindDataset, ChartTheme, ModelType } from '../common/typings';
 import type { VMindApplicationMap } from './types';
-import type {
-  ChartGenerationContext,
-  ChartGenerationOutput,
-  DataAggregationContext,
-  DataAggregationOutput,
-  InsightContext,
-  InsightOutput
-} from '../applications/types';
-import applicationMetaList, { ApplicationType } from '../applications';
-import { calculateTokenUsage } from '../common/utils/utils';
-import { isNil } from '@visactor/vutils';
-import { DEFAULT_MAP_OPTION, SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
-import { BaseApplication } from '../base/application';
-import type { ApplicationMeta, TaskNode } from '../base/metaTypes';
-import type { DataExtractionContext, DataExtractionOutput } from '../applications/types';
+import type { ApplicationMeta } from '../base/metaTypes';
 import { LLMManage } from './llm';
 import type {
   BasemapOption,
@@ -28,7 +13,12 @@ import type {
   ILLMOptions
 } from '../types';
 import { AtomName } from '../types';
-import { getData2ChartSchedule } from '../applications/chartGeneration';
+import {
+  getData2ChartSchedule,
+  getDataQuerySchedule,
+  getText2DataSchedule,
+  getText2MultipleDataSchedule
+} from '../applications';
 import type { Schedule } from '../schedule';
 import { getFieldInfoFromDataset } from '../utils/field';
 import { parseCSVData } from '../utils/dataTable';
@@ -44,63 +34,23 @@ class VMind {
   private _applicationMap: VMindApplicationMap;
   private _runtimeMetaMap: RuntimeMetaMap;
   private llm: LLMManage;
+  private dataQuerySchedule: Schedule<[AtomName.DATA_QUERY]>;
+  private text2DataTable: Schedule<[AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN]>;
+  private text2MultipleDataTable: Schedule<[AtomName.DATA_EXTRACT, AtomName.MULTIPLE_DATA_CLEAN]>;
   private data2ChartSchedule:
-    | Schedule<[AtomName.DATA_QUERY, AtomName.CHART_COMMAND, AtomName.CHART_GENERATE]>
+    | Schedule<[AtomName.DATA_QUERY, AtomName.CHART_GENERATE]>
     | Schedule<[AtomName.CHART_GENERATE]>;
 
   constructor(options?: ILLMOptions) {
     this.llm = new LLMManage(options);
     this.data2ChartSchedule = getData2ChartSchedule(this.llm, options);
+    this.dataQuerySchedule = getDataQuerySchedule(this.llm, options);
+    this.text2DataTable = getText2DataSchedule(this.llm, options);
+    this.text2MultipleDataTable = getText2MultipleDataSchedule(this.llm, options);
   }
 
   updateOptions(options?: ILLMOptions) {
     this.llm.updateOptions(options);
-  }
-
-  setTaskNode(applicationName: string, modelType: ModelType | string, taskNode: TaskNode<any>) {
-    const applicationMeta = this._runtimeMetaMap[applicationName]?.[modelType];
-    if (applicationMeta) {
-      const { taskNodes } = applicationMeta;
-      const originalTaskNode = taskNodes.find(t => t.name === taskNode.name);
-      if (originalTaskNode) {
-        originalTaskNode.taskNode = taskNode.taskNode;
-        this._applicationMap[applicationName][modelType] = new BaseApplication(applicationMeta);
-      } else {
-        throw 'task node name error!';
-      }
-    } else {
-      throw 'application name error!';
-    }
-  }
-
-  private getApplication(name: ApplicationType, modelType: ModelType) {
-    return this._applicationMap[name][modelType];
-  }
-
-  private async runApplication(applicationName: ApplicationType, modelType: ModelType, context: any) {
-    const application = this.getApplication(applicationName, modelType);
-    return application.runTasks(context);
-  }
-
-  /**
-   * Extract json format data from the text, and generate instructions that can be used for drawing
-   */
-  async extractDataFromText(
-    dataText: string,
-    userPrompt?: string,
-    options?: {
-      chartTypeList?: ChartType[];
-    }
-  ): Promise<DataExtractionOutput> {
-    const modelType = this.getModelType();
-    const { chartTypeList } = options ?? {};
-    const context: DataExtractionContext = {
-      userInput: userPrompt ?? '',
-      dataText: dataText,
-      llmOptions: this._options,
-      chartTypeList: chartTypeList ?? SUPPORTED_CHART_LIST
-    };
-    return await this.runApplication(ApplicationType.DataExtraction, modelType, context);
   }
 
   /**
@@ -123,19 +73,61 @@ class VMind {
     return getFieldInfoFromDataset(dataset);
   }
 
-  private getModelType() {
-    if (this._model.includes(ModelType.GPT)) {
-      return ModelType.GPT;
-    } else if (this._model.includes(ModelType.SKYLARK) || this._model.includes(ModelType.CUSTOM)) {
-      return ModelType.SKYLARK;
-    } else if (this._model.includes(ModelType.CHART_ADVISOR)) {
-      return ModelType.CHART_ADVISOR;
-    }
-    return ModelType.SKYLARK;
+  /**
+   *
+   * @param userPrompt user's query
+   * @param dataset current Data set
+   * @param fieldInfo field infomation of dataset
+   * @returns new FieldInfo && new DataSet after user's query
+   */
+  async dataQuery(
+    userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
+    dataset: DataTable,
+    fieldInfo?: FieldInfo[]
+  ) {
+    this.dataQuerySchedule.setNewTask({
+      command: userPrompt,
+      fieldInfo,
+      dataTable: dataset
+    });
+    const { dataTable, fieldInfo: newFieldInfo, usage } = await this.dataQuerySchedule.run();
+    return {
+      dataTable,
+      fieldInfo: newFieldInfo,
+      usage
+    };
   }
 
   /**
-   *
+   * Extract json format data from the text
+   */
+  async text2Data(
+    text: string,
+    userPrompt?: string,
+    options?: {
+      textSummary?: string;
+      fieldInfo?: FieldInfo[];
+      hierarchicalClustering?: boolean;
+      clusterThreshold?: number;
+    }
+  ) {
+    const { textSummary, fieldInfo, hierarchicalClustering, clusterThreshold } = options || {};
+    this.text2DataTable.setNewTask({
+      text,
+      textSummary,
+      fieldInfo: fieldInfo?.length ? fieldInfo : []
+    });
+    this.text2DataTable.updateOptions({
+      dataClean: {
+        hierarchicalClustering,
+        clusterThreshold
+      }
+    });
+    const { dataTable, fieldInfo: newFieldInfo, usage, clusterResult } = await this.text2DataTable.run(userPrompt);
+    return { dataTable, fieldInfo: newFieldInfo, usage, clusterResult };
+  }
+
+  /**
    * @param userPrompt user's visualization intention (what aspect they want to show in the data)
    * @param fieldInfo information about fields in the dataset. field name, type, etc. You can get fieldInfo using parseCSVData or parseCSVDataWithLLM
    * @param dataset raw dataset used in the chart. It can be empty and will return a spec template in this case. User can call fillSpecTemplateWithData to fill data into spec template.
@@ -167,7 +159,7 @@ class VMind {
     this.data2ChartSchedule.updateContext({
       fieldInfo,
       dataTable: dataset,
-      command: userPrompt
+      command: userPrompt || ''
     });
     const shouldRunList: Record<string, boolean> = {
       [AtomName.DATA_QUERY]: enableDataQuery,
@@ -186,21 +178,6 @@ class VMind {
       dataTable,
       time
     };
-  }
-
-  async intelligentInsight(spec: any, options?: Partial<InsightContext>): Promise<InsightOutput> {
-    const modelType = this.getModelType();
-    const context = {
-      spec,
-      llmOptions: this._options,
-      ...options
-    };
-    const { insights, spec: specWithInsight } = await this.runApplication(
-      ApplicationType.IntelligentInsight,
-      modelType,
-      context
-    );
-    return { insights, spec: specWithInsight };
   }
 
   /**

@@ -51,7 +51,7 @@ export function DataInput(props: IPropsType) {
       }
       return new Schedule([AtomName.DATA_EXTRACT, AtomName.MULTIPLE_DATA_CLEAN], {
         base: { llm: llm.current, showThoughts },
-        dataExtract: { isCapcut: true }
+        dataExtract: { isMultiple: true }
       });
     },
     [fieldInfo, showThoughts, text, useFieldInfo]

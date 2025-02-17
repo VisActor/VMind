@@ -14,7 +14,7 @@ export interface BaseOptions {
 
 export interface DataExtractionOptions extends BaseOptions {
   reGenerateFieldInfo?: boolean;
-  isCapcut?: boolean;
+  isMultiple?: boolean;
 }
 
 export interface ChartCommandOptions extends BaseOptions {

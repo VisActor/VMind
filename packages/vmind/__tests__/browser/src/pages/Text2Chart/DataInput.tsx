@@ -65,7 +65,7 @@ export function DataInput(props: IPropsType) {
       }
       return new Schedule([AtomName.DATA_EXTRACT, AtomName.MULTIPLE_DATA_CLEAN, AtomName.MULTIPLE_CHART_COMMAND], {
         base: { llm: llm.current, showThoughts: false },
-        dataExtract: { isCapcut: true }
+        dataExtract: { isMultiple: true }
       });
     },
     [text]

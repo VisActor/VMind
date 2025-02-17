@@ -77,7 +77,7 @@ export function DataExtractionTask() {
             })
           : new Schedule([AtomName.DATA_EXTRACT, AtomName.MULTIPLE_DATA_CLEAN], {
               base: { llm, showThoughts: false },
-              dataExtract: { isCapcut: true }
+              dataExtract: { isMultiple: true }
             });
 
       (messageApi as any).info(`Begin ${model}!`);
