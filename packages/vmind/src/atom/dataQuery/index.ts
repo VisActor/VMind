@@ -8,6 +8,7 @@ import { getQueryDatasetPrompt } from './prompt';
 import { parseSQLResponse } from './utils';
 import type { ExecuteQueryCtx } from './executeQuery';
 import { executeDataQuery, getFinalQueryResult, patchSQLBeforeQuery, restoreDatasetAfterQuery } from './executeQuery';
+import { getFieldInfoFromDataset } from '../../utils/field';
 
 export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
   name = AtomName.DATA_QUERY;
@@ -71,6 +72,14 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
       };
     }
     return { ...this.context, sql, llmFieldInfo: responseFiledInfo };
+  }
+
+  protected runBeforeLLM(): DataQueryCtx {
+    const { fieldInfo = [], dataTable } = this.context;
+    if (!fieldInfo.length && dataTable.length) {
+      this.context.fieldInfo = getFieldInfoFromDataset(dataTable);
+    }
+    return this.context;
   }
 
   protected _runWithOutLLM(): DataQueryCtx {

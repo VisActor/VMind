@@ -127,10 +127,9 @@ const demoDataList: { [key: string]: any } = {
 
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
-  [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.SKYLARK2_v1_2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
-  [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
+  [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
@@ -142,8 +141,8 @@ export function DataInput(props: IPropsType) {
   const [csv, setCsv] = useState<string>(demoDataList[defaultDataKey].csv);
   //const [spec, setSpec] = useState<string>('');
   //const [time, setTime] = useState<number>(1000);
-  const [model, setModel] = useState<Model>(Model.GPT3_5);
-  const [cache, setCache] = useState<boolean>(true);
+  const [model, setModel] = useState<Model>(Model.GPT_4o);
+  const [useDataQuery, setUseDataQuery] = useState<boolean>(false);
   const [showThoughts, setShowThoughts] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
@@ -159,7 +158,6 @@ export function DataInput(props: IPropsType) {
     return new VMind({
       url,
       model,
-      cache,
       showThoughts: showThoughts,
       headers: {
         //must has Authorization: `Bearer ${openAIKey}` if use openai api
@@ -167,7 +165,7 @@ export function DataInput(props: IPropsType) {
         'api-key': apiKey
       }
     });
-  }, [apiKey, cache, model, showThoughts, url]);
+  }, [apiKey, model, showThoughts, url]);
 
   const askGPT = useCallback(async () => {
     //setLoading(true);
@@ -193,25 +191,19 @@ export function DataInput(props: IPropsType) {
       const geoJson = await response.json();
       VChart.registerMap('map', geoJson);
     }
-    const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
-      //enableDataQuery: false,
+    const { spec, chartAdvistorRes, time } = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
+      enableDataQuery: useDataQuery,
       //chartTypeList: [ChartType.BarChart, ChartType.LineChart],
       // colorPalette: ArcoTheme.colorScheme,
       theme: 'light'
     });
     const endTime = new Date().getTime();
-    console.log(chartGenerationRes);
-    if (isArray(chartGenerationRes)) {
-      const resNew = chartGenerationRes.map(res => {
-        const { spec, cells } = res;
-        specTemplateTest && (spec.data = undefined);
-        const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset, cells) : spec;
-        return finalSpec;
-      });
-      props.onSpecListGenerate(resNew);
+    console.log(spec);
+    if (chartAdvistorRes?.length) {
+      props.onSpecListGenerate(
+        chartAdvistorRes.map(v => (specTemplateTest ? vmind.fillSpecWithData(v.spec, dataset) : v.spec))
+      );
     } else {
-      const { spec, time, cells } = chartGenerationRes;
-
       const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset) : spec;
 
       const costTime = endTime - startTime;
@@ -219,7 +211,7 @@ export function DataInput(props: IPropsType) {
     }
 
     setLoading(false);
-  }, [vmind, csv, model, describe, props]);
+  }, [vmind, csv, model, describe, useDataQuery, props]);
 
   return (
     <div className="left-sider">
@@ -344,16 +336,16 @@ export function DataInput(props: IPropsType) {
       </div>*/}
       <div style={{ width: '90%', marginBottom: 10 }}>
         <RadioGroup value={model} onChange={v => setModel(v)}>
-          <Radio value={Model.GPT3_5}>GPT-3.5</Radio>
+          <Radio value={Model.GPT_4o}>GPT-4o</Radio>
           <Radio value={Model.GPT4}>GPT-4</Radio>
-          <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
-          <Radio value={Model.SKYLARK2_v1_2}>skylark2 pro-v1.2</Radio>
+          <Radio value={Model.DEEPSEEK_V3}>deepSeek-V3</Radio>
+          <Radio value={Model.DEEPSEEK_R1}>deepSeek-R1</Radio>
           <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
         </RadioGroup>
       </div>
       <div style={{ width: '90%', marginBottom: 10 }}>
-        <Checkbox checked={cache} onChange={v => setCache(v)}>
-          Enable Cache
+        <Checkbox checked={useDataQuery} onChange={v => setUseDataQuery(v)}>
+          Enable Data Query
         </Checkbox>
       </div>
       <div style={{ width: '90%', marginBottom: 20 }}>

@@ -6,7 +6,9 @@ import { isValidDataTable } from '../../../utils/dataTable';
 import { chartTypeMap, getCell, typeMap, VMindChartTypeMap } from '../utils';
 import type { VizSchema } from '../../type';
 import { ChartType as VMindChartType } from '../../../types';
-import type { DataTable } from '../../../types';
+import type { Cell, DataTable } from '../../../types';
+import { uniqBy } from '../../../utils/common';
+
 /**
  * call @visactor/chart-advisor to get the list of advised charts
  * sorted by scores of each chart type
@@ -53,15 +55,22 @@ const getAdvisedListTransformer = (context: GenerateChartCellContext) => {
     (res, chartType) => [...res, ...(VMindChartTypeMap?.[chartType] ?? [])],
     []
   );
-  const advisedList = scores
-    .filter((d: any) => availableChartTypeList.includes(d.chartType) && d.score - 0 >= 0.00000001)
-    .map((result: any) => ({
-      chartType: chartTypeMap(result.chartType as unknown as ChartType).toUpperCase(),
-      cell: getCell(result.cell),
-      dataset: result.dataset,
-      score: result.score
-    }));
-
+  const advisedList: {
+    chartType: string;
+    cell: Cell;
+    dataset: DataTable;
+    score: number;
+  }[] = uniqBy(
+    scores
+      .filter((d: any) => availableChartTypeList.includes(d.chartType) && d.score - 0 >= 0.00000001)
+      .map((result: any) => ({
+        chartType: chartTypeMap(result.chartType as unknown as ChartType).toUpperCase(),
+        cell: getCell(result.cell),
+        dataset: result.dataset,
+        score: result.score
+      })),
+    'chartType'
+  );
   return {
     advisedList,
     chartSource,
@@ -81,9 +90,10 @@ export const getCellContextByAdvisor = (context: GenerateChartCellContext) => {
     return {
       chartType: VMindChartType.BarChart.toUpperCase() as VMindChartType,
       cell: {},
-      dataset: undefined,
+      dataset: [] as DataTable,
       chartSource,
-      usage
+      usage,
+      advisedList
     };
   }
   const result = advisedList[0];
@@ -92,6 +102,7 @@ export const getCellContextByAdvisor = (context: GenerateChartCellContext) => {
     cell: getCell(result.cell),
     dataset: result.dataset,
     chartSource,
-    usage
+    usage,
+    advisedList
   };
 };

@@ -125,12 +125,12 @@ export class Schedule<T extends AtomName[]> {
     return taskMapping;
   }
 
-  async run(query?: string): Promise<Awaited<CombineAll<MapAtomTypes<T>>>> {
+  async run(query?: string, shouldRunList?: Record<AtomName, boolean>): Promise<Awaited<CombineAll<MapAtomTypes<T>>>> {
     this.query = query;
     const subTasks = this.parseSubTasks(query);
     for (const atom of this.atomInstaces) {
       const { shouldRun, query: taskQuery } = subTasks?.[atom.name] || {};
-      if (shouldRun || atom.shouldRunByContextUpdate(this.context)) {
+      if (shouldRunList?.[atom.name] !== false && (shouldRun || atom.shouldRunByContextUpdate(this.context))) {
         this.context = await atom.run({ context: this.context, query: taskQuery });
       }
     }

@@ -1,6 +1,6 @@
 /** Atom Function Types */
 
-import type { BasemapOption, Cell, ChartType } from './chart';
+import type { Cell, ChartType } from './chart';
 import type { VizSchema } from '../atom/type';
 import type { FieldInfo, DataTable } from './base';
 import type { Insight } from '../atom/dataInsight/type';
@@ -147,12 +147,18 @@ export interface ChartGeneratorCtx extends BaseContext {
   chartType?: ChartType;
   /** field mapping result */
   cell: Cell;
-  /** only use in map chart */
-  basemapOption?: BasemapOption;
   /** vizSchema */
   vizSchema: VizSchema;
   /** chart spec */
   spec: any;
+  /** chart advistor result */
+  chartAdvistorRes?: {
+    chartType: ChartType;
+    spec: any;
+    score: number;
+  }[];
+  /** animation config */
+  time?: { totalTime: number; frameArr: any[] };
 }
 
 export interface DataInsightCtx extends BaseContext {

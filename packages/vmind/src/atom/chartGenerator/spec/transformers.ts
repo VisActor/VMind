@@ -52,6 +52,12 @@ const chartTypeMap: { [chartName: string]: string } = {
   [ChartType.VennChart.toUpperCase()]: 'venn'
 };
 
+export const llmChartTypeMap: Record<string, ChartType> = Object.keys(ChartType).reduce((prev: any, cur: string) => {
+  const value = (ChartType as Record<string, string>)[cur];
+  prev[value.toUpperCase()] = value;
+  return prev;
+}, {});
+
 export const getVChartTypeByVmind = (type: string) => chartTypeMap[type];
 export const revisedVChartType = (context: GenerateChartCellContext) => {
   const { chartType, spec } = context;

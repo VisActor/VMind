@@ -133,22 +133,43 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
       this.context.spec = null;
       return this.context;
     }
+    const additionalCtx = {
+      chartTypeList: this.finalChartTypeList,
+      basemapOption: this.options?.basemapOption,
+      totalTime: this.options?.animationDuration,
+      colors: this.options?.colorPalette,
+      chartTheme: this.options?.theme
+    };
     if (!this.useRule && (this.useChartAdvisor || this.options.useChartAdvisor)) {
       // @todo
-      const { cell, dataset, chartType } = getCellContextByAdvisor({
+      const { cell, dataset, chartType, advisedList } = getCellContextByAdvisor({
         ...this.context,
-        chartTypeList: this.finalChartTypeList
+        ...additionalCtx
       });
       this.context = {
         ...this.context,
         cell,
         dataTable: dataset,
-        chartType
+        chartType,
+        chartAdvistorRes: advisedList.map(item => {
+          const tmpContext = merge({}, this.context, {
+            cell: item.cell,
+            dataTable: item.dataset,
+            chartType: item.chartType
+          });
+          return {
+            chartType: item.chartType as ChartType,
+            score: item.score,
+            spec: getChartSpecWithContext({ ...tmpContext, ...additionalCtx }).spec
+          };
+        })
       };
+    } else {
+      this.context.chartAdvistorRes = [];
     }
     const newContext = {
       ...this.context,
-      ...getChartSpecWithContext({ ...this.context, chartTypeList: this.finalChartTypeList })
+      ...getChartSpecWithContext({ ...this.context, ...additionalCtx })
     };
     this.updateContext(newContext);
     return newContext;
