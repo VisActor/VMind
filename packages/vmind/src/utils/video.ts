@@ -1,5 +1,5 @@
 import { cloneDeep } from '@visactor/vutils';
-import type { OuterPackages, TimeType } from '../common/typings';
+import type { OuterPackages, TimeType } from '../types/utils';
 
 let idx = 0;
 export async function _chatToVideoWasm(
@@ -88,10 +88,8 @@ export async function _chatToVideoWasm(
               format: 'PNG',
               size
             };
-            console.log(`BBB--------${info}`);
             resolve(info);
           } else {
-            console.log('no blob');
             reject('no blob');
           }
         }, `image/png`);

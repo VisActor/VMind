@@ -19,6 +19,11 @@ export enum AtomName {
   CUSTOM_PROMPT = 'custom_prompt'
 }
 
+export interface Usage {
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+}
 /** Base LLM Context */
 export interface BaseContext {
   /** response logId in chat */
@@ -32,11 +37,7 @@ export interface BaseContext {
   /** error info */
   error?: string;
   /** prompt usage */
-  usage?: {
-    prompt_tokens: number;
-    completion_tokens: number;
-    total_tokens: number;
-  };
+  usage?: Usage;
 }
 
 export interface ClusterDataView {
@@ -72,8 +73,6 @@ export interface DatasetFromText {
 export interface DataExtractionCtx extends BaseContext {
   /** text object of data extraction */
   text: string;
-  /** current summary of text */
-  textSummary?: string;
   /** extra fieldsInfo of dataTable */
   fieldInfo?: FieldInfo[];
   /** Data Table values */

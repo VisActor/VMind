@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
-import '../DataExtraction/index.scss';
+import '../index.scss';
 import { Avatar, Input, Divider, Button, Select, Modal, Radio } from '@arco-design/web-react';
 import { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
 import { capcutMockV2Data as capcutMockData, capcutMockData as v1MockData } from '../../constants/capcutData';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './index.scss';
+import '../index.scss';
 import { Button, Input, Card, Space, Modal, Spin } from '@arco-design/web-react';
 import VChart from '@visactor/vchart';
 import { isNil } from '@visactor/vutils';

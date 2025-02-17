@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './index.scss';
+import '../index.scss';
 import { Input, Card, Modal, Spin } from '@arco-design/web-react';
 import VChart, { registerLiquidChart } from '@visactor/vchart';
 import { isNil } from '@visactor/vutils';

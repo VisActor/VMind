@@ -2,7 +2,7 @@ import { IconBgColors, IconBulb, IconExperiment, IconLanguage } from '@arco-desi
 import { ChartGenerationPage } from './ChartGeneration/ChartGeneration';
 import React from 'react';
 import { InsightPage } from './Insight/Insight';
-import { DataExtractionPage } from './DataExtraction/DataExtraction';
+import { DataExtractionPage } from './DataExtraction/DataExtractionPage';
 import { NewDataExtractionPage } from './NewDataExtraction';
 import { NewChartGenerationPage } from './NewChartGeneration/ChartGeneration';
 import { Text2Chart } from './Text2Chart/TextToChart';
@@ -39,30 +39,30 @@ export const PLAYGROUND_MENU_INFO: {
     component: <InsightPage />,
     icon: <IconBulb />
   },
-  // [PLAYGROUND_PAGES.DATA_EXTRACTION]: {
-  //   menuItem: 'Data Extraction',
-  //   pageName: 'Data Extraction',
-  //   component: <DataExtractionPage />,
-  //   icon: <IconLanguage />
-  // },
-  [PLAYGROUND_PAGES.NEW_CHART_GENERATION]: {
-    menuItem: 'New Chart Generation',
-    pageName: 'New Chart Generation',
-    component: <NewChartGenerationPage />,
-    icon: <IconBgColors />
-  },
-  [PLAYGROUND_PAGES.NEW_DATA_EXTRACTION]: {
-    menuItem: 'New Data Extraction',
-    pageName: 'New Data Extraction',
-    component: <NewDataExtractionPage />,
+  [PLAYGROUND_PAGES.DATA_EXTRACTION]: {
+    menuItem: 'Data Extraction',
+    pageName: 'Data Extraction',
+    component: <DataExtractionPage />,
     icon: <IconLanguage />
-  },
-  [PLAYGROUND_PAGES.TEXT_2_CHART]: {
-    menuItem: 'TextToChart',
-    pageName: 'TextToChart',
-    component: <Text2Chart />,
-    icon: <IconExperiment />
   }
+  // [PLAYGROUND_PAGES.NEW_CHART_GENERATION]: {
+  //   menuItem: 'New Chart Generation',
+  //   pageName: 'New Chart Generation',
+  //   component: <NewChartGenerationPage />,
+  //   icon: <IconBgColors />
+  // },
+  // [PLAYGROUND_PAGES.NEW_DATA_EXTRACTION]: {
+  //   menuItem: 'New Data Extraction',
+  //   pageName: 'New Data Extraction',
+  //   component: <NewDataExtractionPage />,
+  //   icon: <IconLanguage />
+  // }
+  // [PLAYGROUND_PAGES.TEXT_2_CHART]: {
+  //   menuItem: 'TextToChart',
+  //   pageName: 'TextToChart',
+  //   component: <Text2Chart />,
+  //   icon: <IconExperiment />
+  // }
 };
 export const CollapseCSS = {
   width: '100vw',

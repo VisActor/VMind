@@ -35,7 +35,7 @@ export function NewDataExtractionPage() {
       <Sider
         style={{
           height: '100%',
-          minWidth: 300
+          minWidth: 325
         }}
       >
         <DataInput onOk={handleOk} setLoading={setLoading} type={type} setType={setType} />

@@ -41,7 +41,7 @@ export function Text2Chart() {
       <Sider
         style={{
           height: '100%',
-          minWidth: 300
+          minWidth: 325
         }}
       >
         <DataInput type={type} setType={setType} onOk={handleOk} setLoading={setLoading} />

@@ -1,21 +1,18 @@
 /* eslint-disable no-console */
-import React, { useState, useCallback, useMemo } from 'react';
-import './index.scss';
-import {
-  Avatar,
-  Input,
-  Divider,
-  Button,
-  InputNumber,
-  Upload,
-  Message,
-  Select,
-  Radio,
-  Checkbox,
-  Modal
-} from '@arco-design/web-react';
-import VMind, { ArcoTheme } from '../../../../../src/index';
-import { Model } from '../../../../../src/index';
+import React, { useState, useEffect } from 'react';
+import '../index.scss';
+import { Avatar, Input, Divider, Button, Select, Checkbox, Modal, Radio, Message } from '@arco-design/web-react';
+import VMind, { Model } from '../../../../../src/index';
+
+const TextArea = Input.TextArea;
+const Option = Select.Option;
+const RadioGroup = Radio.Group;
+
+type IPropsType = {
+  onOk: (dataExtractCtx: any, spec: any, specList: any[], time: any, timeCost: number) => void;
+  setLoading: (loading: boolean) => void;
+};
+
 import {
   mockUserTextInput0,
   mockUserTextInput1,
@@ -29,58 +26,42 @@ import {
   mockUserTextInput8,
   mockUserTextInput9
 } from '../../constants/mockData';
-import type { VMindDataset } from '../../../../../src/common/typings';
 
-const TextArea = Input.TextArea;
-const Option = Select.Option;
-const RadioGroup = Radio.Group;
-
-type IPropsType = {
-  onDatasetGenerate: (payload: any) => void;
-};
-const demoTextList: { [key: string]: any } = {
-  demo0: mockUserTextInput0,
-  demo: mockUserTextInput1,
-  demo2: mockUserTextInput2,
-  demo3: mockUserTextInput3,
-  demo4: mockUserTextInput4,
-  demo5: mockUserTextInput5,
-  demo6: mockUserTextInput6,
-  demo7: mockUserTextInput7,
-  demo8: mockUserTextInput8,
-  demo9: mockUserTextInput9,
-  demo10: mockUserTextInput10
-};
-
+const demoTextList: { text: string; input?: string }[] = [
+  mockUserTextInput0,
+  mockUserTextInput1,
+  mockUserTextInput10,
+  mockUserTextInput2,
+  mockUserTextInput3,
+  mockUserTextInput4,
+  mockUserTextInput5,
+  mockUserTextInput6,
+  mockUserTextInput7,
+  mockUserTextInput8,
+  mockUserTextInput9
+];
 const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
-  [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.SKYLARK2_v1_2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
+  [Model.DOUBAO_PRO]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY },
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
-  [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
+  [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.GPT_4_0613]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
 export function DataInput(props: IPropsType) {
-  const { onDatasetGenerate } = props;
-  const defaultDataKeyForTextInput = Object.keys(demoTextList)[0];
-  const [text, setText] = useState<string>(demoTextList[defaultDataKeyForTextInput].text);
-  const [userInput, setUserInput] = useState<string>(demoTextList[defaultDataKeyForTextInput].input);
-  const [dataset, setDataset] = useState<VMindDataset>([]);
-  const [instructionByLLM, setInstructionByLLM] = useState<string>('');
+  const defaultIndex = 0;
+  const [text, setText] = useState<string>(demoTextList[defaultIndex].text);
+  const [userInput, setUserInput] = useState<string>(demoTextList[defaultIndex].input || '');
 
-  //const [spec, setSpec] = useState<string>('');
-  //const [time, setTime] = useState<number>(1000);
-  const [model, setModel] = useState<Model>(Model.GPT3_5);
-  const [cache, setCache] = useState<boolean>(true);
+  const [model, setModel] = useState<Model>(Model.GPT_4o);
   const [showThoughts, setShowThoughts] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
   const [apiKey, setApiKey] = React.useState(ModelConfigMap[model]?.key);
 
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const vmind: VMind = useMemo(() => {
+  const vmind: VMind = React.useMemo(() => {
     if (!url || !apiKey) {
       Message.error('Please set your LLM URL and API Key!!!');
       return null as unknown as VMind;
@@ -88,23 +69,30 @@ export function DataInput(props: IPropsType) {
     return new VMind({
       url,
       model,
-      cache,
       showThoughts: showThoughts,
       headers: {
-        'api-key': apiKey,
-        Authorization: `Bearer ${apiKey}`
+        //must has Authorization: `Bearer ${openAIKey}` if use openai api
+        Authorization: `Bearer ${apiKey}`,
+        'api-key': apiKey
       }
     });
-  }, [apiKey, cache, model, showThoughts, url]);
-
-  const askGPTForGenerateData = useCallback(async () => {
-    const { instruction, dataset, fieldInfo } = await vmind.extractDataFromText(text, userInput);
-
-    console.log(instruction, dataset, fieldInfo);
-    setDataset(dataset);
-    setInstructionByLLM(instruction);
-    onDatasetGenerate({ dataset, instruction, fieldInfo });
-  }, [vmind, text, userInput, onDatasetGenerate]);
+  }, [apiKey, model, showThoughts, url]);
+  const handleQuery = React.useCallback(async () => {
+    props.setLoading(true);
+    const time1: any = new Date();
+    const { dataTable, fieldInfo, spec, time, chartAdvistorRes } = await vmind.text2Chart(text, userInput, {
+      theme: 'light'
+    });
+    const time2: any = new Date();
+    const diff = (time2 - time1) / 1000;
+    props.onOk(
+      { dataTable, fieldInfo },
+      spec,
+      (chartAdvistorRes || [])?.map(v => v.spec),
+      time,
+      diff
+    );
+  }, [props, text, userInput, vmind]);
 
   return (
     <div className="left-sider">
@@ -119,50 +107,52 @@ export function DataInput(props: IPropsType) {
           </Button>
         </div>
       </div>
-      <div style={{ width: '90%', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ width: '90%', display: 'flex', flexDirection: 'column', flex: 1 }}>
         <div>
           <p>
             <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-              0
+              1
             </Avatar>
             <span style={{ marginLeft: 10 }}>Select Demo Data (optional)</span>
           </p>
           <Select
             style={{ width: '100%' }}
-            defaultValue={defaultDataKeyForTextInput}
-            onChange={v => {
-              const dataObj = demoTextList[v];
+            defaultValue={defaultIndex}
+            onChange={index => {
+              const dataObj = demoTextList[index];
               setText(dataObj.text);
-              setUserInput(dataObj.input);
+              setUserInput(dataObj?.input || '');
             }}
           >
-            {Object.keys(demoTextList).map(name => (
-              <Option key={name} value={name}>
-                {name}
+            {demoTextList.map((data: any, index) => (
+              <Option key={index} value={index}>
+                {`Demo_${index + 1}`}
               </Option>
             ))}
           </Select>
         </div>
 
-        <div style={{ marginTop: 12 }}>
+        <div style={{ marginTop: 12 }} className="flex-text-area">
           <p>
             <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-              1
+              2
             </Avatar>
             <span style={{ marginLeft: 10 }}>Input your data in text format</span>
           </p>
           <TextArea
             placeholder={text}
             value={text}
-            onChange={v => setText(v)}
-            style={{ minHeight: 200, background: 'transparent', border: '1px solid #eee' }}
+            onChange={v => {
+              setText(v);
+            }}
+            style={{ background: 'transparent', border: '1px solid #eee' }}
           />
         </div>
 
         <div style={{ marginTop: 12 }}>
           <p>
             <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-              2
+              3
             </Avatar>
             <span style={{ marginLeft: 10 }}>What would you like to visualize from this text?</span>
           </p>
@@ -175,43 +165,25 @@ export function DataInput(props: IPropsType) {
         </div>
       </div>
 
-      <Divider style={{ marginTop: 30 }} />
+      <Divider style={{ marginTop: 12 }} />
 
       <div style={{ width: '90%', marginBottom: 10 }}>
         <RadioGroup value={model} onChange={v => setModel(v)}>
-          <Radio value={Model.GPT3_5}>GPT-3.5</Radio>
-          <Radio value={Model.GPT_4_0613}>GPT-4-0613</Radio>
-          <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
-          <Radio value={Model.SKYLARK2_v1_2}>skylark2-v1.2</Radio>
-          <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
+          <Radio value={Model.GPT_4o}>GPT-4o</Radio>
+          <Radio value={Model.DOUBAO_PRO}>Doubao-pro</Radio>
+          <Radio value={Model.DEEPSEEK_V3}>deepSeek-V3</Radio>
+          <Radio value={Model.DEEPSEEK_R1}>deepSeek-R1</Radio>
         </RadioGroup>
       </div>
-      <div style={{ width: '90%', marginBottom: 10 }}>
-        <Checkbox checked={cache} onChange={v => setCache(v)}>
-          Enable Cache
-        </Checkbox>
-      </div>
-      <div style={{ width: '90%', marginBottom: 20 }}>
+      <div style={{ width: '90%' }}>
         <Checkbox checked={showThoughts} onChange={v => setShowThoughts(v)}>
           Show Thoughts
         </Checkbox>
       </div>
-      <Divider style={{ marginTop: 30 }} />
-
-      <div className="generate-botton" style={{ alignSelf: 'center', marginTop: 12 }}>
-        <Button
-          loading={loading}
-          onClick={() => {
-            askGPTForGenerateData();
-          }}
-          disabled={!url || !apiKey}
-          shape="round"
-          type="primary"
-        >
-          generate data (preview)
-        </Button>
+      <Divider style={{ marginTop: 12 }} />
+      <div>
+        <Button onClick={handleQuery}>Query</Button>
       </div>
-
       <Modal
         title="Set API Key and URL"
         visible={visible}
