@@ -1,16 +1,16 @@
-import {
-  getCellFromSpec,
-  getChartTypeFromSpec,
-  getDatasetFromSpec,
-  getFieldMappingFromSpec,
-  revisedCell,
-  sumDimensionValues
-} from './utils';
+import { sumDimensionValues } from './utils';
 import type { DataCell, DataTable } from '../../types';
 import { ChartType, type DataInsightCtx } from '../../types';
 import { isArray, isValidNumber } from '@visactor/vutils';
 import { DEFAULT_SERIES_NAME } from './const';
 import { getFieldInfoFromDataset } from '../../utils/field';
+import {
+  getCellFromSpec,
+  getChartTypeFromSpec,
+  getDatasetFromSpec,
+  getFieldMappingFromSpec,
+  revisedCell
+} from '../../utils/spec';
 import type { DimValueDataMap } from './type';
 import { transferFieldInfo } from '../dataClean/utils';
 import { transferMeasureInTable } from '../../utils/dataTable';

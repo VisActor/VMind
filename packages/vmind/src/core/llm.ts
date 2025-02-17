@@ -23,7 +23,7 @@ export class LLMManage {
       url: 'https://api.openai.com/v1/chat/completions',
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
-      model: Model.DOUBAO_PRO,
+      model: Model.GPT_4o,
       maxTokens: 1024,
       temperature: 0,
       frequencyPenalty: 0

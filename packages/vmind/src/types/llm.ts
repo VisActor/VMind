@@ -18,9 +18,9 @@ export enum Model {
   DOUBAO_LITE = 'doubao-lite-32K',
   DOUBAO_PRO = 'doubao-pro-128k',
   DOUBAO_PRO_32K = 'doubao-pro-32k-240828',
-  SKYLARK2 = 'skylark2-pro-4k',
-  SKYLARK2_v1_2 = 'skylark2-pro-4k-v1.2',
-  CHART_ADVISOR = 'chart-advisor'
+  CHART_ADVISOR = 'chart-advisor',
+  DEEPSEEK_V3 = 'deepseek-chat',
+  DEEPSEEK_R1 = 'deepseek-reasoner'
 }
 
 /** LLM Options */

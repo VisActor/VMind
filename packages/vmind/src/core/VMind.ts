@@ -1,17 +1,6 @@
 import { _chatToVideoWasm } from '../chart-to-video';
-import type {
-  ILLMOptions,
-  TimeType,
-  SimpleFieldInfo,
-  DataItem,
-  OuterPackages,
-  VMindDataset,
-  ChartType,
-  ChartTheme,
-  BasemapOption
-} from '../common/typings';
+import type { TimeType, SimpleFieldInfo, OuterPackages, VMindDataset, ChartTheme } from '../common/typings';
 import { Model, ModelType } from '../common/typings';
-import { getFieldInfoFromDataset, parseCSVData as parseCSVDataWithRule } from '../common/dataProcess';
 import type { VMindApplicationMap } from './types';
 import type {
   ChartGenerationContext,
@@ -26,9 +15,24 @@ import { calculateTokenUsage } from '../common/utils/utils';
 import { isNil } from '@visactor/vutils';
 import { DEFAULT_MAP_OPTION, SUPPORTED_CHART_LIST } from '../applications/chartGeneration/constants';
 import { BaseApplication } from '../base/application';
-import { fillSpecTemplateWithData } from '../common/specUtils';
 import type { ApplicationMeta, TaskNode } from '../base/metaTypes';
 import type { DataExtractionContext, DataExtractionOutput } from '../applications/types';
+import { LLMManage } from './llm';
+import type {
+  BasemapOption,
+  ChartGeneratorCtx,
+  ChartType,
+  DataItem,
+  DataTable,
+  FieldInfo,
+  ILLMOptions
+} from '../types';
+import { AtomName } from '../types';
+import { getData2ChartSchedule } from '../applications/chartGeneration';
+import type { Schedule } from '../schedule';
+import { getFieldInfoFromDataset } from '../utils/field';
+import { parseCSVData } from '../utils/dataTable';
+import { fillSpecTemplateWithData } from '../utils/spec';
 
 type MetaMapByModel = { [key: ModelType | string]: ApplicationMeta<any, any> };
 
@@ -37,38 +41,20 @@ type RuntimeMetaMap = {
 };
 class VMind {
   private _FPS = 30;
-  private _options: ILLMOptions | undefined;
-  private _model: Model | string;
   private _applicationMap: VMindApplicationMap;
   private _runtimeMetaMap: RuntimeMetaMap;
+  private llm: LLMManage;
+  private data2ChartSchedule:
+    | Schedule<[AtomName.DATA_QUERY, AtomName.CHART_COMMAND, AtomName.CHART_GENERATE]>
+    | Schedule<[AtomName.CHART_GENERATE]>;
 
   constructor(options?: ILLMOptions) {
-    this._options = { ...(options ?? {}), showThoughts: options?.showThoughts ?? true }; //apply default settings
-    this._model = options?.model ?? Model.GPT3_5;
-    this._runtimeMetaMap = applicationMetaList;
-    this.registerApplications();
+    this.llm = new LLMManage(options);
+    this.data2ChartSchedule = getData2ChartSchedule(this.llm, options);
   }
 
-  private registerApplications() {
-    const applicationList: any = {};
-    Object.keys(this._runtimeMetaMap).forEach(applicationName => {
-      applicationList[applicationName] = {};
-      const applicationMetaByModel: any = this._runtimeMetaMap[applicationName as ApplicationType];
-      Object.keys(applicationMetaByModel).forEach(modelType => {
-        const applicationMeta = applicationMetaByModel[modelType];
-        applicationList[applicationName][modelType] = new BaseApplication(applicationMeta);
-      });
-    });
-    this._applicationMap = applicationList;
-  }
-
-  addApplication(applicationMeta: ApplicationMeta<any, any>, modelType: ModelType | string) {
-    const { name } = applicationMeta;
-    if (!this._applicationMap[name]) {
-      this._applicationMap[name] = {};
-    }
-    this._applicationMap[name][modelType] = new BaseApplication(applicationMeta);
-    return;
+  updateOptions(options?: ILLMOptions) {
+    this.llm.updateOptions(options);
   }
 
   setTaskNode(applicationName: string, modelType: ModelType | string, taskNode: TaskNode<any>) {
@@ -122,10 +108,10 @@ class VMind {
    * @param csvString csv data user want to visualize
    * @returns fieldInfo and raw dataset.
    */
-  parseCSVData(csvString: string): { fieldInfo: SimpleFieldInfo[]; dataset: DataItem[] } {
+  parseCSVData(csvString: string): { fieldInfo: FieldInfo[]; dataset: DataItem[] } {
     //Parse CSV Data without LLM
     //return dataset and fieldInfo
-    return parseCSVDataWithRule(csvString);
+    return parseCSVData(csvString);
   }
 
   /**
@@ -148,21 +134,6 @@ class VMind {
     return ModelType.SKYLARK;
   }
 
-  async dataQuery(
-    userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
-    fieldInfo: SimpleFieldInfo[],
-    dataset: DataItem[]
-  ): Promise<DataAggregationOutput> {
-    const modelType = this.getModelType();
-    const context: DataAggregationContext = {
-      userInput: userPrompt,
-      fieldInfo,
-      sourceDataset: dataset,
-      llmOptions: this._options
-    };
-    return await this.runApplication(ApplicationType.DataAggregation, modelType, context);
-  }
-
   /**
    *
    * @param userPrompt user's visualization intention (what aspect they want to show in the data)
@@ -175,9 +146,9 @@ class VMind {
    * @returns spec and time duration of the chart.
    */
   async generateChart(
-    userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
-    fieldInfo: SimpleFieldInfo[],
-    dataset?: VMindDataset,
+    userPrompt?: string, //user's intent of visualization, usually aspect in data that they want to visualize
+    fieldInfo?: FieldInfo[],
+    dataset?: DataTable,
     options?: {
       chartTypeList?: ChartType[];
       colorPalette?: string[];
@@ -186,66 +157,33 @@ class VMind {
       theme?: ChartTheme | string;
       basemapOption?: BasemapOption;
     }
-  ): Promise<ChartGenerationOutput> {
-    const modelType = this.getModelType();
-    let finalDataset = dataset;
-    let finalFieldInfo = fieldInfo;
-
-    let queryDatasetUsage;
-    const { enableDataQuery, colorPalette, animationDuration, theme, chartTypeList, basemapOption } = options ?? {};
-    try {
-      if (!isNil(dataset) && (isNil(enableDataQuery) || enableDataQuery) && modelType !== ModelType.CHART_ADVISOR) {
-        //run data aggregation first
-        const dataAggregationContext: DataAggregationContext = {
-          userInput: userPrompt,
-          fieldInfo,
-          sourceDataset: dataset,
-          llmOptions: this._options
-        };
-        const {
-          dataset: queryDataset,
-          fieldInfo: fieldInfoNew,
-          usage,
-          error
-        } = await this.runApplication(ApplicationType.DataAggregation, modelType, dataAggregationContext);
-        if (!error) {
-          finalDataset = queryDataset;
-          finalFieldInfo = fieldInfoNew;
-          queryDatasetUsage = usage;
-        }
+  ): Promise<ChartGeneratorCtx> {
+    const { enableDataQuery = false } = options || {};
+    this.data2ChartSchedule.updateOptions({
+      chartGenerate: {
+        ...options
       }
-    } catch (err) {
-      console.error('data query error!');
-      console.error(err);
-    }
-    const context: ChartGenerationContext = {
-      userInput: userPrompt,
-      fieldInfo: finalFieldInfo,
-      dataset: finalDataset,
-      llmOptions: this._options,
-      colors: colorPalette,
-      totalTime: animationDuration,
-      chartTheme: theme,
-      chartTypeList: chartTypeList ?? SUPPORTED_CHART_LIST,
-      basemapOption: basemapOption ?? DEFAULT_MAP_OPTION
+    });
+    this.data2ChartSchedule.updateContext({
+      fieldInfo,
+      dataTable: dataset,
+      command: userPrompt
+    });
+    const shouldRunList: Record<string, boolean> = {
+      [AtomName.DATA_QUERY]: enableDataQuery,
+      [AtomName.CHART_COMMAND]: !userPrompt
     };
-
-    const chartGenerationResult = await this.runApplication(ApplicationType.ChartGeneration, modelType, context);
-
-    if (modelType === ModelType.CHART_ADVISOR) {
-      return chartGenerationResult.advisedList;
-    }
-
-    const { chartType, subChartType, spec, cells, chartSource, time } = chartGenerationResult;
-    const usage = calculateTokenUsage([queryDatasetUsage, chartGenerationResult.usage]);
+    const { chartAdvistorRes, spec, command, cell, vizSchema, dataTable, time } = await this.data2ChartSchedule.run(
+      undefined,
+      shouldRunList
+    );
     return {
-      //...chartGenerationResult,
       spec,
-      usage,
-      chartSource,
-      chartType,
-      subChartType,
-      cells,
+      command,
+      chartAdvistorRes,
+      cell,
+      vizSchema,
+      dataTable,
       time
     };
   }

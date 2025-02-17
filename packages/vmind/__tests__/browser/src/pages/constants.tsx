@@ -27,12 +27,12 @@ export enum PLAYGROUND_PAGES {
 export const PLAYGROUND_MENU_INFO: {
   [key: string]: MenuInfo;
 } = {
-  // [PLAYGROUND_PAGES.CHART_GENERATION]: {
-  //   menuItem: 'Chart Generation',
-  //   pageName: 'Chart Generation',
-  //   component: <ChartGenerationPage />,
-  //   icon: <IconBgColors />
-  // },
+  [PLAYGROUND_PAGES.CHART_GENERATION]: {
+    menuItem: 'Chart Generation',
+    pageName: 'Chart Generation',
+    component: <ChartGenerationPage />,
+    icon: <IconBgColors />
+  },
   [PLAYGROUND_PAGES.SMART_INSIGHT]: {
     menuItem: 'Smart Insight',
     pageName: 'Smart Insight',
