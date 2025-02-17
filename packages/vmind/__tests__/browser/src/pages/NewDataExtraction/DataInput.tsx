@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
-import '../DataExtraction/index.scss';
+import '../index.scss';
 import { Avatar, Input, Divider, Button, Select, Checkbox, Modal, Radio } from '@arco-design/web-react';
 import type { FieldInfo } from '../../../../../src/index';
 import { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
@@ -32,7 +32,7 @@ export function DataInput(props: IPropsType) {
   const [text, setText] = useState<string>(capcutMockData[defaultIndex].text);
   const [userInput, setUserInput] = useState<string>(capcutMockData[defaultIndex].input);
 
-  const [model, setModel] = useState<Model>(Model.DOUBAO_PRO);
+  const [model, setModel] = useState<Model>(Model.GPT_4o);
   const [useFieldInfo, setUseFieldInfo] = useState<boolean>(false);
   const [showThoughts, setShowThoughts] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);

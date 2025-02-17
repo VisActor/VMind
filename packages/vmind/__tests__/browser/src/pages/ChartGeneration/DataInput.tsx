@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { useState, useCallback, useMemo } from 'react';
-import './index.scss';
+import '../index.scss';
 import {
   Avatar,
   Input,
@@ -49,15 +49,15 @@ import {
   linearProgressChartData,
   basicHeatMapChartData,
   vennChartData,
-  mapChartData,
-  singleColumnLineCombinationChartData,
-  singleColumnLineCombinationChartData1,
-  singleColumnBarCombinationChartData1,
-  singleColumnBarCombinationChartData,
-  dynamicScatterPlotData,
-  dynamicRoseData,
-  dynamicRoseData1,
-  sequenceData
+  mapChartData
+  // singleColumnLineCombinationChartData,
+  // singleColumnLineCombinationChartData1,
+  // singleColumnBarCombinationChartData1,
+  // singleColumnBarCombinationChartData,
+  // dynamicScatterPlotData,
+  // dynamicRoseData,
+  // dynamicRoseData1,
+  // sequenceData
 } from '../../constants/mockData';
 import VMind, { ArcoTheme, builtinThemeMap, BuiltinThemeType } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
@@ -114,15 +114,15 @@ const demoDataList: { [key: string]: any } = {
   Gauge: gaugeChartData,
   LinearProgress: linearProgressChartData,
   BasicHeatMap: basicHeatMapChartData,
-  Venn: vennChartData,
-  SingleColumnLineCommon: singleColumnLineCombinationChartData,
-  SingleColumnLineCommon1: singleColumnLineCombinationChartData1,
-  SingleColumnBarCommon: singleColumnBarCombinationChartData,
-  SingleColumnBarCommon1: singleColumnBarCombinationChartData1,
-  dynamicScatterPlotData: dynamicScatterPlotData,
-  dynamicRoseData: dynamicRoseData,
-  dynamicRoseData1: dynamicRoseData1,
-  sequenceData: sequenceData
+  Venn: vennChartData
+  // SingleColumnLineCommon: singleColumnLineCombinationChartData,
+  // SingleColumnLineCommon1: singleColumnLineCombinationChartData1,
+  // SingleColumnBarCommon: singleColumnBarCombinationChartData,
+  // SingleColumnBarCommon1: singleColumnBarCombinationChartData1,
+  // dynamicScatterPlotData: dynamicScatterPlotData,
+  // dynamicRoseData: dynamicRoseData,
+  // dynamicRoseData1: dynamicRoseData1,
+  // sequenceData: sequenceData
 };
 
 const globalVariables = (import.meta as any).env;
@@ -268,8 +268,8 @@ export function DataInput(props: IPropsType) {
           style={{ minHeight: 80, marginTop: 12, background: 'transparent', border: '1px solid #eee' }}
         />
       </div>
-      <Divider style={{ marginTop: 30 }} />
-      <div>
+      <Divider style={{ marginTop: 24 }} />
+      <div className="flex-text-area">
         <p>
           <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
             2
@@ -310,7 +310,7 @@ export function DataInput(props: IPropsType) {
         />
       </div>
 
-      <Divider style={{ marginTop: 60 }} />
+      <Divider style={{ marginTop: 24 }} />
       {/*
       <div>
         <p>
@@ -337,10 +337,9 @@ export function DataInput(props: IPropsType) {
       <div style={{ width: '90%', marginBottom: 10 }}>
         <RadioGroup value={model} onChange={v => setModel(v)}>
           <Radio value={Model.GPT_4o}>GPT-4o</Radio>
-          <Radio value={Model.GPT4}>GPT-4</Radio>
+          <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
           <Radio value={Model.DEEPSEEK_V3}>deepSeek-V3</Radio>
           <Radio value={Model.DEEPSEEK_R1}>deepSeek-R1</Radio>
-          <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
         </RadioGroup>
       </div>
       <div style={{ width: '90%', marginBottom: 10 }}>

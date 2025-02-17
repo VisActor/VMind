@@ -3,8 +3,8 @@ import type { ILLMOptions } from '../../types';
 import { AtomName } from '../../types';
 import { Schedule } from '../../schedule';
 
-export const getDataQuerySchedule = (llm: LLMManage, options: ILLMOptions) => {
-  return new Schedule([AtomName.DATA_QUERY], {
+export const getDataInsightSchedule = (llm: LLMManage, options: ILLMOptions) => {
+  return new Schedule([AtomName.DATA_INSIGHT], {
     base: { llm, showThoughts: options?.showThoughts }
   });
 };

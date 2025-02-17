@@ -1,5 +1,5 @@
 .left-sider {
-  padding: 10px 15px;
+  padding: 10px 12px;
   height: 100%;
   box-sizing: border-box;
   display: flex;
@@ -32,8 +32,6 @@
 .arco-modal {
   width: unset;
 }
-
-.single-table {
-  min-width: 300px;
-  flex: 1;
+.arco-layout-has-sider {
+  height: 100%;
 }

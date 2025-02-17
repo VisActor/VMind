@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { merge } from '@visactor/vutils';
-import type { BaseContext } from '../types/atom';
+import type { BaseContext, Usage } from '../types/atom';
 import { AtomName } from '../types/atom';
 import { BaseAtom } from '../atom/base';
 import {
@@ -125,15 +125,38 @@ export class Schedule<T extends AtomName[]> {
     return taskMapping;
   }
 
+  private addUsage(oldUsage: Usage, newUsage: Usage): Usage {
+    const result: Usage = {} as Usage;
+
+    for (const key in oldUsage) {
+      if (Object.prototype.hasOwnProperty.call(oldUsage, key)) {
+        const curKey = key as keyof Usage;
+        result[curKey] = (oldUsage[curKey] || 0) + (newUsage[curKey] || 0);
+      }
+    }
+
+    return result;
+  }
+
   async run(query?: string, shouldRunList?: Record<AtomName, boolean>): Promise<Awaited<CombineAll<MapAtomTypes<T>>>> {
     this.query = query;
     const subTasks = this.parseSubTasks(query);
+    let usage: Usage = {
+      prompt_tokens: 0,
+      completion_tokens: 0,
+      total_tokens: 0
+    };
     for (const atom of this.atomInstaces) {
       const { shouldRun, query: taskQuery } = subTasks?.[atom.name] || {};
       if (shouldRunList?.[atom.name] !== false && (shouldRun || atom.shouldRunByContextUpdate(this.context))) {
         this.context = await atom.run({ context: this.context, query: taskQuery });
+        usage = this.addUsage(usage, atom.getContext()?.usage);
       }
     }
+    this.context = {
+      ...this.context,
+      usage: usage
+    };
     return this.context;
   }
 

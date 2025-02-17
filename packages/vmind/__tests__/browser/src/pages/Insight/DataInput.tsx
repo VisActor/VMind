@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import './index.scss';
+import React, { useState, useCallback, useEffect } from 'react';
+import '../index.scss';
 import { Avatar, Input, Divider, Button, InputNumber, Select, Radio, Modal } from '@arco-design/web-react';
-import { AtomName, LLMManage, Schedule } from '../../../../../src/index';
+import VMind from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
 import {
   ChangePointChart,
@@ -49,6 +49,7 @@ const globalVariables = (import.meta as any).env;
 const ModelConfigMap: any = {
   [Model.DOUBAO_PRO]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
   [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
@@ -67,8 +68,8 @@ export function DataInput(props: IPropsType) {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const llm = React.useRef<LLMManage>(
-    new LLMManage({
+  const vmind = React.useRef<VMind>(
+    new VMind({
       url,
       headers: {
         'api-key': apiKey,
@@ -78,23 +79,8 @@ export function DataInput(props: IPropsType) {
       maxTokens: 2048
     })
   );
-  const schedule = React.useRef<Schedule<[AtomName.DATA_INSIGHT]>>(
-    new Schedule([AtomName.DATA_INSIGHT], {
-      base: { llm: llm.current },
-      dataInsight: {
-        maxNum: numLimits,
-        detailMaxNum: [
-          { types: ['outlier', 'pair_outlier', 'extreme_value', 'turning_point', 'majority_value'], maxNum: 3 },
-          { types: ['abnormal_band'], maxNum: 3 },
-          { types: ['correlation'], maxNum: 2 },
-          { types: ['overall_trend'], maxNum: 2 },
-          { types: ['abnormal_trend'], maxNum: 3 }
-        ] as any
-      }
-    })
-  );
   useEffect(() => {
-    llm.current.updateOptions({
+    vmind.current.updateOptions({
       url,
       headers: {
         'api-key': apiKey,
@@ -107,13 +93,18 @@ export function DataInput(props: IPropsType) {
   const getInsight = useCallback(async () => {
     const startTime = new Date().getTime();
     const specJson = JSON5.parse(spec);
-    schedule.current.setNewTask({
-      spec: specJson
+    const { insights } = await vmind.current.getInsights(specJson, {
+      maxNum: numLimits,
+      detailMaxNum: [
+        { types: ['outlier', 'pair_outlier', 'extreme_value', 'turning_point', 'majority_value'], maxNum: 3 },
+        { types: ['abnormal_band'], maxNum: 3 },
+        { types: ['correlation'], maxNum: 2 },
+        { types: ['overall_trend'], maxNum: 2 },
+        { types: ['abnormal_trend'], maxNum: 3 }
+      ] as any
     });
-    await schedule.current.run();
     const endTime = new Date().getTime();
     const costTime = endTime - startTime;
-    const { insights } = schedule.current.getContext();
 
     props.onInsightGenerate(insights, specJson, costTime);
 
@@ -121,7 +112,7 @@ export function DataInput(props: IPropsType) {
     console.log(insights);
 
     setLoading(false);
-  }, [props, spec]);
+  }, [numLimits, props, spec]);
 
   return (
     <div className="left-sider">
@@ -192,11 +183,6 @@ export function DataInput(props: IPropsType) {
             max={20}
             onChange={v => {
               setNumLimits(v);
-              schedule.current.updateOptions({
-                dataInsight: {
-                  maxNum: v
-                }
-              });
             }}
             style={{ width: 160, margin: '10px 24px 10px 0' }}
           />
@@ -207,6 +193,8 @@ export function DataInput(props: IPropsType) {
       <div style={{ width: '90%', marginBottom: 10 }}>
         <RadioGroup value={model} onChange={v => setModel(v)}>
           <Radio value={Model.GPT_4o}>GPT-4o</Radio>
+          <Radio value={Model.DEEPSEEK_V3}>DeepSeek-V3</Radio>
+          <Radio value={Model.DEEPSEEK_R1}>DeepSeek-R1</Radio>
           <Radio value={Model.DOUBAO_PRO}>Doubao-Pro</Radio>
         </RadioGroup>
       </div>

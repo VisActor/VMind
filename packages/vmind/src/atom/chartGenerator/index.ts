@@ -1,3 +1,6 @@
+/**
+ * @todo @666haiwen optimize and expand with old develop branch feat/v1_develop
+ */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ChartGeneratorCtx } from '../../types/atom';
 import { AtomName } from '../../types/atom';

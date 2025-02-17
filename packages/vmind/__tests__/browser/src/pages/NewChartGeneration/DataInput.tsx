@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { useState, useCallback, useMemo } from 'react';
-import './index.scss';
+import '../index.scss';
 import { Avatar, Input, Divider, Button, Message, Select, Radio, Modal } from '@arco-design/web-react';
 import { chartGenerationMockData } from '../../constants/chartGeneratorData';
 import type { DataTable, FieldInfo } from '../../../../../src/index';

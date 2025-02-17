@@ -116,7 +116,9 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     try {
       this.runBeforeLLM();
       if (this.isLLMAtom && query) {
-        return await this.runWithChat(query);
+        await this.runWithChat(query);
+        this._runWithOutLLM();
+        return this.context;
       }
       if (this.isLLMAtom) {
         const messages = this.getLLMMessages();

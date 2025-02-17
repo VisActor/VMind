@@ -1,42 +1,40 @@
-import { _chatToVideoWasm } from '../chart-to-video';
-import type { TimeType, OuterPackages, VMindDataset, ChartTheme, ModelType } from '../common/typings';
-import type { VMindApplicationMap } from './types';
-import type { ApplicationMeta } from '../base/metaTypes';
+import type { TimeType, OuterPackages, VMindDataset, ChartTheme } from '../common/typings';
 import { LLMManage } from './llm';
 import type {
   BasemapOption,
   ChartGeneratorCtx,
   ChartType,
+  ClusterDataView,
   DataItem,
   DataTable,
   FieldInfo,
-  ILLMOptions
+  ILLMOptions,
+  Usage
 } from '../types';
 import { AtomName } from '../types';
 import {
   getData2ChartSchedule,
   getDataQuerySchedule,
   getText2DataSchedule,
-  getText2MultipleDataSchedule
+  getDataInsightSchedule,
+  getText2ChartSchedule
 } from '../applications';
 import type { Schedule } from '../schedule';
 import { getFieldInfoFromDataset } from '../utils/field';
 import { parseCSVData } from '../utils/dataTable';
 import { fillSpecTemplateWithData } from '../utils/spec';
+import { _chatToVideoWasm } from '../utils/video';
+import type { DataInsightOptions } from 'src/atom';
 
-type MetaMapByModel = { [key: ModelType | string]: ApplicationMeta<any, any> };
-
-type RuntimeMetaMap = {
-  [key: string]: MetaMapByModel;
-};
 class VMind {
   private _FPS = 30;
-  private _applicationMap: VMindApplicationMap;
-  private _runtimeMetaMap: RuntimeMetaMap;
   private llm: LLMManage;
   private dataQuerySchedule: Schedule<[AtomName.DATA_QUERY]>;
-  private text2DataTable: Schedule<[AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN]>;
-  private text2MultipleDataTable: Schedule<[AtomName.DATA_EXTRACT, AtomName.MULTIPLE_DATA_CLEAN]>;
+  private text2DataTableSchedule: Schedule<[AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN]>;
+  private text2ChartSchedule: Schedule<
+    [AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN, AtomName.CHART_COMMAND, AtomName.CHART_GENERATE]
+  >;
+  private dataInsightSchedule: Schedule<[AtomName.DATA_INSIGHT]>;
   private data2ChartSchedule:
     | Schedule<[AtomName.DATA_QUERY, AtomName.CHART_GENERATE]>
     | Schedule<[AtomName.CHART_GENERATE]>;
@@ -45,8 +43,9 @@ class VMind {
     this.llm = new LLMManage(options);
     this.data2ChartSchedule = getData2ChartSchedule(this.llm, options);
     this.dataQuerySchedule = getDataQuerySchedule(this.llm, options);
-    this.text2DataTable = getText2DataSchedule(this.llm, options);
-    this.text2MultipleDataTable = getText2MultipleDataSchedule(this.llm, options);
+    this.text2DataTableSchedule = getText2DataSchedule(this.llm, options);
+    this.text2ChartSchedule = getText2ChartSchedule(this.llm, options);
+    this.dataInsightSchedule = getDataInsightSchedule(this.llm, options);
   }
 
   updateOptions(options?: ILLMOptions) {
@@ -105,26 +104,96 @@ class VMind {
     text: string,
     userPrompt?: string,
     options?: {
-      textSummary?: string;
       fieldInfo?: FieldInfo[];
       hierarchicalClustering?: boolean;
       clusterThreshold?: number;
     }
-  ) {
-    const { textSummary, fieldInfo, hierarchicalClustering, clusterThreshold } = options || {};
-    this.text2DataTable.setNewTask({
+  ): Promise<{
+    extractDataTable: DataTable;
+    dataTable: DataTable;
+    fieldInfo: FieldInfo[];
+    extractFieldInfo: FieldInfo[];
+    usage: Usage;
+    clusterResult: ClusterDataView[];
+  }> {
+    const { fieldInfo, hierarchicalClustering, clusterThreshold } = options || {};
+    this.text2DataTableSchedule.setNewTask({
       text,
-      textSummary,
       fieldInfo: fieldInfo?.length ? fieldInfo : []
     });
-    this.text2DataTable.updateOptions({
+    this.text2DataTableSchedule.updateOptions({
       dataClean: {
         hierarchicalClustering,
         clusterThreshold
       }
     });
-    const { dataTable, fieldInfo: newFieldInfo, usage, clusterResult } = await this.text2DataTable.run(userPrompt);
-    return { dataTable, fieldInfo: newFieldInfo, usage, clusterResult };
+    const {
+      dataTable,
+      fieldInfo: newFieldInfo,
+      usage,
+      clusterResult
+    } = await this.text2DataTableSchedule.run(userPrompt);
+    const { fieldInfo: extractFieldInfo, dataTable: extractDataTable } = this.text2DataTableSchedule.getContext(
+      AtomName.DATA_EXTRACT
+    );
+    return {
+      extractDataTable,
+      extractFieldInfo,
+      dataTable,
+      fieldInfo: newFieldInfo,
+      usage,
+      clusterResult
+    };
+  }
+
+  async text2Chart(
+    text: string,
+    userPrompt?: string,
+    options?: {
+      fieldInfo?: FieldInfo[];
+      chartTypeList?: ChartType[];
+      colorPalette?: string[];
+      animationDuration?: number;
+      theme?: ChartTheme | string;
+      basemapOption?: BasemapOption;
+    }
+  ) {
+    const { fieldInfo, ...chartOptions } = options || {};
+    this.text2ChartSchedule.setNewTask({
+      text,
+      fieldInfo: fieldInfo?.length ? fieldInfo : [],
+      command: userPrompt
+    });
+    const shouldRunList: Record<string, boolean> = {
+      [AtomName.CHART_COMMAND]: !userPrompt
+    };
+    this.text2ChartSchedule.updateOptions({
+      chartGenerate: {
+        ...chartOptions
+      }
+    });
+    const {
+      chartAdvistorRes,
+      spec,
+      command,
+      cell,
+      vizSchema,
+      dataTable,
+      time,
+      fieldInfo: newFieldInfo,
+      usage
+    } = await this.text2ChartSchedule.run(userPrompt, shouldRunList);
+    return {
+      spec,
+      command,
+      chartAdvistorRes,
+      cell,
+      vizSchema,
+      time,
+      dataTable,
+      fieldInfo: newFieldInfo,
+      usage
+    };
   }
 
   /**
@@ -156,7 +225,7 @@ class VMind {
         ...options
       }
     });
-    this.data2ChartSchedule.updateContext({
+    this.data2ChartSchedule.setNewTask({
       fieldInfo,
       dataTable: dataset,
       command: userPrompt || ''
@@ -178,6 +247,17 @@ class VMind {
       dataTable,
       time
     };
+  }
+
+  async getInsights(spec: any, options?: DataInsightOptions) {
+    this.dataInsightSchedule.setNewTask({
+      spec
+    });
+    this.dataInsightSchedule.updateOptions({
+      dataInsight: options || {}
+    });
+    const { insights, usage } = await this.dataInsightSchedule.run();
+    return { insights, usage };
   }
 
   /**
