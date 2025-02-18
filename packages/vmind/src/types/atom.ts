@@ -38,6 +38,8 @@ export interface BaseContext {
   error?: string;
   /** prompt usage */
   usage?: Usage;
+  /** LLM thoughts */
+  thoughts?: string;
 }
 
 export interface ClusterDataView {

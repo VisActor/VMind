@@ -170,7 +170,7 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
 
   parseLLMContent(resJson: any) {
     const { isMultiple } = this.options;
-    const { dataTable, fieldInfo, isDataExtraction, dataset } = resJson;
+    const { dataTable, fieldInfo, isDataExtraction, dataset, thoughts } = resJson;
     if (isDataExtraction === false || (isMultiple && !dataset)) {
       console.error("It's not a data extraction task");
       return this.context;
@@ -178,12 +178,14 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
     if (isMultiple) {
       return {
         ...this.context,
+        thoughts,
         datasets: this.parseMultipleResult(dataset)
       };
     }
     const llmFieldInfo = this.revisedFieldInfo(dataTable, fieldInfo);
     return {
       ...this.context,
+      thoughts,
       fieldInfo: formatFieldInfo(
         (this.options?.reGenerateFieldInfo ? llmFieldInfo : null) ?? this.context?.fieldInfo ?? []
       ),

@@ -17,7 +17,7 @@ Data field description: [
 
 Response:
 \`\`\`
-{${showThoughts ? '\n"thought": "Your thoughts",' : ''}
+{${showThoughts ? '\n"thoughts": "Your thoughts",' : ''}
 "CHART_TYPE": "Line Chart",
 "FIELD_MAP": {
 "x": "日期",
@@ -48,7 +48,7 @@ Data field description: [
 
 Response:
 \`\`\`
-{${showThoughts ? '\n"thought": "Your thoughts",' : ''}"CHART_TYPE": "Line Chart",
+{${showThoughts ? '\n"thoughts": "Your thoughts",' : ''}"CHART_TYPE": "Line Chart",
 "FIELD_MAP": {
 "x": "日期",
 "y": "降雨量"
@@ -80,7 +80,7 @@ Data field description: [
 
 Response:
 \`\`\`
-{${showThoughts ? '\n"thought": "Your thoughts",' : ''}
+{${showThoughts ? '\n"thoughts": "Your thoughts",' : ''}
 "CHART_TYPE": "Pie Chart",
 "FIELD_MAP": {
 "angle": "市场份额",
@@ -117,7 +117,7 @@ Data field description: [
 
 Response:
 \`\`\`
-{${showThoughts ? '\n"thought": "Your thoughts",' : ''}
+{${showThoughts ? '\n"thoughts": "Your thoughts",' : ''}
 "CHART_TYPE": "Dynamic Bar Chart",
 "FIELD_MAP": {
 "x": "country",
@@ -152,7 +152,7 @@ Data field description: [
 
 Response:
 \`\`\`
-{${showThoughts ? '\n"thought": "Your thoughts",' : ''}
+{${showThoughts ? '\n"thoughts": "Your thoughts",' : ''}
 "CHART_TYPE": "Bar Chart",
 "FIELD_MAP": {
 "x": "商品名称",
