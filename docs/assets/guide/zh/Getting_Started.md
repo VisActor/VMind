@@ -32,7 +32,7 @@ import VMind from '@visactor/vmind';
 
 ## 初始化 VMind 实例
 
-首先我们需要初始化一个 VMind 实例，并用它完成后续操作。VMind 目前支持 OpenAI GPT-3.5，GPT-4 系列模型和火山引擎[云雀（skylark-pro）](https://www.volcengine.com/product/yunque)系列模型，未来我们将支持更多的大语言模型，欢迎访问[Github页面](https://github.com/VisActor/VMind/issues/new/choose)提出你的需求。
+首先我们需要初始化一个 VMind 实例，并用它完成后续操作。VMind 目前支持所有主流模型，包括 OpenAI GPT系列，字节豆包系列以及 DeepSeek 等模型，只要提供对应的模型API接口，所有模型均可以直接调用。
 使用以下代码初始化一个 VMind 实例：
 
 ```js
@@ -40,7 +40,7 @@ import VMind, { Model } from '@visactor/vmind'
 
 const vmind = new VMind({
   url, //指定你的大模型服务url。default is https://api.openai.com/v1/chat/completions
-  model: Model.GPT3_5, //指定你指定的模型
+  model: Model.GPT4o, //指定你指定的模型
   headers: { //指定调用大模型服务时的header
     'api-key': apiKey //Your LLM API Key
   }

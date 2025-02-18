@@ -6,19 +6,20 @@ generateChart函数用于调用LLM完成图表智能生成，返回生成的图�
 若传入的dataset为undefined，则会生成一个spec模板，后续可调用fillSpecWithData向spec中填入数据。
 
 ## 支持模型：
-- GPT-3.5
-- GPT-4
-- [skylark2-pro](https://www.volcengine.com/product/yunque)
+- GPT模型
+- 豆包模型
+- DeepSeek模型
 - [chart-advisor](../guide/Basic_Tutorial/Chart_Advisor)
-- Custom
+- 其他任意模型
 
 ## 图表类型列表
-VMind支持13种常见的图表类型：
+VMind支持25种常见的图表类型：
 ```typescript
 export enum ChartType {
   DynamicBarChart = 'Dynamic Bar Chart',
   BarChart = 'Bar Chart',
   LineChart = 'Line Chart',
+  AreaChart = 'Area Chart',
   PieChart = 'Pie Chart',
   ScatterPlot = 'Scatter Plot',
   WordCloud = 'Word Cloud',
@@ -28,7 +29,18 @@ export enum ChartType {
   FunnelChart = 'Funnel Chart',
   DualAxisChart = 'Dual Axis Chart',
   WaterFallChart = 'Waterfall Chart',
-  BoxPlot = 'Box Plot'
+  BoxPlot = 'Box Plot',
+  LinearProgress = 'Linear Progress chart',
+  CircularProgress = 'Circular Progress chart',
+  LiquidChart = 'Liquid Chart',
+  BubbleCirclePacking = 'Bubble Circle Packing',
+  MapChart = 'Map Chart',
+  RangeColumnChart = 'Range Column Chart',
+  SunburstChart = 'Sunburst Chart',
+  TreemapChart = 'Treemap Chart',
+  Gauge = 'Gauge Chart',
+  BasicHeatMap = 'Basic Heat Map',
+  VennChart = 'Venn Chart'
 }
 ```
 可通过options参数中的chartTypeList限制生成的图表类型。
@@ -62,30 +74,44 @@ interface GenerateChartParams {
   - enableDataQuery (boolean, 可选): 决定是否在图表生成过程中开启数据聚合
   - colorPalette (Array<string>, 可选): 用于设置图表的调色板
   - animationDuration (number, 可选): 用于设置图表动画的播放持续时间
-
+  - theme (ChartTheme | string, 可选): 设置最终sepc的主题样式，默认为空，VMind会默认使用带渐变颜色的主题样式，可以设置 VChart 通用深浅主题（'light' | 'dark')或者符合你使用场景下的主题样式
 ## 返回值类型：
 
 ```typescript
 interface GenerateChartResult {
+  /** 图表spec */
   spec: Record<string, any>;
-  chartType: Record<string, string | string[]>;
+  /** 图表类型*/
+  chartType: ChartType;
+  /** 最终的视觉通道映射  */
   cell: Cell;
-  chartSource: string;
-  usage: any;
+  /** token 消耗量 */
+  usage: Usage;
+  /* 生成当前图表的具体指令，在user prompt的情况下跟user prompt一致 */
+  command: string;
+  /** 转唯gif/video时所用的配置时间 *//
   time: {
     totalTime : number;
     frameArr: number[];
   };
+  /** 基于规则的图表推荐结果，在手动设置规则或者大模型生成有误情况下产生 */
+  chartAdvistorRes: {
+    /** 图表spec */
+    spec: Record<string, any>;
+    /** 图表类型*/
+    chartType: ChartType;
+    /** 推荐得分 */
+    score: number
+  }[]
 }
 ```
 
 - spec (Object): 生成的VChart图表spec。若dataset为空，则为不包含数据的spec模板
 - chartType (ChartType): 生成的图表类型，参见`图表类型列表`章节
 - cell (Record<string, string | string[]>): 图表中的字段映射，描述数据集中的字段如何映射到图表的各个视觉通道上
-- chartSource: string: 图表生成来源。若成功使用LLM生成图表，则为具体的模型名；若最终使用[基于规则的图表生成](../guide/Basic_Tutorial/Chart_Advisor)，则为chart-advisor
 - usage (any): LLM token总消耗
 - time (number): 图表动画的时长信息，可用于导出GIF和视频
-
+- chartAdvistorRes(Array): 该结果是根据当前数据和字段信息，通过VMind的内置规则推导得到的图表推荐结果，在设置模型为`Model.CHART_ADVISOR`或者用户的大模型设置有误，无法获取结果时兜底产生。详见：[基于规则的图表生成](../guide/Basic_Tutorial/Chart_Advisor)
 ## 使用示例：
 
 ```typescript

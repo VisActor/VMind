@@ -8,7 +8,7 @@ The parseCSVData interface is used to convert CSV strings into the dataset and f
 ## Interface Parameters
 
 ```typescript
-parseCSVData(csv: string): { fieldInfo: SimpleFieldInfo[], dataset: any[] }
+parseCSVData(csv: string): { fieldInfo: FieldInfo[], dataset: any[] }
 ```
 
 - csv: A string type, representing the CSV string to be parsed.
@@ -17,7 +17,7 @@ parseCSVData(csv: string): { fieldInfo: SimpleFieldInfo[], dataset: any[] }
 
 Returns an object containing two properties:
 
-- fieldInfo: Type of SimpleFieldInfo[], representing the parsed field information, each element is an object, containing the following properties:
+- fieldInfo: Type of FieldInfo[], representing the parsed field information, each element is an object, containing the following properties:
 
 ```bash
 - fieldName: string type, representing the field name.

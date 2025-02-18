@@ -7,7 +7,7 @@ parseCSVData接口用于将CSV字符串转换为VMind所需的数据集（datase
 ## 接口参数
 
 ```typescript
-parseCSVData(csv: string): { fieldInfo: SimpleFieldInfo[], dataset: any[] }
+parseCSVData(csv: string): { fieldInfo: FieldInfo[], dataset: any[] }
 ```
 
 - csv: string类型，表示需要解析的CSV字符串。
@@ -16,7 +16,7 @@ parseCSVData(csv: string): { fieldInfo: SimpleFieldInfo[], dataset: any[] }
 
 返回一个对象，包含两个属性：
 
-- fieldInfo: SimpleFieldInfo[]类型，表示解析后的字段信息，每个元素是一个对象，包含以下属性：
+- fieldInfo: FieldInfo[]类型，表示解析后的字段信息，每个元素是一个对象，包含以下属性：
 
 ```bash
 - fieldName: string类型，表示字段名称。

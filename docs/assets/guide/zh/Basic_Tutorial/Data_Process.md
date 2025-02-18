@@ -98,14 +98,21 @@
 ## 字段信息fieldInfo
 在VMind中，你需要使用fieldInfo对象来描述数据集中的字段信息。fieldInfo描述了数据中每个字段的名称、类型、字段描述等信息。这些信息将被传给LLM用于图表生成、数据聚合等任务中。
 
-下面是fieldInfo对象的类型定义：
+下面是fieldInfo对象的类型定义，其中必选信息为上述提到的`fieldName | type | role `
 ```ts
-export type SimpleFieldInfo = {
+/** field information Of Data Table */
+export interface FieldInfo {
+  /** name of field */
   fieldName: string;
-  description?: string; //additional description of the field. This will help the model have a more comprehensive understanding of this field, improving the quality of chart generation.
+  /** field type, eg: time / category / numerical */
   type: DataType;
+  /** field role */
   role: ROLE;
-};
+  /** alias of field */
+  alias?: string;
+  /** description of field */
+  description?: string;
+}
 ```
 对于上一个章节中展示的数据集，其对应的fieldInfo如下：
 ```json
