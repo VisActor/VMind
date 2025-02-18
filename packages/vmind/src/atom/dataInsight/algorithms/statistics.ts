@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../../../../types/jstat.d.ts" />
 import jStat from 'jstat';
 import quantile from '@stdlib/stats-base-dists-t-quantile';
 
