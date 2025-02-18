@@ -1,7 +1,6 @@
-import type { BasemapOption, ChartType, FieldInfo } from '../types';
+import type { BasemapOption, ChartTheme, ChartType, FieldInfo } from '../types';
 import type { LLMManage } from '../core/llm';
 import type { AlgorithmType, AlgorithmOptions, InsightType } from './dataInsight/type';
-import type { ChartTheme } from 'src/common/typings';
 
 export interface BaseOptions {
   /** llm manage instance */

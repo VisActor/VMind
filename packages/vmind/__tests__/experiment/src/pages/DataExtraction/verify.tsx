@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 import { stringSimilarity } from 'string-similarity-js';
-import { DataType } from '../../../../../src';
+import { DataType, ROLE } from '../../../../../src';
 import type { DataCell, DataExtractionCtx, FieldInfo, DataTable } from '../../../../../src';
 import { getRoleByFieldType } from '../../../../../src/utils/field';
-import { ROLE } from '../../../../../src/common/typings';
 import type { DataExtractionCase, DataExtractionResult, ScoreDetail } from './type';
 import { isNumber } from '@visactor/vutils';
 
