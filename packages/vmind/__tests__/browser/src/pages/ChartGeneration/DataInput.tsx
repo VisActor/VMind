@@ -59,9 +59,8 @@ import {
   // dynamicRoseData1,
   // sequenceData
 } from '../../constants/mockData';
-import VMind, { ArcoTheme, builtinThemeMap, BuiltinThemeType } from '../../../../../src/index';
+import VMind, { ArcoTheme } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
-import { isArray } from '@visactor/vutils';
 import VChart from '@visactor/vchart';
 
 const TextArea = Input.TextArea;

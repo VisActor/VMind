@@ -32,18 +32,18 @@ import VMind from '@visactor/vmind';
 
 ## Initialize VMind Instance
 
-First, we need to initialize a VMind instance and use it to complete subsequent operations. VMind currently supports OpenAI GPT-3.5, GPT-4 series models and Volcano Engine [Skylark (skylark-pro)](https://www.volcengine.com/product/yunque) series models. In the future, we will support more large language models. Welcome to visit [Github page](https://github.com/VisActor/VMind/issues/new/choose) to propose your needs.
+The complete type definition of options is as follows:
+First, we need to initialize a VMind instance and use it to complete subsequent operations. VMind currently supports all mainstream models, including OpenAI GPT series, Byte Doubao series, and DeepSeek models. As long as the corresponding model API interface is provided, all models can be directly invoked.
 Use the following code to initialize a VMind instance:
 
 ```js
 import VMind, { Model } from '@visactor/vmind'
 
 const vmind = new VMind({
-url, //Specify your LLM service url. The default is https://api.openai.com/v1/chat/completions
-model: Model.GPT3_5, //Specify the model you specify
-headers: { //Specify the header when calling the LLM service
-'api-key': apiKey //Your LLM API Key
-}
+  model: Model.GPT4o, // use gpt-4o model
+  headers: { // specify the header when calling the LLM service
+    Authorization: `Bearer ${OPENAI_API_KEY}` // Your OPENAI_API_KEY
+  }
 })
 ```
 
