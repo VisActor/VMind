@@ -5,9 +5,7 @@ import { capcutResult, capcutV2Result } from './results/dataExtraction/dataResul
 // import { result as doubaoResult } from './results/dataExtraction/doubao1';
 import { commonAnswer } from './data/dataExtractionData';
 import { mergeResult, updateScoreInDataExtraction } from './pages/DataExtraction/verify';
-import { AtomName, Schedule, type FieldInfo } from '../../../src';
-import { DataType } from '../../../src/common/typings';
-import type { SimpleFieldInfo } from '../../../src/common/typings';
+import { AtomName, Schedule, type FieldInfo, DataType } from '../../../src';
 import type { DataExtractionResult } from './pages/DataExtraction/type';
 import { DataCleanAtom, MultipleDataCleanAtom } from '../../../src/atom';
 
@@ -88,7 +86,7 @@ function dataTypeTransfer(dataType: string): DataType {
       return DataType.STRING;
   }
 }
-export function transferFieldInfoInSimpleFieldInfo(fieldInfo: FieldInfo[]): SimpleFieldInfo[] {
+export function transferFieldInfoInSimpleFieldInfo(fieldInfo: FieldInfo[]): FieldInfo[] {
   return fieldInfo.map(item => ({
     fieldName: item.fieldName,
     description: item.description,
