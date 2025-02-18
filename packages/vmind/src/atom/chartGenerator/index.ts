@@ -88,9 +88,10 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
   }
 
   parseLLMContent(resJson: any) {
-    const { CHART_TYPE, FIELD_MAP } = resJson;
+    const { CHART_TYPE, FIELD_MAP, thoughts } = resJson;
     let newContext: GenerateChartCellContext = {
       ...this.context,
+      thoughts,
       chartType: CHART_TYPE,
       cell: FIELD_MAP,
       chartTypeList: this.finalChartTypeList

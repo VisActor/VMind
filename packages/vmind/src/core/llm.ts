@@ -24,7 +24,7 @@ export class LLMManage {
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
       model: Model.GPT_4o,
-      maxTokens: 1024,
+      maxTokens: 2048,
       temperature: 0,
       frequencyPenalty: 0
     };

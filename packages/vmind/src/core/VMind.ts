@@ -25,8 +25,10 @@ import { parseCSVData } from '../utils/dataTable';
 import { fillSpecTemplateWithData } from '../utils/spec';
 import { _chatToVideoWasm } from '../utils/video';
 import type { DataInsightOptions } from 'src/atom';
+import { merge } from '@visactor/vutils';
 
 class VMind {
+  private options: ILLMOptions;
   private _FPS = 30;
   private llm: LLMManage;
   private dataQuerySchedule: Schedule<[AtomName.DATA_QUERY]>;
@@ -40,7 +42,13 @@ class VMind {
     | Schedule<[AtomName.CHART_GENERATE]>;
 
   constructor(options?: ILLMOptions) {
-    this.llm = new LLMManage(options);
+    this.options = merge(
+      {
+        showThoughts: true
+      },
+      options
+    );
+    this.llm = new LLMManage(this.options);
     this.data2ChartSchedule = getData2ChartSchedule(this.llm, options);
     this.dataQuerySchedule = getDataQuerySchedule(this.llm, options);
     this.text2DataTableSchedule = getText2DataSchedule(this.llm, options);
@@ -49,7 +57,13 @@ class VMind {
   }
 
   updateOptions(options?: ILLMOptions) {
-    this.llm.updateOptions(options);
+    this.options = merge(
+      {
+        showThoughts: true
+      },
+      options
+    );
+    this.llm.updateOptions(this.options);
   }
 
   /**
@@ -89,6 +103,11 @@ class VMind {
       fieldInfo,
       dataTable: dataset
     });
+    this.dataQuerySchedule.updateOptions({
+      base: {
+        showThoughts: this.options.showThoughts
+      }
+    });
     const { dataTable, fieldInfo: newFieldInfo, usage } = await this.dataQuerySchedule.run();
     return {
       dataTable,
@@ -122,6 +141,9 @@ class VMind {
       fieldInfo: fieldInfo?.length ? fieldInfo : []
     });
     this.text2DataTableSchedule.updateOptions({
+      base: {
+        showThoughts: this.options.showThoughts
+      },
       dataClean: {
         hierarchicalClustering,
         clusterThreshold
@@ -168,6 +190,9 @@ class VMind {
       [AtomName.CHART_COMMAND]: !userPrompt
     };
     this.text2ChartSchedule.updateOptions({
+      base: {
+        showThoughts: this.options.showThoughts
+      },
       chartGenerate: {
         ...chartOptions
       }
@@ -221,6 +246,9 @@ class VMind {
   ): Promise<ChartGeneratorCtx> {
     const { enableDataQuery = false } = options || {};
     this.data2ChartSchedule.updateOptions({
+      base: {
+        showThoughts: this.options.showThoughts
+      },
       chartGenerate: {
         ...options
       }
@@ -234,11 +262,10 @@ class VMind {
       [AtomName.DATA_QUERY]: enableDataQuery,
       [AtomName.CHART_COMMAND]: !userPrompt
     };
-    const { chartAdvistorRes, spec, command, cell, vizSchema, dataTable, time } = await this.data2ChartSchedule.run(
-      undefined,
-      shouldRunList
-    );
+    const { chartType, chartAdvistorRes, spec, command, cell, vizSchema, dataTable, time } =
+      await this.data2ChartSchedule.run(undefined, shouldRunList);
     return {
+      chartType,
       spec,
       command,
       chartAdvistorRes,
@@ -254,6 +281,9 @@ class VMind {
       spec
     });
     this.dataInsightSchedule.updateOptions({
+      base: {
+        showThoughts: this.options.showThoughts
+      },
       dataInsight: options || {}
     });
     const { insights, usage } = await this.dataInsightSchedule.run();
