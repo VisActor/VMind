@@ -299,3 +299,5 @@ export const VeOThemeNewEnergy: VMindTheme = {
   ],
   background: 'rgba(255,255,255,1)'
 };
+
+export type { ITheme as ChartTheme } from '@visactor/vchart';

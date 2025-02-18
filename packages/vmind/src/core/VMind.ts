@@ -1,14 +1,16 @@
-import type { TimeType, OuterPackages, VMindDataset, ChartTheme } from '../common/typings';
 import { LLMManage } from './llm';
 import type {
   BasemapOption,
   ChartGeneratorCtx,
+  ChartTheme,
   ChartType,
   ClusterDataView,
   DataItem,
   DataTable,
   FieldInfo,
   ILLMOptions,
+  OuterPackages,
+  TimeType,
   Usage
 } from '../types';
 import { AtomName } from '../types';
@@ -297,7 +299,7 @@ class VMind {
    * @param dataset
    * @returns
    */
-  fillSpecWithData(spec: any, dataset: VMindDataset, cell?: any) {
+  fillSpecWithData(spec: any, dataset: DataTable, cell?: any) {
     return fillSpecTemplateWithData(spec, dataset, cell);
   }
 

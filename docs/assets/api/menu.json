@@ -42,6 +42,13 @@
         "zh": "generateChart",
         "en": "generateChart"
       }
+    },
+    {
+      "path": "getInsights",
+      "title": {
+        "zh": "getInsights",
+        "en": "getInsights"
+      }
     }
   ]
 }

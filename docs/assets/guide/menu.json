@@ -84,6 +84,13 @@
             "zh": "基于规则的图表生成",
             "en": "Rule-based Chart Generation"
           }
+        },
+        {
+          "path": "Chart_Insight",
+          "title": {
+            "zh": "智能洞察",
+            "en": "Auto Insight"
+          }
         }
       ]
     }
