@@ -86,6 +86,13 @@
           }
         },
         {
+          "path": "Data_Extraction",
+          "title": {
+            "zh": "数据提取——从文本一步生成图表",
+            "en": "Text to Chart"
+          }
+        },
+        {
           "path": "Chart_Insight",
           "title": {
             "zh": "智能洞察",

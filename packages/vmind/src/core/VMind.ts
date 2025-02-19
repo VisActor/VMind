@@ -178,18 +178,20 @@ class VMind {
       chartTypeList?: ChartType[];
       colorPalette?: string[];
       animationDuration?: number;
+      enableDataQuery?: boolean;
       theme?: ChartTheme | string;
       basemapOption?: BasemapOption;
     }
   ) {
-    const { fieldInfo, ...chartOptions } = options || {};
+    const { fieldInfo, enableDataQuery = false, ...chartOptions } = options || {};
     this.text2ChartSchedule.setNewTask({
       text,
       fieldInfo: fieldInfo?.length ? fieldInfo : [],
       command: userPrompt
     });
     const shouldRunList: Record<string, boolean> = {
-      [AtomName.CHART_COMMAND]: !userPrompt
+      [AtomName.CHART_COMMAND]: !userPrompt,
+      [AtomName.DATA_QUERY]: enableDataQuery
     };
     this.text2ChartSchedule.updateOptions({
       base: {

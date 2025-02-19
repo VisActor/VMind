@@ -62,6 +62,7 @@ interface GenerateChartParams {
     colorPalette?: string[];
     animationDuration?: number;
     enableDataQuery?: boolean;
+    theme?: ChartTheme | string;
   }
 }
 ```
