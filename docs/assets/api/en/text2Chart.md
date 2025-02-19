@@ -7,7 +7,6 @@ The text2Chart function is used to call the LLM to complete two tasks: data extr
 - GPT models
 - Doubao models
 - DeepSeek models
-- [chart-advisor](../guide/Basic_Tutorial/Chart_Advisor)
 - Any other models
 
 ## Chart Type List
@@ -114,7 +113,7 @@ interface GenerateChartResult {
 - cell (Record<string, string | string[]>): Field mapping in the chart, describing how fields in the dataset are mapped to various visual channels of the chart
 - usage (any): Total LLM token consumption
 - time (number): Duration information of the chart animation, can be used for exporting GIFs and videos
-- chartAdvistorRes(Array): This result is the chart recommendation result deduced based on the current data and field information through VMind's built-in rules, generated as a fallback when the model is set to `Model.CHART_ADVISOR` or when the user's large model settings are incorrect. See: [Rule-Based Chart Generation](../guide/Basic_Tutorial/Chart_Advisor)
+- chartAdvistorRes(Array): This result is the chart recommendation result deduced based on the current data and field information through VMind's built-in rules, generated as a fallback when some wrong happens in LLM. See: [Rule-Based Chart Generation](../guide/Basic_Tutorial/Chart_Advisor)
 
 # Usage Example
 [Data Extraction - Generate Chart from Text in One Step](../guide/Basic_Tutorial/Data_Extraction)
