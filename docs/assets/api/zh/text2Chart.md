@@ -7,7 +7,6 @@ text2Chart函数用于调用LLM完成数据提取，图表智能生成两个任�
 - GPT模型
 - 豆包模型
 - DeepSeek模型
-- [chart-advisor](../guide/Basic_Tutorial/Chart_Advisor)
 - 其他任意模型
 
 ## 图表类型列表
@@ -114,7 +113,7 @@ interface GenerateChartResult {
 - cell (Record<string, string | string[]>): 图表中的字段映射，描述数据集中的字段如何映射到图表的各个视觉通道上
 - usage (any): LLM token总消耗
 - time (number): 图表动画的时长信息，可用于导出GIF和视频
-- chartAdvistorRes(Array): 该结果是根据当前数据和字段信息，通过VMind的内置规则推导得到的图表推荐结果，在设置模型为`Model.CHART_ADVISOR`或者用户的大模型设置有误，无法获取结果时兜底产生。详见：[基于规则的图表生成](../guide/Basic_Tutorial/Chart_Advisor)
+- chartAdvistorRes(Array): 该结果是根据当前数据和字段信息，通过VMind的内置规则推导得到的图表推荐结果，在大模型生成图表过程有误时兜底产生。详见：[基于规则的图表生成](../guide/Basic_Tutorial/Chart_Advisor)
 
 # 使用实例
 [数据提取——从文本一步生成图表](../guide/Basic_Tutorial/Data_Extraction)
