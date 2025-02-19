@@ -46,11 +46,13 @@ const demoDataList: { [key: string]: any } = {
 };
 
 const globalVariables = (import.meta as any).env;
-const ModelConfigMap: any = {
-  [Model.DOUBAO_PRO]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+const ModelConfigMap: Record<string, { url: string; key: string }> = {
+  [Model.DOUBAO_PRO]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY },
   [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
-  [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
+  [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.DEEPSEEK_R1]: { url: globalVariables.VITE_DEEPSEEK_URL, key: globalVariables.VITE_DEEPSEEK_KEY },
+  [Model.DEEPSEEK_V3]: { url: globalVariables.VITE_DEEPSEEK_URL, key: globalVariables.VITE_DEEPSEEK_KEY },
+  Custom: { url: globalVariables.VITE_CUSTOM_URL, key: globalVariables.VITE_CUSTOM_KEY }
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
@@ -191,11 +193,22 @@ export function DataInput(props: IPropsType) {
       </div>
 
       <div style={{ width: '90%', marginBottom: 10 }}>
-        <RadioGroup value={model} onChange={v => setModel(v)}>
-          <Radio value={Model.GPT_4o}>GPT-4o</Radio>
+        <RadioGroup
+          value={model}
+          onChange={v => {
+            setModel(v);
+            if (ModelConfigMap[v]?.url && !ModelConfigMap[v].url.startsWith('Your')) {
+              setUrl(ModelConfigMap[v]?.url);
+            }
+            if (ModelConfigMap[v]?.key && !ModelConfigMap[v].key.startsWith('Your')) {
+              setApiKey(ModelConfigMap[v]?.key);
+            }
+          }}
+        >
           <Radio value={Model.DEEPSEEK_V3}>DeepSeek-V3</Radio>
           <Radio value={Model.DEEPSEEK_R1}>DeepSeek-R1</Radio>
-          <Radio value={Model.DOUBAO_PRO}>Doubao-Pro</Radio>
+          <Radio value={Model.GPT_4o}>GPT-4o</Radio>
+          <Radio value={globalVariables.VITE_CUSTOM_MODEL}>Your Custom Model</Radio>
         </RadioGroup>
       </div>
       <div className="generate-botton">

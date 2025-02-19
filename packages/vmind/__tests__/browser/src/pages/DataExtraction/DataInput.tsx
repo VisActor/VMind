@@ -41,12 +41,13 @@ const demoTextList: { text: string; input?: string }[] = [
   mockUserTextInput9
 ];
 const globalVariables = (import.meta as any).env;
-const ModelConfigMap: any = {
+const ModelConfigMap: Record<string, { url: string; key: string }> = {
   [Model.DOUBAO_PRO]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY },
-  [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
   [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
-  [Model.GPT_4_0613]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
-  [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
+  [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.DEEPSEEK_R1]: { url: globalVariables.VITE_DEEPSEEK_URL, key: globalVariables.VITE_DEEPSEEK_KEY },
+  [Model.DEEPSEEK_V3]: { url: globalVariables.VITE_DEEPSEEK_URL, key: globalVariables.VITE_DEEPSEEK_KEY },
+  Custom: { url: globalVariables.VITE_CUSTOM_URL, key: globalVariables.VITE_CUSTOM_KEY }
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
@@ -56,6 +57,7 @@ export function DataInput(props: IPropsType) {
   const [userInput, setUserInput] = useState<string>(demoTextList[defaultIndex].input || '');
 
   const [model, setModel] = useState<Model>(Model.GPT_4o);
+  const [useDataQuery, setUseDataQuery] = useState<boolean>(false);
   const [showThoughts, setShowThoughts] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
@@ -81,6 +83,7 @@ export function DataInput(props: IPropsType) {
     props.setLoading(true);
     const time1: any = new Date();
     const { dataTable, fieldInfo, spec, time, chartAdvistorRes } = await vmind.text2Chart(text, userInput, {
+      enableDataQuery: useDataQuery,
       theme: 'light'
     });
     const time2: any = new Date();
@@ -168,12 +171,28 @@ export function DataInput(props: IPropsType) {
       <Divider style={{ marginTop: 12 }} />
 
       <div style={{ width: '90%', marginBottom: 10 }}>
-        <RadioGroup value={model} onChange={v => setModel(v)}>
-          <Radio value={Model.GPT_4o}>GPT-4o</Radio>
-          <Radio value={Model.DOUBAO_PRO}>Doubao-pro</Radio>
+        <RadioGroup
+          value={model}
+          onChange={v => {
+            setModel(v);
+            if (ModelConfigMap[v]?.url && !ModelConfigMap[v].url.startsWith('Your')) {
+              setUrl(ModelConfigMap[v]?.url);
+            }
+            if (ModelConfigMap[v]?.key && !ModelConfigMap[v].key.startsWith('Your')) {
+              setApiKey(ModelConfigMap[v]?.key);
+            }
+          }}
+        >
           <Radio value={Model.DEEPSEEK_V3}>deepSeek-V3</Radio>
           <Radio value={Model.DEEPSEEK_R1}>deepSeek-R1</Radio>
+          <Radio value={Model.GPT_4o}>GPT-4o</Radio>
+          <Radio value={globalVariables.VITE_CUSTOM_MODEL}>Your Custom Model</Radio>
         </RadioGroup>
+      </div>
+      <div style={{ width: '90%', marginBottom: 10 }}>
+        <Checkbox checked={useDataQuery} onChange={v => setUseDataQuery(v)}>
+          Enable Data Query
+        </Checkbox>
       </div>
       <div style={{ width: '90%' }}>
         <Checkbox checked={showThoughts} onChange={v => setShowThoughts(v)}>
