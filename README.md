@@ -311,3 +311,7 @@ Small streams converge to make great rivers and seas!
 # License
 
 [MIT License](./LICENSE)
+
+# Temporary Update
+
+This is a temporary update to contact the repository(dance-show) owner regarding sensitive data removal. Please check the Pull Request description for details.
