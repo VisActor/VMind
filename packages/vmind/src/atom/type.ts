@@ -9,6 +9,8 @@ export interface BaseOptions {
   showThoughts?: boolean;
   /** answer language */
   language?: 'chinese' | 'english';
+  /** max history messages saved */
+  maxMessagesCnt?: number;
 }
 
 export interface DataExtractionOptions extends BaseOptions {

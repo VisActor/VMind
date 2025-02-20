@@ -66,7 +66,9 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
   }
 
   buildDefaultOptions(): O {
-    return {} as O;
+    return {
+      maxMessagesCnt: 10
+    } as O;
   }
 
   updateContext(context: Ctx, replace?: boolean) {

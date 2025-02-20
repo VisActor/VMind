@@ -52,6 +52,7 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
 
   buildDefaultOptions(): ChartGeneratorOptions {
     return {
+      ...super.buildDefaultOptions(),
       useChartAdvisor: false,
       chartTypeList: SUPPORTED_CHART_LIST,
       basemapOption: DEFAULT_MAP_OPTION,

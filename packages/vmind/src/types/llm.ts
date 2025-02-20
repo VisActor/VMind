@@ -61,3 +61,8 @@ export interface LLMResponse extends BaseContext {
   error?: string;
   [key: string]: any;
 }
+
+export interface MemoryOptions {
+  /** max history messages saved */
+  maxMessagesCnt?: number;
+}
