@@ -100,7 +100,6 @@
     "@visactor/chart-advisor": "workspace:1.2.13",
     "@visactor/vdataset": "~0.19.3",
     "@visactor/vutils": "~0.19.3",
-    "chroma-js": "^3.1.1",
     "axios": "^1.4.0",
     "json5": "~2.2.3",
     "dayjs": "~1.11.10",
