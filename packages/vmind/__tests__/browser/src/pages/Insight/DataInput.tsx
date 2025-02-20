@@ -1,20 +1,8 @@
 /* eslint-disable no-console */
-import React, { useState, useCallback, useMemo } from 'react';
-import './index.scss';
-import {
-  Avatar,
-  Input,
-  Divider,
-  Button,
-  InputNumber,
-  Upload,
-  Message,
-  Select,
-  Radio,
-  Checkbox,
-  Modal
-} from '@arco-design/web-react';
-import VMind, { ArcoTheme } from '../../../../../src/index';
+import React, { useState, useCallback, useEffect } from 'react';
+import '../index.scss';
+import { Avatar, Input, Divider, Button, InputNumber, Select, Radio, Modal } from '@arco-design/web-react';
+import VMind from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
 import {
   ChangePointChart,
@@ -26,18 +14,19 @@ import {
   SalesLineChart,
   SalesLineChart2,
   SalesLineChart3,
+  SalesScatterChart,
   ScatterClusterChart,
-  ScatterPlotChart
+  ScatterPlotChart,
+  ScatterIrisData
 } from './data';
 import JSON5 from 'json5';
-import { InsightLanguage } from '../../../../../src/applications/types';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
 type IPropsType = {
-  onInsightGenerate: (insights: any, costTime: number) => void;
+  onInsightGenerate: (insights: any, spec: any, costTime: number) => void;
   onSpecChange: (spec: any) => void;
 };
 const demoDataList: { [key: string]: any } = {
@@ -51,69 +40,81 @@ const demoDataList: { [key: string]: any } = {
   ChangePointChart: ChangePointChart,
   MultiLineChart2: MultiLineChart2,
   ScatterPlotChart: ScatterPlotChart,
-  ScatterClusterChart: ScatterClusterChart
+  ScatterClusterChart: ScatterClusterChart,
+  ScatterSalesChart: SalesScatterChart,
+  ScatterIrisData: ScatterIrisData
 };
 
 const globalVariables = (import.meta as any).env;
-const ModelConfigMap: any = {
-  [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.SKYLARK2_v1_2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
-  [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
+const ModelConfigMap: Record<string, { url: string; key: string }> = {
+  [Model.DOUBAO_PRO]: { url: globalVariables.VITE_DOUBAO_URL, key: globalVariables.VITE_DOUBAO_KEY },
+  [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.DEEPSEEK_R1]: { url: globalVariables.VITE_DEEPSEEK_URL, key: globalVariables.VITE_DEEPSEEK_KEY },
+  [Model.DEEPSEEK_V3]: { url: globalVariables.VITE_DEEPSEEK_URL, key: globalVariables.VITE_DEEPSEEK_KEY },
+  Custom: { url: globalVariables.VITE_CUSTOM_URL, key: globalVariables.VITE_CUSTOM_KEY }
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
 export function DataInput(props: IPropsType) {
   const defaultDataKey = Object.keys(demoDataList)[0];
   const [spec, setSpec] = useState<string>(JSON.stringify(demoDataList[defaultDataKey].spec));
-  const [fieldInfo, setFieldInfo] = useState<string>(demoDataList[defaultDataKey].fieldInfo);
 
   //const [spec, setSpec] = useState<string>('');
   //const [time, setTime] = useState<number>(1000);
-  const [model, setModel] = useState<Model>(Model.GPT3_5);
-  const [cache, setCache] = useState<boolean>(true);
-  const [showThoughts, setShowThoughts] = useState<boolean>(false);
+  const [model, setModel] = useState<Model>(Model.GPT_4o);
+  const [numLimits, setNumLimits] = useState<number>(8);
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
   const [apiKey, setApiKey] = React.useState(ModelConfigMap[model]?.key);
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const vmind: VMind = useMemo(() => {
-    if (!url || !apiKey) {
-      Message.error('Please set your LLM URL and API Key!!!');
-      return null as unknown as VMind;
-    }
-    return new VMind({
+  const vmind = React.useRef<VMind>(
+    new VMind({
       url,
-      model,
-      cache,
-      showThoughts: showThoughts,
       headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'api-key': apiKey
-      }
+        'api-key': apiKey,
+        Authorization: `Bearer ${apiKey}`
+      },
+      model,
+      maxTokens: 2048
+    })
+  );
+  useEffect(() => {
+    vmind.current.updateOptions({
+      url,
+      headers: {
+        'api-key': apiKey,
+        Authorization: `Bearer ${apiKey}`
+      },
+      model
     });
-  }, [apiKey, cache, model, showThoughts, url]);
+  }, [url, model, apiKey]);
 
   const getInsight = useCallback(async () => {
     const startTime = new Date().getTime();
     const specJson = JSON5.parse(spec);
-    const insights = await vmind.intelligentInsight(specJson, {
-      //insightNumberLimit: 2,
-      generateText: true
-      //language: InsightLanguage.EN
+    const { insights } = await vmind.current.getInsights(specJson, {
+      maxNum: numLimits,
+      detailMaxNum: [
+        { types: ['outlier', 'pair_outlier', 'extreme_value', 'turning_point', 'majority_value'], maxNum: 3 },
+        { types: ['abnormal_band'], maxNum: 3 },
+        { types: ['correlation'], maxNum: 2 },
+        { types: ['overall_trend'], maxNum: 2 },
+        { types: ['abnormal_trend'], maxNum: 3 }
+      ] as any
     });
     const endTime = new Date().getTime();
     const costTime = endTime - startTime;
 
-    props.onInsightGenerate(insights, costTime);
+    props.onInsightGenerate(insights, specJson, costTime);
 
     console.log(costTime);
     console.log(insights);
 
     setLoading(false);
-  }, [props, spec, vmind]);
+  }, [numLimits, props, spec]);
 
   return (
     <div className="left-sider">
@@ -144,7 +145,6 @@ export function DataInput(props: IPropsType) {
             const dataObj = demoDataList[v];
             setSpec(JSON.stringify(dataObj.spec));
             props.onSpecChange(dataObj.spec);
-            setFieldInfo(dataObj.fieldInfo);
           }}
         >
           {Object.keys(demoDataList).map(name => (
@@ -155,56 +155,61 @@ export function DataInput(props: IPropsType) {
         </Select>
       </div>
 
-      <div style={{ width: '100%' }}>
-        <p>
-          <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-            2
-          </Avatar>
-          <span style={{ marginLeft: 10 }}>Input your spec</span>
-        </p>
-        <TextArea
-          placeholder={spec}
-          value={spec}
-          onChange={v => setSpec(v)}
-          style={{ minHeight: 250, background: 'transparent', border: '1px solid #eee' }}
-        />
+      <div style={{ width: '90%', display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <div style={{ width: '100%' }} className="flex-text-area">
+          <p>
+            <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+              2
+            </Avatar>
+            <span style={{ marginLeft: 10 }}>Input your spec</span>
+          </p>
+          <TextArea
+            placeholder={spec}
+            value={spec}
+            onChange={v => setSpec(v)}
+            style={{ minHeight: 250, background: 'transparent', border: '1px solid #eee' }}
+          />
+        </div>
+        <Divider style={{ marginTop: 12 }} />
+        <div>
+          <p>
+            <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
+              2
+            </Avatar>
+            <span style={{ marginLeft: 10 }}>Input Max Num Limits</span>
+          </p>
+          <InputNumber
+            placeholder="Please enter"
+            value={numLimits}
+            min={0}
+            max={20}
+            onChange={v => {
+              setNumLimits(v);
+            }}
+            style={{ width: 160, margin: '10px 24px 10px 0' }}
+          />
+        </div>
+        <Divider style={{ marginTop: 12 }} />
       </div>
-      <div style={{ width: '100%' }}>
-        <p>
-          <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
-            2
-          </Avatar>
-          <span style={{ marginLeft: 10 }}>Input your fieldInfo</span>
-        </p>
-        <TextArea
-          placeholder={fieldInfo}
-          value={fieldInfo}
-          onChange={v => setSpec(v)}
-          style={{ minHeight: 150, background: 'transparent', border: '1px solid #eee' }}
-        />
-      </div>
-
-      <Divider style={{ marginTop: 30 }} />
 
       <div style={{ width: '90%', marginBottom: 10 }}>
-        <RadioGroup value={model} onChange={v => setModel(v)}>
-          <Radio value={Model.GPT3_5}>GPT-3.5</Radio>
-          <Radio value={Model.GPT4}>GPT-4</Radio>
-          <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
-
-          <Radio value={Model.SKYLARK}>skylark pro</Radio>
-          <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
+        <RadioGroup
+          value={model}
+          onChange={v => {
+            setModel(v);
+            if (ModelConfigMap[v]?.url && !ModelConfigMap[v].url.startsWith('Your')) {
+              setUrl(ModelConfigMap[v]?.url);
+            }
+            if (ModelConfigMap[v]?.key && !ModelConfigMap[v].key.startsWith('Your')) {
+              setApiKey(ModelConfigMap[v]?.key);
+            }
+          }}
+        >
+          <Radio value={Model.DEEPSEEK_V3}>DeepSeek-V3</Radio>
+          <Radio value={Model.DEEPSEEK_R1}>DeepSeek-R1</Radio>
+          <Radio value={Model.GPT_4o}>GPT-4o</Radio>
+          <Radio value={globalVariables.VITE_CUSTOM_MODEL}>Your Custom Model</Radio>
         </RadioGroup>
-      </div>
-      <div style={{ width: '90%', marginBottom: 10 }}>
-        <Checkbox checked={cache} onChange={v => setCache(v)}>
-          Enable Cache
-        </Checkbox>
-      </div>
-      <div style={{ width: '90%', marginBottom: 20 }}>
-        <Checkbox checked={showThoughts} onChange={v => setShowThoughts(v)}>
-          Show Thoughts
-        </Checkbox>
       </div>
       <div className="generate-botton">
         <Button

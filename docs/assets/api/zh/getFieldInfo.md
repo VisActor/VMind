@@ -4,19 +4,41 @@
 
 getFieldInfo接口用于解析JSON结构的数据以获得其中的字段信息(fieldInfo)。fieldInfo包括字段名称、类型、值域等信息，其结构如下：
 ```typescript
-export type SimpleFieldInfo = {
+export interface FieldInfo = {
+  /** name of field */
   fieldName: string;
+  /** field type, eg: time / category / numerical */
+  type: DataType;
+  /** field role */
+  role: ROLE;
+  /** alias of field */
+  alias?: string;
+  /** description of field */
   description?: string;
-  type: 'int' | 'float' | 'string' | 'date';
-  role: 'dimension' | 'measure';
-  domain?: (string | number)[];
 };
+
+export enum DataType {
+  DATE = 'date',
+  TIME = 'time',
+  STRING = 'string',
+  REGION = 'region',
+  NUMERICAL = 'numerical',
+  RATIO = 'ratio',
+  COUNT = 'count',
+  FLOAT = 'float',
+  INT = 'int'
+}
+
+export enum ROLE {
+  DIMENSION = 'dimension',
+  MEASURE = 'measure'
+}
 ```
 
 ## 接口参数
 
 ```typescript
-getFieldInfo(dataset: Record<string, number | string>[]): SimpleFieldInfo[]
+getFieldInfo(dataset: Record<string, number | string>[]): FieldInfo[]
 ```
 
 - dataset: JSON格式的数据集，是一个数组，每个元素是一个对象，键为字段名称，值为对应的数据。

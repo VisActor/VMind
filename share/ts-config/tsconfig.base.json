@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2016",
+    "target": "ES2018",
     "experimentalDecorators": true,
     "strict": true,
     "noImplicitAny": true,

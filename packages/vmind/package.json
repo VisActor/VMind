@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vmind",
-  "version": "1.2.13",
+  "version": "2.0.1-beta.15",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -33,6 +33,7 @@
   },
   "scripts": {
     "start": "vite ./__tests__/browser",
+    "exp": "vite ./__tests__/experiment",
     "build": "bundle --clean",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite ./__tests__/browser preview",
@@ -46,6 +47,7 @@
     "postpublish": "npm run clear",
     "release-minor": "npm version minor && npm publish && git commit -a -m 'chore: release minor version for vmind' && git push",
     "release-alpha": "npm version prerelease --preid alpha && npm publish --tag alpha && git commit -a -m 'chore: release alpha version for vmind' && git push",
+    "release-beta": "npm version prerelease --preid beta && npm publish --tag beta && git commit -a -m 'chore: release beta version for vmind' && git push",
     "release": "npm version patch && npm publish && git commit -a -m 'chore: release patch version for vmind' && git push"
   },
   "devDependencies": {
@@ -77,7 +79,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "6.9.0",
-    "@visactor/vchart": "^1.11.4",
+    "@visactor/vchart": "^1.12.4",
     "@rollup/plugin-dynamic-import-vars": "~2.1.0",
     "@types/node": "*",
     "dotenv": "~16.3.1",
@@ -86,7 +88,8 @@
     "canvas": "^2.11.2",
     "@types/array-normalize": "~2.0.5",
     "@types/density-clustering": "~1.3.3",
-    "@types/euclidean-distance": "~1.0.3"
+    "@types/euclidean-distance": "~1.0.3",
+    "express": "~4.21.1"
   },
   "dependencies": {
     "chroma-js": "^3.1.1",
@@ -97,7 +100,7 @@
     "json5": "~2.2.3",
     "dayjs": "~1.11.10",
     "js-yaml": "~4.1.0",
-    "@visactor/calculator": "workspace:1.2.13",
+    "@visactor/calculator": "workspace:*",
     "alasql": "~4.3.2",
     "@visactor/vchart-theme": "^1.11.2",
     "jstat": "~1.9.6",
@@ -105,6 +108,8 @@
     "array-normalize": "~2.0.0",
     "bayesian-changepoint": "~1.0.1",
     "density-clustering": "~1.3.0",
-    "euclidean-distance": "~1.0.0"
+    "euclidean-distance": "~1.0.0",
+    "jsonrepair": "~3.8.1",
+    "string-similarity-js": "~2.1.4"
   }
 }

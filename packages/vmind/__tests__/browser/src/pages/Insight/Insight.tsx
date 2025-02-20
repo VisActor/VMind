@@ -11,16 +11,16 @@ export function InsightPage() {
 
   const [costTime, setCostTime] = useState<number>(0);
   return (
-    <Layout>
+    <Layout style={{ overflow: 'auto' }}>
       <Sider
         style={{
           height: '100%',
-          minWidth: 300
+          minWidth: 325
         }}
       >
         <DataInput
-          onInsightGenerate={(insights, costTime) => {
-            setSpec(insights.spec);
+          onInsightGenerate={(insights, spec, costTime) => {
+            setSpec(spec);
             setInsights(insights);
             setCostTime(costTime);
           }}

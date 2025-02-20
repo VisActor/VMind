@@ -4,6 +4,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# vscode
+.vscode
+
 # Runtime data
 *.pid
 *.seed
@@ -107,3 +110,7 @@ packages/calculator/tsconfig.esm.tsbuildinfo
 packages/chart-advisor/tsconfig.esm.tsbuildinfo
 packages/chart-advisor/tsconfig.cjs.tsbuildinfo
 packages/vmind/__tests__/browser/src/pages/mockData.ts
+packages/vmind/__tests__/experiment/src/results
+
+# open api demo test
+packages/node-api

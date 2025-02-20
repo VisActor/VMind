@@ -1,19 +1,14 @@
-<div align="center">
-   <a href="https://github.com/VisActor#gh-light-mode-only" target="_blank">
-    <img alt="VisActor Logo" width="200" src="https://github.com/VisActor/.github/blob/main/profile/logo_500_200_light.svg"/>
-  </a>
-  <a href="https://github.com/VisActor#gh-dark-mode-only" target="_blank">
-    <img alt="VisActor Logo" width="200" src="https://github.com/VisActor/.github/blob/main/profile/logo_500_200_dark.svg"/>
-  </a>
-</div>
+# @visactor/vmind
 
 <div align="center">
-  <h1>VMind</h1>
+
+[English](README.md) | [简体中文](readme-zh.md) | 日本語
+
 </div>
 
 <div align="center">
 
-自動だけでなく、素晴らしい。インテリジェントなビジュアライゼーションのためのオープンソースソリューション。
+自動化だけでなく、素晴らしい。オープンソースのインテリジェントな可視化ソリューション。
 
 <p align="center">
   <a href="https://www.visactor.io/vmind">紹介</a> •
@@ -33,68 +28,57 @@
 
 </div>
 
-<div align="center">
-
-英語 | [簡体字中国語](readme-zh.md)
-
-</div>
-
 ## 紹介
 
-`@visactor/vmind`は、[VisActor](https://www.visactor.io/)が提供するLLMに基づいたインテリジェントなチャートコンポーネントであり、対話式のチャート生成および編集機能を含んでいます。自然言語のインタラクションインターフェースを提供し、たった一文で`@visactor/VMind`を使ってチャートナラティブ作品を簡単に作成し、継続的な対話を通じて編集することができ、データビジュアライゼーション作品を作成する効率を大幅に向上させます。
+`@visactor/vmind` は [VisActor](https://www.visactor.io/) によって提供される、LLM に基づくインテリジェントなチャートコンポーネントで、対話型のチャート生成と編集機能を含んでいます。自然言語インターフェースを提供し、1文で `@visactor/vmind` を使用してチャートナラティブ作品を簡単に作成し、連続した対話を通じて編集することで、データ可視化作品の作成効率を大幅に向上させます。
 
-`@visactor/vmind`の主な特徴は以下の通りです：
+`@visactor/vmind` の主な特徴は以下の通りです：
 
-- **使いやすさ**：表示したいデータと表示したい情報を説明する一文を提供するだけで、`@visactor/vmind`が自動的にチャートを生成します。既存のチャートに基づいて、チャートに加えたい変更を一文で説明すると、`@visactor/VMind`が望む効果を実現するのに役立ちます。
-- **強力な拡張性**：`@visactor/VMind`のコンポーネントは簡単に拡張およびカスタマイズでき、必要に応じて新しい機能や特徴を追加できます。デフォルトではOpenAI GPTモデルを使用しており、任意のLLMサービスに簡単に置き換えることができます。
-- **簡単なナラティブ**：`@visactor/vchart`の強力なチャートナラティブ能力に基づいて、`@visactor/VMind`はさまざまなタイプのチャートの生成をサポートしており、折れ線グラフ、棒グラフ、円グラフなどを含み、動的な棒グラフなどの動的なチャートも生成できます。これにより、データを簡単にナラティブ化できます。さらに多くのチャートタイプが追加されています。また、対話式の編集機能を使用して、チャートスタイルやアニメーション効果を簡単に変更できるため、ナラティブを簡単に作成できます。
-- **ワンクリックでエクスポート**：`@visactor/VMind`にはチャートエクスポートモジュールが付属しており、作成したチャートナラティブをビデオやGIFとしてエクスポートして表示できます。
+- **使いやすい**：表示したいデータと表示したい情報を説明する1文を提供するだけで、`@visactor/vmind` が自動的にチャートを生成します。既存のチャートに基づいて、チャートに加えたい変更を1文で説明すると、`@visactor/vmind` が望む効果を実現します。
+- **強力な拡張性**：`@visactor/vmind` のコンポーネントは簡単に拡張およびカスタマイズでき、必要に応じて新しい機能や特徴を追加できます。デフォルトでは OpenAI GPT モデルを使用し、任意の LLM サービスに簡単に置き換えることができます。
+- **簡単なナラティブ**：`@visactor/vchart` の強力なチャートナラティブ能力に基づき、`@visactor/vmind` は折れ線グラフ、棒グラフ、円グラフなど、さまざまなタイプのチャートの生成をサポートし、動的な棒グラフやその他の動的なチャートも生成できます。これにより、データを簡単にナレーションできます。さらに、対話型の編集機能を使用して、チャートのスタイルやアニメーション効果を簡単に変更し、ナラティブを作成できます。
+- **ワンクリックエクスポート**：`@visactor/vmind` にはチャートエクスポートモジュールが付属しており、作成したチャートナラティブをビデオや GIF としてエクスポートして表示できます。
 
 ## 開発ガイド
 
 ### ドキュメントページ
 
-VMindリポジトリに入り、以下を実行します：
+VMind リポジトリに入り、以下を実行します：
 
 ```bash
-# 依存関係のインストール
+# 依存関係をインストール
 $ rush update
-# デモページの開始
+# デモページを開始
 $ rush docs
 ```
 
-### 開発ページの開始
+### 開発ページを開始
 
-VMindリポジトリに入り、以下を実行します：
+VMind リポジトリに入り、以下を実行します：
 
 ```bash
-# 依存関係のインストール
+# 依存関係をインストール
 $ rush update
-# VMind開発ページの開始
+# VMind 開発ページを開始
 $ rush vmind
 ```
 
-これで、vmind開発ページを開始できます。
-正常に使用するには、LLMサービスのURLとAPIキーを設定する必要があります。packages/vmind/\_\_tests\_\_/browser/src/pages/DataInput.tsxでLLMを呼び出す際のヘッダーを変更できます。
-packages/vmindフォルダに新しい.env.localファイルを作成し、その中に以下を書き込むことができます：
+これで vmind 開発ページを開始できます。
+正常に使用するには、LLM サービスの URL と API キーを設定する必要があります。packages/vmind/\_\_tests\_\_/browser/src/pages/DataInput.tsx で LLM を呼び出すときのヘッダーを変更できます。
+packages/vmind フォルダーに新しい .env.local ファイルを作成し、次の内容を書き込みます：
 
 ```bash
-VITE_SKYLARK_URL="Your service url of skylark model"
 VITE_GPT_URL="Your service url of gpt model"
-VITE_SKYLARK_KEY="Your api-key of skylark model"
 VITE_GPT_KEY="Your api-key of gpt model"
+VITE_DEEPSEEK_URL="https://api.deepseek.com/chat/completions"
+VITE_DEEPSEEK_KEY="Your api-key of deepseek model"
+VITE_CUSTOM_URL="Your service url of custom model"
+VITE_CUSTOM_KEY="Your api-key of custom model"
+VITE_CUSTOM_MODEL="Your Custom Model Name"
 VITE_PROXY_CONFIG="Your Vite proxy config for forwarding requests. Must be in JSON string format and is optional. Example: {"proxy": {"/v1": {"target": "https://api.openai.com/","changeOrigin": true},"/openapi": {"target": "https://api.openai.com/","changeOrigin": true}}}"
 ```
 
-これらの設定は、開発環境を開始する際に自動的に読み込まれます。
-
-### プロジェクト構造
-
-- \_\_tests\_\_: 開発用のプレイグラウンド
-- src/common: 共通のデータ処理、チャート推奨方法、チャート生成パイプライン
-- src/gpt: gptに関連するインテリジェントチャート生成コード
-- src/skylark: skylarkに関連するインテリジェントチャート生成コード
-- src/chart-to-video: ビデオ、GIFのエクスポートに関連するコード
+開発環境を開始するときにこれらの設定が自動的に読み込まれます。
 
 ## 使用方法
 
@@ -130,39 +114,56 @@ yarn add @visactor/vmind
 import VMind from '@visactor/vmind';
 ```
 
-VMindは現在、OpenAI GPT-3.5、GPT-4モデルおよびskylark-proシリーズモデルをサポートしています。ユーザーは、VMindオブジェクトを初期化する際に呼び出すモデルタイプを指定し、LLMサービスのURLを渡すことができます。次に、モデルタイプとモデルurlを渡してVMindインスタンスを初期化します：
+VMind は現在、GPT、deepseek、doubao などの API キーを持つ任意のモデルをサポートしています。VMind オブジェクトを初期化するときに呼び出すモデルタイプを指定し、LLM サービスの URL を渡すことができます。次に、VMind インスタンスを初期化し、モデルタイプとモデル URL を渡します：
 
 ```typescript
 import { Model } from '@visactor/vmind';
 
 const vmind = new VMind({
-  url: LLM_SERVICE_URL, //LLMサービスのURL
-  model: Model.SKYLARK, //現在、gpt-3.5、gpt-4、skylark proモデルをサポートしています。後続のチャート生成で指定されたモデルが呼び出されます
+  url: LLM_SERVICE_URL, // LLM サービスの URL
+  model: Model.GPT4o, // 使用するモデル
   headers: {
     'api-key': LLM_API_KEY
-  } //headersはLLMリクエストのリクエストヘッダーとして直接使用されます。モデルのapiキーをヘッダーに入れることができます
+  } // ヘッダーは LLM リクエストのリクエストヘッダーとして直接使用されます。モデルの API キーをヘッダーに入れることができます
 });
 ```
 
-サポートされているモデルのリストはこちらです：
+サポートされているモデルのリストは次のとおりです：
 
 ```typescript
-//VMindがサポートするモデル
-//より多くのモデルが開発中です
+// VMind がサポートするモデル
 export enum Model {
   GPT3_5 = 'gpt-3.5-turbo',
+  GPT3_5_1106 = 'gpt-3.5-turbo-1106',
   GPT4 = 'gpt-4',
-  SKYLARK = 'skylark-pro',
-  SKYLARK2 = 'skylark2-pro-4k'
+  GPT_4_0613 = 'gpt-4-0613',
+  GPT_4o = 'gpt-4o-2024-08-06',
+  DOUBAO_LITE = 'doubao-lite-32K',
+  DOUBAO_PRO = 'doubao-pro-128k',
+  CHART_ADVISOR = 'chart-advisor',
+  DEEPSEEK_V3 = 'deepseek-chat',
+  DEEPSEEK_R1 = 'deepseek-reasoner'
 }
 ```
+また、他のモデルを使用することもできます：
+```typescript
+import { Model } from '@visactor/vmind';
 
-VMindはCSV形式とJSON形式のデータセットをサポートしています。
+const vmind = new VMind({
+  url: LLM_SERVICE_URL,
+  model: LLM_MODEL_NAME, // 選択したモデル
+  headers: {
+    'api-key': LLM_API_KEY
+  }
+});
+```
 
-後続のプロセスでCSVデータを使用するには、データ処理メソッドを呼び出してフィールド情報を抽出し、構造化されたデータセットに変換する必要があります。VMindは、フィールド情報を取得するためのルールベースのメソッド`parseCSVData`を提供しています：
+VMind は CSV および JSON 形式のデータセットをサポートしています。
+
+CSV データを後続のプロセスで使用するには、データ処理メソッドを呼び出してフィールド情報を抽出し、構造化されたデータセットに変換する必要があります。VMind はルールベースのメソッド `parseCSVData` を提供してフィールド情報を取得します：
 
 ```typescript
-// CSV文字列を渡して、fieldInfoとJSON構造のデータセットを取得します
+// CSV 文字列を渡して、フィールド情報と JSON 構造のデータセットを取得
 const { fieldInfo, dataset } = vmind.parseCSVData(csv);
 ```
 
@@ -238,28 +239,7 @@ const userPrompt =
 const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
-#### 大模型リクエスト方法のカスタマイズ
-
-VMindオブジェクトを初期化する際にパラメータを渡します：
-
-```typescript
-import VMind from '@visactor/vmind';
-const vmind = new VMind(openAIKey:string, params:{
-url?: string;//大模型サービスのURL
-/** gptリクエストヘッダー、優先度が高い */
-headers?: Record<string, string> ;//リクエストヘッダー
-method?: string;//リクエストメソッド POST GET
-model?: string;//モデル名
-max_tokens?: number;
-temperature?: number;//0に設定することを推奨
-})
-```
-
-urlで大模型サービスのurlを指定します（デフォルトはhttps://api.openai.com/v1/chat/completions）
-後続の呼び出しで、VMindはparamsのパラメータを使用して大模型サービスのurlにリクエストします。
-
 #### データ集約
-📢 注意：データ集約機能はGPTシリーズモデルのみをサポートしています。より多くのモデルが近日中に提供される予定です。
 
 グラフライブラリを使用して棒グラフ、折れ線グラフなどを描画する際、データが集約されていない場合、視覚化効果に影響を与えます。同時に、フィールドのフィルタリングやソートが行われていないため、一部の視覚化意図を満たすことができません。例えば：最もコストがかかるトップ10の部門を表示してください、北のさまざまな製品の販売を表示してくださいなど。
 
@@ -281,7 +261,13 @@ const userInput = 'show me the changes in sales rankings of various car brand';
 const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset, false); //第4パラメータとしてfalseを渡すことで、チャートを生成する前にデータ集約を無効にします。
 ```
 
-#### 対話式編集
+#### データインサイト
+[チュートリアル](https://visactor.io/vmind/guide/Basic_Tutorial/Chart_Insight)
+
+#### データ抽出：テキストからチャートへ
+[チュートリアル](https://visactor.io/vmind/guide/Basic_Tutorial/Data_Extraction)
+
+#### 対話型編集
 
 開発中、乞うご期待
 
