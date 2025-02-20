@@ -2,6 +2,12 @@
   "name": "@visactor/vmind",
   "entries": [
     {
+      "version": "1.2.14",
+      "tag": "@visactor/vmind_v1.2.14",
+      "date": "Tue, 03 Dec 2024 08:54:38 GMT",
+      "comments": {}
+    },
+    {
       "version": "1.2.13",
       "tag": "@visactor/vmind_v1.2.13",
       "date": "Thu, 11 Jul 2024 08:20:22 GMT",
