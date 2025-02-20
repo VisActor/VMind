@@ -448,7 +448,8 @@ export const aliasByComponentType: Record<
   },
   brush: {
     isArray: false
-  }
+  },
+  label: {}
 };
 
 export const removeUnneedArrayInSpec = (leafSpec: any, compKey: string, parentKeyPath: string) => {
