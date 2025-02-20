@@ -11,33 +11,25 @@ The Create VMind Instance interface is used to create a VMind instance, which ca
 
 ```ts
 export interface ILLMOptions {
-  url?: string; // URL of the LLM service, default is openAI API
-  headers?: HeadersInit; // header of the LLM request
-  method?: 'POST' | 'GET'; // request method, post or get
-  model?: Model; // model type
-  max_tokens?: number; // maximum number of tokens for model-generated content
-  temperature?: number; // temperature of model-generated content
-  showThoughts?: boolean; // whether to add the model's thinking process to the output results
-  customRequestFunc?: {
-    chartAdvisor: RequestFunc;
-    dataQuery: RequestFunc;
-  }; // custom method for calling the LLM service
-  [key: string]: any;
+  /** URL of your LLM service. For gpt, default is openAI API. */
+  url?: string;
+  /** llm request header, which has higher priority */
+  headers?: HeadersInit;
+  /** post or get */
+  method?: 'POST' | 'GET';
+  /** LLM Model */
+  model?: Model | string;
+  /** Max token in LLM Chart */
+  maxTokens?: number;
+  /** Temperature of LLM */
+  temperature?: number;
+  /** show llm thoughs or not */
+  showThoughts?: boolean;
+  /** repetition penalty */
+  frequencyPenalty?: number;
+  /** topP */
+  topP?: number;
 }
-```
-```ts
-type RequestFunc = (prompt: string, userMessage: string, options: ILLMOptions | undefined) => Promise<LLMResponse>;
-```
-
-```ts
-export type LLMResponse = {
-  choices: {
-    index: number;
-    message: any;
-  }[];
-  usage: any;
-  [key: string]: any;
-};
 ```
 
 ### url
@@ -54,29 +46,38 @@ The method parameter is used to specify the method type when requesting LLM, usu
 
 ### model
 
-The model parameter is used to specify the type of model. This field will be put into the request body of the LLM service. You can import the Model type from VMind and use it as the value of the model field.
+The model parameter is used to specify the type of model. This field will be put into the request body of the LLM service. You can import the Model type from VMind and use it as the value of the model field. Any model name other than VMind Model can also be specified.
 
 ```ts
 export enum Model {
   GPT3_5 = 'gpt-3.5-turbo',
+  GPT3_5_1106 = 'gpt-3.5-turbo-1106',
   GPT4 = 'gpt-4',
-  SKYLARK = 'skylark-pro',
-  SKYLARK2 = 'skylark2-pro-4k'
+  GPT_4_0613 = 'gpt-4-0613',
+  GPT_4o = 'gpt-4o-2024-08-06',
+  DOUBAO_LITE = 'doubao-lite-32K',
+  DOUBAO_PRO = 'doubao-pro-128k',
+  CHART_ADVISOR = 'chart-advisor',
+  DEEPSEEK_V3 = 'deepseek-chat',
+  DEEPSEEK_R1 = 'deepseek-reasoner'
 }
 ```
 
 ### max_tokens and temperature
 
-The max_tokens and temperature parameters determine the maximum number of tokens and temperature of the model-generated content, respectively. In VMind, the default values of these two parameters are 2000 and 0, respectively. The effects of other values have not been fully tested, so it is not recommended to modify them.
+These two parameters respectively determine the maximum token quantity and the randomness of each generated result of the model, see [OpenAI official documentation](https://platform.openai.com/docs/api-reference/chat/create).
+
+In VMind, the default values of these two parameters are 2048 and 0 respectively.
 
 ### showThoughts
 
 The showThoughts parameter will affect the prompt that VMind sends to the large language model, determining whether to add the thinking process to the output results when completing tasks such as chart generation, data aggregation, etc. In VMind, showThoughts defaults to true.
 
-### customRequestFunc
+### TopP
+Used to control the diversity of output tokens. The larger the TopP value, the more diverse the types of output tokens. The range is 0 to 1, and the default in VMind is 0.
 
-The customRequestFunc parameter allows users to customize the method of calling LLM in each task. For example, you can request your own LLM service in the form of RPC.
-
+### frequencyPenalty
+A number between -2.0 and 2.0. Positive values penalize new tokens based on their frequency in the text, reducing the likelihood of the model repeating the same line verbatim. The default in VMind is 0.
 
 ## Usage Example
 
@@ -84,9 +85,9 @@ The customRequestFunc parameter allows users to customize the method of calling 
 import VMind, { Model } from '@visactor/vmind'
 
 const vmind = new VMind({
-  model: Model.GPT3_5, //use gpt-3.5-turbo model
-  headers: { //specify the header when calling the LLM service
-    Authorization: `Bearer ${OPENAI_API_KEY}` //Your OPENAI_API_KEY
+  model: Model.GPT4o, // use gpt-4o model
+  headers: { // specify the header when calling the LLM service
+    Authorization: `Bearer ${OPENAI_API_KEY}` // Your OPENAI_API_KEY
   }
 })
 ```

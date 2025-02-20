@@ -8,18 +8,18 @@ export { getFieldInfoPrompt } from './gptPrompt';
 export const getBasePrompt = (
   model: string,
   language: 'chinese' | 'english',
-  isCapcut = false,
+  isMultiple = false,
   showThoughs: boolean = false
 ) => {
-  if (isCapcut) {
+  if (isMultiple) {
     return isDoubaoModel(model) ? getCapCutPrompt(language) : getCapCutPromptInGpt(language);
   }
   const func = isDoubaoModel(model) ? doubaoBasePrompt : gptBasePrompt;
   return func(language, showThoughs);
 };
 
-export const getUserQuery = (model: string, language: 'chinese' | 'english', isCapcut = false): LLMMessage[] => {
-  if (isCapcut && !isDoubaoModel(model)) {
+export const getUserQuery = (model: string, language: 'chinese' | 'english', isMultiple = false): LLMMessage[] => {
+  if (isMultiple && !isDoubaoModel(model)) {
     return [
       {
         role: 'user',

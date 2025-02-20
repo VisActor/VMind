@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../../../../types/jstat.d.ts" />
 import jStat from 'jstat';
 import quantile from '@stdlib/stats-base-dists-t-quantile';
 
@@ -158,7 +160,7 @@ export function coefficientVariation(data: number[]) {
   return jStat.coeffvar(data);
 }
 
-export function longestTrendInterval(data: number[]) {
+export function longestTrendInterval(data: number[], trendType?: TrendType) {
   if (data.length === 0) {
     return { length: 0, start: -1, end: -1 };
   }
@@ -169,7 +171,16 @@ export function longestTrendInterval(data: number[]) {
   let end = 0;
   let maxStart = 0;
   let maxEnd = 0;
+  let maxTrend = 0;
   let trend = 0; // 0: no trend, 1: increasing, -1: decreasing
+  const revisedTrend = (trendValue: number) => {
+    if (trendValue === 0) {
+      return TrendType.NO_TREND;
+    } else if (trendValue === 1) {
+      return TrendType.INCREASING;
+    }
+    return TrendType.DECREASING;
+  };
 
   for (let i = 1; i <= data.length; i++) {
     const currentTrend = i === data.length ? null : Math.sign(data[i] - data[i - 1]);
@@ -178,10 +189,11 @@ export function longestTrendInterval(data: number[]) {
       currentLength++;
       end = i;
     } else {
-      if (currentLength > maxLength) {
+      if (currentLength > maxLength && (!trendType || revisedTrend(trend) === trendType)) {
         maxLength = currentLength;
         maxStart = start;
         maxEnd = end;
+        maxTrend = trend;
       }
       trend = currentTrend;
       currentLength = currentTrend !== 0 ? 2 : 1;
@@ -189,7 +201,7 @@ export function longestTrendInterval(data: number[]) {
       end = i;
     }
   }
-  return { length: maxLength, start: maxStart, end: maxEnd };
+  return { length: maxLength, start: maxStart, end: maxEnd, maxTrend };
 }
 
 export const getMeanAndstdDev = (data: number[]) => {

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import './index.scss';
+import '../index.scss';
 import { Button, Input, Card, Space, Modal, Spin } from '@arco-design/web-react';
 import VChart, { registerLiquidChart } from '@visactor/vchart';
 import { ManualTicker, defaultTimeline } from '@visactor/vrender-core';
@@ -20,6 +20,7 @@ type IPropsType = {
       }
     | undefined;
   costTime: number;
+  style?: any;
 };
 
 function downloadGif(link: string, filename = 'out') {
@@ -142,7 +143,7 @@ export function ChartPreview(props: IPropsType) {
   }, [props]);
 
   return (
-    <div className="right-chart">
+    <div className="right-chart" style={props?.style}>
       <Modal
         title={outType}
         visible={!!outType}

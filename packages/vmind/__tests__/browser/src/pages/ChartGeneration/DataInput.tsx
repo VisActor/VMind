@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { useState, useCallback, useMemo } from 'react';
-import './index.scss';
+import '../index.scss';
 import {
   Avatar,
   Input,
@@ -50,10 +50,17 @@ import {
   basicHeatMapChartData,
   vennChartData,
   mapChartData
+  // singleColumnLineCombinationChartData,
+  // singleColumnLineCombinationChartData1,
+  // singleColumnBarCombinationChartData1,
+  // singleColumnBarCombinationChartData,
+  // dynamicScatterPlotData,
+  // dynamicRoseData,
+  // dynamicRoseData1,
+  // sequenceData
 } from '../../constants/mockData';
-import VMind, { ArcoTheme, builtinThemeMap, BuiltinThemeType } from '../../../../../src/index';
+import VMind, { ArcoTheme } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
-import { isArray } from '@visactor/vutils';
 import VChart from '@visactor/vchart';
 
 const TextArea = Input.TextArea;
@@ -107,14 +114,24 @@ const demoDataList: { [key: string]: any } = {
   LinearProgress: linearProgressChartData,
   BasicHeatMap: basicHeatMapChartData,
   Venn: vennChartData
+  // SingleColumnLineCommon: singleColumnLineCombinationChartData,
+  // SingleColumnLineCommon1: singleColumnLineCombinationChartData1,
+  // SingleColumnBarCommon: singleColumnBarCombinationChartData,
+  // SingleColumnBarCommon1: singleColumnBarCombinationChartData1,
+  // dynamicScatterPlotData: dynamicScatterPlotData,
+  // dynamicRoseData: dynamicRoseData,
+  // dynamicRoseData1: dynamicRoseData1,
+  // sequenceData: sequenceData
 };
 
 const globalVariables = (import.meta as any).env;
-const ModelConfigMap: any = {
-  [Model.SKYLARK2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
-  [Model.SKYLARK2_v1_2]: { url: globalVariables.VITE_SKYLARK_URL, key: globalVariables.VITE_SKYLARK_KEY },
+const ModelConfigMap: Record<string, { url: string; key: string }> = {
   [Model.GPT3_5]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
-  [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY }
+  [Model.GPT4]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
+  [Model.DEEPSEEK_R1]: { url: globalVariables.VITE_DEEPSEEK_URL, key: globalVariables.VITE_DEEPSEEK_KEY },
+  [Model.DEEPSEEK_V3]: { url: globalVariables.VITE_DEEPSEEK_URL, key: globalVariables.VITE_DEEPSEEK_KEY },
+  Custom: { url: globalVariables.VITE_CUSTOM_URL, key: globalVariables.VITE_CUSTOM_KEY }
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
@@ -126,8 +143,8 @@ export function DataInput(props: IPropsType) {
   const [csv, setCsv] = useState<string>(demoDataList[defaultDataKey].csv);
   //const [spec, setSpec] = useState<string>('');
   //const [time, setTime] = useState<number>(1000);
-  const [model, setModel] = useState<Model>(Model.GPT3_5);
-  const [cache, setCache] = useState<boolean>(true);
+  const [model, setModel] = useState<Model>(Model.GPT_4o);
+  const [useDataQuery, setUseDataQuery] = useState<boolean>(false);
   const [showThoughts, setShowThoughts] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
@@ -143,7 +160,6 @@ export function DataInput(props: IPropsType) {
     return new VMind({
       url,
       model,
-      cache,
       showThoughts: showThoughts,
       headers: {
         //must has Authorization: `Bearer ${openAIKey}` if use openai api
@@ -151,7 +167,7 @@ export function DataInput(props: IPropsType) {
         'api-key': apiKey
       }
     });
-  }, [apiKey, cache, model, showThoughts, url]);
+  }, [apiKey, model, showThoughts, url]);
 
   const askGPT = useCallback(async () => {
     //setLoading(true);
@@ -177,25 +193,19 @@ export function DataInput(props: IPropsType) {
       const geoJson = await response.json();
       VChart.registerMap('map', geoJson);
     }
-    const chartGenerationRes = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
-      //enableDataQuery: false,
+    const { spec, chartAdvistorRes, time } = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
+      enableDataQuery: useDataQuery,
       //chartTypeList: [ChartType.BarChart, ChartType.LineChart],
       // colorPalette: ArcoTheme.colorScheme,
       theme: 'light'
     });
     const endTime = new Date().getTime();
-    console.log(chartGenerationRes);
-    if (isArray(chartGenerationRes)) {
-      const resNew = chartGenerationRes.map(res => {
-        const { spec, cell } = res;
-        specTemplateTest && (spec.data = undefined);
-        const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset, cell) : spec;
-        return finalSpec;
-      });
-      props.onSpecListGenerate(resNew);
+    console.log(spec);
+    if (chartAdvistorRes?.length) {
+      props.onSpecListGenerate(
+        chartAdvistorRes.map(v => (specTemplateTest ? vmind.fillSpecWithData(v.spec, dataset) : v.spec))
+      );
     } else {
-      const { spec, time, cell } = chartGenerationRes;
-
       const finalSpec = specTemplateTest ? vmind.fillSpecWithData(spec, dataset) : spec;
 
       const costTime = endTime - startTime;
@@ -203,7 +213,7 @@ export function DataInput(props: IPropsType) {
     }
 
     setLoading(false);
-  }, [vmind, csv, model, describe, props]);
+  }, [vmind, csv, model, describe, useDataQuery, props]);
 
   return (
     <div className="left-sider">
@@ -260,8 +270,8 @@ export function DataInput(props: IPropsType) {
           style={{ minHeight: 80, marginTop: 12, background: 'transparent', border: '1px solid #eee' }}
         />
       </div>
-      <Divider style={{ marginTop: 30 }} />
-      <div>
+      <Divider style={{ marginTop: 24 }} />
+      <div className="flex-text-area">
         <p>
           <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
             2
@@ -302,7 +312,7 @@ export function DataInput(props: IPropsType) {
         />
       </div>
 
-      <Divider style={{ marginTop: 60 }} />
+      <Divider style={{ marginTop: 24 }} />
       {/*
       <div>
         <p>
@@ -327,17 +337,28 @@ export function DataInput(props: IPropsType) {
         <InputNumber defaultValue={time} onChange={v => setTime(v)}></InputNumber>
       </div>*/}
       <div style={{ width: '90%', marginBottom: 10 }}>
-        <RadioGroup value={model} onChange={v => setModel(v)}>
-          <Radio value={Model.GPT3_5}>GPT-3.5</Radio>
-          <Radio value={Model.GPT4}>GPT-4</Radio>
-          <Radio value={Model.SKYLARK2}>skylark2 pro</Radio>
-          <Radio value={Model.SKYLARK2_v1_2}>skylark2 pro-v1.2</Radio>
+        <RadioGroup
+          value={model}
+          onChange={v => {
+            setModel(v);
+            if (ModelConfigMap[v]?.url && !ModelConfigMap[v].url.startsWith('Your')) {
+              setUrl(ModelConfigMap[v]?.url);
+            }
+            if (ModelConfigMap[v]?.key && !ModelConfigMap[v].key.startsWith('Your')) {
+              setApiKey(ModelConfigMap[v]?.key);
+            }
+          }}
+        >
+          <Radio value={Model.GPT_4o}>GPT-4o</Radio>
           <Radio value={Model.CHART_ADVISOR}>chart-advisor</Radio>
+          <Radio value={Model.DEEPSEEK_V3}>deepSeek-V3</Radio>
+          <Radio value={Model.DEEPSEEK_R1}>deepSeek-R1</Radio>
+          <Radio value={globalVariables.VITE_CUSTOM_MODEL}>Your Custom Model</Radio>
         </RadioGroup>
       </div>
       <div style={{ width: '90%', marginBottom: 10 }}>
-        <Checkbox checked={cache} onChange={v => setCache(v)}>
-          Enable Cache
+        <Checkbox checked={useDataQuery} onChange={v => setUseDataQuery(v)}>
+          Enable Data Query
         </Checkbox>
       </div>
       <div style={{ width: '90%', marginBottom: 20 }}>

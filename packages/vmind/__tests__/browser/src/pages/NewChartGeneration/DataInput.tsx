@@ -1,13 +1,11 @@
 /* eslint-disable no-console */
 import React, { useState, useCallback, useMemo } from 'react';
-import './index.scss';
+import '../index.scss';
 import { Avatar, Input, Divider, Button, Message, Select, Radio, Modal } from '@arco-design/web-react';
 import { chartGenerationMockData } from '../../constants/chartGeneratorData';
 import type { DataTable, FieldInfo } from '../../../../../src/index';
 import VMind from '../../../../../src/index';
-import { Model, AtomName, Schedule, LLMManage } from '../../../../../src/index';
-import type { SimpleFieldInfo } from '../../../../../src/common/typings';
-import { DataType } from '../../../../../src/common/typings';
+import { Model, AtomName, Schedule, LLMManage, DataType } from '../../../../../src/index';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -42,7 +40,7 @@ function dataTypeTransfer(dataType: string): DataType {
   }
 }
 
-function transferFieldInfoInSimpleFieldInfo(fieldInfo: FieldInfo[]): SimpleFieldInfo[] {
+function transferFieldInfoInSimpleFieldInfo(fieldInfo: FieldInfo[]): FieldInfo[] {
   return fieldInfo.map(item => ({
     fieldName: item.fieldName,
     description: item.description,

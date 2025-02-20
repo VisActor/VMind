@@ -94,7 +94,7 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
       if (increaseTrends.length > 0 && decreasedTrends.length > 0) {
         if (
           increaseTrends.length > decreasedTrends.length &&
-          (decreasedTrends.length / (increaseTrends.length + decreasedTrends.length) < threshold ||
+          (decreasedTrends.length / (increaseTrends.length + decreasedTrends.length) <= threshold ||
             decreasedTrends.length === 1)
         ) {
           const decreaseInsights = decreasedTrends.map(
@@ -112,7 +112,7 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
           result.push(...decreaseInsights);
         } else if (
           increaseTrends.length < decreasedTrends.length &&
-          (increaseTrends.length / (increaseTrends.length + decreasedTrends.length) < threshold ||
+          (increaseTrends.length / (increaseTrends.length + decreasedTrends.length) <= threshold ||
             increaseTrends.length === 1)
         ) {
           const increaseInsights = increaseTrends.map(

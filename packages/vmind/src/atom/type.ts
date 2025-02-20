@@ -1,4 +1,4 @@
-import type { ChartType, FieldInfo } from '../types';
+import type { BasemapOption, ChartTheme, ChartType, FieldInfo } from '../types';
 import type { LLMManage } from '../core/llm';
 import type { AlgorithmType, AlgorithmOptions, InsightType } from './dataInsight/type';
 
@@ -13,7 +13,7 @@ export interface BaseOptions {
 
 export interface DataExtractionOptions extends BaseOptions {
   reGenerateFieldInfo?: boolean;
-  isCapcut?: boolean;
+  isMultiple?: boolean;
 }
 
 export interface ChartCommandOptions extends BaseOptions {
@@ -49,6 +49,10 @@ export interface ChartGeneratorOptions extends BaseOptions {
   chartTypeList?: ChartType[];
   /** un-supported chart list */
   unsupportChartTypeList?: ChartType[];
+  animationDuration?: number;
+  basemapOption?: BasemapOption;
+  colorPalette?: string[];
+  theme?: ChartTheme | string;
 }
 
 export interface DataInsightOptions extends BaseOptions {

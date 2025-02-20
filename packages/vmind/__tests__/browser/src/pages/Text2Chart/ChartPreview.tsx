@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './index.scss';
+import '../index.scss';
 import { Input, Card, Modal, Spin } from '@arco-design/web-react';
 import VChart, { registerLiquidChart } from '@visactor/vchart';
 import { isNil } from '@visactor/vutils';
@@ -93,7 +93,7 @@ export function ChartPreview(props: IPropsType) {
                     {spec && (
                       <div
                         id={`chart-${index}`}
-                        style={{ height: 250, width: 450, marginRight: 12, flexShrink: 0 }}
+                        style={{ height: 280, width: 550, marginRight: 12, flexShrink: 0 }}
                         key={index}
                       ></div>
                     )}

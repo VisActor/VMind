@@ -32,7 +32,7 @@ import VMind from '@visactor/vmind';
 
 ## 初始化 VMind 实例
 
-首先我们需要初始化一个 VMind 实例，并用它完成后续操作。VMind 目前支持 OpenAI GPT-3.5，GPT-4 系列模型和火山引擎[云雀（skylark-pro）](https://www.volcengine.com/product/yunque)系列模型，未来我们将支持更多的大语言模型，欢迎访问[Github页面](https://github.com/VisActor/VMind/issues/new/choose)提出你的需求。
+首先我们需要初始化一个 VMind 实例，并用它完成后续操作。VMind 目前支持所有主流模型，包括 OpenAI GPT系列，字节豆包系列以及 DeepSeek 等模型，只要提供对应的模型API接口，所有模型均可以直接调用。
 使用以下代码初始化一个 VMind 实例：
 
 ```js
@@ -40,7 +40,7 @@ import VMind, { Model } from '@visactor/vmind'
 
 const vmind = new VMind({
   url, //指定你的大模型服务url。default is https://api.openai.com/v1/chat/completions
-  model: Model.GPT3_5, //指定你指定的模型
+  model: Model.GPT4o, //指定你指定的模型
   headers: { //指定调用大模型服务时的header
     'api-key': apiKey //Your LLM API Key
   }
@@ -184,24 +184,57 @@ const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset)
 ## 导出 GIF 和视频
 
 VMind 支持将生成的图表导出为 GIF 格式的动画和视频，随时随地进行分享。
-为了实现视频导出功能，你需要在项目中额外引入VChart和FFMPEG，并将其作为对象传入VMind。下面将展示如何获得图表 GIF 和视频的 ObjectURL：
+为了实现视频导出功能，你需要在项目中额外引入`VChart, FFMPEG, canvas`相关内容，并将其作为对象传入VMind。下面将展示如何获得图表 GIF 和视频的 ObjectURL：
 
-首先安装VChart和FFMPEG：
+首先安装VChart,FFMPEG以及canvas相关内容：
 ```bash
 # 使用 npm 安装
 npm install @visactor/vchart
-npm install @ffmpeg/ffmpeg
-npm install @ffmpeg/util
+npm install @visactor/vrender-core
+npm install @ffmpeg/ffmpeg^0.11.6
+npm install canvas^2.11.2
 ```
+同时确保vrender-core版本与vchart依赖版本一致，如：`"@visactor/vchart": "1.12.7"`对应的版本应该为，`"@visactor/vrender-core": "0.20.7"`
+具体使用如下：
 
 ```typescript
-import VChart from '@visactor/vchart';
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile } from "@ffmpeg/util";
+import VChart from "@visactor/vchart";
+import { ManualTicker, defaultTimeline } from "@visactor/vrender-core";
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg/dist/ffmpeg.min.js'
+import { createCanvas } from "canvas";
+import VMind from "@visactor/vmind";
+
+// 初始化vmind和ffmpeg
+const vmind = new VMind({});
+const ffmpeg = createFFmpeg({
+  log: true,
+});
+const loadFFmpeg = async () => {
+  if (!ffmpeg.isLoaded()) {
+    await ffmpeg.load();
+  }
+};
+// 确保在使用导出功能前已经加载了ffmpeg
+await loadFFmpeg();
 //导出视频
-const videoSrc = await vmind.exportVideo(spec, time, VChart, FFmpeg, fetchFile); //传入图表spec和视频时长，返回ObjectURL
+//传入图表spec，视频时长和视频化必要参数，返回ObjectURL
+const videoSrc = await vmind.exportVideo(spec, time, {
+      VChart,
+      FFmpeg: ffmpeg,
+      fetchFile,
+      ManualTicker,
+      defaultTimeline,
+      createCanvas,
+    });
 //导出GIF图片
-const gifSrc = await vmind.exportGIF(spec, time, VChart, FFmpeg, fetchFile); //传入图表spec和GIF时长，返回ObjectURL
+const gifSrc = await vmind.exportGIF(spec, time, {
+      VChart,
+      FFmpeg: ffmpeg,
+      fetchFile,
+      ManualTicker,
+      defaultTimeline,
+      createCanvas
+    });
 ```
 
 一旦获得图表的 ObjectURL，我们可以将其保存为文件。以保存视频文件为例：

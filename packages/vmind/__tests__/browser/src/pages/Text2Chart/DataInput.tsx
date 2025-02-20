@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
-import '../DataExtraction/index.scss';
+import '../index.scss';
 import { Avatar, Input, Divider, Button, Select, Modal, Radio } from '@arco-design/web-react';
 import { AtomName, LLMManage, Model, Schedule } from '../../../../../src/index';
-import { capcutMockV2Data as capcutMockData } from '../../constants/capcutData';
+import { capcutMockV2Data as capcutMockData, capcutMockData as v1MockData } from '../../constants/capcutData';
 import { ChartType } from '../../../../../src/types';
 
 const TextArea = Input.TextArea;
@@ -65,7 +65,7 @@ export function DataInput(props: IPropsType) {
       }
       return new Schedule([AtomName.DATA_EXTRACT, AtomName.MULTIPLE_DATA_CLEAN, AtomName.MULTIPLE_CHART_COMMAND], {
         base: { llm: llm.current, showThoughts: false },
-        dataExtract: { isCapcut: true }
+        dataExtract: { isMultiple: true }
       });
     },
     [text]
@@ -74,7 +74,7 @@ export function DataInput(props: IPropsType) {
   const chartSchedule = React.useRef(
     new Schedule([AtomName.CHART_GENERATE], {
       base: { llm: llm.current, showThoughts: false },
-      chartGenerate: { unsupportChartTypeList: [ChartType.DynamicBarChart] }
+      chartGenerate: { unsupportChartTypeList: [ChartType.DynamicBarChart, ChartType.MapChart] }
     })
   );
   useEffect(() => {
@@ -108,11 +108,12 @@ export function DataInput(props: IPropsType) {
         });
       }
     } else {
-      const { dataTable, fieldInfo } = schedule.current.getContext();
+      const { dataTable, fieldInfo, command } = schedule.current.getContext();
       chartSchedule.current.setNewTask({
         text,
         dataTable,
-        fieldInfo
+        fieldInfo,
+        command
       });
       chartResult.push({
         context: await chartSchedule.current.run()
@@ -156,6 +157,13 @@ export function DataInput(props: IPropsType) {
             onChange={value => {
               props.setType(value);
               schedule.current = getScheduleByType(value);
+              if (value === 'multiple') {
+                setText(capcutMockData[defaultIndex].text);
+                setUserInput(capcutMockData[defaultIndex].input);
+              } else {
+                setText(v1MockData[defaultIndex].text);
+                setUserInput(v1MockData[defaultIndex].input);
+              }
             }}
           >
             <Option value={'multiple'}>Multiple</Option>
@@ -174,7 +182,8 @@ export function DataInput(props: IPropsType) {
             style={{ width: '100%' }}
             defaultValue={defaultIndex}
             onChange={index => {
-              const dataObj = capcutMockData[index];
+              const targetMockData = props.type === 'multiple' ? capcutMockData : v1MockData;
+              const dataObj = targetMockData[index];
               setText(dataObj.text);
               setUserInput(dataObj.input);
               schedule.current.setNewTask({
@@ -182,7 +191,7 @@ export function DataInput(props: IPropsType) {
               });
             }}
           >
-            {capcutMockData.map((data, index) => (
+            {(props.type === 'multiple' ? capcutMockData : v1MockData).map((data, index) => (
               <Option key={index} value={index}>
                 {`Demo_${index + 1}`}
               </Option>
