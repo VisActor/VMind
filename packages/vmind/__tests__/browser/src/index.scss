@@ -1,3 +1,17 @@
 #root {
   height: 100vh;
 }
+
+.flex-text-area {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  textarea {
+    flex: 1;
+  }
+}
+
+.flex-1 {
+  flex: 1;
+}

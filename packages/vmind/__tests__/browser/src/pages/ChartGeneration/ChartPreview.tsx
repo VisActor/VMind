@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import './index.scss';
+import '../index.scss';
 import { Button, Input, Card, Space, Modal, Spin } from '@arco-design/web-react';
-import VChart from '@visactor/vchart';
+import VChart, { registerLiquidChart } from '@visactor/vchart';
 import { ManualTicker, defaultTimeline } from '@visactor/vrender-core';
 import VMind from '../../../../../src';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
@@ -20,6 +20,7 @@ type IPropsType = {
       }
     | undefined;
   costTime: number;
+  style?: any;
 };
 
 function downloadGif(link: string, filename = 'out') {
@@ -35,6 +36,8 @@ function downloadVideo(link: string, filename = 'out') {
   a.download = `${filename}.mp4`;
   a.dispatchEvent(new MouseEvent('click'));
 }
+
+registerLiquidChart();
 
 export function ChartPreview(props: IPropsType) {
   const [generating, setGenerating] = useState<boolean>(false);
@@ -94,7 +97,7 @@ export function ChartPreview(props: IPropsType) {
       ManualTicker,
       defaultTimeline,
       createCanvas
-    } as any);
+    });
     const src = URL.createObjectURL(new Blob([data], { type: 'video/mp4' }));
     setSrc(src);
     setOutType('gif');
@@ -140,7 +143,7 @@ export function ChartPreview(props: IPropsType) {
   }, [props]);
 
   return (
-    <div className="right-chart">
+    <div className="right-chart" style={props?.style}>
       <Modal
         title={outType}
         visible={!!outType}

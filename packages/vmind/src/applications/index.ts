@@ -1,20 +1,4 @@
-import chartGenerationMetaByModel from './chartGeneration';
-import dataAggregationMetaByModel from './dataAggregation';
-import intelligentInsightMetaByModel from './IngelligentInsight';
-import dataExtractionMetaByModel from './dataExtraction';
-
-export enum ApplicationType {
-  DataAggregation = 'dataAggregation',
-  ChartGeneration = 'chartGeneration',
-  IntelligentInsight = 'intelligentInsight',
-  DataExtraction = 'dataExtraction'
-}
-
-const applicationMetaList = {
-  [ApplicationType.DataAggregation]: dataAggregationMetaByModel,
-  [ApplicationType.ChartGeneration]: chartGenerationMetaByModel,
-  [ApplicationType.IntelligentInsight]: intelligentInsightMetaByModel,
-  [ApplicationType.DataExtraction]: dataExtractionMetaByModel
-};
-
-export default applicationMetaList;
+export { getDataQuerySchedule } from './dataAggregation';
+export { getData2ChartSchedule } from './chartGeneration';
+export { getText2DataSchedule, getText2MultipleDataSchedule, getText2ChartSchedule } from './dataExtraction';
+export { getDataInsightSchedule } from './dataInsight';

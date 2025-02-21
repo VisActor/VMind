@@ -19,7 +19,7 @@ export function ChartGenerationPage() {
       <Sider
         style={{
           height: '100%',
-          minWidth: 300
+          minWidth: 325
         }}
       >
         <DataInput

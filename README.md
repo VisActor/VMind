@@ -82,22 +82,17 @@ You need to set your LLM service URL and API key to use it normally. You can mod
 You can create a new .env.local file in the packages/vmind folder and write in it:
 
 ```bash
-VITE_SKYLARK_URL="Your service url of skylark model"
 VITE_GPT_URL="Your service url of gpt model"
-VITE_SKYLARK_KEY="Your api-key of skylark model"
 VITE_GPT_KEY="Your api-key of gpt model"
+VITE_DEEPSEEK_URL="https://api.deepseek.com/chat/completions"
+VITE_DEEPSEEK_KEY="Your api-key of deepseek model"
+VITE_CUSTOM_URL="Your service url of custom model"
+VITE_CUSTOM_KEY="Your api-key of custom model"
+VITE_CUSTOM_MODEL="Your Custom Model Name"
 VITE_PROXY_CONFIG="Your Vite proxy config for forwarding requests. Must be in JSON string format and is optional. Example: {"proxy": {"/v1": {"target": "https://api.openai.com/","changeOrigin": true},"/openapi": {"target": "https://api.openai.com/","changeOrigin": true}}}"
 ```
 
 These configurations will be automatically loaded when starting the development environment.
-
-### Project Structure
-
-- \_\_tests\_\_: Playground for development
-- src/common: Common data processing, chart recommendation methods, chart generation pipelines
-- src/gpt: Code related to gpt intelligent chart generation
-- src/skylark: Code related to skylark intelligent chart generation
-- src/chart-to-video: Code related to exporting videos, GIFs
 
 ## Instructions for use
 
@@ -133,14 +128,14 @@ Next, import VMind at the top of the JavaScript file
 import VMind from '@visactor/vmind';
 ```
 
-VMind currently supports OpenAI GPT-3.5, GPT-4 models and skylark-pro series models. Users can specify the model type to be called when initializing the VMind object, and pass in the URL of the LLM service. Next, we initialize a VMind instance and pass in the model type and model url:
+VMind currently supports GPT, deepseek, doubao and any other models with API Keys. Users can specify the model type to be called when initializing the VMind object, and pass in the URL of the LLM service. Next, we initialize a VMind instance and pass in the model type and model url:
 
 ```typescript
 import { Model } from '@visactor/vmind';
 
 const vmind = new VMind({
-  url: LLM_SERVICE_URL, //URL of the LLM service
-  model: Model.SKYLARK, //Currently supports gpt-3.5, gpt-4, skylark pro models. The specified model will be called in subsequent chart generation
+  url: LLM_SERVICE_URL, // URL of the LLM service
+  model: Model.GPT4o, // Model to use
   headers: {
     'api-key': LLM_API_KEY
   } //headers will be used directly as the request header in the LLM request. You can put the model api key in the header
@@ -151,13 +146,30 @@ Here is a list of supported models:
 
 ```typescript
 //models that VMind support
-//more models are under development
 export enum Model {
   GPT3_5 = 'gpt-3.5-turbo',
+  GPT3_5_1106 = 'gpt-3.5-turbo-1106',
   GPT4 = 'gpt-4',
-  SKYLARK = 'skylark-pro',
-  SKYLARK2 = 'skylark2-pro-4k'
+  GPT_4_0613 = 'gpt-4-0613',
+  GPT_4o = 'gpt-4o-2024-08-06',
+  DOUBAO_LITE = 'doubao-lite-32K',
+  DOUBAO_PRO = 'doubao-pro-128k',
+  CHART_ADVISOR = 'chart-advisor',
+  DEEPSEEK_V3 = 'deepseek-chat',
+  DEEPSEEK_R1 = 'deepseek-reasoner'
 }
+```
+And also you can use other model you like:
+```typescript
+import { Model } from '@visactor/vmind';
+
+const vmind = new VMind({
+  url: LLM_SERVICE_URL,
+  model: LLM_MODEL_NAME, // Model You Choose
+  headers: {
+    'api-key': LLM_API_KEY
+  }
+});
 ```
 
 VMind supports datasets in both CSV and JSON formats.
@@ -241,31 +253,7 @@ const userPrompt =
 const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
-#### Customizing LLM Request Method
-
-Pass parameters when initializing the VMind object:
-
-```typescript
-import VMind from '@visactor/vmind';
-const vmind = new VMind(openAIKey:string, params:{
-url?: string;//URL of the LLM service
-/** gpt request header, which has higher priority */
-headers?: Record<string, string> ;//request headers
-method?: string;//request method POST GET
-model?: string;//model name
-max_tokens?: number;
-temperature?: number;//recommended to set to 0
-})
-```
-
-Specify your LLM service url in url (default is https://api.openai.com/v1/chat/completions)
-In subsequent calls, VMind will use the parameters in params to request the LLM service url.
-
-
-
 #### Data Aggregation
-📢 Note: The data aggregation function only supports GPT series models, more models will come soon.
-
 When using the chart library to draw bar charts, line charts, etc., if the data is not aggregated, it will affect the visualization effect. At the same time, because no filtering and sorting of fields has been done, some visualization intentions cannot be met, for example: show me the top 10 departments with the most cost, show me the sales of various products in the north, etc.
 
 VMind supports intelligent data aggregation since version 1.2.2. This function uses the data input by the user as a data table, uses a LLM to generate SQL queries according to the user's command, queries data from the data table, and uses GROUP BY and SQL aggregation methods to group, aggregate, sort, and filter data. Supported SQL statements include: SELECT, GROUP BY, WHERE, HAVING, ORDER BY, LIMIT. Supported aggregation methods are: MAX(), MIN(), SUM(), COUNT(), AVG(). Complex SQL operations such as subqueries, JOIN, and conditional statements are not supported.
@@ -275,7 +263,6 @@ Use the `dataQuery` function of the VMind object to aggregate data. This method 
 - userInput: user input. You can use the same input as generateChart
 - fieldInfo: Dataset field information. The same as generateChart, it can be obtained by parseCSVData, or built by the user.
 - dataset: Dataset. The same as generateChart, it can be obtained by parseCSVData, or built by the user.
-
 
 ```typescript
 const { fieldInfo, dataset } = await vmind?.dataQuery(userInput, fieldInfo, dataset);
@@ -289,6 +276,11 @@ const userInput = 'show me the changes in sales rankings of various car brand';
 const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset, false); //pass false as the forth parameter to disable data aggregation before generating a chart.
 ```
 
+#### Data Insight
+[Tutorial](https://visactor.io/vmind/guide/Basic_Tutorial/Chart_Insight)
+
+#### Data Extraction: Text to Chart
+[Tutorial](https://visactor.io/vmind/guide/Basic_Tutorial/Data_Extraction)
 
 #### Dialog-based editing
 

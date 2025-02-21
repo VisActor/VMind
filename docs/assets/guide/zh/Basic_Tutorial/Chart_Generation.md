@@ -1,6 +1,4 @@
 # 图表生成
-📢 提示：图表生成功能目前支持OpenAI GPT-3.5，GPT-4 系列模型和火山引擎[云雀（skylark-pro）](https://www.volcengine.com/product/yunque)系列模型。我们将不断扩大支持的模型范围，如果你有任何需求，欢迎在我们的[Github页面](https://github.com/VisActor/VMind/issues/new/choose)提出。
-
 本教程将向你详细介绍VMind中的图表智能生成功能，并提供一些示例。
 
 生成图表的方式有很多，比如你可以在PowerBI、Tableau等专业的BI可视化工具中，利用数据集的字段来制作可视化图表；或者你也可以直接使用VChart、ECharts、MatPlotlib等图表库，通过编写代码来绘制图表。此外，VChart、Echarts等图表库还提供了简单易用的图表编辑器，用户可以上传数据并进行图表制作。
@@ -28,6 +26,7 @@ VMind的generateChart函数是一个强大的工具，它可以帮助你智能�
   - enableDataQuery (boolean, 可选): 决定是否在图表生成过程中开启数据聚合
   - colorPalette (Array<string>, 可选): 用于设置图表的调色板
   - animationDuration (number, 可选): 用于设置图表动画的播放持续时间
+  - theme (ChartTheme | string, 可选): 设置最终sepc的主题样式，默认为空，VMind会默认使用带渐变颜色的主题样式，可以设置 VChart 通用深浅主题（'light' | 'dark')或者符合你使用场景下的主题样式
 
 这个方法会返回一个[VChart图表spec](https://www.visactor.io/vchart/guide/tutorial_docs/Basic/A_Basic_Spec)。
 
@@ -238,8 +237,15 @@ VMind还支持[动态条形图（ranking bar）](https://www.visactor.io/vchart/
 如果`userPrompt`为`Show me the change of the GDP rankings of each country`，那么就会生成一个动态条形图：
 ![](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/tutorials/VMind_dynamic_bar.gif)
 
-
 为了让VMind生成符合预期的图表，你需要在`userPrompt`中尽可能清晰地描述你的展示意图和目的。此外，你还需要确保数据集的字段名称具有一定的语义，或者在字段信息中添加字段描述，具体请参见[数据格式与数据处理](./Data_Process)章节。
+
+###  User Prompt 为空
+如果我有一个图表，在不进行人工意图的输入下，即没有`userPrompt`的输入情况下，我可以得到一个较好的图表生成结果吗？
+**答案是，yes!**
+目前 VMind 支持在没有用户意图的情况下，根据公域知识以及字段的信息内容，去产生一个用户最可能想要在这个数据上进行呈现的图表内容。同样与前文，这需要数据中的数据信息和字段信息尽可能的详细和完整，设想如果我的数据每个字段的名称和描述都为`'a' | 'b' | 'c'`这样的内容，显然无法产生一个高质量的图表，这个数据本身也没有特别的意义，因为我们并不了解其中的字段到底代表了什么含义。
+
+同样以前文的手机品牌销售额数据集作为测试，当我们不传入`userPrompt`时，结果如下所示
+![](https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind_1.jpeg)
 
 ### options
 #### enableDataQuery: 是否开启智能数据聚合
@@ -256,9 +262,10 @@ const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset,
 这样做可以减少一次调用大模型的过程，降低token消耗，提高图表生成速度。关于VMind数据聚合的更多信息，请参考[数据聚合](./Data_Aggregation)章节。
 
 #### chartTypeList: 限制VMind生成的图表类型
-VMind目前支持VChart中常见的13种图表类型：
+VMind目前支持VChart中常见的25种图表类型：
 - [柱状图](https://www.visactor.io/vchart/demo/bar-chart/basic-column)
-- [折线图](hhttps://www.visactor.io/vchart/demo/line-chart/basic-line)
+- [折线图](https://www.visactor.io/vchart/demo/line-chart/basic-line)
+- [面积图](https://www.visactor.io/vchart/demo/area-chart/basic-area)
 - [饼图](https://www.visactor.io/vchart/demo/pie-chart/basic-pie)
 - [散点图](https://www.visactor.io/vchart/demo/scatter-chart/basic-scatter)
 - [双轴图](https://www.visactor.io/vchart/demo/combination/dual-axis)
@@ -270,6 +277,17 @@ VMind目前支持VChart中常见的13种图表类型：
 - [桑基图](https://www.visactor.io/vchart/demo/sankey-chart/basic-sankey)
 - [瀑布图](https://www.visactor.io/vchart/demo/waterfall/basic-waterfall)
 - [动态条形图（ranking bar）](https://www.visactor.io/vchart/demo/storytelling/ranking-bar)
+- [区间条形图](https://www.visactor.io/vchart/demo/range-column-chart/range-bar)
+- [水波图](https://www.visactor.io/vchart/demo/liquid-chart/liquid-chart)
+- [条形进度条](https://www.visactor.io/vchart/demo/progress/linear-progress)
+- [环形进度条](https://www.visactor.io/vchart/demo/progress/circular-progress)
+- [嵌套圆图](https://www.visactor.io/vchart/demo/circle-packing-chart/basic-circle-packing)
+- [旭日图](https://www.visactor.io/vchart/demo/sunburst-chart/basic-sunburst)
+- [仪表盘图](https://www.visactor.io/vchart/demo/gauge-chart/basic-gauge)
+- [矩形树图](https://www.visactor.io/vchart/demo/treemap-chart/basic-treemap)
+- [热力图](https://www.visactor.io/vchart/demo/heatmap-chart/basic-heatmap)
+- [韦恩图](https://www.visactor.io/vchart/demo/venn-chart/venn-chart)
+- [地图](https://www.visactor.io/vchart/demo/map-chart/basic-map)
 
 根据`userPrompt`和`fieldInfo`的不同，这些图表类型都有可能被大语言模型推荐。
 如果你有新的图表类型需求，欢迎在我们的[Github页面](https://github.com/VisActor/VMind/issues/new/choose)提出。
@@ -325,15 +343,30 @@ vmind.generateChart方法返回值类型定义如下：
 
 ```typescript
 interface GenerateChartResult {
+  /** 图表spec */
   spec: Record<string, any>;
-  chartType: Record<string, string | string[]>;
+  /** 图表类型*/
+  chartType: ChartType;
+  /** 最终的视觉通道映射  */
   cell: Cell;
-  chartSource: string;
-  usage: any;
+  /** token 消耗量 */
+  usage: Usage;
+  /* 生成当前图表的具体指令，在user prompt的情况下跟user prompt一致 */
+  command: string;
+  /** 转唯gif/video时所用的配置时间 *//
   time: {
     totalTime : number;
     frameArr: number[];
   };
+  /** 基于规则的图表推荐结果，在手动设置规则或者大模型生成有误情况下产生 */
+  chartAdvistorRes: {
+    /** 图表spec */
+    spec: Record<string, any>;
+    /** 图表类型*/
+    chartType: ChartType;
+    /** 推荐得分 */
+    score: number
+  }[]
 }
 ```
 
@@ -429,8 +462,8 @@ console.log(cell)
 
 这表示VMind将商品名称字段映射到图表的x轴，销售额字段映射到y轴，region字段映射到柱子的颜色上。
 
-### chartSource
-图表生成来源。若成功使用LLM生成图表，则为具体的模型名；若最终使用[基于规则的图表生成](./Chart_Advisor)，则为chart-advisor
+### chartAdvistorRes
+该结果是根据当前数据和字段信息，通过VMind的内置规则推导得到的图表推荐结果，在设置模型为`Model.CHART_ADVISOR`或者用户的大模型设置有误，无法获取结果时兜底产生。详见：[基于规则的图表生成](./Chart_Advisor)
 
 ## 生成spec模板
 在没有具体数据集、仅有数据字段的情况下，我们也可能需要生成图表。比如，在进行查询之前，我们可以根据数据集中的字段先生成一个图表，之后依据图表的类型和含有的字段执行相关查询。在这种情况下，调用generateChart方法时无需传入具体的数据集，而是先产生一个spec模板，后续再通过fillSpecWithData方法获取最终用于图表渲染的spec。

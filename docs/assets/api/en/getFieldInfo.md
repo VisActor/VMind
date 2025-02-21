@@ -5,19 +5,41 @@
 
 The getFieldInfo interface is used to parse JSON-structured data to obtain field information (fieldInfo). FieldInfo includes field name, type, value range, and other information, and its structure is as follows:
 ```typescript
-export type SimpleFieldInfo = {
-fieldName: string;
-description?: string;
-type: 'int' | 'float' | 'string' | 'date';
-role: 'dimension' | 'measure';
-domain?: (string | number)[];
+export interface FieldInfo = {
+  /** name of field */
+  fieldName: string;
+  /** field type, eg: time / category / numerical */
+  type: DataType;
+  /** field role */
+  role: ROLE;
+  /** alias of field */
+  alias?: string;
+  /** description of field */
+  description?: string;
 };
+
+export enum DataType {
+  DATE = 'date',
+  TIME = 'time',
+  STRING = 'string',
+  REGION = 'region',
+  NUMERICAL = 'numerical',
+  RATIO = 'ratio',
+  COUNT = 'count',
+  FLOAT = 'float',
+  INT = 'int'
+}
+
+export enum ROLE {
+  DIMENSION = 'dimension',
+  MEASURE = 'measure'
+}
 ```
 
 ## Interface Parameters
 
 ```typescript
-getFieldInfo(dataset: Record<string, number | string>[]): SimpleFieldInfo[]
+getFieldInfo(dataset: Record<string, number | string>[]): FieldInfo[]
 ```
 
 - dataset: JSON-formatted data set, an array, each element of which is an object, with the key being the field name and the value being the corresponding data.
