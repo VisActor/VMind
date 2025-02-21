@@ -2,19 +2,25 @@
   "name": "@visactor/vmind",
   "entries": [
     {
-      "version": "1.2.14",
-      "tag": "@visactor/vmind_v1.2.14",
+      "version": "2.0.1",
+      "tag": "@visactor/vmind_v2.0.1",
       "date": "Fri, 21 Feb 2025 07:38:30 GMT",
       "comments": {
         "none": [
           {
-            "comment": "send authorization header when use openai models"
+            "comment": "Overall architecture upgrade"
           },
           {
-            "comment": "set all headers in all cases"
+            "comment": "Support DeepSeek and other custom model with api-key"
           },
           {
-            "comment": "add bearer header in smart insight page"
+            "comment": "12 new chart types added for chart generation"
+          },
+          {
+            "comment": "Add Text2Chart capability"
+          },
+          {
+            "comment": "Add Chart Insight capability"
           }
         ]
       }

@@ -2,14 +2,27 @@
 
 This log was last generated on Fri, 21 Feb 2025 07:38:30 GMT and should not be manually modified.
 
-## 1.2.14
+## 2.0.1
 Fri, 21 Feb 2025 07:38:30 GMT
 
 ### Updates
 
-- send authorization header when use openai models
-- set all headers in all cases
-- add bearer header in smart insight page
+- Overall architecture upgrade
+- Support DeepSeek and other custom model with api-key
+- 12 new chart types added for chart generation
+  - [Range Bar Chart](https://www.visactor.io/vchart/demo/range-column-chart/range-bar)
+  - [Liquid Chart](https://www.visactor.io/vchart/demo/liquid-chart/liquid-chart)
+  - [Linear Progress Bar](https://www.visactor.io/vchart/demo/progress/linear-progress)
+  - [Circular Progress Bar](https://www.visactor.io/vchart/demo/progress/circular-progress)
+  - [Circle Packing Chart](https://www.visactor.io/vchart/demo/circle-packing-chart/basic-circle-packing)
+  - [Sunburst Chart](https://www.visactor.io/vchart/demo/sunburst-chart/basic-sunburst)
+  - [Gauge Chart](https://www.visactor.io/vchart/demo/gauge-chart/basic-gauge)
+  - [Treemap Chart](https://www.visactor.io/vchart/demo/treemap-chart/basic-treemap)
+  - [Heatmap Chart](https://www.visactor.io/vchart/demo/heatmap-chart/basic-heatmap)
+  - [Venn Chart](https://www.visactor.io/vchart/demo/venn-chart/venn-chart)
+  - [Map](https://www.visactor.io/vchart/demo/map-chart/basic-map)
+- Add Text2Chart capability
+- Add Chart Insight capability
 
 ## 1.2.13
 Thu, 11 Jul 2024 08:20:22 GMT
