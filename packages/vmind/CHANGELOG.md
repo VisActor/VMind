@@ -1,6 +1,15 @@
 # Change Log - @visactor/vmind
 
-This log was last generated on Thu, 11 Jul 2024 08:20:22 GMT and should not be manually modified.
+This log was last generated on Fri, 21 Feb 2025 07:38:30 GMT and should not be manually modified.
+
+## 1.2.14
+Fri, 21 Feb 2025 07:38:30 GMT
+
+### Updates
+
+- send authorization header when use openai models
+- set all headers in all cases
+- add bearer header in smart insight page
 
 ## 1.2.13
 Thu, 11 Jul 2024 08:20:22 GMT
