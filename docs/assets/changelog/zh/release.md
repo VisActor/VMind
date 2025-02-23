@@ -1,3 +1,22 @@
+# v2.0.1
+
+2025-02-21
+
+
+**🆕 新增功能**
+
+- **@visactor/vmind**: Support DeepSeek and other custom model with api-key
+- **@visactor/vmind**: 12 new chart types added for chart generation
+- **@visactor/vmind**: Add text2Chart API
+- **@visactor/vmind**: Add getInsights API
+
+**🔖 其他**
+
+- **@visactor/vmind**: Overall architecture upgrade
+
+
+[更多详情请查看 v2.0.1](https://github.com/VisActor/VMind/releases/tag/v2.0.1)
+
 # v1.2.12
 
 2024-06-17
