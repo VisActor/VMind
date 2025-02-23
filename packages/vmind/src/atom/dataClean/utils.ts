@@ -150,9 +150,9 @@ export const getCtxBymeasureAutoTransfer = (context: DataCleanCtx, text?: string
             }
           }
           // transfer ratio value to absolue value without unit
-          if (info.ratioGranularity === '%') {
+          if (info?.ratioGranularity === '%') {
             dataTable[i][info.fieldName] = value / 100;
-          } else if (info.ratioGranularity === '‰') {
+          } else if (info?.ratioGranularity === '‰') {
             dataTable[i][info.fieldName] = value / 1000;
           }
         }

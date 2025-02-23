@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vmind",
+      "comment": "fix fieldinfo may undefiend while chart-advistor",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vmind"
+}
