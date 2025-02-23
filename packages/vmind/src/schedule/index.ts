@@ -131,7 +131,7 @@ export class Schedule<T extends AtomName[]> {
     for (const key in oldUsage) {
       if (Object.prototype.hasOwnProperty.call(oldUsage, key)) {
         const curKey = key as keyof Usage;
-        result[curKey] = (oldUsage[curKey] || 0) + (newUsage[curKey] || 0);
+        result[curKey] = (oldUsage[curKey] || 0) + (newUsage?.[curKey] || 0);
       }
     }
 
