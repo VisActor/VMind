@@ -2,7 +2,7 @@
   {
     "definitionName": "lockStepVersion",
     "policyName": "vmindMin",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "mainProject": "@visactor/vmind",
     "nextBump": "patch"
   }

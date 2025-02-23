@@ -2,6 +2,18 @@
   "name": "@visactor/vmind",
   "entries": [
     {
+      "version": "2.0.2",
+      "tag": "@visactor/vmind_v2.0.2",
+      "date": "Sun, 23 Feb 2025 10:21:08 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix fieldinfo may undefiend while chart-advistor"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.1",
       "tag": "@visactor/vmind_v2.0.1",
       "date": "Fri, 21 Feb 2025 07:38:30 GMT",
