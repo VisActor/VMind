@@ -1,3 +1,14 @@
+# v2.0.2
+
+2025-02-23
+
+
+**🔖 Fix**
+
+- **@visactor/vmind**: fix fieldinfo may undefiend while chart-advistor
+
+[more detail about v2.0.2](https://github.com/VisActor/VMind/releases/tag/v2.0.2)
+
 # v2.0.1
 
 2025-02-21
