@@ -266,7 +266,7 @@ class VMind {
       [AtomName.DATA_QUERY]: enableDataQuery,
       [AtomName.CHART_COMMAND]: !userPrompt
     };
-    const { chartType, chartAdvistorRes, spec, command, cell, vizSchema, dataTable, time } =
+    const { chartType, chartAdvistorRes, spec, command, cell, vizSchema, dataTable, time, usage } =
       await this.data2ChartSchedule.run(undefined, shouldRunList);
     return {
       chartType,
@@ -276,7 +276,8 @@ class VMind {
       cell,
       vizSchema,
       dataTable,
-      time
+      time,
+      usage
     };
   }
 
