@@ -97,6 +97,11 @@ export function DataInput(props: IPropsType) {
     const specJson = JSON5.parse(spec);
     const { insights } = await vmind.current.getInsights(specJson, {
       maxNum: numLimits,
+      algorithmOptions: {
+        pearsonCorrelation: { withoutSeries: true, threshold: 0.75 },
+        lofOutlier: { threshold: 2 },
+        statisticsBase: { defaultLeftAxisName: '左轴', defaultRightAxisName: '右轴' }
+      },
       detailMaxNum: [
         { types: ['outlier', 'pair_outlier', 'extreme_value', 'turning_point', 'majority_value'], maxNum: 3 },
         { types: ['abnormal_band'], maxNum: 3 },
