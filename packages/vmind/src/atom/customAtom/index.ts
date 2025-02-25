@@ -2,14 +2,13 @@ import { AtomName } from '../../types/atom';
 import type { CustomPromptOptions } from '../type';
 import { BaseAtom } from '../base';
 import type { LLMMessage } from '../../types/llm';
-import type { ChartQAExtractionCtx } from '../../types';
 
 export class CustomPrompt extends BaseAtom<any, CustomPromptOptions> {
   name = AtomName.CUSTOM_PROMPT;
 
   isLLMAtom = true;
 
-  constructor(context: ChartQAExtractionCtx, option: CustomPromptOptions) {
+  constructor(context: any, option: CustomPromptOptions) {
     super(context, option);
   }
 
@@ -27,10 +26,11 @@ export class CustomPrompt extends BaseAtom<any, CustomPromptOptions> {
     ];
   }
 
-  parseLLMContent(resJson: any): any {
+  parseLLMContent(resJson: any, toolJson?: any): any {
     return {
       ...this.context,
-      ...resJson
+      ...resJson,
+      toolRes: toolJson
     };
   }
 }

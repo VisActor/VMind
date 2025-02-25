@@ -61,7 +61,7 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
     return [];
   }
 
-  parseLLMContent(resJson: any, llmRes: LLMResponse) {
+  parseLLMContent(resJson: any, toolJson: any, llmRes: LLMResponse) {
     const { sql, fieldInfo: responseFiledInfo, thoughts = '' } = resJson;
     if ((!sql || !responseFiledInfo) && llmRes?.choices?.[0]) {
       //try to parse the response with another format

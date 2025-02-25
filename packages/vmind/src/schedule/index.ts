@@ -125,9 +125,11 @@ export class Schedule<T extends AtomName[]> {
     return taskMapping;
   }
 
-  private addUsage(oldUsage: Usage, newUsage: Usage): Usage {
+  private addUsage(oldUsage: Usage, newUsage?: Usage): Usage {
     const result: Usage = {} as Usage;
-
+    if (!newUsage) {
+      return oldUsage;
+    }
     for (const key in oldUsage) {
       if (Object.prototype.hasOwnProperty.call(oldUsage, key)) {
         const curKey = key as keyof Usage;
@@ -139,7 +141,7 @@ export class Schedule<T extends AtomName[]> {
   }
 
   async run(query?: string, shouldRunList?: Record<AtomName, boolean>): Promise<Awaited<CombineAll<MapAtomTypes<T>>>> {
-    this.query = query;
+    this.query = query || '';
     const subTasks = this.parseSubTasks(query);
     let usage: Usage = {
       prompt_tokens: 0,
@@ -189,7 +191,7 @@ export class Schedule<T extends AtomName[]> {
       const atomInstaces = this.atomInstaces.find(atom => atom.name === atomName);
       if (!atomInstaces) {
         console.error(`Doesn\'t exist ${atomName}`);
-        return null;
+        return null as any;
       }
       return atomInstaces.getContext() as any;
     }
