@@ -125,8 +125,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
         const data = await this.options.llm.run(this.name, messages);
         const resJson = this.options.llm.parseJson(data);
         if (resJson.error || data?.error) {
-          this.updateContext({ error: resJson.error ?? data?.error } as any);
-          return this.context;
+          return this.runWithLLMError(resJson.error ?? data?.error);
         }
         this.recordLLMResponse(data);
         this.setNewContext({
@@ -144,6 +143,11 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
   }
 
   protected runBeforeLLM() {
+    return this.context;
+  }
+
+  protected runWithLLMError(error: string) {
+    this.updateContext({ error } as any);
     return this.context;
   }
 
