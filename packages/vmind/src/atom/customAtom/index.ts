@@ -19,6 +19,7 @@ export class CustomPrompt extends BaseAtom<any, CustomPromptOptions> {
         role: 'system',
         content: this.options.promptTemplate
       },
+      ...(this.responses || []),
       {
         role: 'user',
         content: query || text

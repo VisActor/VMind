@@ -106,10 +106,14 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
    * @param userInput
    * @param userInput.context new context to update
    * @param userInput.query user's query to adjust context
+   * @param userInput.messages user's history messages
    * @returns new context after execute atom function
    */
-  async run(userInput?: { context?: Ctx; query?: string }) {
-    const { context, query } = userInput || {};
+  async run(userInput?: { context?: Ctx; query?: string; messages?: LLMMessage[] }) {
+    const { context, query, messages } = userInput || {};
+    if (!!messages) {
+      this.setResponses(messages);
+    }
     this.context.error = null;
     this.updateContext(context);
     this.originContext = this.context;
@@ -158,7 +162,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
    * @param query user's new query
    * @returns new context after execute
    */
-  protected async runWithChat(query: string) {
+  async runWithChat(query: string) {
     const messages = this.getLLMMessages(query);
     const functionCalls = this.getFunctionCalls();
     const data = await this.options.llm.run(this.name, messages, functionCalls);
@@ -221,6 +225,14 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
         assistantMsg
       );
     }
+  }
+
+  setResponses(messages: LLMMessage[]) {
+    this.responses = messages;
+  }
+
+  getResponses() {
+    return this.responses;
   }
 
   clearHistory() {
