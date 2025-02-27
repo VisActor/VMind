@@ -41,6 +41,8 @@ export interface BaseContext {
   usage?: Usage;
   /** LLM thoughts */
   thoughts?: string;
+  /** function call res */
+  toolRes?: any;
 }
 
 export interface ClusterDataView {

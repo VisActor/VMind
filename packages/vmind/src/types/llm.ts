@@ -45,11 +45,52 @@ export interface ILLMOptions {
   topP?: number;
 }
 
+/** Tool Messages of tool result */
+export interface ToolCall {
+  id: string;
+  type: 'function';
+  function: {
+    name: string;
+    arguments: string;
+  };
+}
+
 /** LLM Messages api */
 export interface LLMMessage {
-  /** prompt role, system or user query */
-  role: 'system' | 'user' | 'assistant';
+  /** prompt role, system or user query or tool result */
+  role: 'system' | 'user' | 'assistant' | 'tool';
   content: string;
+  name?: string;
+  tool_calls?: ToolCall[];
+  tool_call_id?: string;
+}
+
+export type ParamType = 'function' | 'object' | 'array' | 'string' | 'number' | 'boolean';
+export interface JsonSchemaParams {
+  type: ParamType;
+  description?: string;
+  enum?: string[];
+  properties?: JsonSchemaParams;
+  required?: string[];
+  items?: JsonSchemaParams;
+  minItems?: number;
+  uniqueItems?: boolean;
+  $ref?: string;
+}
+
+export interface ToolMessage {
+  type: 'function';
+  function: {
+    name: string;
+    description: string;
+    parameters?: {
+      type: string;
+      properties: Record<string, JsonSchemaParams>;
+      strict?: boolean;
+      required?: string[];
+      addionalProperties?: boolean;
+    };
+  };
 }
 
 /** LLM Response API */
@@ -57,6 +98,7 @@ export interface LLMResponse extends BaseContext {
   choices?: {
     index: number;
     message: any;
+    finish_reason?: string;
   }[];
   error?: string;
   [key: string]: any;

@@ -5,7 +5,7 @@
 import { merge } from '@visactor/vutils';
 import type { BaseContext } from '../types/atom';
 import { AtomName } from '../types/atom';
-import type { LLMMessage, LLMResponse } from '../types/llm';
+import type { LLMMessage, LLMResponse, ToolMessage } from '../types/llm';
 import type { BaseOptions } from './type';
 
 export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
@@ -31,7 +31,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     id: number;
   };
 
-  constructor(context: Ctx, options: O) {
+  constructor(context: Partial<Ctx>, options: Partial<O>) {
     this.options = merge({}, this.buildDefaultOptions(), options);
     this.responses = [];
     this.history = {
@@ -39,7 +39,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
       idList: [],
       id: null
     };
-    this.setNewContext(this.buildDefaultContext(context));
+    this.setNewContext(this.buildDefaultContext(context as any));
     if (!this.options.llm && this.isLLMAtom) {
       console.error(`Does\'t support LLM Mange in ${this.name} Atom which need LLM`);
     }
@@ -71,7 +71,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     } as O;
   }
 
-  updateContext(context: Ctx, replace?: boolean) {
+  updateContext(context: Partial<Ctx>, replace?: boolean) {
     if (context) {
       if (replace) {
         Object.keys(context).forEach(k => {
@@ -84,7 +84,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     return this.context;
   }
 
-  updateOptions(options: O) {
+  updateOptions(options: Partial<O>) {
     this.options = merge({}, this.options, options);
   }
 
@@ -114,10 +114,14 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
    * @param userInput
    * @param userInput.context new context to update
    * @param userInput.query user's query to adjust context
+   * @param userInput.messages user's history messages
    * @returns new context after execute atom function
    */
-  async run(userInput?: { context?: Ctx; query?: string }) {
-    const { context, query } = userInput || {};
+  async run(userInput?: { context?: Ctx; query?: string; messages?: LLMMessage[] }) {
+    const { context, query, messages } = userInput || {};
+    if (!!messages) {
+      this.setResponses(messages);
+    }
     this.context.error = null;
     this.updateContext(context);
     this.originContext = this.context;
@@ -130,14 +134,16 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
       }
       if (this.isLLMAtom) {
         const messages = this.getLLMMessages();
-        const data = await this.options.llm.run(this.name, messages);
+        const functionCalls = this.getFunctionCalls();
+        const data = await this.options.llm.run(this.name, messages, functionCalls);
         const resJson = this.options.llm.parseJson(data);
+        const toolJson = this.options.llm.parseTools(data);
         if (resJson.error || data?.error) {
           return this.runWithLLMError(resJson.error ?? data?.error);
         }
         this.recordLLMResponse(data);
         this.setNewContext({
-          ...this.parseLLMContent(resJson, data),
+          ...this.parseLLMContent(resJson, toolJson, data),
           usage: (data as LLMResponse)?.usage
         });
         this._runWithOutLLM();
@@ -164,15 +170,17 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
    * @param query user's new query
    * @returns new context after execute
    */
-  protected async runWithChat(query: string) {
+  async runWithChat(query: string) {
     const messages = this.getLLMMessages(query);
-    const data = await this.options.llm.run(this.name, messages);
+    const functionCalls = this.getFunctionCalls();
+    const data = await this.options.llm.run(this.name, messages, functionCalls);
     const resJson = this.options.llm.parseJson(data);
-    if (!resJson.error) {
+    const toolJson = this.options.llm.parseTools(data);
+    if (!resJson.error && !resJson.error) {
       this.recordLLMResponse(data, query);
-      this.setNewContext({ ...this.parseLLMContent(resJson), usage: (data as LLMResponse)?.usage });
+      this.setNewContext({ ...this.parseLLMContent(resJson, toolJson, data), usage: (data as LLMResponse)?.usage });
     } else {
-      this.updateContext({ error: resJson.error } as any);
+      this.updateContext({ error: resJson?.error || toolJson?.error } as any);
     }
     return this.context;
   }
@@ -197,7 +205,11 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     return [];
   }
 
-  protected parseLLMContent(resJson: any, llmRes?: LLMResponse) {
+  protected getFunctionCalls(): ToolMessage[] {
+    return this.options?.tools;
+  }
+
+  protected parseLLMContent(resJson: any, toolJson?: any, llmRes?: LLMResponse) {
     return { ...this.context };
   }
 
@@ -221,6 +233,14 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
         assistantMsg
       );
     }
+  }
+
+  setResponses(messages: LLMMessage[]) {
+    this.responses = messages;
+  }
+
+  getResponses() {
+    return this.responses;
   }
 
   clearHistory() {
