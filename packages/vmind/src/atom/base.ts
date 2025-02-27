@@ -31,7 +31,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     id: number;
   };
 
-  constructor(context: Ctx, options: O) {
+  constructor(context: Partial<Ctx>, options: Partial<O>) {
     this.options = merge({}, this.buildDefaultOptions(), options);
     this.responses = [];
     this.history = {
@@ -39,7 +39,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
       idList: [],
       id: null
     };
-    this.setNewContext(this.buildDefaultContext(context));
+    this.setNewContext(this.buildDefaultContext(context as any));
     if (!this.options.llm && this.isLLMAtom) {
       console.error(`Does\'t support LLM Mange in ${this.name} Atom which need LLM`);
     }
@@ -69,14 +69,14 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     return {} as O;
   }
 
-  updateContext(context: Ctx) {
+  updateContext(context: Partial<Ctx>) {
     if (context) {
       this.context = merge({}, this.context, context);
     }
     return this.context;
   }
 
-  updateOptions(options: O) {
+  updateOptions(options: Partial<O>) {
     this.options = merge({}, this.options, options);
   }
 
