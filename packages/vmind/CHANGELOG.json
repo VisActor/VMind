@@ -2,6 +2,42 @@
   "name": "@visactor/vmind",
   "entries": [
     {
+      "version": "2.0.2",
+      "tag": "@visactor/vmind_v2.0.2",
+      "date": "Sun, 23 Feb 2025 10:21:08 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix fieldinfo may undefiend while chart-advistor"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.0.1",
+      "tag": "@visactor/vmind_v2.0.1",
+      "date": "Fri, 21 Feb 2025 07:38:30 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Overall architecture upgrade"
+          },
+          {
+            "comment": "Support DeepSeek and other custom model with api-key"
+          },
+          {
+            "comment": "12 new chart types added for chart generation"
+          },
+          {
+            "comment": "Add Text2Chart capability"
+          },
+          {
+            "comment": "Add Chart Insight capability"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.2.13",
       "tag": "@visactor/vmind_v1.2.13",
       "date": "Thu, 11 Jul 2024 08:20:22 GMT",

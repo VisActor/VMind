@@ -131,6 +131,12 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
     return this.context;
   }
 
+  protected runWithLLMError(error: string): ChartGeneratorCtx {
+    super._runWithOutLLM();
+    this.useChartAdvisor = true;
+    return this._runWithOutLLM();
+  }
+
   protected _runWithOutLLM(): ChartGeneratorCtx {
     this.isLLMAtom = true;
     if (this.useRule && !this.context.cell) {
@@ -147,12 +153,13 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
     };
     if (!this.useRule && (this.useChartAdvisor || this.options.useChartAdvisor)) {
       // @todo
-      const { cell, dataset, chartType, advisedList } = getCellContextByAdvisor({
+      const { cell, dataset, chartType, advisedList, usage } = getCellContextByAdvisor({
         ...this.context,
         ...additionalCtx
       });
       this.context = {
         ...this.context,
+        usage,
         cell,
         dataTable: dataset,
         chartType,

@@ -115,7 +115,7 @@ const revisedInsightByTypeMapping: Record<
 
 export const getInsights = (context: DataInsightExtractContext, options: DataInsightOptions) => {
   const { algorithms, maxNum, isLimitedbyChartType, detailMaxNum = [], language } = options;
-  const { chartType, cell, spec } = context;
+  const { chartType, cell, spec, originDataset } = context;
   const insights: Insight[] = [];
   const insightAlgorithmContext = { ...context, insights };
   const isStack = isStackChart(spec, chartType, cell);
@@ -144,6 +144,11 @@ export const getInsights = (context: DataInsightExtractContext, options: DataIns
       insights.push(
         ...res.map(v => ({
           ...v,
+          // transfer to origin dataset since dataset may number measurefields but string value in origin dataset
+          data: (v.data || []).map(vv => ({
+            index: vv.index,
+            dataItem: originDataset[vv.index]
+          })),
           name
         }))
       );
