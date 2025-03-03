@@ -1,5 +1,5 @@
 import { isArray, isNil, isPlainObject, isString, isValid, merge } from '@visactor/vutils';
-import type { AppendSpecInfo } from '../../types/atom';
+import type { IVChartOperationItem } from '../../types/atom';
 import { set } from '../../utils/set';
 
 export const validSeriesForChart: Record<
@@ -477,7 +477,13 @@ export const findComponentNameByAlias = (alias: string) => {
 
 const ALIAS_NAME_KEY = '_alias_name';
 
-export const parseAliasOfPath = (parentKeyPath: string, compKey: string, chartSpec: any, leafSpec: any) => {
+export const parseAliasOfPath = (
+  parentKeyPath: string,
+  compKey: string,
+  chartSpec: any,
+  leafSpec: any,
+  op: 'add' | 'update' | 'delete'
+) => {
   const subPaths = parentKeyPath.split('.');
   const aliasOptions = aliasByComponentType[compKey];
 
@@ -496,16 +502,20 @@ export const parseAliasOfPath = (parentKeyPath: string, compKey: string, chartSp
   if (/\[\d\]/.exec(subPaths[0])) {
     // 路径中包含了序号
     if (!isTargetArray) {
+      // 删掉无用的序号，返回结果示例： `legends`
       subPaths[0] = compKey;
     } else {
+      // 替换aliasName为compKey，返回结果示例： `axes[1]`
       subPaths[0] = subPaths[0].replace(aliasName, compKey);
     }
   } else {
     // 路径中没包含序号
     if (isTargetArray) {
-      subPaths[0] = `${compKey}[0]`;
+      // 加上序号，返回结果示例： `legends[0]`
+      subPaths[0] = op === 'add' ? `${compKey}[${chartSpec[compKey]?.length ?? 0}]` : `${compKey}[0]`;
     } else {
-      subPaths[0] = subPaths[0].replace(aliasName, compKey);
+      // 替换aliasName为compKey，返回结果示例： `legends`
+      subPaths[0] = subPaths[0].replace(aliasName, compKey); // 替换aliasName为compKey
     }
   }
 
@@ -531,10 +541,11 @@ export const parseAliasOfPath = (parentKeyPath: string, compKey: string, chartSp
     };
 
     if (isArray(chartSpec[compKey])) {
-      // 固定为array类型
-      let specifiedComps = chartSpec[compKey].filter((comp: any) => comp[ALIAS_NAME_KEY] === aliasName);
+      // 根据别名查找需要修改的组件
+      let specifiedComps =
+        op !== 'add' ? chartSpec[compKey].filter((comp: any) => comp[ALIAS_NAME_KEY] === aliasName) : [];
 
-      if (!specifiedComps.length) {
+      if (op !== 'add' && !specifiedComps.length) {
         specifiedComps = chartSpec[compKey].filter(isMatchComp);
       }
 
@@ -548,7 +559,7 @@ export const parseAliasOfPath = (parentKeyPath: string, compKey: string, chartSp
 
           appendPath.push(appended);
         });
-      } else if (isValidAlias) {
+      } else if ((isValidAlias && op !== 'delete') || op === 'add') {
         const appended = [...subPaths];
 
         appended[0] = `${compKey}[${chartSpec[compKey].length}]`;
@@ -557,13 +568,13 @@ export const parseAliasOfPath = (parentKeyPath: string, compKey: string, chartSp
       }
     } else {
       // 单个组件的配置，判断是否符合条件
-      if (isMatchComp(chartSpec[compKey])) {
+      if (isMatchComp(chartSpec[compKey]) && op !== 'add') {
         const appended = [...subPaths];
 
         appended[0] = `${compKey}`;
 
         appendPath.push(appended);
-      } else {
+      } else if (op !== 'delete') {
         // 扩展成数组
         chartSpec[compKey] = [chartSpec[compKey]];
         const appended = [...subPaths];
@@ -743,58 +754,78 @@ export const convertFunctionString = (spec: any): any => {
   return spec;
 };
 
-export const mergeAppendSpec = (prevSpec: any, appendSpec: AppendSpecInfo) => {
-  const { spec } = appendSpec;
+export const updateSpecByOperation = (prevSpec: any, op: IVChartOperationItem) => {
   const newSpec = merge({}, prevSpec);
 
-  if (isPlainObject(spec)) {
-    Object.keys(spec).forEach(key => {
-      let parentKeyPath: string = key;
-      let updatedKeyPaths: string[] = null;
-      let leafSpec = (spec as any)[key];
-      const aliasName = parentKeyPath.split('.')[0].replace(/\[\d\]/, '');
-      const compKey = findComponentNameByAlias(aliasName);
+  let parentKeyPath: string = op.target;
+  let updatedKeyPaths: string[] = null;
+  let leafSpec = op.value;
+  const aliasName = parentKeyPath.split('.')[0].replace(/\[\d\]/, '');
+  const compKey = findComponentNameByAlias(aliasName);
 
-      if (compKey.startsWith('series') && newSpec.type !== 'common' && !newSpec.series) {
-        leafSpec = removeUnneedArrayInSpec((spec as any)[key], 'series', key);
+  if (compKey.startsWith('series') && newSpec.type !== 'common' && !newSpec.series) {
+    leafSpec = removeUnneedArrayInSpec(op.value, 'series', op.target);
 
-        parentKeyPath = parentKeyPath.indexOf('.') > 0 ? parentKeyPath.slice(parentKeyPath.indexOf('.') + 1) : '';
-      } else {
-        const aliasResult = parseAliasOfPath(parentKeyPath, compKey, newSpec, leafSpec);
+    parentKeyPath = parentKeyPath.indexOf('.') > 0 ? parentKeyPath.slice(parentKeyPath.indexOf('.') + 1) : '';
+  } else {
+    const aliasResult = parseAliasOfPath(parentKeyPath, compKey, newSpec, leafSpec, op.op);
 
-        if (aliasResult.appendContent) {
-          aliasResult.appendContent.forEach(entry => {
-            set(newSpec, entry.appendPath, entry.appendSpec);
-          });
-
-          if (aliasResult.appendContent.length) {
-            updatedKeyPaths = aliasResult.appendContent.map(entry => entry.parentKeyPath);
-          }
-        }
-
-        if (isValid(aliasResult.parentKeyPath)) {
-          parentKeyPath = aliasResult.parentKeyPath;
-        }
-
-        if (isValid(aliasResult.leafSpec)) {
-          leafSpec = aliasResult.leafSpec;
-        }
-
-        leafSpec = convertFunctionString(leafSpec);
-      }
-
-      (updatedKeyPaths ?? [parentKeyPath]).forEach(kp => {
-        if (kp) {
-          set(newSpec, kp, leafSpec);
-        } else {
-          merge(newSpec, leafSpec);
-        }
+    if (aliasResult.appendContent) {
+      aliasResult.appendContent.forEach(entry => {
+        set(newSpec, entry.appendPath, entry.appendSpec);
       });
+
+      if (aliasResult.appendContent.length) {
+        updatedKeyPaths = aliasResult.appendContent.map(entry => entry.parentKeyPath);
+      }
+    }
+
+    if (isValid(aliasResult.parentKeyPath)) {
+      parentKeyPath = aliasResult.parentKeyPath;
+    }
+
+    if (isValid(aliasResult.leafSpec)) {
+      leafSpec = aliasResult.leafSpec;
+    }
+
+    leafSpec = convertFunctionString(leafSpec);
+  }
+
+  if (op.op === 'add' || op.op === 'update') {
+    (updatedKeyPaths ?? [parentKeyPath]).forEach(kp => {
+      if (kp) {
+        set(newSpec, kp, leafSpec);
+      } else {
+        merge(newSpec, leafSpec);
+      }
+    });
+  } else if (op.op === 'delete') {
+    (updatedKeyPaths ?? [parentKeyPath]).forEach(kp => {
+      if (kp) {
+        set(newSpec, kp, null);
+      }
     });
   }
 
   return {
     newSpec,
     code: 0
+  };
+};
+
+export const runOperactionsOfSpec = (prevSpec: any, ops: IVChartOperationItem[]) => {
+  let spec = prevSpec;
+  const codes: number[] = [];
+
+  ops.forEach(op => {
+    const res = updateSpecByOperation(spec, op);
+
+    spec = res.newSpec;
+    codes.push(res.code);
+  });
+
+  return {
+    spec,
+    codes
   };
 };

@@ -1,5 +1,5 @@
 import { merge } from '@visactor/vutils';
-import { mergeAppendSpec } from '../../../src/atom/VChartSpec/utils';
+import { updateSpecByOperation } from '../../../src/atom/VChartSpec/utils';
 
 const spec = {
   type: 'bar',
@@ -120,45 +120,42 @@ const spec = {
   }
 };
 
-describe('mergeAppendSpec of barchart', () => {
+describe('updateSpecByOperation of barchart', () => {
   it('should reduce duplicated code', () => {
-    const newSpec = mergeAppendSpec(merge({}, spec), {
-      spec: {
-        scales: [
+    const newSpec = updateSpecByOperation(merge({}, spec), {
+      op: 'add',
+      target: 'scales',
+      value: [
+        {
+          domain: [
+            {
+              fields: ['yourFieldName']
+            }
+          ]
+        }
+      ]
+    });
+    const newSpec2 = updateSpecByOperation(merge({}, spec), {
+      op: 'add',
+      target: 'scales[0]',
+      value: {
+        domain: [
           {
-            domain: [
-              {
-                fields: ['yourFieldName']
-              }
-            ]
+            fields: ['yourFieldName']
           }
         ]
       }
     });
 
-    expect(newSpec).toEqual(
-      mergeAppendSpec(spec, {
-        spec: {
-          'scales[0]': {
-            domain: [
-              {
-                fields: ['yourFieldName']
-              }
-            ]
-          }
-        }
-      })
-    );
+    expect(newSpec).toEqual(newSpec2);
   });
 
   it('should parse complicated path', () => {
-    const append = {
-      spec: {
-        'scales[0].domain[0].fields': 'yourFieldName'
-      }
-    };
-
-    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'add',
+      target: 'scales[0].domain[0].fields',
+      value: 'yourFieldName'
+    });
 
     expect(newSpec.scales).toEqual([
       {
@@ -172,20 +169,17 @@ describe('mergeAppendSpec of barchart', () => {
   });
 
   it('should parse complicated path of axes', () => {
-    const append = {
-      spec: {
-        axes: [
-          {
-            label: {
-              style: {
-                lineWidth: 2
-              }
-            }
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'add',
+      target: 'axes',
+      value: {
+        label: {
+          style: {
+            lineWidth: 2
           }
-        ]
+        }
       }
-    };
-    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    });
 
     expect(newSpec.axes).toEqual([
       {
@@ -197,19 +191,17 @@ describe('mergeAppendSpec of barchart', () => {
       }
     ]);
 
-    const append1 = {
-      spec: {
-        axes: {
-          label: {
-            style: {
-              lineWidth: 2
-            }
+    const { newSpec: newSpec1 } = updateSpecByOperation(merge({}, spec), {
+      op: 'add',
+      target: 'axes[0]',
+      value: {
+        label: {
+          style: {
+            lineWidth: 2
           }
         }
       }
-    };
-
-    const { newSpec: newSpec1 } = mergeAppendSpec(merge({}, spec), append1);
+    });
 
     expect(newSpec1.axes).toEqual([
       {
@@ -221,19 +213,17 @@ describe('mergeAppendSpec of barchart', () => {
       }
     ]);
 
-    const append2 = {
-      spec: {
-        yAxis: {
-          label: {
-            style: {
-              lineWidth: 2
-            }
+    const { newSpec: newSpec2 } = updateSpecByOperation(merge({}, spec), {
+      op: 'add',
+      target: 'yAxis',
+      value: {
+        label: {
+          style: {
+            lineWidth: 2
           }
         }
       }
-    };
-
-    const { newSpec: newSpec2 } = mergeAppendSpec(merge({}, spec), append2);
+    });
 
     expect(newSpec2.axes).toEqual([
       {
@@ -247,19 +237,17 @@ describe('mergeAppendSpec of barchart', () => {
       }
     ]);
 
-    const append3 = {
-      spec: {
-        'yAxis[0]': {
-          label: {
-            style: {
-              lineWidth: 2
-            }
+    const { newSpec: newSpec3 } = updateSpecByOperation(merge({}, spec), {
+      op: 'add',
+      target: 'yAxis[0]',
+      value: {
+        label: {
+          style: {
+            lineWidth: 2
           }
         }
       }
-    };
-
-    const { newSpec: newSpec3 } = mergeAppendSpec(merge({}, spec), append3);
+    });
 
     expect(newSpec3.axes).toEqual([
       {
@@ -273,13 +261,11 @@ describe('mergeAppendSpec of barchart', () => {
       }
     ]);
 
-    const append4 = {
-      spec: {
-        'yAxis[0].label.style.lineWidth': 2
-      }
-    };
-
-    const { newSpec: newSpec4 } = mergeAppendSpec(merge({}, spec), append4);
+    const { newSpec: newSpec4 } = updateSpecByOperation(merge({}, spec), {
+      op: 'add',
+      target: 'yAxis[0].label.style.lineWidth',
+      value: 2
+    });
 
     expect(newSpec4.axes).toEqual([
       {
@@ -295,17 +281,15 @@ describe('mergeAppendSpec of barchart', () => {
   });
 
   it('should handle function', () => {
-    const append = {
-      spec: {
-        bar: {
-          style: {
-            fill: "(datum, index) => index === 0 ? 'red' : null"
-          }
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'update',
+      target: 'bar',
+      value: {
+        style: {
+          fill: "(datum, index) => index === 0 ? 'red' : null"
         }
       }
-    };
-
-    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    });
 
     expect(newSpec.bar.style.fill).toBeDefined();
     expect(newSpec.bar.style.fill('test', 0)).toBe('red');
@@ -313,13 +297,11 @@ describe('mergeAppendSpec of barchart', () => {
   });
 
   it('should not not add series when has only one series', () => {
-    const append = {
-      spec: {
-        'series[0].extensionMark[0].style.size': 10
-      }
-    };
-
-    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'update',
+      target: 'series[0].extensionMark[0].style.size',
+      value: 10
+    });
     expect(newSpec.extensionMark).toEqual([
       {
         style: {
@@ -330,13 +312,11 @@ describe('mergeAppendSpec of barchart', () => {
   });
 
   it('should not not add series when has only one series when alias is empty', () => {
-    const append = {
-      spec: {
-        'series[0].extensionMark[0].style.size': 10
-      }
-    };
-
-    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'update',
+      target: 'series[0].extensionMark[0].style.size',
+      value: 10
+    });
     expect(newSpec.extensionMark).toEqual([
       {
         style: {
@@ -347,19 +327,15 @@ describe('mergeAppendSpec of barchart', () => {
   });
 
   it('should not not add series when has only one series in bar chart', () => {
-    const append = {
-      spec: {
-        series: [
-          {
-            label: {
-              overlap: true
-            }
-          }
-        ]
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'update',
+      target: 'series[0]',
+      value: {
+        label: {
+          overlap: true
+        }
       }
-    };
-
-    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
+    });
     expect(newSpec.label).toEqual({
       overlap: true
     });
@@ -368,30 +344,30 @@ describe('mergeAppendSpec of barchart', () => {
 
   it('should contain all spec when spec has more than one path', () => {
     const append = {
-      spec: {
-        tooltip: {
-          mark: {
-            maxLineCount: 20
-          },
-          dimension: {
-            maxLineCount: 20
-          }
+      tooltip: {
+        mark: {
+          maxLineCount: 20
+        },
+        dimension: {
+          maxLineCount: 20
         }
-      },
-      parentKeyPath: 'tooltip',
-      aliasKeyPath: 'tooltip'
+      }
     };
 
-    const { newSpec } = mergeAppendSpec(merge({}, spec), append);
-    expect(newSpec.tooltip).toEqual(append.spec.tooltip);
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'add',
+      target: 'tooltip',
+      value: append
+    });
+    expect(newSpec.tooltip).toEqual(append);
   });
 
   it('should not create legends array when only one legend', () => {
-    const { newSpec } = mergeAppendSpec(merge({}, spec), {
-      spec: {
-        'legends[0]': {
-          orient: 'left'
-        }
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'update',
+      target: 'legends[0]',
+      value: {
+        orient: 'left'
       }
     });
     expect(newSpec.legends).toEqual({
@@ -399,11 +375,11 @@ describe('mergeAppendSpec of barchart', () => {
       visible: true,
       orient: 'left'
     });
-    const { newSpec: newSpec2 } = mergeAppendSpec(merge({}, spec), {
-      spec: {
-        'legends[0]': {
-          orient: 'left'
-        }
+    const { newSpec: newSpec2 } = updateSpecByOperation(merge({}, spec), {
+      op: 'update',
+      target: 'legends',
+      value: {
+        orient: 'left'
       }
     });
     expect(newSpec2.legends).toEqual({
@@ -414,22 +390,22 @@ describe('mergeAppendSpec of barchart', () => {
   });
 
   it('should not handle result of color', () => {
-    const { newSpec } = mergeAppendSpec(merge({}, spec), {
-      spec: {
-        color: ['red']
-      }
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'update',
+      target: 'color',
+      value: ['red']
     });
     expect(newSpec.color).toEqual(['red']);
   });
 
   it('should add default axes when return `allAxis`', () => {
-    const { newSpec } = mergeAppendSpec(merge({}, spec), {
-      spec: {
-        allAxis: {
-          label: {
-            autoHide: false,
-            autoLimit: true
-          }
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'add',
+      target: 'allAxis',
+      value: {
+        label: {
+          autoHide: false,
+          autoLimit: true
         }
       }
     });
@@ -452,7 +428,7 @@ describe('mergeAppendSpec of barchart', () => {
   });
 
   it('should filter yaxis when axes is not empty', () => {
-    const { newSpec } = mergeAppendSpec(
+    const { newSpec } = updateSpecByOperation(
       merge({}, spec, {
         axes: [
           {
@@ -474,11 +450,11 @@ describe('mergeAppendSpec of barchart', () => {
         ]
       }),
       {
-        spec: {
-          yAxis: {
-            label: {
-              autoWrap: true
-            }
+        op: 'update',
+        target: 'yAxis',
+        value: {
+          label: {
+            autoWrap: true
           }
         }
       }
