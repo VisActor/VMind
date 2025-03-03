@@ -48,7 +48,7 @@ function revisedTestData(data: DataExtractionResult, reGenerateDataClean = false
           dataset: caseResult.dataset,
           fieldInfoResult: caseResult.fieldInfoResult,
           defaultResult: caseResult.defaultResult.map(v => {
-            dataClean.reset(v.context as any);
+            dataClean.reset(v.context);
             return {
               ...v,
               dataClean: dataClean._runWithOutLLM()

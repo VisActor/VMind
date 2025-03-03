@@ -134,6 +134,7 @@ export const extractDataFromContext = (context: DataInsightCtx) => {
     },
     specFieldMapping
   )?.fieldInfo;
+  const originDataset = dataset;
   dataset = transferMeasureInTable(dataset, fieldInfo);
 
   const cell = revisedCell(getCellFromSpec(spec, chartType), dataset);
@@ -163,6 +164,7 @@ export const extractDataFromContext = (context: DataInsightCtx) => {
   const onlyOneSeries = Object.keys(seriesDataMap).length === 1;
   return {
     dataset,
+    originDataset,
     fieldInfo,
     chartType,
     seriesDataMap,

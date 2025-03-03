@@ -55,7 +55,8 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
       useChartAdvisor: false,
       chartTypeList: SUPPORTED_CHART_LIST,
       basemapOption: DEFAULT_MAP_OPTION,
-      unsupportChartTypeList: []
+      unsupportChartTypeList: [],
+      useChartRule: false
     };
   }
 
@@ -88,13 +89,15 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
   }
 
   parseLLMContent(resJson: any) {
-    const { CHART_TYPE, FIELD_MAP, thoughts } = resJson;
+    const { CHART_TYPE, FIELD_MAP, thoughts, stackOrPercent, transpose } = resJson;
     let newContext: GenerateChartCellContext = {
       ...this.context,
       thoughts,
       chartType: CHART_TYPE,
       cell: FIELD_MAP,
-      chartTypeList: this.finalChartTypeList
+      chartTypeList: this.finalChartTypeList,
+      stackOrPercent,
+      transpose
     };
     newContext = getContextAfterRevised(newContext);
     const { error, chartType, fieldInfo, cell } = newContext as any;
@@ -114,7 +117,7 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
     if (this.options.useChartAdvisor) {
       this.isLLMAtom = false;
     }
-    if (dataTable.length > 1) {
+    if (dataTable.length > 1 || !this.options.useChartRule) {
       return this.context;
     }
     this.isLLMAtom = false;
@@ -128,6 +131,12 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
       } as any);
     }
     return this.context;
+  }
+
+  protected runWithLLMError(error: string): ChartGeneratorCtx {
+    super._runWithOutLLM();
+    this.useChartAdvisor = true;
+    return this._runWithOutLLM();
   }
 
   protected _runWithOutLLM(): ChartGeneratorCtx {
