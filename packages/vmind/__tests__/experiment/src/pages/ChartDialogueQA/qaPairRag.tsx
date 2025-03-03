@@ -556,7 +556,10 @@ export function QARag() {
                   setQuery('');
                   axios(`${url}closeSession`, {
                     method: 'POST',
-                    data: {}
+                    data: {
+                      sessionId,
+                      userId: 'vmind_test'
+                    }
                   });
                 }}
               />
