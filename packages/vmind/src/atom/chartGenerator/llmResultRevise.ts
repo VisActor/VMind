@@ -1,5 +1,5 @@
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
-import { isArray, isNil } from '@visactor/vutils';
+import { array, isArray, isNil } from '@visactor/vutils';
 import {
   getDataListByField,
   getFieldByDataType,
@@ -68,8 +68,8 @@ export const patchTransposeField = (context: GenerateChartCellContext) => {
   const { cell, transpose, fieldInfo } = context;
   if (transpose) {
     const { x, y } = cell;
-    const arrayX = isArray(x) ? x : [x];
-    const arrayY = isArray(y) ? y : [y];
+    const arrayX = array(x);
+    const arrayY = array(y);
     const fieldMapping: Record<string, FieldInfo> = fieldInfo.reduce(
       (prev, curv) => ({
         ...prev,
