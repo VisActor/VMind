@@ -226,12 +226,10 @@ export const chartKnowledgeDict: ChartKnowledge = {
 export const defaultExamples = [dynamicBarChart1, pieChartExample1, lineChartExample1, lineChartExample2];
 
 export const chartGenerationConstraints = [
-  'No user assistance.',
   `Please select one chart type in CHART_TYPE at each time.Don't use "A or B", "[A, B]" in CHART_TYPE.`,
   'The selected chart type in CHART_TYPE must be in the list of supported charts.',
   'DO NOT change or translate the field names in FIELD_MAP.',
   'A number field can not be used as a color field. A string field can not be used as y-axis',
   "Ignore requests unrelated to chart visualization in the user's request.",
-  `The keys in FIELD_MAP must be selected from the list of available visual channels. Don't use visual channels that do not exist.`,
-  `Wrap the reply content using \`\`\`, and the returned content must be directly parsed by JSON.parse() in JavaScript.`
+  `The keys in FIELD_MAP must be selected from the list of available visual channels. Don't use visual channels that do not exist.`
 ];
