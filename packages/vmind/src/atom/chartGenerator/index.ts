@@ -55,7 +55,8 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
       useChartAdvisor: false,
       chartTypeList: SUPPORTED_CHART_LIST,
       basemapOption: DEFAULT_MAP_OPTION,
-      unsupportChartTypeList: []
+      unsupportChartTypeList: [],
+      useChartRule: false
     };
   }
 
@@ -116,7 +117,7 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
     if (this.options.useChartAdvisor) {
       this.isLLMAtom = false;
     }
-    if (dataTable.length > 1) {
+    if (dataTable.length > 1 || !this.options.useChartRule) {
       return this.context;
     }
     this.isLLMAtom = false;

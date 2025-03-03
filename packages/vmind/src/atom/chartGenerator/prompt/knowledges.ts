@@ -4,7 +4,8 @@ import {
   CARTESIAN_CHART_LIST,
   NEED_COLOR_FIELD_CHART_LIST,
   NEED_SIZE_FIELD_CHART_LIST,
-  NEED_COLOR_AND_SIZE_CHART_LIST
+  NEED_COLOR_AND_SIZE_CHART_LIST,
+  NEED_VALUE_FIELD
 } from '../const';
 import { ChartType } from '../../../types';
 import type { ChartKnowledge, VisualChannel } from '../type';
@@ -22,6 +23,15 @@ const getSizeKnowledge = (chartTypeList: ChartType[]) => {
   const validSet = new Set(chartTypeList);
   if (NEED_SIZE_FIELD_CHART_LIST.some(chartType => validSet.has(chartType))) {
     const includedCharts = chartTypeList.filter(chart => NEED_SIZE_FIELD_CHART_LIST.includes(chart));
+    return ", can't be empty in " + includedCharts.join(' , ') + '.';
+  }
+  return '.';
+};
+
+const getValueKnowledge = (chartTypeList: ChartType[]) => {
+  const validSet = new Set(chartTypeList);
+  if (NEED_VALUE_FIELD.some(chartType => validSet.has(chartType))) {
+    const includedCharts = chartTypeList.filter(chart => NEED_VALUE_FIELD.includes(chart));
     return ", can't be empty in " + includedCharts.join(' , ') + '.';
   }
   return '.';
@@ -70,7 +80,7 @@ export const visualChannelInfoMap: Record<VisualChannel, (chartTypeList: ChartTy
   target: (chartTypeList: ChartType[]) =>
     "the field mapped to the target channel. Only used in Sankey Chart. Can't be empty in Sankey Chart.",
   value: (chartTypeList: ChartType[]) =>
-    "the field mapped to the value channel. Only used in Sankey Chart. Can't be empty in Sankey Chart."
+    `the field mapped to the value channel. Must use a number field${getValueKnowledge(chartTypeList)}`
 };
 export const chartKnowledgeDict: ChartKnowledge = {
   [ChartType.BarChart]: {
