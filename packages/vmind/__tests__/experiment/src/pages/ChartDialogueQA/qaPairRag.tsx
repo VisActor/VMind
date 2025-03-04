@@ -24,10 +24,10 @@ import {
   stackBar
 } from '../../data/editorData';
 import { JSONEditor } from './specEditor';
+import { Logo } from './logo';
 
 const globalVariables = (import.meta as any).env;
 const url = globalVariables.VITE_VCHART_EDITOR_URL || 'http://localhost/';
-
 const demoData = [
   {
     name: '基础线图',
@@ -101,7 +101,7 @@ export function QARag() {
   const [dialog, setDialog] = React.useState<
     {
       role: string;
-      content: string | string[];
+      content: string;
       res?: any;
     }[]
   >([
@@ -322,28 +322,35 @@ export function QARag() {
                     </div>
                   );
                 }
+                const jsonRes =
+                  content.includes('"thought":') && content.includes('"spec":') ? JSON.parse(content) : {};
+                const { thought, answer } = jsonRes?.spec || {};
                 return (
                   <div key={index} className="assistant dialog-item">
-                    <IconRobot style={{ width: 25, height: 25, marginRight: 4 }} />
+                    <Logo style={{ width: 25, height: 25, marginRight: 4 }} />
                     <div className="assistant-content diaglog-content">
-                      {isArray(content) ? (
-                        content.map(v => (
-                          <pre key={v}>
-                            <code>{v}</code>
+                      <div className="assistant-div">
+                        {thought ? (
+                          <blockquote className="thought">
+                            <div className="title">思考内容:</div>
+                            <div className="content">{thought}</div>
+                          </blockquote>
+                        ) : (
+                          <span>{content}</span>
+                        )}
+                        {answer ? (
+                          <pre className="spec-answer">
+                            <code>{JSON.stringify(answer, null, 2)}</code>
                           </pre>
-                        ))
-                      ) : (
-                        <pre>
-                          <code>{content}</code>
-                        </pre>
-                      )}
+                        ) : null}
+                      </div>
                     </div>
                   </div>
                 );
               })}
               {loading && (
                 <div className="assistant dialog-item">
-                  <IconRobot style={{ width: 25, height: 25, marginTop: 4, marginRight: 4 }} />
+                  <Logo style={{ width: 25, height: 25, marginTop: 4, marginRight: 4 }} />
                   <div className="assistant-content diaglog-content">
                     <IconLoading />
                   </div>

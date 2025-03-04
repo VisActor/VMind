@@ -135,27 +135,52 @@
     padding: 8px;
     border-radius: 8px;;
     overflow: auto;
+    
   }
-
-  .feedback {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    svg {
-      margin: 0 4px;
-      width: 16px;
-      height: 16px;
-
-      &:hover {
-        cursor: pointer;
-      }
-    }
+  svg {
+    flex-shrink: 0;
   }
 
   &.user {
     flex-direction: row-reverse;
   }
+
+  .thought {
+    border-left: 4px solid #1a73e8;
+    background: #f8f9fa;
+    color: #444;
+    margin: 0;
+    padding: 16px 20px;
+    quotes: "\201C" "\201D"; /* 自动添加引号符号 */
+
+    .title {
+      font-weight: bold;
+      margin-left: -12px;
+    }
+  }
+
+    pre.spec-answer {
+      margin: 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-top: 1px solid #eee;
+      font-size: 14px;
+      overflow-x: auto;
+      color: #333; /* 主文字颜色加深 */
+    }
+    
+    .spec-answer code {
+      font-family: 'SF Mono', 'Consolas', monospace;
+      line-height: 1.6;
+      white-space: pre-wrap;
+     }
+     
+     /* 浅色主题语法高亮 */
+     .spec-answer code .key { color: #1a73e8; } /* 键 - 谷歌蓝 */
+     .spec-answer code .string { color: #188038; } /* 字符串 - 深绿 */
+     .spec-answer code .number { color: #e67c73; } /* 数字 - 橙红 */
+     .spec-answer code .boolean { color: #c2185b; } /* 布尔值 - 玫红 */
+     .spec-answer code .null { color: #9c27b0; } /* null - 紫色 */
 }
 
 .qa-card {
