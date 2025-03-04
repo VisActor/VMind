@@ -498,25 +498,32 @@ export const parseAliasOfPath = (
     newLeafSpec = isArray(leafSpec) ? leafSpec[0] : leafSpec;
   }
   const isTargetArray = (chartSpec[compKey] && isArray(chartSpec[compKey])) || aliasOptions?.isArray;
+  const specifiedIndexRes = /\[(\d+)\]/.exec(subPaths[0]);
+  const specifiedIndex = specifiedIndexRes ? Number(specifiedIndexRes[1]) : -1;
 
-  if (/\[\d\]/.exec(subPaths[0])) {
-    // 路径中包含了序号
-    if (!isTargetArray) {
-      // 删掉无用的序号，返回结果示例： `legends`
-      subPaths[0] = compKey;
+  // 路径中没包含序号
+  if (isTargetArray) {
+    // 加上序号，返回结果示例： `legends[0]`
+    if (op === 'add') {
+      if (specifiedIndex >= 0 && (!chartSpec[compKey] || specifiedIndex <= chartSpec[compKey].length)) {
+        subPaths[0] = `${compKey}[${specifiedIndex}]`;
+      } else {
+        subPaths[0] = `${compKey}[${chartSpec[compKey]?.length ?? 0}]`;
+      }
     } else {
-      // 替换aliasName为compKey，返回结果示例： `axes[1]`
-      subPaths[0] = subPaths[0].replace(aliasName, compKey);
+      if (specifiedIndex >= 0 && (!chartSpec[compKey] || specifiedIndex <= chartSpec[compKey].length - 1)) {
+        subPaths[0] = `${compKey}[${specifiedIndex}]`;
+      } else {
+        subPaths[0] = `${compKey}[0]`;
+      }
     }
+  } else if (aliasOptions?.isArray !== false && op === 'add' && chartSpec[compKey]) {
+    // 扩展成数组，添加到第二个元素上
+    chartSpec[compKey] = [chartSpec[compKey]];
+    subPaths[0] = `${compKey}[1]`;
   } else {
-    // 路径中没包含序号
-    if (isTargetArray) {
-      // 加上序号，返回结果示例： `legends[0]`
-      subPaths[0] = op === 'add' ? `${compKey}[${chartSpec[compKey]?.length ?? 0}]` : `${compKey}[0]`;
-    } else {
-      // 替换aliasName为compKey，返回结果示例： `legends`
-      subPaths[0] = subPaths[0].replace(aliasName, compKey); // 替换aliasName为compKey
-    }
+    // 替换aliasName为compKey，返回结果示例： `legends`
+    subPaths[0] = compKey; // 替换aliasName为compKey
   }
 
   if (!isValidAlias) {
