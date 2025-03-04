@@ -147,6 +147,7 @@ export interface AxesDataInfo {
 
 export interface DataInsightExtractContext {
   dataset: DataTable;
+  originDataset: DataTable;
   fieldInfo: FieldInfo[];
   dimensionDataMap: DimValueDataMap;
   dimensionSumMap: Record<string, number[]>;

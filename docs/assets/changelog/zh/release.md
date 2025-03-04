@@ -1,3 +1,51 @@
+# v2.0.3
+
+2025-03-04
+
+**🆕 新增功能**
+
+- **atom**: VMind内部原子化功能支持function call能力
+
+**🔖 Fix**
+
+- **chartGeneration**: 修复堆积类/百分比柱图不生效的问题，修复条形图无法正确生成的问题
+- **getInsights**: 修复当图表数值为string时，洞察得到的原始数据为转为number类型的数据项，导致匹配可能有误的问题
+
+**🔖 其他**
+
+- **@visactor/vmind**: 类型定义优化
+
+
+# v2.0.2
+
+2025-02-23
+
+
+**🔖 Fix**
+
+- **@visactor/vmind**: fix fieldinfo may undefiend while chart-advistor
+
+[更多详情请查看 v2.0.2](https://github.com/VisActor/VMind/releases/tag/v2.0.2)
+
+# v2.0.1
+
+2025-02-21
+
+
+**🆕 新增功能**
+
+- **@visactor/vmind**: Support DeepSeek and other custom model with api-key
+- **@visactor/vmind**: 12 new chart types added for chart generation
+- **@visactor/vmind**: Add text2Chart API
+- **@visactor/vmind**: Add getInsights API
+
+**🔖 其他**
+
+- **@visactor/vmind**: Overall architecture upgrade
+
+
+[更多详情请查看 v2.0.1](https://github.com/VisActor/VMind/releases/tag/v2.0.1)
+
 # v1.2.12
 
 2024-06-17

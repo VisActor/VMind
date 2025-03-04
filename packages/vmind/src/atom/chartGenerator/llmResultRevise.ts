@@ -1,5 +1,5 @@
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
-import { isArray, isNil } from '@visactor/vutils';
+import { array, isArray, isNil } from '@visactor/vutils';
 import {
   getDataListByField,
   getFieldByDataType,
@@ -9,6 +9,7 @@ import {
 } from '../../utils/field';
 import { foldDataTableByYField, isValidDataTable } from '../../utils/dataTable';
 import { replaceAll } from '../../utils/text';
+import type { FieldInfo } from '../../types';
 import { ChartType, DataType, ROLE } from '../../types';
 import {
   NEED_COLOR_FIELD_CHART_LIST,
@@ -22,6 +23,7 @@ import { isValidData } from '../../utils/common';
 export const getContextAfterRevised = (context: GenerateChartCellContext) => {
   const revisedFuncList = [
     patchChartType,
+    patchTransposeField,
     patchAxisField,
     patchColorField,
     patchLabelField,
@@ -60,6 +62,36 @@ export const patchChartType = (context: GenerateChartCellContext) => {
   }
 
   return { chartType: chartTypeNew.toUpperCase() as ChartType };
+};
+
+export const patchTransposeField = (context: GenerateChartCellContext) => {
+  const { cell, transpose, fieldInfo } = context;
+  if (transpose) {
+    const { x, y } = cell;
+    const arrayX = array(x);
+    const arrayY = array(y);
+    const fieldMapping: Record<string, FieldInfo> = fieldInfo.reduce(
+      (prev, curv) => ({
+        ...prev,
+        [curv.fieldName]: curv
+      }),
+      {}
+    );
+    const transpoeField =
+      arrayX.every(field => !!fieldMapping[field] && fieldMapping[field].role === ROLE.MEASURE) &&
+      arrayY.every(field => !!fieldMapping[field] && fieldMapping[field].role === ROLE.DIMENSION);
+    if (transpoeField) {
+      return {
+        ...context,
+        cell: {
+          ...cell,
+          x: y,
+          y: x
+        }
+      };
+    }
+  }
+  return context;
 };
 
 export const patchAxisField = (context: GenerateChartCellContext) => {

@@ -1,6 +1,17 @@
 # Change Log - @visactor/vmind
 
-This log was last generated on Sun, 23 Feb 2025 10:21:08 GMT and should not be manually modified.
+This log was last generated on Tue, 04 Mar 2025 08:58:32 GMT and should not be manually modified.
+
+## 2.0.3
+Tue, 04 Mar 2025 08:58:32 GMT
+
+### Updates
+
+- Fixed issues where stacked/percentage bar charts were not working, and bar charts were not generating correctly
+- Fixed an issue where, if chart values were strings, the original data obtained by insights was converted to number type, potentially causing incorrect matches
+- Optimized type definitions
+- Feat: VMind's internal atomization feature now supports function call capability
+
 
 ## 2.0.2
 Sun, 23 Feb 2025 10:21:08 GMT

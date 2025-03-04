@@ -26,7 +26,7 @@ import { getFieldInfoFromDataset } from '../utils/field';
 import { parseCSVData } from '../utils/dataTable';
 import { fillSpecTemplateWithData } from '../utils/spec';
 import { _chatToVideoWasm } from '../utils/video';
-import type { DataInsightOptions } from 'src/atom';
+import type { DataInsightOptions } from '../atom';
 import { merge } from '@visactor/vutils';
 
 class VMind {
@@ -43,7 +43,7 @@ class VMind {
     | Schedule<[AtomName.DATA_QUERY, AtomName.CHART_GENERATE]>
     | Schedule<[AtomName.CHART_GENERATE]>;
 
-  constructor(options?: ILLMOptions) {
+  constructor(options: ILLMOptions) {
     this.options = merge(
       {
         showThoughts: true
@@ -167,7 +167,7 @@ class VMind {
       fieldInfo: newFieldInfo,
       usage,
       clusterResult
-    };
+    } as any;
   }
 
   async text2Chart(
@@ -266,7 +266,7 @@ class VMind {
       [AtomName.DATA_QUERY]: enableDataQuery,
       [AtomName.CHART_COMMAND]: !userPrompt
     };
-    const { chartType, chartAdvistorRes, spec, command, cell, vizSchema, dataTable, time } =
+    const { chartType, chartAdvistorRes, spec, command, cell, vizSchema, dataTable, time, usage } =
       await this.data2ChartSchedule.run(undefined, shouldRunList);
     return {
       chartType,
@@ -276,7 +276,8 @@ class VMind {
       cell,
       vizSchema,
       dataTable,
-      time
+      time,
+      usage
     };
   }
 

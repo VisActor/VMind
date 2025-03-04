@@ -1,3 +1,50 @@
+# v2.0.3
+
+2025-03-04
+
+**🆕 New Features**
+
+- **atom**: VMind's internal atomization feature now supports function call capability
+
+**🔖 Fixes**
+
+- **chartGeneration**: Fixed issues where stacked/percentage bar charts were not working, and bar charts were not generating correctly
+- **getInsights**: Fixed an issue where, if chart values were strings, the original data obtained by insights was converted to number type, potentially causing incorrect matches
+
+**🔖 Others**
+
+- **@visactor/vmind**: Optimized type definitions
+
+# v2.0.2
+
+2025-02-23
+
+
+**🔖 Fix**
+
+- **@visactor/vmind**: fix fieldinfo may undefiend while chart-advistor
+
+[more detail about v2.0.2](https://github.com/VisActor/VMind/releases/tag/v2.0.2)
+
+# v2.0.1
+
+2025-02-21
+
+
+**🆕 New feature**
+
+- **@visactor/vmind**: Support DeepSeek and other custom model with api-key
+- **@visactor/vmind**: 12 new chart types added for chart generation
+- **@visactor/vmind**: Add text2Chart API
+- **@visactor/vmind**: Add getInsights API
+
+**🔖 other**
+
+- **@visactor/vmind**: Overall architecture upgrade
+
+
+[more detail about v2.0.1](https://github.com/VisActor/VMind/releases/tag/v2.0.1)
+
 # v1.2.12
 
 2024-06-17
