@@ -1,7 +1,11 @@
-import { isObject, isValid, merge } from '@visactor/vutils';
+import { isArray, isObject, isValid, merge } from '@visactor/vutils';
 
 export function set(object: any, path: string, value: any) {
   return object == null ? object : baseSet(object, path, value);
+}
+
+export function deleteByPath(object: any, path: string) {
+  return object == null ? object : baseDelete(object, path);
 }
 
 /**
@@ -77,6 +81,43 @@ function baseSet(object: any, pathString: string, value: any) {
       nested[key] = newValue;
     }
     nested = nested[key];
+  }
+  return object;
+}
+
+/**
+ * @private
+ * @param {Object} object The object to modify.
+ * @param {Array|string} pathString The path of the property to set.
+ * @param {*} value The value to set.
+ * @param {Function} [customizer] The function to customize path creation.
+ * @returns {Object} Returns `object`.
+ */
+function baseDelete(object: any, pathString: string) {
+  if (!isObject(object)) {
+    return object;
+  }
+  const path = castPath(pathString, object);
+
+  let index = -1;
+  const length = path.length;
+  const lastIndex = length - 1;
+  let nested: any = object;
+
+  while (nested != null && ++index < length) {
+    const key = path[index];
+
+    if (key in nested) {
+      if (index === lastIndex) {
+        if (isArray(nested)) {
+          nested.splice(Number(key), 1);
+        } else {
+          delete nested[key];
+        }
+      } else {
+        nested = nested[key];
+      }
+    }
   }
   return object;
 }

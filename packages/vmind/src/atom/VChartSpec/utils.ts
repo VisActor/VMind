@@ -1,6 +1,6 @@
 import { isArray, isNil, isPlainObject, isString, isValid, merge } from '@visactor/vutils';
 import type { IVChartOperationItem } from '../../types/atom';
-import { set } from '../../utils/set';
+import { deleteByPath, set } from '../../utils/set';
 
 export const validSeriesForChart: Record<
   string,
@@ -526,7 +526,7 @@ export const parseAliasOfPath = (
     subPaths[0] = compKey; // 替换aliasName为compKey
   }
 
-  if (!isValidAlias) {
+  if (!isValidAlias || op === 'delete') {
     return { parentKeyPath: subPaths.join('.'), leafSpec: newLeafSpec };
   }
   const appendSpec = { ...aliasOptions.aliasMap[aliasName].appendSpec, [ALIAS_NAME_KEY]: aliasName };
@@ -566,7 +566,7 @@ export const parseAliasOfPath = (
 
           appendPath.push(appended);
         });
-      } else if ((isValidAlias && op !== 'delete') || op === 'add') {
+      } else if (isValidAlias || op === 'add') {
         const appended = [...subPaths];
 
         appended[0] = `${compKey}[${chartSpec[compKey].length}]`;
@@ -581,7 +581,7 @@ export const parseAliasOfPath = (
         appended[0] = `${compKey}`;
 
         appendPath.push(appended);
-      } else if (op !== 'delete') {
+      } else {
         // 扩展成数组
         chartSpec[compKey] = [chartSpec[compKey]];
         const appended = [...subPaths];
@@ -809,7 +809,7 @@ export const updateSpecByOperation = (prevSpec: any, op: IVChartOperationItem) =
   } else if (op.op === 'delete') {
     (updatedKeyPaths ?? [parentKeyPath]).forEach(kp => {
       if (kp) {
-        set(newSpec, kp, null);
+        deleteByPath(newSpec, kp);
       }
     });
   }
