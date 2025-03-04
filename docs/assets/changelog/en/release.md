@@ -1,3 +1,20 @@
+# v2.0.3
+
+2025-03-04
+
+**🆕 New Features**
+
+- **atom**: VMind's internal atomization feature now supports function call capability
+
+**🔖 Fixes**
+
+- **chartGeneration**: Fixed issues where stacked/percentage bar charts were not working, and bar charts were not generating correctly
+- **getInsights**: Fixed an issue where, if chart values were strings, the original data obtained by insights was converted to number type, potentially causing incorrect matches
+
+**🔖 Others**
+
+- **@visactor/vmind**: Optimized type definitions
+
 # v2.0.2
 
 2025-02-23
