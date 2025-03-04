@@ -472,21 +472,21 @@ describe('updateSpecByOperation of barchart', () => {
   });
 
   it('should not create array for label', () => {
-    const { newSpec } = mergeAppendSpec(merge({}, spec), {
-      spec: {
-        'label[0].visible': true
-      }
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'update',
+      target: 'label[0].visible',
+      value: true
     });
 
     expect(newSpec.label).toEqual({
       visible: true
     });
 
-    const { newSpec: newSpec1 } = mergeAppendSpec(merge({}, spec), {
-      spec: {
-        label: {
-          position: 'inside'
-        }
+    const { newSpec: newSpec1 } = updateSpecByOperation(merge({}, spec), {
+      op: 'update',
+      target: 'label',
+      value: {
+        position: 'inside'
       }
     });
 
