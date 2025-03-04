@@ -13,4 +13,46 @@ describe('set', () => {
     set(spec, 'label.visible', false);
     expect(spec).toEqual({ label: { a: 1, visible: false } });
   });
+
+  it('should set value correctly when value is null', () => {
+    const spec = { padding: { top: 0, left: 0 } };
+    set(spec, 'padding', null);
+
+    expect(spec).toEqual({ padding: { top: 0, left: 0 } });
+  });
+
+  it('should set value correctly when value is undefined', () => {
+    const spec = { padding: { top: 0, left: 0 } };
+    set(spec, 'padding', undefined);
+
+    expect(spec).toEqual({ padding: { top: 0, left: 0 } });
+  });
+
+  it('should create new object when path does not exist', () => {
+    const spec = {};
+    set(spec, 'padding.top', 10);
+
+    expect(spec).toEqual({ padding: { top: 10 } });
+  });
+
+  it('should set value on existing object when path exists', () => {
+    const spec = { padding: { top: 0, left: 0 } };
+    set(spec, 'padding.top', 10);
+
+    expect(spec).toEqual({ padding: { top: 10, left: 0 } });
+  });
+
+  it('should set value on existing object when path exists and value is null', () => {
+    const spec = { padding: { top: 0, left: 0 } };
+    set(spec, 'padding.top', null);
+
+    expect(spec).toEqual({ padding: { top: 0, left: 0 } });
+  });
+
+  it('should set value on existing object when path exists and value is undefined', () => {
+    const spec = { padding: { top: 0, left: 0 } };
+    set(spec, 'padding.top', undefined);
+
+    expect(spec).toEqual({ padding: { top: 0, left: 0 } });
+  });
 });

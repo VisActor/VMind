@@ -145,7 +145,7 @@ const topKeys = [
   'activePoint',
   'samplingFactor'
 ];
-const vchartSpecAtom = new VChartSpec({ spec: baseSpec }, {});
+const vchartSpecAtom = new VChartSpec({ originalSpec: baseSpec }, {});
 export function QARag() {
   const vchartInstance = React.useRef<any>(null);
   const [query, setQuery] = React.useState('');
@@ -255,10 +255,9 @@ export function QARag() {
 
     vchartSpecAtom.updateContext(
       {
-        spec: spec,
-        appendSpec: {
-          spec: dslRes
-        }
+        prevSpec: spec,
+        originalSpec: spec,
+        operations: dslRes.answer
       },
       true
     );

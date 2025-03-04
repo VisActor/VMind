@@ -6,6 +6,7 @@ import { ChartGenerationTask } from './ChartGenerator/test';
 import { ChartGeneratorResult } from './ChartGenerator/caseStudy';
 import { ChartQAGenerator } from './ChartDialogueQA/test';
 import { QARag } from './ChartDialogueQA/qaPairRag';
+
 type MenuInfo = {
   menuItem: string;
   subItems: {
@@ -72,6 +73,11 @@ export const PLAYGROUND_MENU_INFO: {
         name: 'QA Rag',
         component: <QARag />
       }
+      // {
+      //   key: '2',
+      //   name: 'Color Palette Test',
+      //   component: <ColorPalette />
+      // }
     ]
   }
 };
