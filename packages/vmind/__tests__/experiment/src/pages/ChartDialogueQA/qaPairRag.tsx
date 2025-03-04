@@ -3,20 +3,27 @@
 /* eslint-disable no-console */
 import React from 'react';
 import axios from 'axios';
-import { Input, Card, Message, Checkbox, Select, Tooltip, Modal, Form } from '@arco-design/web-react';
+import { Input, Card, Message, Checkbox, Select, Tooltip, Modal, Form, Button } from '@arco-design/web-react';
 import './rag.scss';
-import {
-  IconDelete,
-  IconLoading,
-  IconRobot,
-  IconSend,
-  IconThumbDownFill,
-  IconThumbUpFill,
-  IconUser
-} from '@arco-design/web-react/icon';
+import { IconDelete, IconLoading, IconRobot, IconSend, IconUser } from '@arco-design/web-react/icon';
 import VChart from '@visactor/vchart';
 import { isArray } from '@visactor/vutils';
 import { VChartSpec } from '../../../../../src';
+import {
+  baseFunnel,
+  baseGroupBar,
+  baseLine,
+  baseRadar,
+  baseSankey,
+  baseScatter,
+  baseStackArea,
+  baseWordcloud,
+  multipleLine,
+  pieChart,
+  roseChart,
+  stackBar
+} from '../../data/editorData';
+import { JSONEditor } from './specEditor';
 
 const { Option } = Select;
 const TextArea = Input.TextArea;
@@ -146,23 +153,73 @@ const topKeys = [
   'samplingFactor'
 ];
 const vchartSpecAtom = new VChartSpec({ spec: baseSpec }, {});
+
+const demoData = [
+  {
+    name: '基础线图',
+    spec: baseLine,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vchart/preview/line-chart/basic-line.png'
+  },
+  {
+    name: '多系列折线图',
+    spec: multipleLine,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vchart/preview/line-chart/null-value-line.png'
+  },
+  {
+    name: '堆积面积图',
+    spec: baseStackArea,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vchart/preview/area-chart/stacked-area.png'
+  },
+  {
+    name: '分组柱图',
+    spec: baseGroupBar,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vchart/preview/bar-chart/group-column.png'
+  },
+  {
+    name: '堆积柱图',
+    spec: stackBar,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vchart/preview/bar-chart/stack-column.png'
+  },
+  {
+    name: '饼图',
+    spec: pieChart,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/c0de7ff0a101bd4cb25c81707.png'
+  },
+  {
+    name: '玫瑰图',
+    spec: roseChart,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vchart/preview/rose-chart/basic-rose.png'
+  },
+  {
+    name: '漏斗图',
+    spec: baseFunnel,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vchart/preview/funnel-chart/basic-funnel.png'
+  },
+  {
+    name: '散点图',
+    spec: baseScatter,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vchart/preview/scatter-chart/basic-scatter.png'
+  },
+  {
+    name: '雷达图',
+    spec: baseRadar,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/c0de7ff0a101bd4cb25c8170c.png'
+  },
+  {
+    name: '桑基图',
+    spec: baseSankey,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/57a706137957fce7388f3ab02.png'
+  },
+  {
+    name: '词云图',
+    spec: baseWordcloud,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vchart/preview/word-cloud-chart/word-cloud-basis.png'
+  }
+];
+
 export function QARag() {
   const vchartInstance = React.useRef<any>(null);
   const [query, setQuery] = React.useState('');
-  const [ragOption, setRagOptions] = React.useState<{
-    type: 'qa' | 'code';
-    useTopKey: boolean;
-    topK: number;
-    useSpec: boolean;
-    useQueryTransfer: boolean;
-  }>({
-    topK: 5,
-    useTopKey: true,
-    useSpec: false,
-    type: 'qa',
-    useQueryTransfer: true
-  });
-  const [llmTopKey, setLLmTopKey] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [spec, setSpec] = React.useState<any>(baseSpec);
   const [sessionId, setSessionId] = React.useState<string>('');
@@ -178,28 +235,9 @@ export function QARag() {
       content: 'Hello! How can I help you today?'
     }
   ]);
-  const [qaResult, setQAResult] = React.useState<
-    {
-      scores: number;
-      question: string;
-      answer: string;
-      explanation: string;
-    }[]
-  >([]);
-  const [keyPathResult, setKeyPathResult] = React.useState<
-    {
-      scores: number;
-      index: string;
-      text: string;
-      answer?: string;
-      key: string;
-    }[]
-  >([]);
-  const [feedbackVisible, setFeedbackVisible] = React.useState(false);
+  const [specVisible, setSpecVisible] = React.useState(false);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
-  const [form] = Form.useForm();
   const dialogRef = React.useRef<HTMLDivElement>(null);
-  const currentFeedbackIndex = React.useRef<number>(0);
 
   const handleQuery = React.useCallback(async () => {
     const newDialg = [
@@ -221,8 +259,7 @@ export function QARag() {
           query,
           spec,
           sessionId,
-          userId: 'vmind_test',
-          ...ragOption
+          userId: 'vmind_test'
         }
       });
     } catch (e: any) {
@@ -301,56 +338,8 @@ export function QARag() {
         }
       }
     ]);
-    setQAResult(qaRes);
-    setKeyPathResult(keyPathRes);
-    setLLmTopKey(topKeys);
     setSessionId(newSessionId);
-  }, [dialog, query, spec, sessionId, ragOption]);
-
-  const handleFeedback = React.useCallback(
-    (type: 'up' | 'down', index: number) => {
-      if (type === 'up') {
-        Message.success('Thansk for your feedback!');
-        const currentDialog = dialog[index];
-        axios(`${url}feedback`, {
-          method: 'POST',
-          data: {
-            type,
-            ragOption,
-            ...currentDialog?.res
-          }
-        });
-      } else {
-        currentFeedbackIndex.current = index;
-        setFeedbackVisible(true);
-      }
-    },
-    [dialog, ragOption]
-  );
-
-  const handleDownFeedback = React.useCallback(() => {
-    setConfirmLoading(true);
-    form
-      .validate()
-      .then(res => {
-        const currentDialog = dialog[currentFeedbackIndex.current];
-        axios(`${url}feedback`, {
-          method: 'POST',
-          data: {
-            type: 'down',
-            ragOption,
-            ...currentDialog?.res,
-            ...res
-          }
-        });
-      })
-      .finally(() => {
-        setConfirmLoading(false);
-        setFeedbackVisible(false);
-        form.clearFields();
-        Message.success('Thansk for your feedback!');
-      });
-  }, [dialog, form, ragOption]);
+  }, [dialog, query, spec, sessionId]);
 
   React.useEffect(() => {
     dialogRef.current?.scrollTo({
@@ -381,235 +370,125 @@ export function QARag() {
 
   return (
     <div className="rag-panel">
-      <Modal
-        title="Add User"
-        visible={feedbackVisible}
-        onOk={handleDownFeedback}
-        confirmLoading={confirmLoading}
-        onCancel={() => setFeedbackVisible(false)}
-        style={{
-          width: 650
-        }}
-      >
-        <Form
-          {...{
-            labelCol: {
-              span: 4
-            },
-            wrapperCol: {
-              span: 20
-            }
-          }}
-          form={form}
-          labelCol={{
-            style: { flexBasis: 220 }
-          }}
-          wrapperCol={{
-            style: { flexBasis: 'calc(100% - 230px)' }
-          }}
-        >
-          <FormItem label="哪里错了" required field="wrongType" rules={[{ required: true }]}>
-            <Select
-              options={[
-                { label: 'DSL', value: 'DSL' },
-                { label: 'VChart', value: 'VChart' },
-                { label: 'Not sure', value: 'Not sure' }
-              ]}
-            />
-          </FormItem>
-          <FormItem label="正确答案对应的topKey是什么" field="topKeyAnswer" rules={[{ required: true }]}>
-            <Select options={topKeys} showSearch mode="multiple" />
-          </FormItem>
-          <FormItem label="正确的DSL是啥" field="dslAnswer">
-            <TextArea placeholder={`{"label": {"visible": true}}`} />
-          </FormItem>
-          <FormItem label="正确的dsl路径是啥" field="keyPathAnswer">
-            <TextArea placeholder={'label.text.fill'} />
-          </FormItem>
-          <FormItem label="针对这次问答的其他想法与反馈" field="info">
-            <TextArea placeholder="我觉得主要问题是xxxxx" />
-          </FormItem>
-        </Form>
-      </Modal>
-      <div className="rag-options">
-        <Select
-          style={{ width: 200, marginRight: 12 }}
-          value={ragOption.type}
-          onChange={v => setRagOptions({ ...ragOption, type: v })}
-        >
-          <Option value="qa">KeyPath of QA</Option>
-          <Option value="code">KeyPath of Code</Option>
-        </Select>
-        <Select
-          style={{ width: 200, marginRight: 12 }}
-          prefix="Top K"
-          value={ragOption.topK}
-          onChange={v => setRagOptions({ ...ragOption, topK: v })}
-        >
-          <Option value={3}>3</Option>
-          <Option value={4}>4</Option>
-          <Option value={5}>5</Option>
-          <Option value={6}>6</Option>
-          <Option value={7}>7</Option>
-          <Option value={8}>8</Option>
-          <Option value={9}>9</Option>
-          <Option value={10}>10</Option>
-        </Select>
-        <Checkbox
-          checked={ragOption.useQueryTransfer}
-          onChange={v => setRagOptions({ ...ragOption, useQueryTransfer: v })}
-        >
-          Use Query Transfer(问题黑话转译)
-        </Checkbox>
-        <Checkbox checked={ragOption.useSpec} onChange={v => setRagOptions({ ...ragOption, useSpec: v })}>
-          Use Spec(传递关联的spec给大模型)
-        </Checkbox>
+      <div className="chart-demo-selection">
+        <div></div>
+        {demoData.map(chartDemo => {
+          const { name, spec, src } = chartDemo;
+          return (
+            <div key={name} className="chart-demo" onClick={() => setSpec(spec)}>
+              <img src={src.replace('https://lf9-dp-fe-cms-tos.byteorg.com', '/proxy-image')}></img>
+              <div className="chart-title">{name}</div>
+            </div>
+          );
+        })}
       </div>
       <div className="rag-container">
         <div className="vchart-container">
           <div id="chart" />
-          <div className="log">
-            {ragOption.useTopKey && <div>TOP KEY RESULT: {JSON.stringify(llmTopKey)}</div>}
-            <div className="recall-content">
-              <div className="one-content">
-                <div>QA Recall:</div>
-                {qaResult.map((item, index) => (
-                  <Card key={index} className="qa-card">
-                    <div className="qa-div">
-                      <span className="title">Score:</span>
-                      <span>{item.scores.toFixed(2)}</span>
-                    </div>
-                    <div className="qa-div">
-                      <div className="title">Question:</div>
-                      <span>{item.question}</span>
-                    </div>
-                    <div className="qa-div">
-                      <div className="title">Explanation:</div>
-                      <span>{item.explanation}</span>
-                    </div>
-                    <div className="qa-div">
-                      <div className="title">Answer:</div>
-                      <span>{JSON.stringify(item.answer)}</span>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-
-              <div className="one-content">
-                <div>KeyPath Recall:</div>
-                {keyPathResult && keyPathResult.length
-                  ? keyPathResult.map((item, index) => (
-                      <Card key={index} className="qa-card">
-                        <div className="qa-div">
-                          <span className="title">Score:</span>
-                          <span>{item.scores.toFixed(2)}</span>
-                        </div>
-                        <div className="qa-div">
-                          <div className="title">content:</div>
-                          <span>{item.text}</span>
-                        </div>
-                        {ragOption.type === 'qa' ? (
-                          <div className="qa-div">
-                            <div className="title">Answer:</div>
-                            <span>{JSON.stringify(item.answer)}</span>
-                          </div>
-                        ) : null}
-                        <div className="qa-div">
-                          <div className="title">key:</div>
-                          <span>{item.key}</span>
-                        </div>
-                      </Card>
-                    ))
-                  : null}
-              </div>
-            </div>
+          <div className="selection">
+            <Button
+              size="small"
+              onClick={() => {
+                setSpecVisible(!specVisible);
+              }}
+              shape="round"
+              type="primary"
+            >
+              {specVisible ? '智能编辑' : '人工编辑'}
+            </Button>
           </div>
         </div>
-        <div className="query-container">
-          <div className="query-input">
-            <Input
-              placeholder="Input Your Query"
-              value={query}
-              onChange={v => setQuery(v)}
-              onPressEnter={handleQuery}
-              style={{ minHeight: 40, margin: 12, marginLeft: 0, background: '#fff', border: '1px solid #eee' }}
-              suffix={<IconSend onClick={handleQuery} />}
-            />
-            <Tooltip content="Reset ALL">
-              <IconDelete
-                style={{
-                  cursor: 'pointer',
-                  color: '#999',
-                  fontSize: 16,
-                  alignSelf: 'center'
-                }}
-                onClick={() => {
-                  setDialog([
-                    {
-                      role: 'assistant',
-                      content: 'Hello! How can I help you today?'
-                    }
-                  ]);
-                  setSpec(baseSpec);
-                  setKeyPathResult([]);
-                  setQAResult([]);
-                  setQuery('');
-                  axios(`${url}closeSession`, {
-                    method: 'POST',
-                    data: {
-                      sessionId,
-                      userId: 'vmind_test'
-                    }
-                  });
-                }}
+        <div className="right-container">
+          <div className="query-container" style={{ display: specVisible ? 'none' : 'flex' }}>
+            <div className="query-input">
+              <Input
+                placeholder="Input Your Query"
+                value={query}
+                onChange={v => setQuery(v)}
+                onPressEnter={handleQuery}
+                style={{ minHeight: 40, margin: 12, marginLeft: 0, background: '#fff', border: '1px solid #eee' }}
+                suffix={<IconSend onClick={handleQuery} />}
               />
-            </Tooltip>
-          </div>
-          <div className="dialog" ref={dialogRef}>
-            {dialog.map((item, index) => {
-              const { role, content } = item;
-              if (role === 'user') {
+              <Tooltip content="Reset ALL">
+                <IconDelete
+                  style={{
+                    cursor: 'pointer',
+                    color: '#999',
+                    fontSize: 16,
+                    alignSelf: 'center'
+                  }}
+                  onClick={() => {
+                    setDialog([
+                      {
+                        role: 'assistant',
+                        content: 'Hello! How can I help you today?'
+                      }
+                    ]);
+                    setSpec(baseSpec);
+                    setQuery('');
+                    axios(`${url}closeSession`, {
+                      method: 'POST',
+                      data: {
+                        sessionId,
+                        userId: 'vmind_test'
+                      }
+                    });
+                  }}
+                />
+              </Tooltip>
+            </div>
+            <div className="dialog" ref={dialogRef}>
+              {dialog.map((item, index) => {
+                const { role, content } = item;
+                if (role === 'user') {
+                  return (
+                    <div key={index} className="user dialog-item">
+                      <IconUser style={{ width: 25, height: 25, marginLeft: 4 }} />
+                      <div className="user-content diaglog-content">{content}</div>
+                    </div>
+                  );
+                }
                 return (
-                  <div key={index} className="user dialog-item">
-                    <IconUser style={{ width: 25, height: 25, marginLeft: 4 }} />
-                    <div className="user-content diaglog-content">{content}</div>
+                  <div key={index} className="assistant dialog-item">
+                    <IconRobot style={{ width: 25, height: 25, marginRight: 4 }} />
+                    <div className="assistant-content diaglog-content">
+                      {isArray(content) ? (
+                        content.map(v => (
+                          <pre key={v}>
+                            <code>{v}</code>
+                          </pre>
+                        ))
+                      ) : (
+                        <pre>
+                          <code>{content}</code>
+                        </pre>
+                      )}
+                    </div>
                   </div>
                 );
-              }
-              return (
-                <div key={index} className="assistant dialog-item">
-                  <IconRobot style={{ width: 25, height: 25, marginRight: 4 }} />
+              })}
+              {loading && (
+                <div className="assistant dialog-item">
+                  <IconRobot style={{ width: 25, height: 25, marginTop: 4, marginRight: 4 }} />
                   <div className="assistant-content diaglog-content">
-                    {isArray(content) ? (
-                      content.map(v => (
-                        <pre key={v}>
-                          <code>{v}</code>
-                        </pre>
-                      ))
-                    ) : (
-                      <pre>
-                        <code>{content}</code>
-                      </pre>
-                    )}
-                  </div>
-                  <div
-                    className="feedback"
-                    // style={{ visibility: index === dialog.length - 1 && index > 0 ? 'visible' : 'hidden' }}
-                  >
-                    <IconThumbUpFill style={{ color: '#28a745' }} onClick={() => handleFeedback('up', index)} />
-                    <IconThumbDownFill style={{ color: '#dc3545' }} onClick={() => handleFeedback('down', index)} />
+                    <IconLoading />
                   </div>
                 </div>
-              );
-            })}
-            {loading && (
-              <div className="assistant dialog-item">
-                <IconRobot style={{ width: 25, height: 25, marginTop: 4, marginRight: 4 }} />
-                <div className="assistant-content diaglog-content">
-                  <IconLoading />
-                </div>
-              </div>
-            )}
+              )}
+            </div>
+          </div>
+          <div className="spec-editor" style={{ visibility: specVisible ? 'visible' : 'hidden' }}>
+            <JSONEditor
+              spec={JSON.stringify(spec, null, 2)}
+              setSpec={(newSpec: string) => {
+                try {
+                  const a = JSON.parse(newSpec);
+                  setSpec(a);
+                } catch (e) {
+                  console.error(e);
+                }
+              }}
+            />
           </div>
         </div>
       </div>

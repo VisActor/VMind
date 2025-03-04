@@ -17,43 +17,83 @@
   flex-direction: row;
   flex: 1;
   overflow: hidden;
-
-  #chart {
-    height: 300px;
-    width: 100%;
-    flex-shrink: 0;
-    border-bottom: 1px solid #e8e8e8;
-  }
 }
 
+.chart-demo-selection {
+  display: flex;
+  width: 100%;
+  overflow: auto;
+  padding: 8px;
+  background: #f0f8ff77;
+
+  .chart-demo {
+    margin: 8px;
+    padding-top: 10px;
+    background: #fff;
+    box-shadow: 0 6px 20px #0098e426;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    flex-direction: column;
+    
+
+    img {
+      margin: auto;
+      width: 120px;
+    }
+
+    .chart-title {
+      padding-left: 8px;
+      width: 100%;
+      height: 28px;
+      line-height: 28px;
+      font-size: 12px;
+      background: linear-gradient(0deg, #f6f8fe00, #f6f8fe);
+    }
+  }
+}
 .vchart-container {
-  width: 50%;
-  height: 100%;
-  overflow: hidden;
+  width: 65%;
+  flex: 1;
   display: flex;
   flex-direction: column; 
   padding: 8px;
-
-  .log {
-    overflow: scroll;
-    width: 100%;
-    margin-top: 12px;
+  overflow: hidden;
+  min-height: 0;
+  
+  #chart {
+    flex-grow: 1;
+    overflow: hidden;
+    border-bottom: 1px solid #e8e8e8;
   }
 
-  .recall-content {
-    display: flex;
-    padding-right: 10px;
-    .one-content {
-      width: 49%;
-      margin: 0 0.3%;
-    }
+  .selection {
+    flex-shrink: 0;
+    padding: 8px;
+    direction: rtl;
+  }
+}
+
+.right-container {
+  width: 35%;
+  height: 100%;
+  display: block;
+  background: #f5f5f5;
+}
+
+.spec-editor {
+  height: 100%;
+  overflow: hidden;
+
+  .editor-container {
+    height: 100%;
+    overflow: hidden;
+    padding: 2.5%;
   }
 }
 
 .query-container {
-  width: 50%;
   height: 100%;
-  background: #f5f5f5;
   display: flex;
   flex-direction: column-reverse;
 

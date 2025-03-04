@@ -149,6 +149,7 @@ importers:
       '@internal/jest-config': workspace:*
       '@internal/ts-config': workspace:*
       '@jest/globals': ~29.5.0
+      '@monaco-editor/react': ~4.7.0
       '@rollup/plugin-dynamic-import-vars': ~2.1.0
       '@rushstack/eslint-patch': ~1.1.4
       '@stdlib/stats-base-dists-t-quantile': 0.2.1
@@ -231,6 +232,7 @@ importers:
       '@internal/jest-config': link:../../share/jest-config
       '@internal/ts-config': link:../../share/ts-config
       '@jest/globals': 29.5.0
+      '@monaco-editor/react': 4.7.0_nnrd3gsncyragczmpvfhocinkq
       '@rollup/plugin-dynamic-import-vars': 2.1.5
       '@rushstack/eslint-patch': 1.1.4
       '@types/array-normalize': 2.0.5
@@ -2270,6 +2272,24 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    dev: true
+
+  /@monaco-editor/loader/1.5.0:
+    resolution: {integrity: sha512-hKoGSM+7aAc7eRTRjpqAZucPmoNOC4UUbknb/VNoTkEIkCPhqV8LfbsgM1webRM7S/z21eHEx9Fkwx8Z/C/+Xw==}
+    dependencies:
+      state-local: 1.0.7
+    dev: true
+
+  /@monaco-editor/react/4.7.0_nnrd3gsncyragczmpvfhocinkq:
+    resolution: {integrity: sha512-cyzXQCtO47ydzxpQtCGSQGOC8Gk3ZUeBXFAxD+CWXYFo5OqZyZUonFl0DwUlTyAfRHntBfw2p3w4s9R6oe1eCA==}
+    peerDependencies:
+      monaco-editor: '>= 0.25.0 < 1'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    dependencies:
+      '@monaco-editor/loader': 1.5.0
+      react: 18.3.1
+      react-dom: 18.3.1_react@18.3.1
     dev: true
 
   /@nodelib/fs.scandir/2.1.5:
@@ -12586,6 +12606,10 @@ packages:
 
   /stackback/0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
+    dev: true
+
+  /state-local/1.0.7:
+    resolution: {integrity: sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==}
     dev: true
 
   /static-extend/0.1.2:
