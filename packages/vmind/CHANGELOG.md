@@ -1,6 +1,11 @@
 # Change Log - @visactor/vmind
 
-This log was last generated on Sun, 23 Feb 2025 10:21:08 GMT and should not be manually modified.
+This log was last generated on Tue, 04 Mar 2025 08:58:32 GMT and should not be manually modified.
+
+## 2.0.3
+Tue, 04 Mar 2025 08:58:32 GMT
+
+_Version update only_
 
 ## 2.0.2
 Sun, 23 Feb 2025 10:21:08 GMT
