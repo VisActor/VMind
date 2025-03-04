@@ -1,9 +1,10 @@
-import { isArray } from '@visactor/vutils';
+import { isArray, isValidNumber } from '@visactor/vutils';
 import { longestTrendInterval, originalMKTest, TrendType } from '../statistics';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
 import { ChartType } from '../../../../types';
 import { isPercentChart, isStackChart } from '../../utils';
+import { findLastIndex } from '../../../../utils/common';
 
 export interface OverallTrendingOptions {
   alpha?: number;
@@ -20,25 +21,47 @@ export const overallTrendingAlgo = (context: DataInsightExtractContext, options:
     const overallDataset = dimensionSumMap[measureId];
     const { trend, pValue, zScore, slope, intercept } = originalMKTest(overallDataset, alpha, calcScope);
     if (trend !== TrendType.NO_TREND) {
-      const { length, start, end } = longestTrendInterval(overallDataset);
-      result.push({
-        type: InsightType.OverallTrend,
-        fieldId: measureId,
-        value: trend,
-        significant: 1 - pValue,
-        info: {
-          slope,
-          intercept,
-          length,
-          start,
-          end,
-          change: overallDataset[end] / overallDataset[start] - 1,
-          startDimValue: dimensionValues[start],
-          endDimValue: dimensionValues[end],
-          startValue: overallDataset[start],
-          endValue: overallDataset[end]
-        }
-      } as unknown as Insight);
+      const { length, start, end, maxTrend } = longestTrendInterval(overallDataset, trend);
+      const overallEndIndex = findLastIndex(overallDataset, v => isValidNumber(v));
+      const onverallStartIndex = overallDataset.findIndex(v => isValidNumber(v));
+      const overallChange =
+        overallDataset[onverallStartIndex] === 0
+          ? -overallDataset[overallEndIndex]
+          : overallDataset[overallEndIndex] / overallDataset[onverallStartIndex] - 1;
+      if (
+        (trend === TrendType.INCREASING && overallChange > 0) ||
+        (trend === TrendType.DECREASING && overallChange < 0)
+      ) {
+        result.push({
+          type: InsightType.OverallTrend,
+          fieldId: measureId,
+          value: trend,
+          significant: 1 - pValue,
+          info: {
+            slope,
+            intercept,
+            length,
+            overall: {
+              start: onverallStartIndex,
+              end: overallEndIndex,
+              change: overallChange,
+              startValue: overallDataset[onverallStartIndex],
+              endValue: overallDataset[overallEndIndex],
+              startDimValue: dimensionValues[onverallStartIndex],
+              endDimValue: dimensionValues[overallEndIndex]
+            },
+            start,
+            end,
+            maxTrend,
+            change:
+              overallDataset[start] === 0 ? -overallDataset[end] : overallDataset[end] / overallDataset[start] - 1,
+            startDimValue: dimensionValues[start],
+            endDimValue: dimensionValues[end],
+            startValue: overallDataset[start],
+            endValue: overallDataset[end]
+          }
+        } as unknown as Insight);
+      }
     }
   });
 

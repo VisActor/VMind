@@ -1,5 +1,6 @@
 import { ChartType } from '../../../types';
 import type { GenerateChartCellContext } from '../type';
+import { estimateVideoTime } from '../utils';
 import {
   axis,
   cartesianBar,
@@ -76,7 +77,8 @@ import {
   mapDisplayConf,
   registerChart,
   seriesField,
-  commonLabel
+  commonLabel,
+  llmChartTypeMap
 } from './transformers';
 
 const pipelineBar = [
@@ -277,8 +279,12 @@ const beforePipe = () => {
 };
 
 const afterPipe = (context: GenerateChartCellContext) => {
-  const { spec } = context;
-  return { spec };
+  const { spec, chartType, totalTime } = context;
+  return {
+    spec,
+    chartType: llmChartTypeMap[chartType],
+    time: estimateVideoTime(chartType, spec, totalTime ? totalTime * 1000 : undefined)
+  };
 };
 
 export const getChartSpecWithContext = (context: GenerateChartCellContext) => {

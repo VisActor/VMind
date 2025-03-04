@@ -19,6 +19,7 @@ export class ChartCommandAtom extends BaseAtom<ChartCommandCtx, ChartCommandOpti
 
   buildDefaultOptions(): ChartCommandOptions {
     return {
+      ...super.buildDefaultOptions(),
       useDataTable: false
     };
   }

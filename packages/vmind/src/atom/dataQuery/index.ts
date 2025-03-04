@@ -8,6 +8,7 @@ import { getQueryDatasetPrompt } from './prompt';
 import { parseSQLResponse } from './utils';
 import type { ExecuteQueryCtx } from './executeQuery';
 import { executeDataQuery, getFinalQueryResult, patchSQLBeforeQuery, restoreDatasetAfterQuery } from './executeQuery';
+import { getFieldInfoFromDataset } from '../../utils/field';
 
 export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
   name = AtomName.DATA_QUERY;
@@ -34,6 +35,7 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
 
   buildDefaultOptions(): DataQueryOptions {
     return {
+      ...super.buildDefaultOptions(),
       useSQL: true
     };
   }
@@ -60,8 +62,8 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
     return [];
   }
 
-  parseLLMContent(resJson: any, llmRes: LLMResponse) {
-    const { sql, fieldInfo: responseFiledInfo } = resJson;
+  parseLLMContent(resJson: any, toolJson: any, llmRes: LLMResponse) {
+    const { sql, fieldInfo: responseFiledInfo, thoughts = '' } = resJson;
     if ((!sql || !responseFiledInfo) && llmRes?.choices?.[0]) {
       //try to parse the response with another format
       const content = llmRes.choices[0].message.content;
@@ -70,7 +72,15 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
         ...parseSQLResponse(content)
       };
     }
-    return { ...this.context, sql, llmFieldInfo: responseFiledInfo };
+    return { ...this.context, sql, llmFieldInfo: responseFiledInfo, thoughts };
+  }
+
+  protected runBeforeLLM(): DataQueryCtx {
+    const { fieldInfo = [], dataTable } = this.context;
+    if (!fieldInfo.length && dataTable.length) {
+      this.context.fieldInfo = getFieldInfoFromDataset(dataTable);
+    }
+    return this.context;
   }
 
   protected _runWithOutLLM(): DataQueryCtx {

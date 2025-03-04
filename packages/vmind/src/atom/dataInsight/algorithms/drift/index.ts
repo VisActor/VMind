@@ -65,7 +65,7 @@ export const pageHinkleyFunc = (context: DataInsightExtractContext, options: Pag
 
 export const PageHinkleyAlg: InsightAlgorithm = {
   name: 'pageHinkley',
-  forceChartType: [ChartType.DualAxisChart, ChartType.LineChart],
+  forceChartType: [ChartType.DualAxisChart, ChartType.LineChart, ChartType.BarChart, ChartType.AreaChart],
   insightType: InsightType.Outlier,
   algorithmFunction: pageHinkleyFunc,
   supportPercent: false

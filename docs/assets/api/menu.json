@@ -42,6 +42,20 @@
         "zh": "generateChart",
         "en": "generateChart"
       }
+    },
+    {
+      "path": "text2Chart",
+      "title": {
+        "zh": "text2Chart",
+        "en": "text2Chart"
+      }
+    },
+    {
+      "path": "getInsights",
+      "title": {
+        "zh": "getInsights",
+        "en": "getInsights"
+      }
     }
   ]
 }

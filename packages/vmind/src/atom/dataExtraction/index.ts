@@ -54,8 +54,9 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtracti
 
   buildDefaultOptions(): DataExtractionOptions {
     return {
+      ...super.buildDefaultOptions(),
       reGenerateFieldInfo: true,
-      isCapcut: false
+      isMultiple: false
     };
   }
 
@@ -75,20 +76,20 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtracti
 
   getLLMMessages(query?: string): LLMMessage[] {
     const { fieldInfo, text } = this.context;
-    const { showThoughts, reGenerateFieldInfo, llm, isCapcut } = this.options;
+    const { showThoughts, reGenerateFieldInfo, llm, isMultiple } = this.options;
     const addtionContent = this.getHistoryLLMMessages(query);
     const language = this.options?.language ?? getLanguageOfText(text);
     if (!fieldInfo || !fieldInfo?.length) {
       return [
         {
           role: 'system',
-          content: getBasePrompt(llm.options.model, language, isCapcut, showThoughts)
+          content: getBasePrompt(llm.options.model, language, isMultiple, showThoughts)
         },
         {
           role: 'user',
           content: this.revisedText(text)
         },
-        ...getUserQuery(llm.options.model, language, isCapcut),
+        ...getUserQuery(llm.options.model, language, isMultiple),
         ...addtionContent
       ];
     }
@@ -169,21 +170,23 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
   }
 
   parseLLMContent(resJson: any) {
-    const { isCapcut } = this.options;
-    const { dataTable, fieldInfo, isDataExtraction, dataset } = resJson;
-    if (isDataExtraction === false || (isCapcut && !dataset)) {
+    const { isMultiple } = this.options;
+    const { dataTable, fieldInfo, isDataExtraction, dataset, thoughts } = resJson;
+    if (isDataExtraction === false || (isMultiple && !dataset)) {
       console.error("It's not a data extraction task");
       return this.context;
     }
-    if (isCapcut) {
+    if (isMultiple) {
       return {
         ...this.context,
+        thoughts,
         datasets: this.parseMultipleResult(dataset)
       };
     }
     const llmFieldInfo = this.revisedFieldInfo(dataTable, fieldInfo);
     return {
       ...this.context,
+      thoughts,
       fieldInfo: formatFieldInfo(
         (this.options?.reGenerateFieldInfo ? llmFieldInfo : null) ?? this.context?.fieldInfo ?? []
       ),

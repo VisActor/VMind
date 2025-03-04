@@ -1,19 +1,23 @@
-import type { ChartType, FieldInfo } from '../types';
+import type { BasemapOption, ChartTheme, ChartType, FieldInfo, ToolCall, ToolMessage } from '../types';
 import type { LLMManage } from '../core/llm';
 import type { AlgorithmType, AlgorithmOptions, InsightType } from './dataInsight/type';
 
 export interface BaseOptions {
   /** llm manage instance */
   llm?: LLMManage;
+  /** function calls */
+  tools?: ToolMessage[];
   /** show llm thoughs or not */
   showThoughts?: boolean;
   /** answer language */
   language?: 'chinese' | 'english';
+  /** max history messages saved */
+  maxMessagesCnt?: number;
 }
 
 export interface DataExtractionOptions extends BaseOptions {
   reGenerateFieldInfo?: boolean;
-  isCapcut?: boolean;
+  isMultiple?: boolean;
 }
 
 export interface ChartCommandOptions extends BaseOptions {
@@ -49,6 +53,10 @@ export interface ChartGeneratorOptions extends BaseOptions {
   chartTypeList?: ChartType[];
   /** un-supported chart list */
   unsupportChartTypeList?: ChartType[];
+  animationDuration?: number;
+  basemapOption?: BasemapOption;
+  colorPalette?: string[];
+  theme?: ChartTheme | string;
 }
 
 export interface DataInsightOptions extends BaseOptions {

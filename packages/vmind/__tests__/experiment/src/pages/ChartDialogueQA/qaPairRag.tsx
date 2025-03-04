@@ -165,6 +165,7 @@ export function QARag() {
   const [llmTopKey, setLLmTopKey] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [spec, setSpec] = React.useState<any>(baseSpec);
+  const [sessionId, setSessionId] = React.useState<string>('');
   const [dialog, setDialog] = React.useState<
     {
       role: string;
@@ -219,6 +220,8 @@ export function QARag() {
           chartType: 'bar',
           query,
           spec,
+          sessionId,
+          userId: 'vmind_test',
           ...ragOption
         }
       });
@@ -239,7 +242,16 @@ export function QARag() {
       return;
     }
     console.log('res: ', res.data);
-    const { keyPathRes = [], qaRes = [], topKeys = [], dslRes, parentKeyPath, aliasKeyPath, error } = res?.data;
+    const {
+      keyPathRes = [],
+      qaRes = [],
+      topKeys = [],
+      dslRes,
+      parentKeyPath,
+      aliasKeyPath,
+      error,
+      sessionId: newSessionId
+    } = res?.data;
 
     vchartSpecAtom.updateContext(
       {
@@ -291,7 +303,8 @@ export function QARag() {
     setQAResult(qaRes);
     setKeyPathResult(keyPathRes);
     setLLmTopKey(topKeys);
-  }, [dialog, query, spec, ragOption]);
+    setSessionId(newSessionId);
+  }, [dialog, query, spec, sessionId, ragOption]);
 
   const handleFeedback = React.useCallback(
     (type: 'up' | 'down', index: number) => {
@@ -540,6 +553,13 @@ export function QARag() {
                   setKeyPathResult([]);
                   setQAResult([]);
                   setQuery('');
+                  axios(`${url}closeSession`, {
+                    method: 'POST',
+                    data: {
+                      sessionId,
+                      userId: 'vmind_test'
+                    }
+                  });
                 }}
               />
             </Tooltip>

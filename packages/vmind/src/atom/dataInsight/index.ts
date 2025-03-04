@@ -32,6 +32,7 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
 
   buildDefaultOptions(): DataInsightOptions {
     return {
+      ...super.buildDefaultOptions(),
       algorithms: [
         AlgorithmType.OverallTrending,
         AlgorithmType.AbnormalTrend,
@@ -43,8 +44,9 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
         AlgorithmType.MajorityValue,
         AlgorithmType.PageHinkley,
         // AlgorithmType.DifferenceOutlier,
-        AlgorithmType.TurningPoint
-        // AlgorithmType.Volatility
+        AlgorithmType.TurningPoint,
+        AlgorithmType.StatisticsBase,
+        AlgorithmType.Volatility
       ],
       isLimitedbyChartType: true,
       language: 'chinese',
@@ -72,6 +74,17 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
             type: insight.type,
             content: insight.textContent?.content,
             variables: insight.textContent?.variables
+              ? Object.keys(insight.textContent.variables).reduce<Record<string, any>>((acc, key) => {
+                  return {
+                    ...acc,
+                    [key]: {
+                      ...insight.textContent?.variables[key],
+                      value: null,
+                      formatValue: null
+                    }
+                  };
+                }, {})
+              : {}
           }))
         })
       },

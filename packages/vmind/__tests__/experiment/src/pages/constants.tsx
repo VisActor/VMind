@@ -6,7 +6,7 @@ import { ChartGenerationTask } from './ChartGenerator/test';
 import { ChartGeneratorResult } from './ChartGenerator/caseStudy';
 import { ChartQAGenerator } from './ChartDialogueQA/test';
 import { QARag } from './ChartDialogueQA/qaPairRag';
-// import { ColorPalette } from './ChartDialogueQA/tempColor';
+
 type MenuInfo = {
   menuItem: string;
   subItems: {

@@ -86,10 +86,17 @@
           }
         },
         {
-          "path": "Custom_Request",
+          "path": "Data_Extraction",
           "title": {
-            "zh": "自定义LLM调用",
-            "en": "Custom LLM Access Function"
+            "zh": "数据提取——从文本一步生成图表",
+            "en": "Text to Chart"
+          }
+        },
+        {
+          "path": "Chart_Insight",
+          "title": {
+            "zh": "智能洞察",
+            "en": "Auto Insight"
           }
         }
       ]

@@ -1,6 +1,24 @@
 # Change Log - @visactor/vmind
 
-This log was last generated on Thu, 11 Jul 2024 08:20:22 GMT and should not be manually modified.
+This log was last generated on Sun, 23 Feb 2025 10:21:08 GMT and should not be manually modified.
+
+## 2.0.2
+Sun, 23 Feb 2025 10:21:08 GMT
+
+### Updates
+
+- fix fieldinfo may undefiend while chart-advistor
+
+## 2.0.1
+Fri, 21 Feb 2025 07:38:30 GMT
+
+### Updates
+
+- Overall architecture upgrade
+- Support DeepSeek and other custom model with api-key
+- 12 new chart types added for chart generation
+- Add Text2Chart capability
+- Add Chart Insight capability
 
 ## 1.2.13
 Thu, 11 Jul 2024 08:20:22 GMT

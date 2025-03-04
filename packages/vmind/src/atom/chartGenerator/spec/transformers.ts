@@ -21,7 +21,7 @@ import type { GenerateChartCellContext } from '../type';
 import { getFieldByDataType, getFieldIdInCell } from '../../../utils/field';
 import { isValidDataTable } from '../../../utils/dataTable';
 import { DataType, ChartType, ROLE } from '../../../types';
-import type { DataCell, DataTable, FieldInfo } from '../../../types';
+import type { DataCell, DataTable } from '../../../types';
 import { builtinThemeMap } from '../const';
 
 const chartTypeMap: { [chartName: string]: string } = {
@@ -51,6 +51,12 @@ const chartTypeMap: { [chartName: string]: string } = {
   [ChartType.BasicHeatMap.toUpperCase()]: 'common',
   [ChartType.VennChart.toUpperCase()]: 'venn'
 };
+
+export const llmChartTypeMap: Record<string, ChartType> = Object.keys(ChartType).reduce((prev: any, cur: string) => {
+  const value = (ChartType as Record<string, string>)[cur];
+  prev[value.toUpperCase()] = value;
+  return prev;
+}, {});
 
 export const getVChartTypeByVmind = (type: string) => chartTypeMap[type];
 export const revisedVChartType = (context: GenerateChartCellContext) => {
@@ -913,7 +919,7 @@ export const axis = (context: GenerateChartCellContext) => {
   const { y: celly } = cell;
   const yFields = isArray(celly) ? celly : [celly];
   const yFieldsInfo = yFields.map(field => fieldInfo.find(v => v.fieldName === field));
-  const isAllRatio = yFieldsInfo.every(v => !!v.ratioGranularity);
+  const isAllRatio = yFieldsInfo.every(v => !!v?.ratioGranularity);
   const isSameUnit = uniqArray(yFieldsInfo.map(v => v?.unit).filter(v => !!v)).length === 1;
 
   spec.axes = [
@@ -969,7 +975,7 @@ export const commonLabel = (context: GenerateChartCellContext) => {
   } else if (celly) {
     const field = isArray(celly) ? celly[0] : celly;
     const info = fieldInfo.find(v => v.fieldName === field);
-    if (info.ratioGranularity) {
+    if (info?.ratioGranularity) {
       spec.label.formatter = `{${field}:~%}`;
     }
   }
@@ -1060,7 +1066,7 @@ export const scatterAxis = (context: GenerateChartCellContext) => {
   spec.axes = [
     {
       orient: 'bottom',
-      type: [DataType.DATE, DataType.STRING].includes(xFieldInfo.type) ? 'band' : 'linear',
+      type: [DataType.DATE, DataType.STRING].includes(xFieldInfo?.type) ? 'band' : 'linear',
       label: {
         style: {
           //fill: '#FFFFFF'
@@ -1075,7 +1081,7 @@ export const scatterAxis = (context: GenerateChartCellContext) => {
     },
     {
       orient: 'left',
-      type: [DataType.DATE, DataType.STRING].includes(yFieldInfo.type) ? 'band' : 'linear',
+      type: [DataType.DATE, DataType.STRING].includes(yFieldInfo?.type) ? 'band' : 'linear',
       label: {
         style: {
           //fill: '#FFFFFF'

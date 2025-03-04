@@ -1,6 +1,6 @@
 {
   "name": "@visactor/chart-advisor",
-  "version": "1.2.13",
+  "version": "2.0.2",
   "description": "图表推荐模块",
   "main": "lib",
   "module": "es",
@@ -30,7 +30,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@visactor/vutils": "~0.17.4"
+    "@visactor/vutils": "~0.19.3"
   },
   "devDependencies": {
     "@internal/jest-config": "workspace:*",

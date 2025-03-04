@@ -470,4 +470,28 @@ describe('updateSpecByOperation of barchart', () => {
       }
     });
   });
+
+  it('should not create array for label', () => {
+    const { newSpec } = mergeAppendSpec(merge({}, spec), {
+      spec: {
+        'label[0].visible': true
+      }
+    });
+
+    expect(newSpec.label).toEqual({
+      visible: true
+    });
+
+    const { newSpec: newSpec1 } = mergeAppendSpec(merge({}, spec), {
+      spec: {
+        label: {
+          position: 'inside'
+        }
+      }
+    });
+
+    expect(newSpec1.label).toEqual({
+      position: 'inside'
+    });
+  });
 });

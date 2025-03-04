@@ -35,6 +35,12 @@ export default defineConfig(({ mode }) => {
         'Cross-Origin-Embedder-Policy': 'require-corp',
         'Cross-Origin-Opener-Policy': 'same-origin'
       },
+      proxy: {
+        '/api': {
+          target: 'https://byterec.bytedance.net',
+          changeOrigin: true
+        }
+      },
       ...proxyConfig
     },
     resolve: {

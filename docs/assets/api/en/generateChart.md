@@ -6,28 +6,41 @@ The generateChart function is used to call LLM to complete intelligent generatio
 If the passed in dataset is undefined, a spec template will be generated, and fillSpecWithData can be called later to fill data into the spec.
 
 ## Supported Models:
-- GPT-3.5
-- GPT-4
-- [skylark2-pro](https://www.volcengine.com/product/yunque)
+- GPT models
+- Doubao models
+- DeepSeek models
 - [chart-advisor](../guide/Basic_Tutorial/Chart_Advisor)
+- Any other models
 
 ## Chart Type List
-VMind supports 13 common chart types:
+VMind supports 25 common chart types:
 ```typescript
 export enum ChartType {
-DynamicBarChart = 'Dynamic Bar Chart',
-BarChart = 'Bar Chart',
-LineChart = 'Line Chart',
-PieChart = 'Pie Chart',
-ScatterPlot = 'Scatter Plot',
-WordCloud = 'Word Cloud',
-RoseChart = 'Rose Chart',
-RadarChart = 'Radar Chart',
-SankeyChart = 'Sankey Chart',
-FunnelChart = 'Funnel Chart',
-DualAxisChart = 'Dual Axis Chart',
-WaterFallChart = 'Waterfall Chart',
-BoxPlot = 'Box Plot'
+  DynamicBarChart = 'Dynamic Bar Chart',
+  BarChart = 'Bar Chart',
+  LineChart = 'Line Chart',
+  AreaChart = 'Area Chart',
+  PieChart = 'Pie Chart',
+  ScatterPlot = 'Scatter Plot',
+  WordCloud = 'Word Cloud',
+  RoseChart = 'Rose Chart',
+  RadarChart = 'Radar Chart',
+  SankeyChart = 'Sankey Chart',
+  FunnelChart = 'Funnel Chart',
+  DualAxisChart = 'Dual Axis Chart',
+  WaterFallChart = 'Waterfall Chart',
+  BoxPlot = 'Box Plot',
+  LinearProgress = 'Linear Progress chart',
+  CircularProgress = 'Circular Progress chart',
+  LiquidChart = 'Liquid Chart',
+  BubbleCirclePacking = 'Bubble Circle Packing',
+  MapChart = 'Map Chart',
+  RangeColumnChart = 'Range Column Chart',
+  SunburstChart = 'Sunburst Chart',
+  TreemapChart = 'Treemap Chart',
+  Gauge = 'Gauge Chart',
+  BasicHeatMap = 'Basic Heat Map',
+  VennChart = 'Venn Chart'
 }
 ```
 You can restrict the type of chart generated through the chartTypeList in the options parameter.
@@ -49,6 +62,7 @@ interface GenerateChartParams {
     colorPalette?: string[];
     animationDuration?: number;
     enableDataQuery?: boolean;
+    theme?: ChartTheme | string;
   }
 }
 ```
@@ -62,29 +76,45 @@ interface GenerateChartParams {
   - enableDataQuery (boolean, optional): Determines whether to enable data aggregation during chart generation
   - colorPalette (Array<string>, optional): Used to set the color palette of the chart
   - animationDuration (number, optional): Used to set the playback duration of the chart animation
+  - theme (ChartTheme | string, optional): Sets the theme style of the final spec. By default, VMind uses a theme style with gradient colors. You can set VChart's general light or dark theme ('light' | 'dark') or a theme style that suits your usage scenario.
 
 ## Return Value Type:
 
 ```typescript
 interface GenerateChartResult {
+  /** Chart spec */
   spec: Record<string, any>;
-  chartType: Record<string, string | string[]>;
+  /** Chart type */
+  chartType: ChartType;
+  /** Final visual channel mapping */
   cell: Cell;
-  chartSource: string;
-  usage: any;
+  /** Token consumption */
+  usage: Usage;
+  /* Specific command to generate the current chart, consistent with user prompt in the case of user prompt */
+  command: string;
+  /** Configuration time used for converting to gif/video */
   time: {
     totalTime : number;
     frameArr: number[];
   };
+  /** Rule-based chart recommendation results, generated as a fallback when manually setting rules or when the large model generation is incorrect */
+  chartAdvistorRes: {
+    /** Chart spec */
+    spec: Record<string, any>;
+    /** Chart type */
+    chartType: ChartType;
+    /** Recommendation score */
+    score: number
+  }[]
 }
 ```
 
 - spec (Object): The generated VChart chart spec. If the dataset is empty, it is a spec template that does not contain data
 - chartType (ChartType): The type of the chart generated, see `Chart Type List` section
 - cell (Record<string, string | string[]>): The field mapping in the chart, describing how the fields in the dataset map to the various visual channels on the chart
-- chartSource: string: The source of the chart generation. If the chart is successfully generated using LLM, it is the specific model name; if the final use is [rule-based chart generation](../guide/Basic_Tutorial/Chart_Advisor), then it is chart-advisor
 - usage (any): Total LLM token consumption
 - time (number): The duration of the chart animation, which can be used to export GIF and video
+- chartAdvistorRes (Array): This result is the chart recommendation result derived based on the current data and field information through VMind's built-in rules, generated as a fallback when the model is set to `Model.CHART_ADVISOR` or the user's large model settings are incorrect and no result can be obtained. For details, see: [Rule-Based Chart Generation](../guide/Basic_Tutorial/Chart_Advisor)- 
 
 ## Usage Example:
 

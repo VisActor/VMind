@@ -52,10 +52,15 @@ export class RAGManage {
           sparse_vector: (sparseVector ?? [])
             .map(item => {
               // 使用正则表达式解析字符串
-              const match = item.match(/\('(.+)', ([\d.]+)\)/);
+              const match = item.match(/\("(.+?)", ([\d.]+)\)/);
               if (match) {
                 return [match[1], parseFloat(match[2])];
               }
+              const oldMatch = item.match(/\('(.+)', ([\d.]+)\)/);
+              if (oldMatch) {
+                return [oldMatch[1], parseFloat(oldMatch[2])];
+              }
+
               return null;
             })
             .filter(item => item !== null),

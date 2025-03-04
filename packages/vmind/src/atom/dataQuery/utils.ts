@@ -47,7 +47,8 @@ export const parseSQLResponse = (response: string) => {
   }
   return {
     sql,
-    llmFieldInfo: fieldInfo
+    llmFieldInfo: fieldInfo,
+    thoughts: ''
   };
 };
 

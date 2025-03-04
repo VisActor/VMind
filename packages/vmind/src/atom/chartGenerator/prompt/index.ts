@@ -37,7 +37,7 @@ description?: string; // description of field
 # Response
 Response in the following format:
 \`\`\`
-{${showThoughts ? '\n"thought" : your thoughts' : ''}
+{${showThoughts ? '\n"thoughts" : your thoughts' : ''}
 "CHART_TYPE": string; // The chart type you choose.
 "FIELD_MAP": { // Visualization channel mapping results
 ${visualChannels}

@@ -101,12 +101,19 @@ In VMind, you need to use the fieldInfo object to describe the field information
 
 The following is the type definition of the fieldInfo object:
 ```ts
-export type SimpleFieldInfo = {
-fieldName: string;
-description?: string; //additional description of the field. This will help the model have a more comprehensive understanding of this field, improving the quality of chart generation.
-type: DataType;
-role: ROLE;
-};
+/** field information Of Data Table */
+export interface FieldInfo {
+  /** name of field */
+  fieldName: string;
+  /** field type, eg: time / category / numerical */
+  type: DataType;
+  /** field role */
+  role: ROLE;
+  /** alias of field */
+  alias?: string;
+  /** additional description of the field. This will help the model have a more comprehensive understanding of this field, improving the quality of chart generation. */
+  description?: string;
+}
 ```
 For the dataset shown in the previous section, the corresponding fieldInfo is as follows:
 ```json

@@ -1,28 +1,25 @@
-import type { ApplicationMeta } from '../../base/metaTypes';
-import GetDatasetTaskNodeGPTMeta from './taskNodes/generateDataset/GPT';
-import { ModelType } from '../../common/typings';
-import type { DataExtractionContext, DataExtractionOutput } from '../types';
-import GetDatasetTaskNodeSkylarkMeta from './taskNodes/generateDataset/skylark';
+import type { LLMManage } from '../../core/llm';
+import { Schedule } from '../../schedule';
+import type { ILLMOptions } from '../../types';
+import { AtomName } from '../../types';
 
-/**
- * data extraction application in vmind
- * pipeline: generateDataset
- * first it gets userInput, original text as input (DataExtractionContext)
- * then it run GetDatasetTaskNode to get instruction, dataset and llmFieldInfo(DataExtractionOutput)
- */
-const dataExtractionGPTMeta: ApplicationMeta<DataExtractionContext, DataExtractionOutput> = {
-  name: 'dataExtraction',
-  taskNodes: [{ taskNode: GetDatasetTaskNodeGPTMeta, name: 'getDataset' }]
+export const getText2DataSchedule = (llm: LLMManage, options: ILLMOptions) => {
+  return new Schedule([AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN], {
+    base: { llm, showThoughts: options?.showThoughts }
+  });
 };
 
-const dataExtractionSkylarkMeta: ApplicationMeta<DataExtractionContext, DataExtractionOutput> = {
-  name: 'dataExtraction',
-  taskNodes: [{ taskNode: GetDatasetTaskNodeSkylarkMeta, name: 'getDataset' }]
+export const getText2MultipleDataSchedule = (llm: LLMManage, options: ILLMOptions) => {
+  return new Schedule([AtomName.DATA_EXTRACT, AtomName.MULTIPLE_DATA_CLEAN], {
+    base: { llm, showThoughts: options?.showThoughts }
+  });
 };
 
-const dataExtractionMetaByModel = {
-  [ModelType.GPT]: dataExtractionGPTMeta,
-  [ModelType.SKYLARK]: dataExtractionSkylarkMeta
+export const getText2ChartSchedule = (llm: LLMManage, options: ILLMOptions) => {
+  return new Schedule(
+    [AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN, AtomName.DATA_QUERY, AtomName.CHART_COMMAND, AtomName.CHART_GENERATE],
+    {
+      base: { llm, showThoughts: options?.showThoughts }
+    }
+  );
 };
-
-export default dataExtractionMetaByModel;

@@ -1,3 +1,6 @@
+/**
+ * @todo @666haiwen optimize and expand with old develop branch feat/v1_develop
+ */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ChartGeneratorCtx } from '../../types/atom';
 import { AtomName } from '../../types/atom';
@@ -41,8 +44,7 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
       {},
       {
         dataTable: [],
-        fieldInfo: [],
-        basemapOption: DEFAULT_MAP_OPTION
+        fieldInfo: []
       },
       context
     );
@@ -50,8 +52,10 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
 
   buildDefaultOptions(): ChartGeneratorOptions {
     return {
+      ...super.buildDefaultOptions(),
       useChartAdvisor: false,
       chartTypeList: SUPPORTED_CHART_LIST,
+      basemapOption: DEFAULT_MAP_OPTION,
       unsupportChartTypeList: []
     };
   }
@@ -85,9 +89,10 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
   }
 
   parseLLMContent(resJson: any) {
-    const { CHART_TYPE, FIELD_MAP } = resJson;
+    const { CHART_TYPE, FIELD_MAP, thoughts } = resJson;
     let newContext: GenerateChartCellContext = {
       ...this.context,
+      thoughts,
       chartType: CHART_TYPE,
       cell: FIELD_MAP,
       chartTypeList: this.finalChartTypeList
@@ -126,6 +131,12 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
     return this.context;
   }
 
+  protected runWithLLMError(error: string): ChartGeneratorCtx {
+    super._runWithOutLLM();
+    this.useChartAdvisor = true;
+    return this._runWithOutLLM();
+  }
+
   protected _runWithOutLLM(): ChartGeneratorCtx {
     this.isLLMAtom = true;
     if (this.useRule && !this.context.cell) {
@@ -133,22 +144,44 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
       this.context.spec = null;
       return this.context;
     }
+    const additionalCtx = {
+      chartTypeList: this.finalChartTypeList,
+      basemapOption: this.options?.basemapOption,
+      totalTime: this.options?.animationDuration,
+      colors: this.options?.colorPalette,
+      chartTheme: this.options?.theme
+    };
     if (!this.useRule && (this.useChartAdvisor || this.options.useChartAdvisor)) {
       // @todo
-      const { cell, dataset, chartType } = getCellContextByAdvisor({
+      const { cell, dataset, chartType, advisedList, usage } = getCellContextByAdvisor({
         ...this.context,
-        chartTypeList: this.finalChartTypeList
+        ...additionalCtx
       });
       this.context = {
         ...this.context,
+        usage,
         cell,
         dataTable: dataset,
-        chartType
+        chartType,
+        chartAdvistorRes: advisedList.map(item => {
+          const tmpContext = merge({}, this.context, {
+            cell: item.cell,
+            dataTable: item.dataset,
+            chartType: item.chartType
+          });
+          return {
+            chartType: item.chartType as ChartType,
+            score: item.score,
+            spec: getChartSpecWithContext({ ...tmpContext, ...additionalCtx }).spec
+          };
+        })
       };
+    } else {
+      this.context.chartAdvistorRes = [];
     }
     const newContext = {
       ...this.context,
-      ...getChartSpecWithContext({ ...this.context, chartTypeList: this.finalChartTypeList })
+      ...getChartSpecWithContext({ ...this.context, ...additionalCtx })
     };
     this.updateContext(newContext);
     return newContext;

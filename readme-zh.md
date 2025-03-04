@@ -71,22 +71,17 @@ $ rush vmind
 你可以在 packages/vmind 文件夹中新建.env.local 文件，在其中写入：
 
 ```bash
-VITE_SKYLARK_URL="Your service url of skylark model"
 VITE_GPT_URL="Your service url of gpt model"
-VITE_SKYLARK_KEY="Your api-key of skylark model"
 VITE_GPT_KEY="Your api-key of gpt model"
+VITE_DEEPSEEK_URL="https://api.deepseek.com/chat/completions"
+VITE_DEEPSEEK_KEY="Your api-key of deepseek model"
+VITE_CUSTOM_URL="Your service url of custom model"
+VITE_CUSTOM_KEY="Your api-key of custom model"
+VITE_CUSTOM_MODEL="Your Custom Model Name"
 VITE_PROXY_CONFIG="Your Vite proxy config for forwarding requests. Must be in JSON string format and is optional. Example: {"proxy": {"/v1": {"target": "https://api.openai.com/","changeOrigin": true},"/openapi": {"target": "https://api.openai.com/","changeOrigin": true}}}"
 ```
 
 在启动开发环境时将会自动读取这些配置
-
-### 项目结构
-
-- \_\_tests\_\_: 开发用的 playground
-- src/common: 公共的数据处理、图表推荐方法，图表生成 pipelines
-- src/gpt: gpt 图表智能生成相关代码
-- src/skylark: skylark 图表智能生成相关代码
-- src/chart-to-video: 导出视频、GIF 相关代码
 
 ## 使用说明
 
@@ -122,33 +117,49 @@ yarn add @visactor/vmind
 import VMind from '@visactor/vmind';
 ```
 
-VMind 目前支持 OpenAI GPT-3.5、GPT-4 模型和 skylark-pro 系列模型。用户可以在初始化 VMind 对象时指定调用的模型类型，并传入大模型服务 URL。接下来，我们初始化一个 VMind 实例，并传入模型类型、模型 url：
+VMind VMind 目前支持所有主流模型，包括 OpenAI GPT系列，字节豆包系列以及 DeepSeek 等模型，只要提供对应的模型API接口，所有模型均可以直接调用。用户可以在初始化 VMind 对象时指定调用的模型类型，并传入大模型服务 URL。接下来，我们初始化一个 VMind 实例，并传入模型类型、模型 url：
 
 ```typescript
-import { Model } from '@visactor/vmind';
+import VMind, { Model } from '@visactor/vmind'
 
 const vmind = new VMind({
-  url: LLM_SERVICE_URL, //大模型服务的 url
-  model: Model.SKYLARK, //目前支持 gpt-3.5, gpt-4, skylark pro 模型。在后续的图表生成中将调用指定的模型
-  headers: {
-    'api-key': LLM_API_KEY
-  } //headers 将会被直接用作大模型请求中的 request header. 可以将模型 api key 放入 header 中
-});
+  url, //指定你的大模型服务url。default is https://api.openai.com/v1/chat/completions
+  model: Model.GPT4o, //指定你指定的模型
+  headers: { //指定调用大模型服务时的header
+    'api-key': apiKey //Your LLM API Key
+  }
+})
 ```
 
 这里列出了支持的模型列表：
 
 ```typescript
 //models that VMind support
-//more models is under developing
 export enum Model {
   GPT3_5 = 'gpt-3.5-turbo',
+  GPT3_5_1106 = 'gpt-3.5-turbo-1106',
   GPT4 = 'gpt-4',
-  SKYLARK = 'skylark-pro',
-  SKYLARK2 = 'skylark2-pro-4k'
+  GPT_4_0613 = 'gpt-4-0613',
+  GPT_4o = 'gpt-4o-2024-08-06',
+  DOUBAO_LITE = 'doubao-lite-32K',
+  DOUBAO_PRO = 'doubao-pro-128k',
+  CHART_ADVISOR = 'chart-advisor',
+  DEEPSEEK_V3 = 'deepseek-chat',
+  DEEPSEEK_R1 = 'deepseek-reasoner'
 }
 ```
+你也可以使用不在列表里，但是符合使用API鉴权格式的其他大模型：
+```typescript
+import { Model } from '@visactor/vmind';
 
+const vmind = new VMind({
+  url: LLM_SERVICE_URL, // 大模型api地址
+  model: LLM_MODEL_NAME, // 大模型名称
+  headers: {
+    'api-key': LLM_API_KEY // 鉴权key
+  }
+});
+```
 VMind支持csv格式和json格式的数据集。
 
 为了在后续流程中使用 csv 数据，需要调用数据处理方法，提取数据中的字段信息，并转换成结构化的 dataset。VMind 提供了基于规则的方法`parseCSVData`来获取字段信息：
@@ -229,28 +240,7 @@ const userPrompt =
 const { spec, time } = await vmind.generateChart(userPrompt, fieldInfo, dataset);
 ```
 
-#### 自定义大模型调用方式
-
-在初始化 VMind 对象时传入参数：
-
-```typescript
-import VMind from '@visactor/vmind';
-const vmind = new VMind(openAIKey:string, params:{
-  url?: string;//大模型服务URL
-  /** gpt request header, which has higher priority */
-  headers?: Record<string, string> ;//请求头
-  method?: string;//请求方法 POST GET
-  model?: string;//模型名称
-  max_tokens?: number;
-  temperature?: number;//推荐设为0
-  })
-```
-
-在 url 中指定您的大模型服务 url（默认为https://api.openai.com/v1/chat/completions）
-在随后的调用中，VMind 会使用 params 中的参数请求大模型服务 url
-
 #### 数据聚合
-📢 Note: 数据聚合功能只支持GPT系列模型，更多模型正在接入中。
 
 在使用图表库绘制柱状图、折线图等图表时，若传入的数据不是聚合后的数据，会影响可视化效果。同时由于没有对字段进行筛选和排序，某些图表展示意图无法满足，例如：帮我展示使用量最多的10个部门，帮我展示北方各商品的销售额等。
 
@@ -275,6 +265,11 @@ const userInput = 'show me the changes in sales rankings of various car brand';
 const { spec, time } = await vmind.generateChart(userInput, fieldInfo, dataset, false); //pass false as the forth parameter to disable data aggregation before generating a chart.
 ```
 
+#### 智能洞察
+[Tutorial](https://visactor.io/vmind/guide/Basic_Tutorial/Chart_Insight)
+
+#### 数据提取——从文本一步生成图表
+[Tutorial](https://visactor.io/vmind/guide/Basic_Tutorial/Data_Extraction)
 
 #### 对话式编辑
 
