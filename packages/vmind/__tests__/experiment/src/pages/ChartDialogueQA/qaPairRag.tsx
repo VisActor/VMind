@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 import React from 'react';
 import axios from 'axios';
-import { Input, Card, Message, Checkbox, Select, Tooltip, Modal, Form, Button } from '@arco-design/web-react';
+import { Input, Tooltip, Button } from '@arco-design/web-react';
 import './rag.scss';
 import { IconDelete, IconLoading, IconRobot, IconSend, IconUser } from '@arco-design/web-react/icon';
 import VChart from '@visactor/vchart';
@@ -25,134 +25,8 @@ import {
 } from '../../data/editorData';
 import { JSONEditor } from './specEditor';
 
-const { Option } = Select;
-const TextArea = Input.TextArea;
-const FormItem = Form.Item;
 const globalVariables = (import.meta as any).env;
 const url = globalVariables.VITE_VCHART_EDITOR_URL || 'http://localhost/';
-const baseSpec = {
-  type: 'bar',
-  data: [
-    {
-      id: 'barData',
-      values: [
-        { type: 'Autocracies', year: '1930', value: 129 },
-        { type: 'Autocracies', year: '1940', value: 133 },
-        { type: 'Autocracies', year: '1950', value: 130 },
-        { type: 'Autocracies', year: '1960', value: 126 },
-        { type: 'Autocracies', year: '1970', value: 117 },
-        { type: 'Autocracies', year: '1980', value: 114 },
-        { type: 'Autocracies', year: '1990', value: 111 },
-        { type: 'Autocracies', year: '2000', value: 89 },
-        { type: 'Autocracies', year: '2010', value: 80 },
-        { type: 'Autocracies', year: '2018', value: 80 },
-        { type: 'Democracies', year: '1930', value: 22 },
-        { type: 'Democracies', year: '1940', value: 13 },
-        { type: 'Democracies', year: '1950', value: 25 },
-        { type: 'Democracies', year: '1960', value: 29 },
-        { type: 'Democracies', year: '1970', value: 38 },
-        { type: 'Democracies', year: '1980', value: 41 },
-        { type: 'Democracies', year: '1990', value: 57 },
-        { type: 'Democracies', year: '2000', value: 87 },
-        { type: 'Democracies', year: '2010', value: 98 },
-        { type: 'Democracies', year: '2018', value: 99 }
-      ]
-    }
-  ],
-  xField: ['year', 'type'],
-  yField: 'value',
-  seriesField: 'type',
-  legends: {
-    visible: true,
-    orient: 'top',
-    position: 'start'
-  }
-};
-const topKeys = [
-  'NotSure',
-  'type',
-  'series',
-  'axes',
-  'crosshair',
-  'data',
-  'width',
-  'height',
-  'autoFit',
-  'color',
-  'seriesStyle',
-  'animationThreshold',
-  'hover',
-  'select',
-  'region',
-  'title',
-  'layout',
-  'legends',
-  'tooltip',
-  'player',
-  'dataZoom',
-  'scrollBar',
-  'brush',
-  'scales',
-  'customMark',
-  'theme',
-  'background',
-  'stackInverse',
-  'stackSort',
-  'media',
-  'autoBandSize',
-  'direction',
-  'markLine',
-  'markArea',
-  'markPoint',
-  'padding',
-  'percent',
-  'name',
-  'id',
-  'animation',
-  'stack',
-  'animationEnter',
-  'animationUpdate',
-  'animationExit',
-  'dataIndex',
-  'sampling',
-  'animationState',
-  'large',
-  'largeThreshold',
-  'progressiveStep',
-  'progressiveThreshold',
-  'support3d',
-  'regionIndex',
-  'regionId',
-  'totalLabel',
-  'animationAppear',
-  'animationDisappear',
-  'animationNormal',
-  'xField',
-  'yField',
-  'label',
-  'bar',
-  'barBackground',
-  'barWidth',
-  'barMinWidth',
-  'barMaxWidth',
-  'barGapInGroup',
-  'barMinHeight',
-  'stackCornerRadius',
-  'x2Field',
-  'y2Field',
-  'zField',
-  'sortDataByAxis',
-  'dataId',
-  'dataKey',
-  'seriesField',
-  'stackOffsetSilhouette',
-  'invalidType',
-  'extensionMark',
-  'interactions',
-  'activePoint',
-  'samplingFactor'
-];
-const vchartSpecAtom = new VChartSpec({ spec: baseSpec }, {});
 
 const demoData = [
   {
@@ -217,11 +91,12 @@ const demoData = [
   }
 ];
 
+const vchartSpecAtom = new VChartSpec({ originalSpec: baseGroupBar }, {});
 export function QARag() {
   const vchartInstance = React.useRef<any>(null);
   const [query, setQuery] = React.useState('');
   const [loading, setLoading] = React.useState(false);
-  const [spec, setSpec] = React.useState<any>(baseSpec);
+  const [spec, setSpec] = React.useState<any>(baseGroupBar);
   const [sessionId, setSessionId] = React.useState<string>('');
   const [dialog, setDialog] = React.useState<
     {
@@ -292,10 +167,9 @@ export function QARag() {
 
     vchartSpecAtom.updateContext(
       {
-        spec: spec,
-        appendSpec: {
-          spec: dslRes
-        }
+        prevSpec: spec,
+        originalSpec: spec,
+        operations: dslRes.answer
       },
       true
     );
@@ -424,7 +298,7 @@ export function QARag() {
                         content: 'Hello! How can I help you today?'
                       }
                     ]);
-                    setSpec(baseSpec);
+                    setSpec(baseGroupBar);
                     setQuery('');
                     axios(`${url}closeSession`, {
                       method: 'POST',

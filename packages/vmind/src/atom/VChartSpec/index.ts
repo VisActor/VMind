@@ -2,8 +2,7 @@ import { AtomName } from '../../types/atom';
 import type { BaseOptions } from '../type';
 import { BaseAtom } from '../base';
 import type { VChartSpecCtx } from '../../types';
-import { mergeAppendSpec } from './utils';
-import { isNil } from '@visactor/vutils';
+import { runOperactionsOfSpec } from './utils';
 
 export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
   name = AtomName.VCHART_SPEC;
@@ -22,21 +21,18 @@ export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
   }
 
   _runWithOutLLM(): VChartSpecCtx {
-    const { spec, appendSpec } = this.context;
+    const { prevSpec, originalSpec, operations } = this.context;
+    const baseSpec = prevSpec ?? originalSpec;
 
-    if (!spec) {
-      this.context.spec = {};
+    if (!operations || !operations.length) {
+      this.context.spec = baseSpec;
 
       return this.context;
     }
+    const { spec: newSpec } = runOperactionsOfSpec(baseSpec, operations);
 
-    if (appendSpec && 'spec' in appendSpec) {
-      const { newSpec, code } = mergeAppendSpec(this.context.spec, appendSpec);
-
-      this.context.appendCode = code;
-      this.context.prevSpec = this.context.spec;
-      this.context.spec = newSpec;
-    }
+    this.context.prevSpec = baseSpec;
+    this.context.spec = newSpec;
 
     return this.context;
   }

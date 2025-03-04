@@ -1,5 +1,5 @@
 import { merge } from '@visactor/vutils';
-import { mergeAppendSpec } from '../../../src/atom/VChartSpec/utils';
+import { updateSpecByOperation } from '../../../src/atom/VChartSpec/utils';
 
 const spec = {
   type: 'common',
@@ -69,15 +69,15 @@ const spec = {
   }
 };
 
-describe('mergeAppendSpec of commonChart', () => {
+describe('updateSpecByOperation of commonChart', () => {
   it('should update series when set style of bar series', () => {
-    const { newSpec } = mergeAppendSpec(merge({}, spec), {
-      spec: {
-        barSeries: {
-          bar: {
-            style: {
-              fill: 'red'
-            }
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'update',
+      target: 'barSeries',
+      value: {
+        bar: {
+          style: {
+            fill: 'red'
           }
         }
       }
@@ -91,13 +91,13 @@ describe('mergeAppendSpec of commonChart', () => {
   });
 
   it('should update series when set style of series[0]', () => {
-    const { newSpec } = mergeAppendSpec(merge({}, spec), {
-      spec: {
-        'series[0]': {
-          bar: {
-            style: {
-              fill: 'red'
-            }
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'update',
+      target: 'series[0]',
+      value: {
+        bar: {
+          style: {
+            fill: 'red'
           }
         }
       }

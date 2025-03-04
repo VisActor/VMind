@@ -188,25 +188,50 @@ export interface ChartQAExtractionCtx extends BaseContext {
   explanation: string;
 }
 
-export interface AppendSpecInfo {
+/**
+ * 更新vchart spec 的原子操作
+ */
+export interface IVChartOperationItem {
   /**
-   * 大模型返回的配置内容
+   * The type of operation to perform.
+   * - "add": Add a new field or array element.
+   * - "update": Update an existing field or array element.
+   * - "delete": Remove an existing field or array element.
    */
-  spec: any;
+  op: 'add' | 'update' | 'delete';
+  /**
+   * The target location of the operation in the DSL.
+   * - Use dot notation for nested fields (e.g., "settings.theme.color").
+   * - Use square brackets for array indices (e.g., "data[2]").
+   */
+  target: string;
+  /**
+   * The value to be added or updated
+   */
+  value?: any;
 }
 
 export interface VChartSpecCtx extends BaseContext {
-  spec: any;
-  prevSpec?: any;
-  // 新增的spec相关配置
-  appendSpec?: AppendSpecInfo;
-
   /**
-   * 新增spec操作的结果
-   * 0 - 成功
-   * 1 - 不成功
+   * the original spec
    */
-  appendCode?: number;
+  originalSpec: any;
+  /**
+   * the latest spec
+   */
+  spec?: any;
+  /**
+   * the spec before operations
+   */
+  prevSpec?: any;
+  /**
+   * The operations to be performed on the spec
+   */
+  operations?: IVChartOperationItem[];
+  /**
+   * the result of operations
+   */
+  opertationsResult?: number[];
 }
 
 export interface DialogueChartCtx extends BaseContext {
