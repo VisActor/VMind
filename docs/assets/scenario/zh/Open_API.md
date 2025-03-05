@@ -22,7 +22,7 @@ curl --location 'VMind Open API服务地址' \
         \"销售额\": 1027
     }
 ]"' \
---form 'model="skylark"' \
+--form 'model="doubao"' \
 --form 'userPrompt="帮我展示北方各商品销售额"' \
 ```
 
@@ -31,7 +31,6 @@ curl --location 'VMind Open API服务地址' \
 {
     "chart": [
         {
-            "chartSource": "skylark2-pro-4k-v1.2", //图表生成来源
             "chartType": "BAR CHART", //图表类型
             "spec": { //生成的VChart Spec
                 "type": "bar",
@@ -57,7 +56,11 @@ curl --location 'VMind Open API服务地址' \
 }
 ```
 
-VMind Open API目前支持skylark2-pro模型进行智能数据聚合和图表生成，以及chart-advisor完成基于规则的图表推荐。
+VMind Open API目前支持多种模型进行智能数据聚合和图表生成，以及chart-advisor完成基于规则的图表推荐,具体支持模型如下所示：
+- doubao: 默认值,对应doubao-pro-32k-240828模型，即240828发布的pro模型
+- doubao-1.5-pro-32k: 对应250115发布的豆包1.5pro模型
+- doubao-1.5-lite-32k: 对应250115发布的豆包1.5lite模型
+- 其他:例如gpt系列模型和deepseek系列模型
 
 ## 接口说明
 ### /generateChart
@@ -84,8 +87,8 @@ POST
 ```
 
 - model
-可选值：skylark
-说明：可选，模型类型，当前仅支持skylark
+可选值：doubao | doubao-1.5-pro-32k | doubao-1.5-lite-32k
+说明：可选，模型类型，默认支持doubao模型；同时也支持gpt系列和deepseek系列，可以按需提供
 
 - mode
 可选值："accuracyFirst" ， "performanceFirst"
