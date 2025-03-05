@@ -8,7 +8,7 @@ import {
   visualChannelInfoMap
 } from './knowledges';
 import { getStrFromArray } from '../../../utils/common';
-import type { ChartType } from '../../../types';
+import { ChartType } from '../../../types';
 import type { VisualChannel } from '../type';
 import type { VizSchema } from '../../type';
 
@@ -18,8 +18,9 @@ const ChartAdvisorPromptEnglish = (
   supportedChartList: string[],
   knowledge: string,
   visualChannels: string,
-  constraints: string,
-  examples: string
+  examples: string,
+  stackOrPercent: boolean,
+  transpose?: boolean
 ) => `You are a data visualization expert with an in-depth understanding of visualization grammar. Your task is to provide the chart type and field visualization mapping based on the user's visualization needs and the existing field descriptions.
 # User Input
 User Input is Bellow:
@@ -41,7 +42,9 @@ Response in the following format:
 "CHART_TYPE": string; // The chart type you choose.
 "FIELD_MAP": { // Visualization channel mapping results
 ${visualChannels}
-}${showThoughts ? ',\n"Reason": the reason for selecting the chart type and visual mapping.' : ''}
+}${showThoughts ? ',\n"Reason": the reason for selecting the chart type and visual mapping.' : ''}${
+  stackOrPercent ? '\n"stackOrPercent"?: "stack" | "percent" // default undefined' : ''
+}${transpose ? '\n"transpose"?: boolean // 是否横向展示，或者是否为条形图' : ''}
 }
 \`\`\`
 
@@ -54,6 +57,7 @@ ${visualChannels}
 6. The x field and the time field MUST be different.
 7. Focus only on chart visualization tasks.
 8. Strictly define the type of return format, use JSON format to reply, do not include any extra content.
+9. The xy fields remain UNCHANGED even under transpose.
 ${knowledge.length > 0 ? '\n# Knowledge' : ''}
 ${knowledge}
 
@@ -108,8 +112,9 @@ export const getPrompt = (propsChartList: ChartType[], showThoughts: boolean = t
     chartTypeList,
     knowledgeStr,
     visualChannelsStr,
-    constraintsStr,
-    examplesStr
+    examplesStr,
+    !!chartTypeList.find(v => [ChartType.BarChart, ChartType.AreaChart].includes(v)),
+    chartTypeList.includes(ChartType.BarChart)
   );
   return QueryDatasetPrompt;
 };

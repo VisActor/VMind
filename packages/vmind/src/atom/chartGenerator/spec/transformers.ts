@@ -787,7 +787,7 @@ export const sankeyLink = (context: GenerateChartCellContext) => {
 
 export const cartesianBar = (context: GenerateChartCellContext) => {
   //assign fields according to cell
-  const { cell, fieldInfo, spec } = context;
+  const { cell, fieldInfo, spec, stackOrPercent } = context;
   const cellNew = { ...cell };
   const flattenedXField = Array.isArray(cell.x) ? cell.x : [cell.x];
   if (cell.color && cell.color.length > 0 && cell.color !== cell.x) {
@@ -808,6 +808,11 @@ export const cartesianBar = (context: GenerateChartCellContext) => {
       spec.xField.push(colorField.fieldName);
       cellNew.color = colorField.fieldName;
     }
+  }
+  if (spec.xField.length > 1 && stackOrPercent) {
+    spec.xField = [spec.xField[0]];
+    spec.stack = !!stackOrPercent;
+    spec.percent = stackOrPercent === 'percent';
   }
   return { spec, cell: cellNew };
 };
@@ -963,6 +968,26 @@ export const axis = (context: GenerateChartCellContext) => {
     }
   ];
   return { spec };
+};
+
+export const transposeField = (context: GenerateChartCellContext) => {
+  const { spec, transpose } = context;
+  if (transpose) {
+    const newSpec = { ...spec, xField: spec.yField, yField: spec.xField, direction: 'horizontal' };
+    const bottomAxis = (newSpec.axes || []).find((axis: any) => axis.orient === 'bottom');
+    const leftAxis = (newSpec.axes || []).find((axis: any) => axis.orient === 'left');
+    if (bottomAxis) {
+      bottomAxis.orient = 'left';
+    }
+    if (leftAxis) {
+      leftAxis.orient = 'bottom';
+    }
+    return {
+      ...context,
+      spec: newSpec
+    };
+  }
+  return context;
 };
 
 export const commonLabel = (context: GenerateChartCellContext) => {

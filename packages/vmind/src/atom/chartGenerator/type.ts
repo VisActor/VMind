@@ -21,6 +21,8 @@ export interface GenerateChartCellContext extends ChartGeneratorCtx {
   /** only use in map chart */
   basemapOption?: BasemapOption;
   totalTime?: number;
+  stackOrPercent?: 'stack' | 'percent';
+  transpose?: boolean;
 }
 
 export interface ChartAdvistorResult {

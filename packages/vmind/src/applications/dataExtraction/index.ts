@@ -19,7 +19,8 @@ export const getText2ChartSchedule = (llm: LLMManage, options: ILLMOptions) => {
   return new Schedule(
     [AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN, AtomName.DATA_QUERY, AtomName.CHART_COMMAND, AtomName.CHART_GENERATE],
     {
-      base: { llm, showThoughts: options?.showThoughts }
+      base: { llm, showThoughts: options?.showThoughts },
+      chartGenerate: { useChartRule: true }
     }
   );
 };

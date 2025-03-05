@@ -78,7 +78,8 @@ import {
   registerChart,
   seriesField,
   commonLabel,
-  llmChartTypeMap
+  llmChartTypeMap,
+  transposeField
 } from './transformers';
 
 const pipelineBar = [
@@ -91,6 +92,7 @@ const pipelineBar = [
   legend,
   commonLabel,
   displayConfBar,
+  transposeField,
   //animationCartesianBar,
   theme
 ];

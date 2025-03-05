@@ -88,8 +88,8 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     this.options = merge({}, this.options, options);
   }
 
-  reset(context?: Ctx) {
-    this.context = this.buildDefaultContext(context);
+  reset(context?: Partial<Ctx>) {
+    this.context = this.buildDefaultContext(context as any);
     this.responses = [];
     this.history.map.clear();
     this.history.idList = [];

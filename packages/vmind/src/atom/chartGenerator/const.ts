@@ -28,6 +28,8 @@ export const NEED_COLOR_FIELD_CHART_LIST = [ChartType.PieChart, ChartType.RoseCh
 
 export const NEED_SIZE_FIELD_CHART_LIST = [ChartType.ScatterPlot, ChartType.BasicHeatMap];
 
+export const NEED_VALUE_FIELD = [ChartType.SankeyChart, ChartType.CircularProgress];
+
 export const NEED_COLOR_AND_SIZE_CHART_LIST = [
   ChartType.WordCloud,
   ChartType.MapChart,

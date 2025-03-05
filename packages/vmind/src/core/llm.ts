@@ -96,7 +96,7 @@ export class LLMManage {
       };
     }
     try {
-      const toolCalls = choices[0].message.tool_calls || '';
+      const toolCalls = choices[0].message?.tool_calls || [];
       return toolCalls.map((toolCall: any) => ({
         ...toolCall,
         function: {
