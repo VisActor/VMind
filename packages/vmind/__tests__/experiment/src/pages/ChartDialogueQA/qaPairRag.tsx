@@ -3,9 +3,9 @@
 /* eslint-disable no-console */
 import React from 'react';
 import axios from 'axios';
-import { Input, Tooltip, Button } from '@arco-design/web-react';
+import { Input, Tooltip, Button, Message } from '@arco-design/web-react';
 import './rag.scss';
-import { IconDelete, IconLoading, IconRobot, IconSend, IconUser } from '@arco-design/web-react/icon';
+import { IconDelete, IconLoading, IconSend, IconThumbDownFill, IconUser } from '@arco-design/web-react/icon';
 import VChart from '@visactor/vchart';
 import { isArray } from '@visactor/vutils';
 import { VChartSpec } from '../../../../../src';
@@ -18,6 +18,7 @@ import {
   baseScatter,
   baseStackArea,
   baseWordcloud,
+  duelAxisChart,
   multipleLine,
   pieChart,
   roseChart,
@@ -53,6 +54,11 @@ const demoData = [
     name: '堆积柱图',
     spec: stackBar,
     src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vchart/preview/bar-chart/stack-column.png'
+  },
+  {
+    name: '双轴图',
+    spec: duelAxisChart,
+    src: 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vchart/preview/combination/dual-axis.png'
   },
   {
     name: '饼图',
@@ -130,7 +136,7 @@ export function QARag() {
       res = await axios(`${url}queryKeyPath`, {
         method: 'POST',
         data: {
-          chartType: 'bar',
+          chartType: spec.type,
           query,
           spec,
           sessionId,
@@ -242,6 +248,22 @@ export function QARag() {
     }
   }, [spec, vchartInstance]);
 
+  const handleFeedback = React.useCallback(
+    (index: number) => {
+      const currentDialog = dialog[index];
+      Message.success('Thansk for your feedback!');
+      axios(`${url}feedback`, {
+        method: 'POST',
+        data: {
+          sessionId,
+          userId: 'vmind_test',
+          ...currentDialog?.res
+        }
+      });
+    },
+    [dialog, sessionId]
+  );
+
   return (
     <div className="rag-panel">
       <div className="chart-demo-selection">
@@ -298,7 +320,6 @@ export function QARag() {
                         content: 'Hello! How can I help you today?'
                       }
                     ]);
-                    setSpec(baseGroupBar);
                     setQuery('');
                     axios(`${url}closeSession`, {
                       method: 'POST',
@@ -344,6 +365,11 @@ export function QARag() {
                           </pre>
                         ) : null}
                       </div>
+                    </div>
+                    <div className="feedback">
+                      {answer ? (
+                        <IconThumbDownFill style={{ color: '#dc3545aa' }} onClick={() => handleFeedback(index)} />
+                      ) : null}
                     </div>
                   </div>
                 );
