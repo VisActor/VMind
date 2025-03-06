@@ -29,6 +29,8 @@ import { Logo } from './logo';
 
 const globalVariables = (import.meta as any).env;
 const url = globalVariables.VITE_VCHART_EDITOR_URL || 'http://localhost/';
+const feedbackUrl = globalVariables.VITE_VCHART_EDITOR_FEEDBACK || url;
+const vmindKey = globalVariables.VITE_VMIND_KEY;
 const demoData = [
   {
     name: '基础线图',
@@ -133,8 +135,9 @@ export function QARag() {
     setLoading(true);
     let res: any;
     try {
-      res = await axios(`${url}queryKeyPath`, {
+      res = await axios(`${url}vchartDsl`, {
         method: 'POST',
+        headers: { 'api-key': vmindKey },
         data: {
           chartType: spec.type,
           query,
@@ -252,8 +255,9 @@ export function QARag() {
     (index: number) => {
       const currentDialog = dialog[index];
       Message.success('Thansk for your feedback!');
-      axios(`${url}feedback`, {
+      axios(`${feedbackUrl}feedback`, {
         method: 'POST',
+        headers: { 'api-key': vmindKey },
         data: {
           sessionId,
           userId: 'vmind_test',
@@ -321,11 +325,13 @@ export function QARag() {
                       }
                     ]);
                     setQuery('');
-                    axios(`${url}closeSession`, {
+                    axios(`${url}vchartDsl`, {
                       method: 'POST',
+                      headers: { 'api-key': vmindKey },
                       data: {
                         sessionId,
-                        userId: 'vmind_test'
+                        userId: 'vmind_test',
+                        clearHistory: true
                       }
                     });
                   }}
