@@ -18,7 +18,7 @@ describe('set', () => {
     const spec = { padding: { top: 0, left: 0 } };
     set(spec, 'padding', null);
 
-    expect(spec).toEqual({ padding: { top: 0, left: 0 } });
+    expect(spec).toEqual({ padding: null });
   });
 
   it('should set value correctly when value is undefined', () => {
@@ -46,7 +46,7 @@ describe('set', () => {
     const spec = { padding: { top: 0, left: 0 } };
     set(spec, 'padding.top', null);
 
-    expect(spec).toEqual({ padding: { top: 0, left: 0 } });
+    expect(spec).toEqual({ padding: { top: null, left: 0 } });
   });
 
   it('should set value on existing object when path exists and value is undefined', () => {
@@ -54,5 +54,15 @@ describe('set', () => {
     set(spec, 'padding.top', undefined);
 
     expect(spec).toEqual({ padding: { top: 0, left: 0 } });
+  });
+
+  it('should set value when prev value is a string', () => {
+    const spec = { xField: 'x' };
+    set(spec, 'xField', ['x', 'y']);
+
+    expect(spec).toEqual({ xField: ['x', 'y'] });
+
+    set(spec, 'xField', 0);
+    expect(spec).toEqual({ xField: 0 });
   });
 });

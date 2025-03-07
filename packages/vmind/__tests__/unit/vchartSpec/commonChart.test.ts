@@ -109,4 +109,16 @@ describe('updateSpecByOperation of commonChart', () => {
       }
     });
   });
+
+  it('should update series when update label of barSeries', () => {
+    const { newSpec } = updateSpecByOperation(merge({}, spec), {
+      op: 'update',
+      target: 'barSeries.label.visible',
+      value: false
+    });
+
+    expect(newSpec.series[0].label).toEqual({
+      visible: false
+    });
+  });
 });
