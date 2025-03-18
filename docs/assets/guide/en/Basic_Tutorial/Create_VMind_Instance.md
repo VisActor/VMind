@@ -10,7 +10,7 @@ const vmind = new VMind(options)
 The complete type definition of options is as follows:
 
 ```ts
-export interface ILLMOptions {
+export interface VMindOptions {
   /** URL of your LLM service. For gpt, default is openAI API. */
   url?: string;
   /** llm request header, which has higher priority */
@@ -29,9 +29,22 @@ export interface ILLMOptions {
   frequencyPenalty?: number;
   /** topP */
   topP?: number;
+  /** custom llm request func */
+  customRequestFunc?: {
+    /** 图表生成任务 */
+    chartAdvisor?: RequestFunc;
+    /** 数据查询任务 */
+    dataQuery?: RequestFunc;
+    /** 文本中提取数据任务 */
+    dataExtraction?: RequestFunc;
+    /** 图表生成中指令生成任务 */
+    chartCommand?: RequestFunc;
+    /** 洞察生成任务 */
+    IntelligentInsight?: RequestFunc;
+  };
 }
 ```
-In ILLMOptions, most parameters will be passed directly to the LLM service.
+In VMindOptions, most parameters will be passed directly to the LLM service.
 
 ## Example with GPT
 
@@ -130,8 +143,67 @@ Therefore, if you expect better execution results, you can set showThoughts to t
 
 In VMind, showThoughts defaults to true.
 
+## Customizing the method of calling the LLM service through customRequestFunc
+
+VMind calls the LLM service through the requestGPT method by HTTP request. However, you can customize the method of calling the LLM in each task through the customRequestFunc parameter. For example, you can request your own LLM service in the form of RPC.
+This parameter has three RequestFunc type values, the complete type definition is as follows:
+```ts
+type customRequestFunc= {
+  chartAdvisor: RequestFunc;
+  dataQuery: RequestFunc;
+};
+
+type RequestFunc = (prompt: string, userMessage: string, options: ILLMOptions | undefined) => Promise<LLMResponse>;
+
+export type LLMResponse = {
+  usage?: Usage;
+  /** function call res */
+  toolRes?: any;
+  /** content */
+  choices?: {
+    index: number;
+    message: any;
+    finish_reason?: string;
+  }[];
+  error?: string;
+  [key: string]: any;
+};
+```
+
+chartAdvisor and dataQuery correspond to the methods of calling the LLM during chart generation, data extraction, and data aggregation, respectively. Each method needs to receive the [messages](https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages), [tools](https://platform.openai.com/docs/api-reference/chat/create#chat-create-tools), and VMind options as parameters, and ensure that the returned object is the same as the OpenAI completions API structure (see [The chat completion object](https://platform.openai.com/docs/api-reference/chat/object)).
+Here is an example of using RPC for intelligent chart generation:
+```ts
+import VMind, { Model } from '@visactor/vmind'
+
+const vmind = new VMind({
+  model: Model.GPT4o,
+  customRequestFunc: {
+    chartAdvisor: async (messages: LLMMessage[], tools: ToolMessage[] | undefined, _options: ILLMOptions | undefined) => {
+      const resp = await call_RPC_LLM_Service(messages, tools, _options)
+
+      const { result } = resp
+      const content = result.content.content
+      const gptResponse = {
+        usage: {}, //token用量信息
+        choices: [{
+        index: 0,
+        message: {
+          role: 'assistant',
+          content //Put the model's generated results into content
+        }
+        }]
+      }
+      return gptResponse //return chat completion object, see https://platform.openai.com/docs/api-reference/chat/object
+    }
+  }
+})
+
+const { spec } = await vmind.generateChart(userInput, fieldInfo, dataset); //Call generateChart for chart generation
+
+```
+
 # Conclusion
-This tutorial details how to create a VMind instance and how to set various parameters to meet different needs. We learned how to specify the URL of the model service, how to set headers for authentication, how to choose the model type, and how to set the maximum token quantity and temperature of the model-generated content. We also learned how to control whether the model adds the thinking process to the output results through the showThoughts parameter.
+This tutorial details how to create a VMind instance and how to set various parameters to meet different needs. We learned how to specify the URL of the model service, how to set headers for authentication, how to choose the model type, and how to set the maximum token quantity and temperature of the model-generated content. We also learned how to control whether the model adds the thinking process to the output results through the showThoughts parameter, and how to customize the method of calling the LLM service through the customRequestFunc parameter.
 
 Through this tutorial, you can not only learn how to create and configure VMind instances, but also understand how to adjust and optimize the use of VMind according to your own needs and environment, so as to more effectively use VMind to complete various tasks, including chart generation, data processing, and data aggregation, etc.
 

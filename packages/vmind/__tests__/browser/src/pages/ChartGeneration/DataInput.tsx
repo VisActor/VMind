@@ -62,6 +62,7 @@ import {
 import VMind, { ArcoTheme } from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
 import VChart from '@visactor/vchart';
+import axios from 'axios';
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -166,6 +167,42 @@ export function DataInput(props: IPropsType) {
         Authorization: `Bearer ${apiKey}`,
         'api-key': apiKey
       }
+      // custom request test
+      // customRequestFunc: {
+      //   chartAdvisor: async (messages, tools, options) => {
+      //     return await axios(url, {
+      //       method: 'POST',
+      //       headers: options!.headers as any,
+      //       data: {
+      //         model: Model.DOUBAO_PRO_32K,
+      //         messages,
+      //         tools,
+      //         stream: false
+      //       }
+      //     }).then(response => response.data);
+      //   },
+      //   chartCommand: async (messages, tools, options) => {
+      //     return {
+      //       logId: '111',
+      //       id: '111',
+      //       choices: [
+      //         {
+      //           index: 0,
+      //           message: {
+      //             role: 'assistant',
+      //             content: ''
+      //           },
+      //           finish_reason: 'stop'
+      //         }
+      //       ],
+      //       usage: {
+      //         prompt_tokens: 1,
+      //         completion_tokens: 1,
+      //         total_tokens: 2
+      //       }
+      //     };
+      //   }
+      // }
     });
   }, [apiKey, model, showThoughts, url]);
 

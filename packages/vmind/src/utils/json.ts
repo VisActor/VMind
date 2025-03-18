@@ -29,7 +29,8 @@ export const parseLLMJson = (JsonStr: string, prefix?: string) => {
         return JSON5.parse(jsonrepair(str));
       } catch (err) {
         return {
-          error: true
+          error: `LLM Result is not Valid JSON; llm res: ${JsonStr}`,
+          errorInfo: err
         };
       }
     }
@@ -43,5 +44,8 @@ export const parseLLMJson = (JsonStr: string, prefix?: string) => {
     }
   }
   const res2 = parseNoPrefixStr(JsonStr);
+  if (res2.error) {
+    console.error(res2.errorInfo);
+  }
   return res2;
 };

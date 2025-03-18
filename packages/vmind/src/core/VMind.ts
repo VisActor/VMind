@@ -8,10 +8,10 @@ import type {
   DataItem,
   DataTable,
   FieldInfo,
-  ILLMOptions,
   OuterPackages,
   TimeType,
-  Usage
+  Usage,
+  VMindOptions
 } from '../types';
 import { AtomName } from '../types';
 import {
@@ -19,7 +19,8 @@ import {
   getDataQuerySchedule,
   getText2DataSchedule,
   getDataInsightSchedule,
-  getText2ChartSchedule
+  getText2ChartSchedule,
+  getScheduleLLmOptions
 } from '../applications';
 import type { Schedule } from '../schedule';
 import { getFieldInfoFromDataset } from '../utils/field';
@@ -30,7 +31,7 @@ import type { DataInsightOptions } from '../atom';
 import { merge } from '@visactor/vutils';
 
 class VMind {
-  private options: ILLMOptions;
+  private options: VMindOptions;
   private _FPS = 30;
   private llm: LLMManage;
   private dataQuerySchedule: Schedule<[AtomName.DATA_QUERY]>;
@@ -43,14 +44,14 @@ class VMind {
     | Schedule<[AtomName.DATA_QUERY, AtomName.CHART_GENERATE]>
     | Schedule<[AtomName.CHART_GENERATE]>;
 
-  constructor(options: ILLMOptions) {
+  constructor(options: VMindOptions) {
     this.options = merge(
       {
         showThoughts: true
       },
       options
     );
-    this.llm = new LLMManage(this.options);
+    this.llm = new LLMManage(getScheduleLLmOptions(options));
     this.data2ChartSchedule = getData2ChartSchedule(this.llm, options);
     this.dataQuerySchedule = getDataQuerySchedule(this.llm, options);
     this.text2DataTableSchedule = getText2DataSchedule(this.llm, options);
@@ -58,14 +59,14 @@ class VMind {
     this.dataInsightSchedule = getDataInsightSchedule(this.llm, options);
   }
 
-  updateOptions(options?: ILLMOptions) {
+  updateOptions(options?: VMindOptions) {
     this.options = merge(
       {
         showThoughts: true
       },
       options
     );
-    this.llm.updateOptions(this.options);
+    this.llm.updateOptions(getScheduleLLmOptions(this.options));
   }
 
   /**
@@ -110,11 +111,12 @@ class VMind {
         showThoughts: this.options.showThoughts
       }
     });
-    const { dataTable, fieldInfo: newFieldInfo, usage } = await this.dataQuerySchedule.run();
+    const { dataTable, fieldInfo: newFieldInfo, usage, error } = await this.dataQuerySchedule.run();
     return {
       dataTable,
       fieldInfo: newFieldInfo,
-      usage
+      usage,
+      error
     };
   }
 
@@ -155,7 +157,8 @@ class VMind {
       dataTable,
       fieldInfo: newFieldInfo,
       usage,
-      clusterResult
+      clusterResult,
+      error
     } = await this.text2DataTableSchedule.run(userPrompt);
     const { fieldInfo: extractFieldInfo, dataTable: extractDataTable } = this.text2DataTableSchedule.getContext(
       AtomName.DATA_EXTRACT
@@ -166,7 +169,8 @@ class VMind {
       dataTable,
       fieldInfo: newFieldInfo,
       usage,
-      clusterResult
+      clusterResult,
+      error
     } as any;
   }
 
@@ -210,7 +214,8 @@ class VMind {
       dataTable,
       time,
       fieldInfo: newFieldInfo,
-      usage
+      usage,
+      error
     } = await this.text2ChartSchedule.run(userPrompt, shouldRunList);
     return {
       spec,
@@ -221,7 +226,8 @@ class VMind {
       time,
       dataTable,
       fieldInfo: newFieldInfo,
-      usage
+      usage,
+      error
     };
   }
 
@@ -266,7 +272,7 @@ class VMind {
       [AtomName.DATA_QUERY]: enableDataQuery,
       [AtomName.CHART_COMMAND]: !userPrompt
     };
-    const { chartType, chartAdvistorRes, spec, command, cell, vizSchema, dataTable, time, usage } =
+    const { chartType, chartAdvistorRes, spec, command, cell, vizSchema, dataTable, time, usage, error } =
       await this.data2ChartSchedule.run(undefined, shouldRunList);
     return {
       chartType,
@@ -277,7 +283,8 @@ class VMind {
       vizSchema,
       dataTable,
       time,
-      usage
+      usage,
+      error
     };
   }
 
@@ -291,8 +298,8 @@ class VMind {
       },
       dataInsight: options || {}
     });
-    const { insights, usage } = await this.dataInsightSchedule.run();
-    return { insights, usage };
+    const { insights, usage, error } = await this.dataInsightSchedule.run();
+    return { insights, usage, error };
   }
 
   /**

@@ -9,7 +9,7 @@ const vmind = new VMind(options)
 options的完整类型定义如下：
 
 ```ts
-export interface ILLMOptions {
+export interface VMindOptions {
   /** URL of your LLM service. For gpt, default is openAI API. */
   url?: string;
   /** llm request header, which has higher priority */
@@ -28,6 +28,19 @@ export interface ILLMOptions {
   frequencyPenalty?: number;
   /** topP */
   topP?: number;
+  /** custom llm request func */
+  customRequestFunc?: {
+    /** 图表生成任务 */
+    chartAdvisor?: RequestFunc;
+    /** 数据查询任务 */
+    dataQuery?: RequestFunc;
+    /** 文本中提取数据任务 */
+    dataExtraction?: RequestFunc;
+    /** 图表生成中指令生成任务 */
+    chartCommand?: RequestFunc;
+    /** 洞察生成任务 */
+    IntelligentInsight?: RequestFunc;
+  };
 }
 
 ```
@@ -122,7 +135,83 @@ export enum Model {
 
 在VMind中，showThoughts默认为true。
 
+## 通过customRequestFunc自定义LLM服务调用方法
+
+VMind默认通过LLM配置的地址，通过HTTP请求进行LLM服务的调用。然而，你可以通过customRequestFunc参数，自定义在每种任务中调用LLM的方法。例如，你可以通过RPC的形式请求你自己的LLM服务。
+该参数有三个requestFunc类型的值，完整的类型定义如下：
+```ts
+type customRequestFunc= {
+  chartAdvisor?: RequestFunc;
+  dataQuery?: RequestFunc;
+  dataExtraction?: RequestFunc;
+  chartCommand?: RequestFunc;
+  IntelligentInsight?: RequestFunc;
+};
+
+type RequestFunc = (
+  messages: LLMMessage[],
+  tools: ToolMessage[] | undefined,
+  options: ILLMOptions | undefined
+) => Promise<LLMResponse>;
+
+/** LLM Messages api */
+export interface LLMMessage {
+  /** prompt role, system or user query or tool result */
+  role: 'system' | 'user' | 'assistant' | 'tool';
+  content: string;
+  name?: string;
+  tool_calls?: ToolCall[];
+  tool_call_id?: string;
+}
+
+export interface LLMResponse {
+  usage?: Usage;
+  /** function call res */
+  toolRes?: any;
+  /** content */
+  choices?: {
+    index: number;
+    message: any;
+    finish_reason?: string;
+  }[];
+  error?: string;
+  [key: string]: any;
+}
+```
+
+chartAdvisor和dataQuery分别对应图表生成，数据处理和数据聚合时调用LLM的方法。每个方法需要接收传给大模型的Messages（详情见[messages](https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages)）, function call配置（详情见[tools](https://platform.openai.com/docs/api-reference/chat/create#chat-create-tools)）以及VMind options作为参数，并确保返回的对象与OpenAI completions API结构相同（详情请见[The chat completion object](https://platform.openai.com/docs/api-reference/chat/object)）。
+下面展示一个使用RPC进行图表智能生成的例子：
+```ts
+import VMind, { Model } from '@visactor/vmind'
+
+const vmind = new VMind({
+  model: Model.GPT4o,
+  customRequestFunc: {
+    chartAdvisor: async (messages: LLMMessage[], tools: ToolMessage[] | undefined, _options: ILLMOptions | undefined) => {
+      const resp = await call_RPC_LLM_Service(messages, tools, _options)
+
+      const { result } = resp
+      const content = result.content.content
+      const gptResponse = {
+        usage: {}, //token用量信息
+        choices: [{
+        index: 0,
+        message: {
+          role: 'assistant',
+          content //将模型的生成结果放入content中
+      }
+      }]
+      }
+      return gptResponse //返回chat completion object，见https://platform.openai.com/docs/api-reference/chat/object
+    }
+  }
+})
+
+const { spec } = await vmind.generateChart(userInput, fieldInfo, dataset); //调用generateChart进行图表生成
+
+```
+
 # 总结
-本教程详细介绍了如何创建VMind实例，以及如何设置各种参数以满足不同的需求。我们学习了如何指定模型服务的url，如何设置headers以进行鉴权，如何选择模型类型，以及如何设置模型生成内容的最大token数量和temperature。我们还了解了如何通过showThoughts参数来控制模型是否将思考过程添加到输出结果中。
+本教程详细介绍了如何创建VMind实例，以及如何设置各种参数以满足不同的需求。我们学习了如何指定模型服务的url，如何设置headers以进行鉴权，如何选择模型类型，以及如何设置模型生成内容的最大token数量和temperature。我们还了解了如何通过showThoughts参数来控制模型是否将思考过程添加到输出结果中,以及如何通过customRequestFunc参数来自定义LLM服务的调用方法。
 
 通过本教程，你不仅可以学会如何创建和配置VMind实例，更了解了如何根据自己的需求和环境来调整和优化VMind的使用，从而更有效地利用VMind来完成各种任务，包括图表生成、数据处理和数据聚合等。
