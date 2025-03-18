@@ -1,4 +1,4 @@
-import { merge } from '@visactor/vutils';
+import { isFunction, merge } from '@visactor/vutils';
 import axios from 'axios';
 import type { BaseContext } from '../types/atom';
 import type { AtomName } from '../types/atom';
@@ -43,27 +43,31 @@ export class LLMManage {
       temperature,
       model,
       frequencyPenalty: frequency_penalty,
-      topP: top_p
+      topP: top_p,
+      customRequestFunc
     } = this.options;
     if (!this.historys[name]) {
       this.historys[name] = [];
     }
     try {
-      const res: LLMResponse = await axios(url, {
-        method,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        headers: headers as any,
-        data: {
-          model,
-          messages,
-          tools,
-          max_tokens: maxTokens,
-          temperature,
-          stream: false,
-          frequency_penalty,
-          top_p
-        }
-      }).then(response => response.data);
+      const res: LLMResponse =
+        customRequestFunc?.[name] && isFunction(customRequestFunc[name])
+          ? await customRequestFunc[name](messages, tools, this.options)
+          : await axios(url, {
+              method,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              headers: headers as any,
+              data: {
+                model,
+                messages,
+                tools,
+                max_tokens: maxTokens,
+                temperature,
+                stream: false,
+                frequency_penalty,
+                top_p
+              }
+            }).then(response => response.data);
 
       const { logId, id } = res;
       this.historys[name].push({

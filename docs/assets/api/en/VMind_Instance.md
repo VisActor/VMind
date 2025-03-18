@@ -7,10 +7,10 @@ The Create VMind Instance interface is used to create a VMind instance, which ca
 
 ## Interface Parameters
 
-### ILLMOptions
+### VMindOptions
 
 ```ts
-export interface ILLMOptions {
+export interface VMindOptions {
   /** URL of your LLM service. For gpt, default is openAI API. */
   url?: string;
   /** llm request header, which has higher priority */
@@ -29,6 +29,19 @@ export interface ILLMOptions {
   frequencyPenalty?: number;
   /** topP */
   topP?: number;
+  /** custom llm request func */
+  customRequestFunc?: {
+    /** chart generation task */
+    chartAdvisor?: RequestFunc;
+    /** data query task */
+    dataQuery?: RequestFunc;
+    /** data extraction from text task */
+    dataExtraction?: RequestFunc;
+    /** chart command auto generation task */
+    chartCommand?: RequestFunc;
+    /** insight task */
+    IntelligentInsight?: RequestFunc;
+  };
 }
 ```
 
@@ -78,6 +91,10 @@ Used to control the diversity of output tokens. The larger the TopP value, the m
 
 ### frequencyPenalty
 A number between -2.0 and 2.0. Positive values penalize new tokens based on their frequency in the text, reducing the likelihood of the model repeating the same line verbatim. The default in VMind is 0.
+
+### customRequestFunc
+
+The customRequestFunc parameter allows users to customize the method of calling LLM in each task. For example, you can request your own LLM service in the form of RPC.
 
 ## Usage Example
 

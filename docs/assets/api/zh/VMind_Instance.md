@@ -7,10 +7,10 @@
 
 ## 接口参数
 
-### ILLMOptions
+### VMindOptions
 
 ```ts
-export interface ILLMOptions {
+export interface VMindOptions {
   /** URL of your LLM service. For gpt, default is openAI API. */
   url?: string;
   /** llm request header, which has higher priority */
@@ -29,6 +29,19 @@ export interface ILLMOptions {
   frequencyPenalty?: number;
   /** topP */
   topP?: number;
+  /** custom llm request func */
+  customRequestFunc?: {
+    /** 图表生成任务 */
+    chartAdvisor?: RequestFunc;
+    /** 数据查询任务 */
+    dataQuery?: RequestFunc;
+    /** 文本中提取数据任务 */
+    dataExtraction?: RequestFunc;
+    /** 图表生成中指令生成任务 */
+    chartCommand?: RequestFunc;
+    /** 洞察生成任务 */
+    IntelligentInsight?: RequestFunc;
+  };
 }
 ```
 
@@ -80,6 +93,9 @@ export enum Model {
 
 showThoughts参数将影响VMind传给大语言模型的prompt，决定其在完成图表生成、数据聚合等任务时，是否将思考过程添加到输出结果中。在VMind中，showThoughts默认为true。
 
+### customRequestFunc
+
+customRequestFunc参数允许用户自定义在每种任务中调用LLM的方法。例如，你可以通过RPC的形式请求你自己的LLM服务。
 
 ## 使用示例
 
