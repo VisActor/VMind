@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vmind",
+      "comment": "Feat: Add CustomRequest options in Vmind",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vmind"
+}
