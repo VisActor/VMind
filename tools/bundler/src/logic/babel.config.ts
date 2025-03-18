@@ -11,6 +11,7 @@ export function getBabelPlugins(
   }
 ): BabelPlugins {
   const plugins = [
+    require.resolve('@babel/plugin-transform-private-methods'),
     require.resolve('@babel/plugin-proposal-export-default-from'),
     require.resolve('@babel/plugin-proposal-class-properties'),
     [
