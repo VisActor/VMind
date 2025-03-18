@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vmind",
+      "comment": "feat: add umd output to build",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vmind"
+}
