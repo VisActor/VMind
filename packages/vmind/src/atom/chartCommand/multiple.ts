@@ -21,6 +21,7 @@ export class MultipleChartCommandAtom extends BaseAtom<MultipleChartCommandsCtx,
 
   buildDefaultOptions(): ChartCommandOptions {
     return {
+      ...super.buildDefaultOptions(),
       useDataTable: false,
       filterByRule: true
     };

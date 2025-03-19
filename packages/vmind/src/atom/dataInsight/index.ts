@@ -32,6 +32,7 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
 
   buildDefaultOptions(): DataInsightOptions {
     return {
+      ...super.buildDefaultOptions(),
       algorithms: [
         AlgorithmType.OverallTrending,
         AlgorithmType.AbnormalTrend,

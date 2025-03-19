@@ -1,41 +1,99 @@
-.rag-container {
+.rag-panel {
   display: flex;
-  flex-direction: row;
-  height: 100%;
+  flex-direction: column;
+  height: 100%;;
 
-  #chart {
-    height: 300px;
-    width: 100%;
-    flex-shrink: 0;
+  .rag-options {
+    padding: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid #e8e8e8;
   }
 }
 
-.vchart-container {
-  width: 50%;
-  height: 100%;
+.rag-container {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
   overflow: hidden;
+}
+
+.chart-demo-selection {
+  display: flex;
+  width: 100%;
+  overflow: auto;
+  padding: 8px;
+  background: #f0f8ff77;
+
+  .chart-demo {
+    margin: 8px;
+    padding-top: 10px;
+    background: #fff;
+    box-shadow: 0 6px 20px #0098e426;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    flex-direction: column;
+    
+
+    img {
+      margin: auto;
+      width: 120px;
+    }
+
+    .chart-title {
+      padding-left: 8px;
+      width: 100%;
+      height: 28px;
+      line-height: 28px;
+      font-size: 12px;
+      background: linear-gradient(0deg, #f6f8fe00, #f6f8fe);
+    }
+  }
+}
+.vchart-container {
+  width: 65%;
+  flex: 1;
   display: flex;
   flex-direction: column; 
-
-  .log {
-    overflow: scroll;
-    width: 100%;;
+  padding: 8px;
+  overflow: hidden;
+  min-height: 0;
+  
+  #chart {
+    flex-grow: 1;
+    overflow: hidden;
+    border-bottom: 1px solid #e8e8e8;
   }
 
-  .recall-content {
-    display: flex;
-    padding-right: 10px;
-    .one-content {
-      width: 49%;
-      margin: 0 0.3%;
-    }
+  .selection {
+    flex-shrink: 0;
+    padding: 8px;
+    direction: rtl;
+  }
+}
+
+.right-container {
+  width: 35%;
+  height: 100%;
+  display: block;
+  background: #f5f5f5;
+}
+
+.spec-editor {
+  height: 100%;
+  overflow: hidden;
+
+  .editor-container {
+    height: 100%;
+    overflow: hidden;
+    padding: 2.5%;
   }
 }
 
 .query-container {
-  width: 50%;
   height: 100%;
-  background: #f5f5f5;
   display: flex;
   flex-direction: column-reverse;
 
@@ -76,6 +134,7 @@
     border: 1px solid #eee;
     padding: 8px;
     border-radius: 8px;;
+    overflow: auto;
   }
 
   .feedback {
@@ -90,13 +149,54 @@
 
       &:hover {
         cursor: pointer;
-      }
+      }  
     }
+  }
+
+  svg {
+    flex-shrink: 0;
   }
 
   &.user {
     flex-direction: row-reverse;
   }
+
+  .thought {
+    border-left: 4px solid #1a73e8;
+    background: #f8f9fa;
+    color: #444;
+    margin: 0;
+    padding: 16px 20px;
+    quotes: "\201C" "\201D"; /* 自动添加引号符号 */
+
+    .title {
+      font-weight: bold;
+      margin-left: -12px;
+    }
+  }
+
+    pre.spec-answer {
+      margin: 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-top: 1px solid #eee;
+      font-size: 14px;
+      overflow-x: auto;
+      color: #333; /* 主文字颜色加深 */
+    }
+    
+    .spec-answer code {
+      font-family: 'SF Mono', 'Consolas', monospace;
+      line-height: 1.6;
+      white-space: pre-wrap;
+     }
+     
+     /* 浅色主题语法高亮 */
+     .spec-answer code .key { color: #1a73e8; } /* 键 - 谷歌蓝 */
+     .spec-answer code .string { color: #188038; } /* 字符串 - 深绿 */
+     .spec-answer code .number { color: #e67c73; } /* 数字 - 橙红 */
+     .spec-answer code .boolean { color: #c2185b; } /* 布尔值 - 玫红 */
+     .spec-answer code .null { color: #9c27b0; } /* null - 紫色 */
 }
 
 .qa-card {

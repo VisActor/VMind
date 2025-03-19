@@ -272,7 +272,6 @@ const spec = vmind.fillSpecWithData(spec, dataset)
 - VMind默认会为生成的图表添加入场动画，因此它还会返回图表动画的时长time。如果你想关闭图表动画，可以将spec.animation设为false。
 - 当设定模型类型为chart-advisor时，将不需调用大型语言模型生成图表，产生的结果将包括多种图表，详情可参见[基于规则的图表生成](../guide/Basic_Tutorial/Chart_Advisor)。
 - generateChart方法不传入数据集时，无法使用智能数据聚合。
-- 在使用 `Custom` 自定义模型时，会调用 `skylark` 模型的流程。
 
 ## 相关教程
 - [图表智能生成](../guide/Basic_Tutorial/Chart_Generation)

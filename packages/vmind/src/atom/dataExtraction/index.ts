@@ -54,6 +54,7 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtracti
 
   buildDefaultOptions(): DataExtractionOptions {
     return {
+      ...super.buildDefaultOptions(),
       reGenerateFieldInfo: true,
       isMultiple: false
     };

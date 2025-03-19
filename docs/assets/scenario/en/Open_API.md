@@ -22,7 +22,7 @@ curl --location 'VMind Open API service address' \
 \"sales\": 1027
 }
 ]"' \
---form 'model="skylark"' \
+--form 'model="doubao"' \
 --form 'userPrompt="Show me the sales of products in the north"' \
 ```
 
@@ -31,7 +31,6 @@ Return Value:
 {
 "chart": [
 {
-"chartSource": "skylark2-pro-4k-v1.2", // Source of chart generation
 "chartType": "BAR CHART", // Chart type
 "spec": { // Generated VChart Spec
 "type": "bar",
@@ -57,7 +56,11 @@ Return Value:
 }
 ```
 
-The VMind Open API currently supports intelligent data aggregation and chart generation with the skylark2-pro model, and rule-based chart recommendation with the chart-advisor.
+The VMind Open API currently supports multiple models for intelligent data aggregation and chart generation, as well as chart-advisor for rule-based chart recommendations. The specific supported models are as follows:
+- doubao: Default value, corresponding to the doubao-pro-32k-240828 model (Pro model released on 240828)
+- doubao-1.5-pro-32k: Corresponding to the Doubao 1.5 Pro model released on 250115
+- doubao-1.5-lite-32k: Corresponding to the Doubao 1.5 Lite model released on 250115
+- Others: For example, GPT series models and DeepSeek series models
 
 ## Interface Description
 ### /generateChart
@@ -84,8 +87,8 @@ Show the sales data of each product, with region as the x-axis and product type 
 ```
 
 - model
-Optional value: skylark
-Description: Optional, model type, only skylark is currently supported
+Optional values: doubao | doubao-1.5-pro-32k | doubao-1.5-lite-32k
+Description: Optional. Specifies the model type, defaults to the doubao model. Also supports GPT series and DeepSeek series models, available upon request.
 
 - mode
 Optional value: "accuracyFirst" ， "performanceFirst"

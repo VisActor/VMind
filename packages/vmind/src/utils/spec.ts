@@ -1,4 +1,4 @@
-import { isArray, isString, merge, uniqArray } from '@visactor/vutils';
+import { array, isArray, isString, merge, uniqArray } from '@visactor/vutils';
 import { ChartType } from '../types';
 import type { DataItem, DataTable, DataCell, Cell, FieldInfo } from '../types';
 import { getFieldInfoFromDataset } from './field';
@@ -85,7 +85,8 @@ export const getDatasetFromSpec = (spec: any) => {
   if (!spec) {
     return [];
   }
-  return spec.data.map((d: any) => d.values).flat(2);
+  const originSpecData = array(spec.data);
+  return originSpecData.map((d: any) => d.values).flat(2);
 };
 
 export const getFieldMappingFromSpec = (spec: any) => {
@@ -93,7 +94,7 @@ export const getFieldMappingFromSpec = (spec: any) => {
     return {};
   }
   let res = {};
-  spec.data.forEach((d: any) => {
+  array(spec.data).forEach((d: any) => {
     if (d?.fields) {
       res = merge(res, d.fields);
     }

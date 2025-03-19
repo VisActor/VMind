@@ -35,6 +35,7 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
 
   buildDefaultOptions(): DataQueryOptions {
     return {
+      ...super.buildDefaultOptions(),
       useSQL: true
     };
   }

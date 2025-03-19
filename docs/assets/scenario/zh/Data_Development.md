@@ -35,7 +35,7 @@ print()
 body = {
     "data": sales_data_json,
     "userPrompt": userPrompt,
-    "model": "skylark"  # 使用云雀模型
+    "model": "doubao"  # 使用豆包模型
 }
 
 # 调用VMind open api进行图表生成
