@@ -17,6 +17,7 @@ import { getRuleLLMContent } from './spec/rule';
 import { getCellContextByAdvisor } from './advisor';
 import type { ChartType } from '../../types';
 import type { GenerateChartCellContext } from './type';
+import { getFieldInfoFromDataset } from '../../utils/field';
 
 export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGeneratorOptions> {
   name = AtomName.CHART_GENERATE;
@@ -61,7 +62,7 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
     };
   }
 
-  updateContext(context: ChartGeneratorCtx) {
+  updateContext(context: Partial<ChartGeneratorCtx>) {
     this.context = super.updateContext(context);
     this.context.vizSchema = getVizSchema(this.context);
     return this.context;
@@ -113,10 +114,15 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
   }
 
   protected runBeforeLLM(): ChartGeneratorCtx {
-    const { dataTable } = this.context;
+    const { dataTable, fieldInfo } = this.context;
     this.useRule = false;
     if (this.options.useChartAdvisor) {
       this.isLLMAtom = false;
+    }
+    if (!fieldInfo || fieldInfo.length === 0) {
+      this.updateContext({
+        fieldInfo: getFieldInfoFromDataset(dataTable)
+      });
     }
     if (dataTable.length > 1 || !this.options.useChartRule) {
       return this.context;

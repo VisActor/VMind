@@ -132,7 +132,10 @@ const ModelConfigMap: Record<string, { url: string; key: string }> = {
   [Model.GPT_4o]: { url: globalVariables.VITE_GPT_URL, key: globalVariables.VITE_GPT_KEY },
   [Model.DEEPSEEK_R1]: { url: globalVariables.VITE_DEEPSEEK_URL, key: globalVariables.VITE_DEEPSEEK_KEY },
   [Model.DEEPSEEK_V3]: { url: globalVariables.VITE_DEEPSEEK_URL, key: globalVariables.VITE_DEEPSEEK_KEY },
-  Custom: { url: globalVariables.VITE_CUSTOM_URL, key: globalVariables.VITE_CUSTOM_KEY }
+  [globalVariables.VITE_CUSTOM_MODEL || 'Custom']: {
+    url: globalVariables.VITE_CUSTOM_URL,
+    key: globalVariables.VITE_CUSTOM_KEY
+  }
 };
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
@@ -230,7 +233,7 @@ export function DataInput(props: IPropsType) {
       const geoJson = await response.json();
       VChart.registerMap('map', geoJson);
     }
-    const { spec, chartAdvistorRes, time } = await vmind.generateChart(describe, finalFieldInfo, finalDataset, {
+    const { spec, chartAdvistorRes, time } = await vmind.generateChart(describe, undefined, finalDataset, {
       enableDataQuery: useDataQuery,
       //chartTypeList: [ChartType.BarChart, ChartType.LineChart],
       // colorPalette: ArcoTheme.colorScheme,
