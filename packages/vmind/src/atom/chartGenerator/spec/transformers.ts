@@ -644,6 +644,10 @@ export const radarField = (context: GenerateChartCellContext) => {
   if (cell.color) {
     spec.seriesField = cell.color;
   }
+  if (!spec.categoryField && spec.seriesField) {
+    spec.categoryField = spec.seriesField;
+    delete spec.seriesField;
+  }
   return { spec };
 };
 
