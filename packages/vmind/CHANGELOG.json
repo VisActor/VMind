@@ -2,6 +2,21 @@
   "name": "@visactor/vmind",
   "entries": [
     {
+      "version": "2.0.4",
+      "tag": "@visactor/vmind_v2.0.4",
+      "date": "Thu, 20 Mar 2025 02:17:19 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Feat: Add CustomRequest options in Vmind"
+          },
+          {
+            "comment": "feat: add umd output to build"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.3",
       "tag": "@visactor/vmind_v2.0.3",
       "date": "Tue, 04 Mar 2025 08:58:32 GMT",
