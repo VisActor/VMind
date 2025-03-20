@@ -12,7 +12,8 @@ import {
   MultipleDataCleanAtom,
   MultipleChartCommandAtom,
   CustomPrompt,
-  ChartQAExtraction
+  ChartQAExtraction,
+  VChartSpec
 } from '../atom';
 import type { CombineAll, MapAtomTypes, TaskMapping } from '../types/schedule';
 import { DataCleanAtom } from '../atom/dataClean/dataClean';
@@ -38,6 +39,7 @@ export interface ScheduleOptions {
   [AtomName.MULTIPLE_CHART_COMMAND]?: ChartCommandOptions;
   [AtomName.CHART_QA_EXTRACTION]?: BaseOptions;
   [AtomName.CUSTOM_PROMPT]?: CustomPromptOptions;
+  [AtomName.VCHART_SPEC]?: BaseOptions;
 }
 
 export class Schedule<T extends AtomName[]> {
@@ -104,6 +106,8 @@ export class Schedule<T extends AtomName[]> {
         return new ChartQAExtraction(this.context, options);
       case AtomName.CUSTOM_PROMPT:
         return new CustomPrompt(this.context, options);
+      case AtomName.VCHART_SPEC:
+        return new VChartSpec(this.context, options);
       default:
         return new BaseAtom(this.context, options);
     }

@@ -90,7 +90,7 @@ const pipelineBar = [
   seriesField,
   axis,
   legend,
-  commonLabel,
+  // commonLabel,
   displayConfBar,
   transposeField,
   //animationCartesianBar,
@@ -104,7 +104,7 @@ const pipelineLine = [
   seriesField,
   axis,
   legend,
-  commonLabel,
+  // commonLabel,
   displayConfLine,
   //animationCartisianLine,
   theme
@@ -127,7 +127,7 @@ const pipelineRankingBar = [
   rankingBarField,
   rankingBarAxis,
   seriesField,
-  commonLabel,
+  // commonLabel,
   customMark,
   rankingBarLabel,
   theme
@@ -154,7 +154,7 @@ const pipelineScatterPlot = [
   theme
 ];
 
-const pipelineFunnel = [revisedVChartType, funnelData, color, funnelField, legend, theme];
+const pipelineFunnel = [revisedVChartType, funnelData, color, funnelField, legend, commonLabel, theme];
 
 const pipelineDualAxis = [revisedVChartType, data, color, dualAxisSeries, dualAxisAxes, legend, theme];
 
@@ -178,7 +178,7 @@ const pipelineRadar = [
   radarDisplayConf,
   radarAxis,
   legend,
-  commonLabel,
+  // commonLabel,
   //animationCartisianLine,
   theme
 ];

@@ -35,6 +35,24 @@ export default defineConfig(({ mode }) => {
         'Cross-Origin-Embedder-Policy': 'require-corp',
         'Cross-Origin-Opener-Policy': 'same-origin'
       },
+      proxy: {
+        '/api': {
+          target: 'https://byterec.bytedance.net',
+          changeOrigin: true
+        },
+        '/proxy-image': {
+          target: 'https://lf9-dp-fe-cms-tos.byteorg.com',
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/proxy-image/, ''),
+          configure: proxy => {
+            proxy.on('proxyRes', (proxyRes, req, res) => {
+              proxyRes.headers['Access-Control-Allow-Origin'] = '*';
+              proxyRes.headers['Cross-Origin-Embedder-Policy'] = 'unsafe-none';
+              proxyRes.headers['Cross-Origin-Resource-Policy'] = 'cross-origin';
+            });
+          }
+        }
+      },
       ...proxyConfig
     },
     resolve: {

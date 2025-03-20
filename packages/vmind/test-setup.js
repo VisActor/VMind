@@ -1,5 +1,5 @@
 require('dotenv').config({ path: './.env.local' });
-const { error, log,warn,info,debug } = require('console');
+const { error, log, warn, info, debug } = require('console');
 
 global.console = {
   // eslint-disable-next-line no-undef
@@ -12,3 +12,6 @@ global.console = {
   info: jest.fn(),
   debug: jest.fn()
 };
+
+global.TextEncoder = require('util').TextEncoder;
+global.TextDecoder = require('util').TextDecoder;

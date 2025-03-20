@@ -16,7 +16,8 @@ export enum AtomName {
   CHART_GENERATE = 'chartGenerate',
   DATA_INSIGHT = 'dataInsight',
   CHART_QA_EXTRACTION = 'chartQAExtraction',
-  CUSTOM_PROMPT = 'custom_prompt'
+  CUSTOM_PROMPT = 'custom_prompt',
+  VCHART_SPEC = 'vchart_spec'
 }
 
 export interface Usage {
@@ -185,6 +186,52 @@ export interface ChartQAExtractionCtx extends BaseContext {
   answer: string;
   keyList: string[];
   explanation: string;
+}
+
+/**
+ * 更新vchart spec 的原子操作
+ */
+export interface IVChartOperationItem {
+  /**
+   * The type of operation to perform.
+   * - "add": Add a new field or array element.
+   * - "update": Update an existing field or array element.
+   * - "delete": Remove an existing field or array element.
+   */
+  op: 'add' | 'update' | 'delete';
+  /**
+   * The target location of the operation in the DSL.
+   * - Use dot notation for nested fields (e.g., "settings.theme.color").
+   * - Use square brackets for array indices (e.g., "data[2]").
+   */
+  target: string;
+  /**
+   * The value to be added or updated
+   */
+  value?: any;
+}
+
+export interface VChartSpecCtx extends BaseContext {
+  /**
+   * the original spec
+   */
+  originalSpec: any;
+  /**
+   * the latest spec
+   */
+  spec?: any;
+  /**
+   * the spec before operations
+   */
+  prevSpec?: any;
+  /**
+   * The operations to be performed on the spec
+   */
+  operations?: IVChartOperationItem[];
+  /**
+   * the result of operations
+   */
+  opertationsResult?: number[];
 }
 
 export interface DialogueChartCtx extends BaseContext {

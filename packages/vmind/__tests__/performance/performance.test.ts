@@ -85,7 +85,7 @@ const testPerformance = (model: Model, vmind: VMind) => {
         } else {
           error('fail to generate with LLM!');
         }
-        done();
+        // done();
       });
     }
     modelResultMap[model].totalCount += 1;

@@ -35,7 +35,7 @@ print()
 body = {
 "data": sales_data_json,
 "userPrompt": userPrompt,
-"model": "skylark" # Use the skylark model
+"model": "doubao" # Use the doubao model
 }
 
 # Call VMind Open API to generate chart

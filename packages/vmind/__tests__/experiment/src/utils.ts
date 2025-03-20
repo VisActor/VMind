@@ -1,13 +1,16 @@
 // import { result as capcutResult } from './results/dataExtraction/result7';
 // import { result as capcutResult, caseResult, capcutV2Result } from './results/dataExtraction/version1';
-import { capcutResult, capcutV2Result } from './results/dataExtraction/dataResult';
+// import { capcutResult, capcutV2Result } from './results/dataExtraction/dataResult';
 // import { result as caseResult } from './results/dataExtraction/commonResult';
 // import { result as doubaoResult } from './results/dataExtraction/doubao1';
 import { commonAnswer } from './data/dataExtractionData';
 import { mergeResult, updateScoreInDataExtraction } from './pages/DataExtraction/verify';
 import { AtomName, Schedule, type FieldInfo, DataType } from '../../../src';
 import type { DataExtractionResult } from './pages/DataExtraction/type';
-import { DataCleanAtom, MultipleDataCleanAtom } from '../../../src/atom';
+import { MultipleDataCleanAtom } from '../../../src/atom';
+
+const capcutResult = {};
+const capcutV2Result = {};
 
 export function getCurrentFormattedTime() {
   const now = new Date();

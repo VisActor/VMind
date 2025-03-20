@@ -6,7 +6,7 @@ import { ChartGenerationTask } from './ChartGenerator/test';
 import { ChartGeneratorResult } from './ChartGenerator/caseStudy';
 import { ChartQAGenerator } from './ChartDialogueQA/test';
 import { QARag } from './ChartDialogueQA/qaPairRag';
-import { ColorPalette } from './ChartDialogueQA/tempColor';
+
 type MenuInfo = {
   menuItem: string;
   subItems: {
@@ -28,38 +28,38 @@ export enum PLAYGROUND_PAGES {
 export const PLAYGROUND_MENU_INFO: {
   [key: string]: MenuInfo;
 } = {
-  [PLAYGROUND_PAGES.DATA_EXTRACTION]: {
-    menuItem: 'Data Extraction',
-    icon: <IconLanguage />,
-    subItems: [
-      {
-        key: '0',
-        name: 'Run Case',
-        component: <DataExtractionTask />
-      },
-      {
-        key: '1',
-        name: 'Case Study',
-        component: <DataExtractionResult />
-      }
-    ]
-  },
-  [PLAYGROUND_PAGES.CHART_GENERATION]: {
-    menuItem: 'Chart Generation',
-    icon: <IconBgColors />,
-    subItems: [
-      {
-        key: '0',
-        name: 'Run Case',
-        component: <ChartGenerationTask />
-      },
-      {
-        key: '1',
-        name: 'Case Study',
-        component: <ChartGeneratorResult />
-      }
-    ]
-  },
+  // [PLAYGROUND_PAGES.DATA_EXTRACTION]: {
+  //   menuItem: 'Data Extraction',
+  //   icon: <IconLanguage />,
+  //   subItems: [
+  //     {
+  //       key: '0',
+  //       name: 'Run Case',
+  //       component: <DataExtractionTask />
+  //     },
+  //     {
+  //       key: '1',
+  //       name: 'Case Study',
+  //       component: <DataExtractionResult />
+  //     }
+  //   ]
+  // },
+  // [PLAYGROUND_PAGES.CHART_GENERATION]: {
+  //   menuItem: 'Chart Generation',
+  //   icon: <IconBgColors />,
+  //   subItems: [
+  //     {
+  //       key: '0',
+  //       name: 'Run Case',
+  //       component: <ChartGenerationTask />
+  //     },
+  //     {
+  //       key: '1',
+  //       name: 'Case Study',
+  //       component: <ChartGeneratorResult />
+  //     }
+  //   ]
+  // },
   [PLAYGROUND_PAGES.CHART_DIALOG_QA]: {
     menuItem: 'Chart Dialogue QA',
     subItems: [
@@ -72,12 +72,12 @@ export const PLAYGROUND_MENU_INFO: {
         key: '1',
         name: 'QA Rag',
         component: <QARag />
-      },
-      {
-        key: '2',
-        name: 'Color Palette Test',
-        component: <ColorPalette />
       }
+      // {
+      //   key: '2',
+      //   name: 'Color Palette Test',
+      //   component: <ColorPalette />
+      // }
     ]
   }
 };

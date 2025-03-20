@@ -118,8 +118,9 @@ export const chartKnowledgeDict: ChartKnowledge = {
   },
   [ChartType.RadarChart]: {
     index: 8,
-    visualChannels: ['x', 'y', 'color', 'angle', 'value'],
-    examples: []
+    visualChannels: ['x', 'y', 'color', 'value'],
+    examples: [],
+    knowledge: ['x means polarAngle, y means poloarRadius, color means series']
   },
   [ChartType.SankeyChart]: {
     index: 9,

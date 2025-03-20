@@ -1,4 +1,4 @@
-import type { BaseContext } from './atom';
+import type { AtomName, BaseContext } from './atom';
 
 /** LLM Model Type */
 export enum ModelType {
@@ -23,8 +23,15 @@ export enum Model {
   DEEPSEEK_R1 = 'deepseek-reasoner'
 }
 
-/** LLM Options */
-export interface ILLMOptions {
+/** Custrom Request function callback of llm */
+export type RequestFunc = (
+  messages: LLMMessage[],
+  tools: ToolMessage[] | undefined,
+  options: ILLMOptions | undefined
+) => Promise<LLMResponse>;
+
+/** Base LLM Options */
+interface BaseLLMOptions {
   /** URL of your LLM service. For gpt, default is openAI API. */
   url?: string;
   /** llm request header, which has higher priority */
@@ -43,6 +50,27 @@ export interface ILLMOptions {
   frequencyPenalty?: number;
   /** topP */
   topP?: number;
+  /** function call */
+  functionCall?: 'auto' | 'none' | { name: string };
+}
+
+/** LLM Options */
+export interface ILLMOptions extends BaseLLMOptions {
+  /** customRequest */
+  customRequestFunc?: {
+    [key in AtomName]?: RequestFunc;
+  };
+}
+
+/** VMind Options */
+export interface VMindOptions extends BaseLLMOptions {
+  customRequestFunc?: {
+    chartAdvisor?: RequestFunc;
+    dataQuery?: RequestFunc;
+    dataExtraction?: RequestFunc;
+    chartCommand?: RequestFunc;
+    IntelligentInsight?: RequestFunc;
+  };
 }
 
 /** Tool Messages of tool result */
@@ -102,4 +130,9 @@ export interface LLMResponse extends BaseContext {
   }[];
   error?: string;
   [key: string]: any;
+}
+
+export interface MemoryOptions {
+  /** max history messages saved */
+  maxMessagesCnt?: number;
 }

@@ -66,12 +66,20 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
   }
 
   buildDefaultOptions(): O {
-    return {} as O;
+    return {
+      maxMessagesCnt: 10
+    } as O;
   }
 
-  updateContext(context: Partial<Ctx>) {
+  updateContext(context: Partial<Ctx>, replace?: boolean) {
     if (context) {
-      this.context = merge({}, this.context, context);
+      if (replace) {
+        Object.keys(context).forEach(k => {
+          (this.context as any)[k] = (context as any)[k];
+        });
+      } else {
+        this.context = merge({}, this.context, context);
+      }
     }
     return this.context;
   }
@@ -143,7 +151,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
         this._runWithOutLLM();
       }
     } catch (error) {
-      this.context.error = error as string;
+      return this.runWithLLMError(error as string);
     }
     return this.context;
   }
@@ -153,7 +161,8 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
   }
 
   protected runWithLLMError(error: string) {
-    this.updateContext({ error } as any);
+    this.updateContext({ error: `LLM Error in ${this.name}.\n${error}` } as any);
+    console.error(this.context.error);
     return this.context;
   }
 
