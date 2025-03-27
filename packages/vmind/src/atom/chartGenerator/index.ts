@@ -13,7 +13,7 @@ import { getPrompt, revisedUserInput } from './prompt';
 import { getContextAfterRevised } from './llmResultRevise';
 import { checkChartTypeAndCell, getVizSchema } from './utils';
 import { getChartSpecWithContext } from './spec';
-import { getRuleLLMContent } from './spec/rule';
+import { getRuleLLMContent } from './rule';
 import { getCellContextByAdvisor } from './advisor';
 import type { ChartType } from '../../types';
 import type { GenerateChartCellContext } from './type';
@@ -115,18 +115,18 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
 
   protected runBeforeLLM(): ChartGeneratorCtx {
     const { dataTable, fieldInfo } = this.context;
-    this.useRule = false;
-    if (this.options.useChartAdvisor) {
-      this.isLLMAtom = false;
-    }
+
     if (!fieldInfo || fieldInfo.length === 0) {
       this.updateContext({
         fieldInfo: getFieldInfoFromDataset(dataTable)
       });
     }
     if (dataTable.length > 1 || !this.options.useChartRule) {
+      this.useRule = false;
+      this.isLLMAtom = !this.options.useChartAdvisor;
       return this.context;
     }
+
     this.isLLMAtom = false;
     this.useRule = true;
     const ruleResJson = getRuleLLMContent(this.context);

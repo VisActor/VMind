@@ -1,3 +1,6 @@
+/**
+ * 根据数据等，生成图表指令
+ */
 import { merge } from '@visactor/vutils';
 import type { ChartCommandCtx, LLMMessage } from '../../types';
 import { AtomName } from '../../types';

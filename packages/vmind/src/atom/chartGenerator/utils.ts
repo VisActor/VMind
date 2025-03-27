@@ -6,7 +6,7 @@ import { ChartType as VMindChartType } from '../../types';
 import type { ChartGeneratorCtx } from '../../types';
 import { DEFAULT_VIDEO_LENGTH, VIDEO_LENGTH_BY_CHART_TYPE } from './spec/constants';
 
-export { getVChartTypeByVmind } from './spec/transformers';
+export { getVChartTypeByVmind } from './spec/chartTypeUtils';
 
 /**
  * Generate a vizSchema from fieldInfo
