@@ -1,257 +1,37 @@
 import { ChartType } from '../../../types';
 import type { GenerateChartCellContext } from '../type';
 import { estimateVideoTime } from '../utils';
-import {
-  axis,
-  cartesianBar,
-  cartesianLine,
-  revisedVChartType,
-  color,
-  data,
-  legend,
-  pieField,
-  scatterField,
-  wordCloudField,
-  roseField,
-  roseAxis,
-  radarField,
-  radarDisplayConf,
-  radarAxis,
-  sankeyData,
-  sankeyField,
-  sankeyLabel,
-  sankeyLink,
-  sequenceData,
-  rankingBarAxis,
-  rankingBarField,
-  customMark,
-  scatterAxis,
-  wordCloudData,
-  displayConfBar,
-  displayConfLine,
-  colorLine,
-  colorBar,
-  colorDynamicBar,
-  wordCloudDisplayConf,
-  rankingBarLabel,
-  funnelField,
-  funnelData,
-  dualAxisSeries,
-  dualAxisAxes,
-  waterfallField,
-  waterfallAxes,
-  waterfallStackLabel,
-  boxPlotField,
-  boxPlotStyle,
-  theme,
-  liquidField,
-  liquidStyle,
-  linearProgressField,
-  circularProgressField,
-  circularProgressStyle,
-  linearProgressStyle,
-  linearProgressAxes,
-  indicator,
-  bubbleCirclePackingField,
-  bubbleCirclePackingDisplayConf,
-  bubbleCirclePackingData,
-  rangeColumnField,
-  rangeColumnDisplayConf,
-  sunburstData,
-  sunburstDisplayConf,
-  treemapData,
-  sunburstOrTreemapField,
-  treemapDisplayConf,
-  gaugeField,
-  gaugeDisplayConf,
-  arrayData,
-  vennData,
-  vennField,
-  basicHeatMapSeries,
-  basicHeatMapRegion,
-  basicHeatMapColor,
-  basicHeatMapAxes,
-  basicHeatMapLegend,
-  basemap,
-  mapField,
-  mapDisplayConf,
-  registerChart,
-  seriesField,
-  commonLabel,
-  llmChartTypeMap,
-  transposeField
-} from './transformers';
-
-const pipelineBar = [
-  revisedVChartType,
-  data,
-  colorBar,
-  cartesianBar,
-  seriesField,
-  axis,
-  legend,
-  // commonLabel,
-  displayConfBar,
-  transposeField,
-  //animationCartesianBar,
-  theme
-];
-const pipelineLine = [
-  revisedVChartType,
-  data,
-  colorLine,
-  cartesianLine,
-  seriesField,
-  axis,
-  legend,
-  // commonLabel,
-  displayConfLine,
-  //animationCartisianLine,
-  theme
-];
-const pipeAreaLine = [...pipelineLine];
-const pipelinePie = [
-  revisedVChartType,
-  data,
-  color,
-  pieField,
-  legend,
-  commonLabel,
-  // animationCartesianPie,
-  theme
-];
-const pipelineRankingBar = [
-  revisedVChartType,
-  sequenceData,
-  colorDynamicBar,
-  rankingBarField,
-  rankingBarAxis,
-  seriesField,
-  // commonLabel,
-  customMark,
-  rankingBarLabel,
-  theme
-];
-
-const pipelineWordCloud = [
-  revisedVChartType,
-  wordCloudData,
-  color,
-  wordCloudField,
-  wordCloudDisplayConf,
-  //animationOneByOne,
-  theme
-];
-
-const pipelineScatterPlot = [
-  revisedVChartType,
-  data,
-  color,
-  scatterField,
-  scatterAxis,
-  legend,
-  //animationOneByOne,
-  theme
-];
-
-const pipelineFunnel = [revisedVChartType, funnelData, color, funnelField, legend, commonLabel, theme];
-
-const pipelineDualAxis = [revisedVChartType, data, color, dualAxisSeries, dualAxisAxes, legend, theme];
-
-const pipelineRose = [
-  revisedVChartType,
-  data,
-  color,
-  roseField,
-  roseAxis,
-  legend,
-  commonLabel,
-  //animationCartesianPie,
-  theme
-];
-
-const pipelineRadar = [
-  revisedVChartType,
-  data,
-  color,
-  radarField,
-  radarDisplayConf,
-  radarAxis,
-  legend,
-  // commonLabel,
-  //animationCartisianLine,
-  theme
-];
-
-const pipelineSankey = [revisedVChartType, sankeyData, color, sankeyField, sankeyLink, sankeyLabel, legend, theme];
-
-const pipelineWaterfall = [
-  revisedVChartType,
-  data,
-  color,
-  waterfallField,
-  waterfallAxes,
-  waterfallStackLabel,
-  legend,
-  theme
-];
-
-const pipelineBoxPlot = [revisedVChartType, data, color, boxPlotField, boxPlotStyle, legend, theme];
-
-const pipelineLiquid = [revisedVChartType, data, color, liquidField, liquidStyle, indicator, theme];
-
-const pipelineLinearProgress = [
-  revisedVChartType,
-  data,
-  color,
-  linearProgressField,
-  linearProgressAxes,
-  linearProgressStyle,
-  theme
-];
-
-const pipelineCircularProgress = [
-  revisedVChartType,
-  data,
-  color,
-  circularProgressField,
-  circularProgressStyle,
-  indicator,
-  theme
-];
-
-const pipelineBubbleCirclePacking = [
-  revisedVChartType,
-  bubbleCirclePackingData,
-  data,
-  color,
-  bubbleCirclePackingField,
-  bubbleCirclePackingDisplayConf,
-  theme
-];
-
-const pipelineMapChart = [revisedVChartType, basemap, color, arrayData, mapField, mapDisplayConf, theme];
-const pipelineRangeColumn = [revisedVChartType, data, color, rangeColumnField, rangeColumnDisplayConf, theme];
-const pipelineSunburst = [revisedVChartType, sunburstData, color, sunburstOrTreemapField, sunburstDisplayConf, theme];
-const pipelineTreemap = [revisedVChartType, treemapData, color, sunburstOrTreemapField, treemapDisplayConf, theme];
-const pipelineGauge = [revisedVChartType, arrayData, color, gaugeField, gaugeDisplayConf, theme];
-const pipelineBasicHeatMap = [
-  revisedVChartType,
-  arrayData,
-  color,
-  basicHeatMapSeries,
-  basicHeatMapRegion,
-  basicHeatMapColor,
-  basicHeatMapAxes,
-  basicHeatMapLegend,
-  theme
-];
-const pipelineVenn = [revisedVChartType, registerChart, vennData, color, vennField, legend, theme];
+import { llmChartTypeMap } from './chartTypeUtils';
+import { pipelineBar } from './transformers/bar';
+import { pipelineBoxPlot } from './transformers/boxplot';
+import { pipelineBubbleCirclePacking } from './transformers/circlePacking';
+import { pipelineCircularProgress } from './transformers/circularProgress';
+import { revisedVChartType, theme } from './transformers/common';
+import { pipelineDualAxis } from './transformers/dualAxis';
+import { pipelineFunnel } from './transformers/funnel';
+import { pipelineGauge } from './transformers/gauge';
+import { pipelineBasicHeatMap } from './transformers/heatmap';
+import { pipelineLine } from './transformers/line';
+import { pipelineLinearProgress } from './transformers/linearProgress';
+import { pipelineLiquid } from './transformers/liquid';
+import { pipelineMapChart } from './transformers/map';
+import { pipelinePie } from './transformers/pie';
+import { pipelineRadar } from './transformers/radar';
+import { pipelineRangeColumn } from './transformers/rangeColumn';
+import { pipelineRankingBar } from './transformers/rankingBar';
+import { pipelineRose } from './transformers/rose';
+import { pipelineSankey } from './transformers/sankey';
+import { pipelineScatterPlot } from './transformers/scatter';
+import { pipelineSunburst } from './transformers/sunburst';
+import { pipelineTreemap } from './transformers/treemap';
+import { pipelineVenn } from './transformers/venn';
+import { pipelineWaterfall } from './transformers/waterfall';
+import { pipelineWordCloud } from './transformers/wordcloud';
 
 const pipelineMap: { [chartType: string]: any } = {
   [ChartType.BarChart.toUpperCase()]: pipelineBar,
   [ChartType.LineChart.toUpperCase()]: pipelineLine,
-  [ChartType.AreaChart.toUpperCase()]: pipeAreaLine,
+  [ChartType.AreaChart.toUpperCase()]: pipelineLine,
   [ChartType.PieChart.toUpperCase()]: pipelinePie,
   [ChartType.WordCloud.toUpperCase()]: pipelineWordCloud,
   [ChartType.ScatterPlot.toUpperCase()]: pipelineScatterPlot,
@@ -291,7 +71,7 @@ const afterPipe = (context: GenerateChartCellContext) => {
 
 export const getChartSpecWithContext = (context: GenerateChartCellContext) => {
   const { chartType } = context;
-  const chartSpecPipelines = [beforePipe, ...pipelineMap[chartType.toUpperCase()], afterPipe];
+  const chartSpecPipelines = [beforePipe, revisedVChartType, ...pipelineMap[chartType.toUpperCase()], theme, afterPipe];
   let newContext = { ...context };
   chartSpecPipelines.forEach(func => {
     newContext = {

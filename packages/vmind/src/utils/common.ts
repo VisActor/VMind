@@ -58,8 +58,8 @@ export function validateDate(date: any) {
   const formaterDate = `${date}`.trim();
   //check if the string is a data string
   return (
-    dayjs(formaterDate).isValid() ||
-    dateFormats.find(v => dayjs(formaterDate, v.key, true).isValid()) ||
+    new Date(formaterDate).toString() !== 'Invalid Date' ||
+    dateFormats.find(v => new Date(formaterDate.replace(v.regex, v.format)).toString() !== 'Invalid Date') ||
     isQuarterDate(formaterDate)
   );
 }
