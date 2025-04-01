@@ -10,4 +10,5 @@ export { ChartQAExtraction } from './chartQAExtraction';
 export { CustomPrompt } from './customAtom';
 export { BaseAtom } from './base';
 export { VChartSpec } from './VChartSpec';
+export type { AlgorithmType, AlgorithmOptions, InsightType, Insight } from './dataInsight/type';
 export * from './type';
