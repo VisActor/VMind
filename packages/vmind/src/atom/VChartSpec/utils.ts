@@ -483,7 +483,7 @@ export const parseAliasOfPath = (
   compKey: string,
   chartSpec: any,
   leafSpec: any,
-  op: 'add' | 'update' | 'delete'
+  op: 'add' | 'update' | 'delete' | 'deleteAll'
 ) => {
   const subPaths = parentKeyPath.split('.');
   const aliasOptions = aliasByComponentType[compKey];
@@ -505,7 +505,7 @@ export const parseAliasOfPath = (
   // 路径中没包含序号
   if (isTargetArray) {
     // 加上序号，返回结果示例： `legends[0]`
-    if (op === 'add') {
+    if (op === 'add' && subPaths.length === 1) {
       if (specifiedIndex >= 0 && (!chartSpec[compKey] || specifiedIndex <= chartSpec[compKey].length)) {
         subPaths[0] = `${compKey}[${specifiedIndex}]`;
       } else {
@@ -527,7 +527,7 @@ export const parseAliasOfPath = (
     subPaths[0] = compKey; // 替换aliasName为compKey
   }
 
-  if (!isValidAlias || op === 'delete') {
+  if (!isValidAlias || op === 'delete' || op === 'deleteAll') {
     return { parentKeyPath: subPaths.join('.'), leafSpec: newLeafSpec };
   }
   const appendSpec = { ...aliasOptions.aliasMap[aliasName].appendSpec, [ALIAS_NAME_KEY]: aliasName };
@@ -811,6 +811,14 @@ export const updateSpecByOperation = (prevSpec: any, op: IVChartOperationItem) =
     (updatedKeyPaths ?? [parentKeyPath]).forEach(kp => {
       if (kp) {
         deleteByPath(newSpec, kp);
+      }
+    });
+  } else if (op.op === 'deleteAll') {
+    (updatedKeyPaths ?? [parentKeyPath]).forEach(kp => {
+      if (kp) {
+        // 如果是删除所有的元素，并且最后的路径里面有数组下标，需要删除数组下标
+
+        deleteByPath(newSpec, kp.replace(/(\[(\d+)\])$/, ''));
       }
     });
   }
