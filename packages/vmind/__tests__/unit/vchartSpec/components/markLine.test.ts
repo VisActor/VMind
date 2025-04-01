@@ -1,5 +1,5 @@
 import { merge } from '@visactor/vutils';
-import { updateSpecByOperation } from '../../../../src/atom/VChartSpec/utils';
+import { runOperactionsOfSpec, updateSpecByOperation } from '../../../../src/atom/VChartSpec/utils';
 
 const spec = {
   type: 'bar',
@@ -173,5 +173,29 @@ describe('updateSpecByOperation of barchart', () => {
     });
 
     expect(newSpec).toEqual(spec);
+  });
+
+  it('should delete the array of markLine when op is "deleteAll"', () => {
+    const specWithMarkLine = {
+      ...spec,
+      markLine: [
+        {
+          x: 10
+        }
+      ]
+    };
+    const { spec: newSpec } = runOperactionsOfSpec(merge({}, specWithMarkLine), [
+      {
+        op: 'delete',
+        target: 'markLine.x'
+      },
+      {
+        op: 'add',
+        target: 'markLine.y',
+        value: 10
+      }
+    ]);
+
+    expect(newSpec.markLine).toEqual([{ y: 10 }]);
   });
 });

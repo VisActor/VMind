@@ -505,7 +505,7 @@ export const parseAliasOfPath = (
   // 路径中没包含序号
   if (isTargetArray) {
     // 加上序号，返回结果示例： `legends[0]`
-    if (op === 'add') {
+    if (op === 'add' && subPaths.length === 1) {
       if (specifiedIndex >= 0 && (!chartSpec[compKey] || specifiedIndex <= chartSpec[compKey].length)) {
         subPaths[0] = `${compKey}[${specifiedIndex}]`;
       } else {
