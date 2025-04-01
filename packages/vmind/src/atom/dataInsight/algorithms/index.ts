@@ -145,10 +145,12 @@ export const getInsights = (context: DataInsightExtractContext, options: DataIns
         ...res.map(v => ({
           ...v,
           // transfer to origin dataset since dataset may number measurefields but string value in origin dataset
-          data: (v.data || []).map(vv => ({
-            index: vv.index,
-            dataItem: originDataset[vv.index]
-          })),
+          data: v.info?.isAxesArea
+            ? v.data
+            : (v.data || []).map(vv => ({
+                index: vv.index,
+                dataItem: originDataset[vv.index]
+              })),
           name
         }))
       );

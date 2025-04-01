@@ -76,6 +76,16 @@ export interface DataInsightOptions extends BaseOptions {
   isLimitedbyChartType?: boolean;
   /** polish insights by llm or not */
   usePolish?: boolean;
+  /** add insights into spec */
+  enableInsightAnnotation?: boolean;
+}
+
+export interface SpecInsightOptions extends BaseOptions {
+  defaultMarkerLineStyle?: any;
+  defaultMarkerSymbolStyle?: any;
+  diffMarkerSymbolStyle?: any;
+  labelBackground?: any;
+  defaultOffsetInGrowthMarkLine?: number;
 }
 
 export interface CustomPromptOptions extends BaseOptions {

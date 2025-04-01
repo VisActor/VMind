@@ -69,12 +69,17 @@ const getDataBySeries = (context: AxesDataInfoCtx & { position: string[] }) => {
   const currentAxis = axes.find((v: any) => position.includes(v.orient));
   const axisTitle = currentAxis?.title?.text;
   let currentSeries = [];
+  let seriesIndex = null;
+  let seriesId = '';
   if (currentAxis?.seriesId) {
+    seriesId = currentAxis?.seriesId;
     currentSeries = series.filter((s: any) => currentAxis.seriesId.includes(s.id));
   } else if (currentAxis?.seriesIndex) {
+    seriesIndex = currentAxis?.seriesIndex;
     currentSeries = currentAxis.seriesIndex.map((v: any) => series[v]).filter((s: any) => !!s);
   } else {
     series.filter((s: any) => position.includes(s[_vmindAxesDiffKey]));
+    seriesId = (series || []).map((v: any) => v.id).filter((v: any) => !!v);
   }
   const dataList: DataTable = [];
   currentSeries.forEach((s: any) => {
@@ -92,6 +97,8 @@ const getDataBySeries = (context: AxesDataInfoCtx & { position: string[] }) => {
     series: currentSeries,
     seriesNames,
     axisTitle,
+    seriesIndex: isArray(seriesIndex) ? seriesIndex[0] : seriesIndex,
+    seriesId: isArray(seriesId) ? seriesId?.[0] : seriesId,
     yField: currentSeries?.[0]?.yField,
     ...getDimensionDataInfo({ xField, yField, onlyOneSeries: seriesNames.length === 1, dataset: dataList })
   };

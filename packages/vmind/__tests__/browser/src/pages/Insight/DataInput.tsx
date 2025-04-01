@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React, { useState, useCallback, useEffect } from 'react';
 import '../index.scss';
-import { Avatar, Input, Divider, Button, InputNumber, Select, Radio, Modal } from '@arco-design/web-react';
+import { Avatar, Input, Divider, Button, InputNumber, Select, Radio, Modal, Checkbox } from '@arco-design/web-react';
 import VMind from '../../../../../src/index';
 import { Model } from '../../../../../src/index';
 import {
@@ -67,6 +67,7 @@ export function DataInput(props: IPropsType) {
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = React.useState(ModelConfigMap[model]?.url ?? OPENAI_API_URL);
   const [apiKey, setApiKey] = React.useState(ModelConfigMap[model]?.key);
+  const [enableAnnotation, setEnableAnnotation] = React.useState(false);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -102,24 +103,29 @@ export function DataInput(props: IPropsType) {
         lofOutlier: { threshold: 2 },
         statisticsBase: { defaultLeftAxisName: '左轴', defaultRightAxisName: '右轴' }
       },
+      // usePolish: false,
       detailMaxNum: [
         { types: ['outlier', 'pair_outlier', 'extreme_value', 'turning_point', 'majority_value'], maxNum: 3 },
         { types: ['abnormal_band'], maxNum: 3 },
         { types: ['correlation'], maxNum: 2 },
         { types: ['overall_trend'], maxNum: 2 },
         { types: ['abnormal_trend'], maxNum: 3 }
-      ] as any
-    });
+      ]
+    } as any);
     const endTime = new Date().getTime();
     const costTime = endTime - startTime;
-
-    props.onInsightGenerate(insights, specJson, costTime);
+    let newSpec = null;
+    if (enableAnnotation) {
+      newSpec = (await vmind.current.updateSpecByInsights(specJson, insights)).newSpec;
+      console.log(newSpec);
+    }
+    props.onInsightGenerate(insights, enableAnnotation ? newSpec : specJson, costTime);
 
     console.log(costTime);
     console.log(insights);
 
     setLoading(false);
-  }, [numLimits, props, spec]);
+  }, [numLimits, props, spec, enableAnnotation]);
 
   return (
     <div className="left-sider">
@@ -215,6 +221,11 @@ export function DataInput(props: IPropsType) {
           <Radio value={Model.GPT_4o}>GPT-4o</Radio>
           <Radio value={globalVariables.VITE_CUSTOM_MODEL}>Your Custom Model</Radio>
         </RadioGroup>
+      </div>
+      <div style={{ width: '90%', marginBottom: 10 }}>
+        <Checkbox checked={enableAnnotation} onChange={v => setEnableAnnotation(v)}>
+          Enable Insights Annotation
+        </Checkbox>
       </div>
       <div className="generate-botton">
         <Button

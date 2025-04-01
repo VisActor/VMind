@@ -24,7 +24,7 @@ export const isStackChart = (spec: any, chartType: ChartType, cell: Cell) => {
     );
   }
   return (
-    ((stack !== false && chartType === ChartType.BarChart) || !!stack) &&
+    ((stack !== false && (chartType === ChartType.BarChart || type === 'bar')) || !!stack) &&
     seriesField &&
     !(isArray(cell.x) && cell.x.includes(seriesField))
   );

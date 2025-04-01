@@ -29,6 +29,7 @@ import { fillSpecTemplateWithData } from '../utils/spec';
 import { _chatToVideoWasm } from '../utils/video';
 import type { DataInsightOptions } from '../atom';
 import { merge } from '@visactor/vutils';
+import type { Insight } from '../atom/dataInsight/type';
 
 class VMind {
   private options: VMindOptions;
@@ -39,7 +40,7 @@ class VMind {
   private text2ChartSchedule: Schedule<
     [AtomName.DATA_EXTRACT, AtomName.DATA_CLEAN, AtomName.CHART_COMMAND, AtomName.CHART_GENERATE]
   >;
-  private dataInsightSchedule: Schedule<[AtomName.DATA_INSIGHT]>;
+  private dataInsightSchedule: Schedule<[AtomName.DATA_INSIGHT, AtomName.SPEC_INSIGHT]>;
   private data2ChartSchedule:
     | Schedule<[AtomName.DATA_QUERY, AtomName.CHART_GENERATE]>
     | Schedule<[AtomName.CHART_GENERATE]>;
@@ -298,8 +299,27 @@ class VMind {
       },
       dataInsight: options || {}
     });
-    const { insights, usage, error } = await this.dataInsightSchedule.run();
-    return { insights, usage, error };
+    const shouldRunList: Record<string, boolean> = {
+      [AtomName.DATA_INSIGHT]: true,
+      [AtomName.SPEC_INSIGHT]: !!options?.enableInsightAnnotation
+    };
+    const { insights, usage, error, newSpec } = await this.dataInsightSchedule.run(undefined, shouldRunList);
+    return { insights, usage, error, newSpec };
+  }
+
+  async updateSpecByInsights(spec: any, insights: Insight[], options?: { chartType?: ChartType }) {
+    const { chartType } = options || {};
+    const shouldRunList: Record<string, boolean> = {
+      [AtomName.DATA_INSIGHT]: false,
+      [AtomName.SPEC_INSIGHT]: true
+    };
+    this.dataInsightSchedule.setNewTask({
+      spec,
+      insights,
+      chartType
+    });
+    const { error, newSpec } = await this.dataInsightSchedule.run(undefined, shouldRunList);
+    return { error, newSpec };
   }
 
   /**
