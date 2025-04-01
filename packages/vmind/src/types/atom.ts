@@ -210,7 +210,7 @@ export interface IVChartOperationItem {
    * - "update": Update an existing field or array element.
    * - "delete": Remove an existing field or array element.
    */
-  op: 'add' | 'update' | 'delete';
+  op: 'add' | 'update' | 'delete' | 'deleteAll';
   /**
    * The target location of the operation in the DSL.
    * - Use dot notation for nested fields (e.g., "settings.theme.color").
