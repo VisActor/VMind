@@ -167,14 +167,17 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
     }
   }
 
-  protected getNormalMarkLine(spec: any, value: number, options: { position: 'x' | 'y'; text: string }) {
-    const { position, text } = options;
+  protected getNormalMarkLine(spec: any, value: number, options: { position: 'x' | 'y'; text: string; info: any }) {
+    const { position, text, info } = options;
     if (!spec.markLine) {
       spec.markLine = [];
     }
     const { defaultMarkerLineStyle, defaultMarkerSymbolStyle, labelBackground } = this.options;
+    const { seriesId, seriesIndex } = info || {};
     spec.markLine.push({
       [position]: value,
+      ...(isNumber(seriesIndex) ? { relativeSeriesIndex: seriesIndex } : {}),
+      ...(seriesId ? { relativeSeriesId: seriesId } : {}),
       label: {
         visible: true,
         autoRotate: false,
@@ -308,7 +311,8 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
         case InsightType.Avg:
           this.getNormalMarkLine(newSpec, Number(value), {
             position: cell.isTransposed ? 'x' : 'y',
-            text: formatV ? `Avg: ${formatV}` : 'Avg'
+            text: formatV ? `Avg: ${formatV}` : 'Avg',
+            info
           });
           break;
         case InsightType.OverallTrend:

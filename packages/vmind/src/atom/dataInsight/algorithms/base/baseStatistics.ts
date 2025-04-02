@@ -127,6 +127,8 @@ const getBaseInsightByDataset = (
       significant: 1,
       data: [],
       info: {
+        seriesId,
+        seriesIndex,
         isAxesArea,
         titleName,
         axesDirection
