@@ -307,6 +307,12 @@ class VMind {
     return { insights, usage, error, newSpec };
   }
 
+  /**
+   * Update spec by insights fetched by vmind (support markpoint and markLine)
+   * @param spec chart spec
+   * @param insights vmind insights
+   * @returns newSpec of chart
+   */
   async updateSpecByInsights(spec: any, insights: Insight[], options?: { chartType?: ChartType }) {
     const { chartType } = options || {};
     const shouldRunList: Record<string, boolean> = {

@@ -70,6 +70,7 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
     return true;
   }
 
+  /** generate mark point into chart by datum into coordinates */
   protected generateMarkPoint(spec: any, datum: Datum, options: { direction: string; text: string; info: any }) {
     const { direction, text, info } = options;
     if (!spec.markPoint) {
@@ -167,7 +168,8 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
     }
   }
 
-  protected getNormalMarkLine(spec: any, value: number, options: { position: 'x' | 'y'; text: string; info: any }) {
+  /** generate markline of avg insights */
+  protected getAvgMarkLine(spec: any, value: number, options: { position: 'x' | 'y'; text: string; info: any }) {
     const { position, text, info } = options;
     if (!spec.markLine) {
       spec.markLine = [];
@@ -211,6 +213,7 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
     });
   }
 
+  /** generate markline of overall trend by coordinates */
   protected getGrowthMarkLine(
     spec: any,
     options: {
@@ -267,7 +270,7 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
     const { spec, insights, chartType } = this.context;
     const newSpec = merge({}, spec);
     const cell = getCellFromSpec(spec, chartType);
-    const pointIndexMap: Record<number, boolean> = {};
+    const pointIndexMap: Record<string, boolean> = {};
     const isStack = isStackChart(spec, chartType, cell);
     insights.forEach(insight => {
       const { type, data, value, fieldId, info } = insight;
@@ -288,6 +291,7 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
         return;
       }
       const formatV = this.formatterValue(value);
+      const dataString = JSON.stringify(data?.[0]?.dataItem || {});
       switch (type) {
         case InsightType.Min:
         case InsightType.Max:
@@ -295,8 +299,8 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
         case InsightType.ExtremeValue:
         case InsightType.MajorityValue:
         case InsightType.TurningPoint:
-          if (!pointIndexMap[data[0].index]) {
-            pointIndexMap[data[0].index] = true;
+          if (!pointIndexMap[dataString]) {
+            pointIndexMap[dataString] = true;
             this.generateMarkPoint(
               newSpec,
               { ...data[0].dataItem, [fieldId]: Number(value) },
@@ -309,7 +313,7 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
           }
           break;
         case InsightType.Avg:
-          this.getNormalMarkLine(newSpec, Number(value), {
+          this.getAvgMarkLine(newSpec, Number(value), {
             position: cell.isTransposed ? 'x' : 'y',
             text: formatV ? `Avg: ${formatV}` : 'Avg',
             info
