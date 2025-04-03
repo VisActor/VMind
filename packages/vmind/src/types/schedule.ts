@@ -10,7 +10,8 @@ import type {
   MultipleDataCleanCtx,
   MultipleChartCommandsCtx,
   ChartQAExtractionCtx,
-  VChartSpecCtx
+  VChartSpecCtx,
+  SpecInsightCtx
 } from './atom';
 
 export interface Tasks {
@@ -30,6 +31,7 @@ export type AtomTypeMap = {
   [AtomName.MULTIPLE_DATA_CLEAN]: MultipleDataCleanCtx;
   [AtomName.DATA_QUERY]: DataQueryCtx;
   [AtomName.DATA_INSIGHT]: DataInsightCtx;
+  [AtomName.SPEC_INSIGHT]: SpecInsightCtx;
   [AtomName.CHART_COMMAND]: ChartCommandCtx;
   [AtomName.MULTIPLE_CHART_COMMAND]: MultipleChartCommandsCtx;
   [AtomName.CHART_GENERATE]: ChartGeneratorCtx;

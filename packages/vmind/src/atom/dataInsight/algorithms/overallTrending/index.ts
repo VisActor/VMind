@@ -15,8 +15,9 @@ export const overallTrendingAlgo = (context: DataInsightExtractContext, options:
   const { cell, dimensionSumMap, dimensionValues } = context;
   const { alpha = 0.05, calcScope = false } = options || {};
   const result: Insight[] = [];
-  const { y: celly } = cell;
+  const { y: celly, x: cellx } = cell;
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
+  const xField = isArray(cellx) ? cellx[0] : cellx;
   yField.forEach(measureId => {
     const overallDataset = dimensionSumMap[measureId];
     const { trend, pValue, zScore, slope, intercept } = originalMKTest(overallDataset, alpha, calcScope);
@@ -42,6 +43,10 @@ export const overallTrendingAlgo = (context: DataInsightExtractContext, options:
             intercept,
             length,
             overall: {
+              coordinates: [
+                { [xField]: dimensionValues[onverallStartIndex], [measureId]: overallDataset[onverallStartIndex] },
+                { [xField]: dimensionValues[overallEndIndex], [measureId]: overallDataset[overallEndIndex] }
+              ],
               start: onverallStartIndex,
               end: overallEndIndex,
               change: overallChange,

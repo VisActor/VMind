@@ -37,7 +37,10 @@ const getMinMaxAvg = (data: number[]) => {
 };
 
 const getBaseInsightByDataset = (
-  context: Pick<AxesDataInfo, 'dataset' | 'dimensionStackSumMap' | 'dimensionValues' | 'axisTitle'> & {
+  context: Pick<
+    AxesDataInfo,
+    'dataset' | 'dimensionStackSumMap' | 'dimensionValues' | 'axisTitle' | 'seriesId' | 'seriesIndex'
+  > & {
     xField: string;
     measureId: string | string[];
     isStack: boolean;
@@ -54,7 +57,9 @@ const getBaseInsightByDataset = (
     dimensionStackSumMap,
     axisTitle = [],
     isAxesArea = false,
-    axesDirection
+    axesDirection,
+    seriesId,
+    seriesIndex
   } = context;
   const dataList = dataset.map((d, index) => ({
     index: index,
@@ -81,6 +86,8 @@ const getBaseInsightByDataset = (
             }
           ],
       info: {
+        seriesId,
+        seriesIndex,
         isAxesArea,
         titleName,
         isGroup: isStack,
@@ -105,6 +112,8 @@ const getBaseInsightByDataset = (
       info: {
         isAxesArea,
         titleName,
+        seriesId,
+        seriesIndex,
         isGroup: isStack,
         dimValue: isStack ? dimensionValues[max.index] : dataList[max.index].dataItem[xField]
       }
@@ -118,6 +127,8 @@ const getBaseInsightByDataset = (
       significant: 1,
       data: [],
       info: {
+        seriesId,
+        seriesIndex,
         isAxesArea,
         titleName,
         axesDirection
@@ -171,6 +182,8 @@ const BaseStatisticsFunction = (context: DataInsightExtractContext, options: Bas
       ...getBaseInsightByDataset({
         ...baseInfo,
         axisTitle: '',
+        seriesId: '',
+        seriesIndex: null,
         isStack: isStackChart(spec, chartType, cell)
       })
     );
