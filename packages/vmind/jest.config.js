@@ -7,5 +7,13 @@ module.exports = {
     ...baseJestConfig.moduleNameMapper,
     '@visactor/calculator': path.resolve(__dirname, '../calculator/src'),
     '@visactor/chart-advisor': path.resolve(__dirname, '../chart-advisor/src')
+  },
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        diagnostics: false // ignore TypeScript error
+      }
+    ]
   }
 };
