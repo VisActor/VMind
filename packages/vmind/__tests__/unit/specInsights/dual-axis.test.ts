@@ -1,4 +1,5 @@
-import VMind, { ChartType } from '../../../src';
+import { ChartType } from '../../../src/types/chart';
+import { SpecInsightAtom } from '../../../src/atom/specInsight';
 
 const spec = {
   type: 'common',
@@ -416,9 +417,9 @@ const insights: any[] = [
 ];
 
 describe('updateSpecByInsights of dual-axis', () => {
-  const vmind = new VMind({});
   it('should add min/max/avg in dual axis', async () => {
-    const { newSpec } = await vmind.updateSpecByInsights(spec, insights, { chartType: ChartType.DualAxisChart });
+    const specInishgtAtom = new SpecInsightAtom({ spec, insights, chartType: ChartType.DualAxisChart }, {});
+    const { newSpec } = await specInishgtAtom.run();
     // left and right axis markline
     expect(newSpec.markLine[0].relativeSeriesId).toEqual('line');
     expect(newSpec.markLine[0].y).toEqual(30);

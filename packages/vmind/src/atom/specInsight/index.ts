@@ -4,10 +4,10 @@ import type { SpecInsightOptions } from '../type';
 import { BaseAtom } from '../base';
 import { isNumber, isValidNumber, merge } from '@visactor/vutils';
 import { InsightType } from '../dataInsight/type';
-import type { Datum } from '@visactor/vchart/esm/typings';
 import { getCellFromSpec } from '../../utils/spec';
 import { TrendType } from '../dataInsight/algorithms/statistics';
 import { isStackChart } from '../dataInsight/utils';
+import type { DataItem } from '../../types';
 
 export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions> {
   name = AtomName.SPEC_INSIGHT;
@@ -71,7 +71,7 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
   }
 
   /** generate mark point into chart by datum into coordinates */
-  protected generateMarkPoint(spec: any, datum: Datum, options: { direction: string; text: string; info: any }) {
+  protected generateMarkPoint(spec: any, datum: DataItem, options: { direction: string; text: string; info: any }) {
     const { direction, text, info } = options;
     if (!spec.markPoint) {
       spec.markPoint = [];
@@ -217,7 +217,7 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
   protected getGrowthMarkLine(
     spec: any,
     options: {
-      coordinates: Datum[];
+      coordinates: DataItem[];
       text: string;
       isTransposed: boolean;
     }

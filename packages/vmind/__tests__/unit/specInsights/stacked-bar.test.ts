@@ -1,4 +1,4 @@
-import VMind from '../../../src';
+import { SpecInsightAtom } from '../../../src/atom/specInsight';
 
 const spec = {
   type: 'bar',
@@ -337,8 +337,8 @@ describe('updateSpecByInsights of stacked bar chart', () => {
   let newSpec: any;
 
   beforeAll(async () => {
-    const vmind = new VMind({});
-    newSpec = (await vmind.updateSpecByInsights(spec, insights)).newSpec;
+    const specInishgtAtom = new SpecInsightAtom({ spec, insights }, {});
+    newSpec = (await specInishgtAtom.run()).newSpec;
   });
   it('only base statistic insights', () => {
     expect(newSpec.markPoint.length).toEqual(2);

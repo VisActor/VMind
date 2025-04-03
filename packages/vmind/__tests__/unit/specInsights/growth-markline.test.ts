@@ -1,4 +1,4 @@
-import VMind from '../../../src';
+import { SpecInsightAtom } from '../../../src/atom/specInsight';
 
 const spec = {
   type: 'line',
@@ -419,9 +419,9 @@ const insights: any[] = [
 ];
 
 describe('updateSpecByInsights of overall_trend', () => {
-  const vmind = new VMind({});
   it('add markline of growth overall trend', async () => {
-    const { newSpec } = await vmind.updateSpecByInsights(spec, insights);
+    const specInishgtAtom = new SpecInsightAtom({ spec, insights }, {});
+    const { newSpec } = await specInishgtAtom.run();
     expect(newSpec.markLine[0].coordinates).toEqual([
       {
         年份: 1977,
