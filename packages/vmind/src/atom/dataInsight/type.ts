@@ -137,6 +137,8 @@ export interface AxesDataInfo {
   dataset: DataTable;
   seriesNames: string[];
   series: any[];
+  seriesIndex: number;
+  seriesId: string;
   dimensionDataMap: DimValueDataMap;
   dimensionValues: DataCell[];
   dimensionSumMap: Record<string, number[]>;

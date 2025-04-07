@@ -15,6 +15,7 @@ export enum AtomName {
   MULTIPLE_CHART_COMMAND = 'multipleChartCommand',
   CHART_GENERATE = 'chartGenerate',
   DATA_INSIGHT = 'dataInsight',
+  SPEC_INSIGHT = 'specInsight',
   CHART_QA_EXTRACTION = 'chartQAExtraction',
   CUSTOM_PROMPT = 'custom_prompt',
   VCHART_SPEC = 'vchart_spec'
@@ -180,6 +181,17 @@ export interface DataInsightCtx extends BaseContext {
   chartType?: ChartType;
 }
 
+export interface SpecInsightCtx extends BaseContext {
+  /** spec of chart */
+  spec?: any;
+  /** final insight */
+  insights: Insight[];
+  /** chartType */
+  chartType?: ChartType;
+  /** spec added with insights */
+  newSpec?: any;
+}
+
 export interface ChartQAExtractionCtx extends BaseContext {
   text: string;
   question: string;
@@ -198,7 +210,7 @@ export interface IVChartOperationItem {
    * - "update": Update an existing field or array element.
    * - "delete": Remove an existing field or array element.
    */
-  op: 'add' | 'update' | 'delete';
+  op: 'add' | 'update' | 'delete' | 'deleteAll';
   /**
    * The target location of the operation in the DSL.
    * - Use dot notation for nested fields (e.g., "settings.theme.color").
