@@ -39,6 +39,7 @@ const getValueKnowledge = (chartTypeList: ChartType[]) => {
 
 export const getNeedColorAndSizeKnowledge = (chartTypeList: ChartType[]) => {
   const validSet = new Set(chartTypeList);
+
   if (NEED_COLOR_AND_SIZE_CHART_LIST.some(chartType => validSet.has(chartType))) {
     const includedCharts = chartTypeList.filter(chart => NEED_COLOR_AND_SIZE_CHART_LIST.includes(chart));
     return (
