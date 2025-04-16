@@ -1,2 +1,2 @@
-export { MultipleDataCleanAtom } from './multiple';
-export { DataCleanAtom } from './dataClean';
+export * from './multiple';
+export * from './dataClean';

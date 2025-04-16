@@ -13,7 +13,7 @@ export const getData2ChartSchedule = (llm: LLMManage, options: ILLMOptions) => {
       chartGenerate: { useChartAdvisor: true }
     });
   }
-  return new Schedule([AtomName.DATA_QUERY, AtomName.CHART_COMMAND, AtomName.CHART_GENERATE], {
+  return new Schedule([AtomName.IMAGE_READER, AtomName.DATA_QUERY, AtomName.CHART_COMMAND, AtomName.CHART_GENERATE], {
     base: { llm, showThoughts: options?.showThoughts },
     chartCommand: { useDataTable: true }
   });

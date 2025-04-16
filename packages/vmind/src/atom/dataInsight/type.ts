@@ -13,6 +13,7 @@ import type { StatisticsOptions } from './algorithms/outlier/statistics';
 import type { DifferenceOptions } from './algorithms/outlier/difference';
 import type { PageHinkleyOptions } from './algorithms/drift';
 import type { BaseStatisticsOptions } from './algorithms/base/baseStatistics';
+import type { BaseOptions } from '../../types/atom';
 
 export enum AlgorithmType {
   OverallTrending = 'overallTrend',
@@ -162,4 +163,24 @@ export interface DataInsightExtractContext {
   insights?: Insight[];
   leftAxesDataList?: AxesDataInfo;
   rightAxesDataList?: AxesDataInfo;
+}
+
+export interface DataInsightOptions extends BaseOptions {
+  /** max number of insight */
+  maxNum?: number;
+  /** detail number limits of insight, higher priority than maxNum */
+  detailMaxNum?: {
+    types: InsightType[];
+    maxNum: number;
+  }[];
+  /** using algorithms list */
+  algorithms?: AlgorithmType[];
+  /** options of each algorithms */
+  algorithmOptions?: AlgorithmOptions;
+  /** insight limited by chartType, eg. cluster only in scatter chart */
+  isLimitedbyChartType?: boolean;
+  /** polish insights by llm or not */
+  usePolish?: boolean;
+  /** add insights into spec */
+  enableInsightAnnotation?: boolean;
 }

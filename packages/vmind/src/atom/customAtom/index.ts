@@ -1,7 +1,9 @@
 import { AtomName } from '../../types/atom';
-import type { CustomPromptOptions } from '../type';
+import type { CustomPromptOptions } from '../../types';
 import { BaseAtom } from '../base';
 import type { LLMMessage } from '../../types/llm';
+import { Factory } from '../../core/factory';
+import type { BaseAtomConstructor } from '../../types';
 
 export class CustomPrompt extends BaseAtom<any, CustomPromptOptions> {
   name = AtomName.CUSTOM_PROMPT;
@@ -35,3 +37,10 @@ export class CustomPrompt extends BaseAtom<any, CustomPromptOptions> {
     };
   }
 }
+
+export const registerCustomPromptAtom = () => {
+  Factory.registerAtom(
+    AtomName.CUSTOM_PROMPT,
+    CustomPrompt as unknown as BaseAtomConstructor<any, CustomPromptOptions>
+  );
+};

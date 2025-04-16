@@ -33,7 +33,17 @@ const chartTypeMap: { [chartName: string]: string } = {
  * @param type
  * @returns
  */
-export const getVChartTypeByVmind = (type: string) => chartTypeMap[type];
+export const getVChartTypeByVmind = (type: string) => {
+  if (chartTypeMap[type]) {
+    return chartTypeMap[type];
+  }
+
+  return null;
+};
+
+export const formatTypeToVMind = (type: string) => {
+  return Object.values(ChartType).find(vmindType => chartTypeMap[vmindType.toUpperCase()] === type) ?? type;
+};
 
 /**
  * 维护一个类型映射：

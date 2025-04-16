@@ -1,5 +1,4 @@
 export enum ChartType {
-  DynamicBarChart = 'Dynamic Bar Chart',
   BarChart = 'Bar Chart',
   LineChart = 'Line Chart',
   AreaChart = 'Area Chart',
@@ -24,7 +23,8 @@ export enum ChartType {
   Gauge = 'Gauge Chart',
   // LinearProgressChart = 'Linear Progress Chart',
   BasicHeatMap = 'Basic Heat Map',
-  VennChart = 'Venn Chart'
+  VennChart = 'Venn Chart',
+  DynamicBarChart = 'Dynamic Bar Chart'
 }
 
 export enum mapRegionProjectionType {

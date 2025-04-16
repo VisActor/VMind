@@ -1,6 +1,6 @@
 import type { ITheme as ChartTheme } from '@visactor/vchart';
-import type { BasemapOption, Cell, ChartGeneratorCtx, ChartType, DataTable } from '../../types';
-import type { VizSchema } from '../type';
+import type { BasemapOption, Cell, ChartGeneratorCtx, ChartType, DataTable, VizSchema } from '../../types';
+import type { BaseOptions } from '../../types/atom';
 
 export type VisualChannel = 'x' | 'y' | 'color' | 'angle' | 'radius' | 'size' | 'value' | 'source' | 'target' | 'time';
 
@@ -33,4 +33,17 @@ export interface ChartAdvistorResult {
   chartSource: string;
   usage: any; //token usage of the LLM
   time?: { totalTime: number; frameArr: any[] };
+}
+
+export interface ChartGeneratorOptions extends BaseOptions {
+  useChartAdvisor?: boolean;
+  useChartRule?: boolean;
+  /** supported chart list */
+  chartTypeList?: ChartType[];
+  /** un-supported chart list */
+  unsupportChartTypeList?: ChartType[];
+  animationDuration?: number;
+  basemapOption?: BasemapOption;
+  colorPalette?: string[];
+  theme?: ChartTheme | string;
 }

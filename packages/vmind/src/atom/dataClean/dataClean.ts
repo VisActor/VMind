@@ -1,6 +1,5 @@
-import type { DataCleanCtx } from '../../types/atom';
+import type { DataCleanCtx, DataCleanOptions } from '../../types';
 import { AtomName } from '../../types/atom';
-import type { DataCleanOptions } from '../type';
 import { BaseAtom } from '../base';
 import { merge } from '@visactor/vutils';
 import {
@@ -15,7 +14,8 @@ import {
   revisedUnMatchedFieldInfo,
   sortDataTableByDate
 } from './utils';
-
+import { Factory } from '../../core/factory';
+import type { BaseAtomConstructor } from '../../types';
 /** The order of pipeline is meaningful   */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const pipelines: { key: string; func: (ctx: DataCleanCtx, ...args: any[]) => DataCleanCtx }[] = [
@@ -115,3 +115,10 @@ export class DataCleanAtom extends BaseAtom<DataCleanCtx, DataCleanOptions> {
     return this.context;
   }
 }
+
+export const registerDataCleanAtom = () => {
+  Factory.registerAtom(
+    AtomName.DATA_CLEAN,
+    DataCleanAtom as unknown as BaseAtomConstructor<DataCleanCtx, DataCleanOptions>
+  );
+};

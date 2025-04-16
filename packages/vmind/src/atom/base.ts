@@ -3,10 +3,11 @@
  */
 
 import { merge } from '@visactor/vutils';
-import type { BaseContext } from '../types/atom';
+import type { BaseContext, BaseOptions } from '../types';
 import { AtomName } from '../types/atom';
 import type { LLMMessage, LLMResponse, ToolMessage } from '../types/llm';
-import type { BaseOptions } from './type';
+import type { BaseAtomConstructor } from '../types';
+import { Factory } from '../core/factory';
 
 export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
   /** name */
@@ -248,3 +249,7 @@ export class BaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
     this.responses.length = 0;
   }
 }
+
+export const registerBaseAtom = () => {
+  Factory.registerAtom(AtomName.BASE, BaseAtom as unknown as BaseAtomConstructor<BaseContext, BaseOptions>);
+};

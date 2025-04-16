@@ -143,6 +143,7 @@ const MAP_CHART_BASEMAP = 'https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/g
 const specTemplateTest = false;
 export function DataInput(props: IPropsType) {
   const defaultDataKey = Object.keys(demoDataList)[3];
+  const [image, setImage] = useState<string>();
   const [describe, setDescribe] = useState<string>(demoDataList[defaultDataKey].input);
   const [csv, setCsv] = useState<string>(demoDataList[defaultDataKey].csv);
   //const [spec, setSpec] = useState<string>('');
@@ -214,14 +215,7 @@ export function DataInput(props: IPropsType) {
     //const { fieldInfo: fieldInfoQuery, dataset: datasetQuery } = await vmind?.dataQuery(describe, fieldInfo, dataset);
     //const dataset = mockData4;
     //const fieldInfo = vmind?.getFieldInfo(dataset);
-    const { fieldInfo, dataset } = vmind.parseCSVData(csv);
-
-    console.log(dataset);
-
-    console.log(fieldInfo);
-    const finalFieldInfo = specTemplateTest
-      ? fieldInfo.map(info => ({ fieldName: info.fieldName, role: info.role, type: info.type }))
-      : fieldInfo;
+    const dataset = image ? undefined : vmind.parseCSVData(csv).dataset;
 
     const finalDataset = specTemplateTest && model !== Model.CHART_ADVISOR ? undefined : dataset;
 
@@ -234,6 +228,7 @@ export function DataInput(props: IPropsType) {
       VChart.registerMap('map', geoJson);
     }
     const { spec, chartAdvistorRes, time } = await vmind.generateChart(describe, undefined, finalDataset, {
+      image,
       enableDataQuery: useDataQuery,
       //chartTypeList: [ChartType.BarChart, ChartType.LineChart],
       // colorPalette: ArcoTheme.colorScheme,
@@ -253,7 +248,7 @@ export function DataInput(props: IPropsType) {
     }
 
     setLoading(false);
-  }, [vmind, csv, model, describe, useDataQuery, props]);
+  }, [vmind, csv, model, describe, useDataQuery, props, image]);
 
   return (
     <div className="left-sider">
@@ -274,7 +269,7 @@ export function DataInput(props: IPropsType) {
           <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
             0
           </Avatar>
-          <span style={{ marginLeft: 10 }}>Select Demo Data (optional)</span>
+          <span style={{ marginLeft: 10 }}>Select Demo Data or image (optional)</span>
         </p>
         <Select
           style={{
@@ -293,10 +288,44 @@ export function DataInput(props: IPropsType) {
             </Option>
           ))}
         </Select>
+
+        <Upload
+          style={{ marginTop: 12 }}
+          drag
+          accept="image/*"
+          listType="picture-list"
+          onDrop={e => {
+            const uploadFile = e.dataTransfer.files[0];
+            if (!uploadFile.type.startsWith('image/')) {
+              Message.info('Please upload image files only');
+              return;
+            }
+          }}
+          onRemove={() => {
+            setImage(undefined);
+          }}
+          customRequest={option => {
+            const { file, onError, onSuccess } = option;
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.addEventListener('load', () => {
+              const result = reader.result;
+              if (!result) {
+                onError?.();
+                return;
+              }
+
+              setImage(result as string);
+              // Handle the image data as needed
+              onSuccess?.();
+            });
+          }}
+          tip="Only images can be uploaded"
+        />
       </div>
 
       <div>
-        <p>
+        <p className={image ? 'disabled-row' : ''}>
           <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
             1
           </Avatar>
@@ -304,6 +333,7 @@ export function DataInput(props: IPropsType) {
         </p>
 
         <TextArea
+          disabled={!!image}
           placeholder={describe}
           value={describe}
           onChange={v => setDescribe(v)}
@@ -312,12 +342,13 @@ export function DataInput(props: IPropsType) {
       </div>
       <Divider style={{ marginTop: 24 }} />
       <div className="flex-text-area">
-        <p>
+        <p className={image ? 'disabled-row' : ''}>
           <Avatar size={18} style={{ backgroundColor: '#3370ff' }}>
             2
           </Avatar>
           <span style={{ marginLeft: 10 }}>Input your data file in csv format</span>
         </p>
+
         {/*<Upload
           drag
           accept='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'
@@ -345,6 +376,7 @@ export function DataInput(props: IPropsType) {
           tip='Only pictures can be uploaded'
         />*/}
         <TextArea
+          disabled={!!image}
           placeholder={csv}
           value={csv}
           onChange={v => setCsv(v)}
