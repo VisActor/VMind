@@ -38,7 +38,7 @@ export const getCellContextBySimpleVChartSpec = (
     transpose?: boolean;
   };
 } => {
-  const { type, transpose, stackOrPercent, coordinate, data, series } = simpleVChartSpec;
+  const { type, transpose, stackOrPercent, coordinate, data, series, palette } = simpleVChartSpec;
   const cell: Cell = {};
   const dataTable =
     data ??
@@ -47,19 +47,34 @@ export const getCellContextBySimpleVChartSpec = (
       return acc;
     }, []);
   const firstDatum = dataTable?.[0];
+  const chartType =
+    type === 'common'
+      ? series && series.length >= 2 && series.some((s, index) => index > 0 && s.type !== series[0].type)
+        ? type
+        : series?.[0]?.type === 'bar' && coordinate === 'polar'
+        ? 'rose'
+        : series?.[0]?.type ?? type
+      : type;
 
   if (firstDatum && 'group' in firstDatum) {
     cell.color = 'group';
+  } else if (palette && palette.length === dataTable.length && palette.length > 1) {
+    cell.color = 'name';
   }
 
   if (coordinate === 'polar') {
-    cell.angle = 'name';
-    cell.radius = 'value';
+    if (type === 'pie') {
+      cell.angle = 'value';
+    } else {
+      cell.angle = 'name';
+      cell.radius = 'value';
+    }
     cell.category = 'name';
-  } else if (coordinate === 'rect') {
+  } else if (coordinate === 'rect' || chartType === 'funnel') {
     cell.x = 'name';
     cell.y = 'value';
-  } else {
+  } else if (chartType === 'circlePacking') {
+    cell.size = 'value';
   }
 
   const fieldInfo = ['name', 'value', 'group'].reduce((res, field) => {
@@ -76,7 +91,7 @@ export const getCellContextBySimpleVChartSpec = (
 
   return {
     mockLLMContent: {
-      CHART_TYPE: formatTypeToVMind(type) as ChartType,
+      CHART_TYPE: formatTypeToVMind(chartType) as ChartType,
       FIELD_MAP: cell,
       stackOrPercent,
       transpose

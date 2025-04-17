@@ -6,7 +6,10 @@ export const bubbleCirclePackingData = (context: GenerateChartCellContext) => {
   if (cell.size) {
     dataTable.forEach(data => {
       data.value = data[cell.size];
-      delete data[cell.size];
+
+      if (cell.size !== 'value') {
+        delete data[cell.size];
+      }
     });
   }
   return { spec };

@@ -5,7 +5,7 @@ export const roseField = (context: GenerateChartCellContext) => {
   const { cell, spec } = context;
   spec.valueField = cell.radius || cell.angle;
   if (cell.color) {
-    spec.categoryField = cell.color;
+    spec.categoryField = cell.category ?? cell.color;
     spec.seriesField = cell.color;
   }
   spec.outerRadius = 0.8;

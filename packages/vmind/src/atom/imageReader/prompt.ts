@@ -21,10 +21,10 @@ When executing the task, you need to meet the following requirements:
   * "polar' - "极坐标系"
   */
   coordinate?: "none" | "rect" | "polar";
-  /** 是否发生堆积，如果是百分比堆积，返回 'percent' */
-  stackOrPercent?: 'stack' | 'percent';
+  /** 当柱子或者区块有堆积行为时，返回该值，否则不返回；如果是百分比堆积，返回 'percent'，如果是普通的堆积，返回 'stack' */
+  stackOrPercent?: 'stack' | 'percent' | null;
   /**
-  * 是否存在横向条形图
+  * 当柱子是按照竖直方向排列时，返回该值，否则不返回；如果是水平方向排列，返回true，否则返回false
   */
   transpose?: boolean;
   /*
@@ -57,7 +57,7 @@ When executing the task, you need to meet the following requirements:
   dataZoom?: { orient: 'top' | 'left' | 'right' |'bottom' }[];
   /** 标注点 */
   markPoint?: { x: any; y: any; label?: string }[];
-  /** 标注线 */
+  /** 标注线，水平方向的标注线只需要返回y对应的值，竖直方向的标注线只需要返回x对应的值 */
   markLine?: { x?: any; y?: any; label?: string }[];
   /** 标注区域 */
   markArea?: { x?: any; x1?: any; y?: any; y1?: any; label?: string }[];

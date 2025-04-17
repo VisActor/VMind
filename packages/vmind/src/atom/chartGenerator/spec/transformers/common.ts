@@ -47,7 +47,7 @@ export const arrayData = (context: GenerateChartCellContext) => {
 };
 
 export const discreteLegend = (context: GenerateChartCellContext) => {
-  const { cell, spec, simpleVChartSpec } = context;
+  const { cell, spec } = context;
 
   if (spec.legends || (!(cell.color || cell.category) && !spec.seriesField && spec.type !== 'common')) {
     return { spec };

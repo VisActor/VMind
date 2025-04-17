@@ -1,4 +1,3 @@
-import { isArray } from '@visactor/vutils';
 import { ChartType } from '../../../types';
 import type { GenerateChartCellContext } from '../type';
 import { estimateVideoTime } from '../utils';
@@ -23,6 +22,7 @@ import { pipelineRankingBar } from './transformers/rankingBar';
 import { pipelineRose } from './transformers/rose';
 import { pipelineSankey } from './transformers/sankey';
 import { pipelineScatterPlot } from './transformers/scatter';
+import { fomartSimpleSpec } from './transformers/simpleSpec';
 import { pipelineSunburst } from './transformers/sunburst';
 import { pipelineTreemap } from './transformers/treemap';
 import { pipelineVenn } from './transformers/venn';
@@ -58,119 +58,7 @@ const pipelineMap: { [chartType: string]: any } = {
 };
 
 const beforePipe = (context: GenerateChartCellContext) => {
-  const { simpleVChartSpec } = context;
-  const spec: any = {};
-
-  if (simpleVChartSpec) {
-    if (simpleVChartSpec.legends) {
-      spec.legends = simpleVChartSpec.legends;
-    }
-    if (simpleVChartSpec.title) {
-      spec.title = simpleVChartSpec.title;
-    }
-
-    if (simpleVChartSpec.axes) {
-      spec.axes = simpleVChartSpec.axes;
-    }
-
-    if (simpleVChartSpec.dataZoom) {
-      spec.dataZoom = simpleVChartSpec.dataZoom;
-    }
-
-    if (simpleVChartSpec.markPoint) {
-      spec.markPoint = simpleVChartSpec.markPoint.map(entry => {
-        return {
-          ...entry,
-          visible: true,
-          x: entry.x,
-          y: entry.y,
-          label: {
-            text: entry.label
-          }
-        };
-      });
-    }
-
-    if (simpleVChartSpec.markLine) {
-      spec.markLine = simpleVChartSpec.markLine.map(entry => {
-        return {
-          ...entry,
-          visible: true,
-          x: entry.x,
-          y: entry.y,
-          label: {
-            text: entry.label
-          }
-        };
-      });
-    }
-
-    if (simpleVChartSpec.markArea) {
-      spec.markArea = simpleVChartSpec.markArea.map(entry => {
-        return {
-          ...entry,
-          visible: true,
-          x: entry.x,
-          y: entry.y,
-          label: {
-            text: entry.label
-          }
-        };
-      });
-    }
-
-    if (simpleVChartSpec.label) {
-      spec.label = isArray(simpleVChartSpec.label)
-        ? simpleVChartSpec.label.map(entry => {
-            return {
-              ...entry,
-              visible: true
-            };
-          })
-        : {
-            ...(simpleVChartSpec.label as any),
-            visible: true
-          };
-    }
-
-    if (simpleVChartSpec.indicator) {
-      const formatIndicator = (entry: any) => {
-        return {
-          title: {
-            style: {
-              text: entry.title
-            }
-          },
-          content: isArray(entry.content)
-            ? entry.content.map((t: string) => {
-                return {
-                  style: {
-                    text: t
-                  }
-                };
-              })
-            : {
-                style: {
-                  text: entry.content
-                }
-              }
-        };
-      };
-      spec.indicator = isArray(simpleVChartSpec.indicator)
-        ? simpleVChartSpec.indicator.map(formatIndicator)
-        : formatIndicator(simpleVChartSpec.indicator);
-    }
-
-    if (simpleVChartSpec.background) {
-      spec.background = simpleVChartSpec.background;
-    }
-
-    if (simpleVChartSpec.palette && simpleVChartSpec.palette.length) {
-      spec.color = simpleVChartSpec.palette;
-    }
-  }
-
-  return { spec };
+  return { spec: {} };
 };
 
 const afterPipe = (context: GenerateChartCellContext) => {
@@ -186,7 +74,7 @@ export const getChartSpecWithContext = (context: GenerateChartCellContext) => {
   const { chartType } = context;
   const pipline = pipelineMap[chartType.toUpperCase()] ? pipelineMap[chartType.toUpperCase()] : [];
 
-  const chartSpecPipelines = [beforePipe, revisedVChartType, ...pipline, theme, afterPipe];
+  const chartSpecPipelines = [beforePipe, revisedVChartType, ...pipline, theme, fomartSimpleSpec, afterPipe];
   let newContext = { ...context };
   chartSpecPipelines.forEach(func => {
     newContext = {
