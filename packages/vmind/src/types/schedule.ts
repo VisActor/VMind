@@ -21,6 +21,7 @@ import type {
 } from './atom';
 import type { ChartGeneratorOptions } from '../atom/chartGenerator/type';
 import type { DataInsightOptions } from '../atom/dataInsight/type';
+import type { ImageReaderCtx } from '../atom/imageReader/interface';
 
 export interface Tasks {
   /** current atom task should run or not */
@@ -46,6 +47,7 @@ export type AtomTypeMap = {
   [AtomName.CHART_QA_EXTRACTION]: ChartQAExtractionCtx;
   [AtomName.CUSTOM_PROMPT]: any;
   [AtomName.VCHART_SPEC]: VChartSpecCtx;
+  [AtomName.IMAGE_READER]: ImageReaderCtx;
 };
 
 export type MapAtomTypes<T extends (keyof AtomTypeMap)[]> = {

@@ -1,4 +1,4 @@
-import type { SimpleVChartSpec } from 'src/atom/imageReader/interface';
+import type { SimpleVChartSpec } from '../../../atom/imageReader/interface';
 import { ROLE, DataType, ChartType } from '../../../types';
 import type { Cell, ChartGeneratorCtx } from '../../../types';
 import type { GenerateChartCellContext } from '../type';
@@ -42,7 +42,7 @@ export const getCellContextBySimpleVChartSpec = (
   const cell: Cell = {};
   const dataTable =
     data ??
-    series.reduce((acc, cur) => {
+    series.reduce((acc: any[], cur: any) => {
       acc.push(...cur.data);
       return acc;
     }, []);
