@@ -10,15 +10,12 @@ import {
   FOLD_VALUE_SUB,
   GROUP_FIELD
 } from '@visactor/chart-advisor';
-import {
-  data,
-  funnelData,
-  legend,
-  sankeyData,
-  sequenceData,
-  wordCloudData
-} from '../atom/chartGenerator/spec/transformers';
 import { foldDataTableByYField, foldDatasetByYField } from './dataTable';
+import { sequenceData } from '../atom/chartGenerator/spec/transformers/rankingBar';
+import { data, discreteLegend } from '../atom/chartGenerator/spec/transformers/common';
+import { wordCloudData } from '../atom/chartGenerator/spec/transformers/wordcloud';
+import { funnelData } from '../atom/chartGenerator/spec/transformers/funnel';
+import { sankeyData } from '../atom/chartGenerator/spec/transformers/sankey';
 
 /**
  * extract vmind chart type from spec
@@ -329,7 +326,7 @@ export const fillSpecTemplateWithData = (template: any, dataset: DataTable, prop
       totalTime
     };
     const { spec: spec1 } = data(contextNew);
-    const { spec } = legend({ ...contextNew, spec: spec1 });
+    const { spec } = discreteLegend({ ...contextNew, spec: spec1 });
     return spec;
   }
   if (['pie', 'scatter', 'rose', 'radar', 'waterfall', 'boxPlot'].includes(type)) {
@@ -379,7 +376,7 @@ export const fillSpecTemplateWithData = (template: any, dataset: DataTable, prop
     }
 
     const { spec: spec1 } = data(context);
-    const { spec: finalSpec } = legend({ ...context, spec: spec1 });
+    const { spec: finalSpec } = discreteLegend({ ...context, spec: spec1 });
 
     //const { spec } = dualAxisSeries({ ...context, spec: spec2 });
     const { cartesianInfo, y } = cellNew;
