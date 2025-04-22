@@ -1,5 +1,4 @@
-import { group } from './../../../../../../calculator/src/pipes/group';
-import { array, isArray } from '@visactor/vutils';
+import { array, isArray, isNil } from '@visactor/vutils';
 import type { GenerateChartCellContext } from '../../type';
 
 const handleMaybeArray = (spec: any, handler: (spec: any) => any) => {
@@ -7,6 +6,36 @@ const handleMaybeArray = (spec: any, handler: (spec: any) => any) => {
     return spec.map(handler);
   }
   return handler(spec);
+};
+
+const combineTitle = (titleSpec: any) => {
+  const titlesByOrient: any = {};
+
+  titleSpec.forEach((title: any) => {
+    const { orient } = title;
+    if (!titlesByOrient[orient]) {
+      titlesByOrient[orient] = [];
+    }
+    titlesByOrient[orient].push(title);
+  });
+
+  const res: any[] = [];
+
+  Object.values(titlesByOrient).forEach((titles: any) => {
+    if (titles.length === 2 && titles.every((title: any) => isNil(title.text))) {
+      res.push({
+        ...titles[0],
+        text: titles[0].text,
+        subtext: titles[1].text
+      });
+    } else {
+      titles.forEach((title: any) => {
+        res.push(title);
+      });
+    }
+  });
+
+  return res;
 };
 
 export const fomartSimpleSpec = (context: GenerateChartCellContext) => {
@@ -19,7 +48,10 @@ export const fomartSimpleSpec = (context: GenerateChartCellContext) => {
       delete spec.legends;
     }
     if (simpleVChartSpec.title) {
-      spec.title = simpleVChartSpec.title;
+      spec.title =
+        isArray(simpleVChartSpec.title) && simpleVChartSpec.title.length >= 2
+          ? combineTitle(simpleVChartSpec.title)
+          : simpleVChartSpec.title;
     } else if ('title' in spec) {
       delete spec.title;
     }

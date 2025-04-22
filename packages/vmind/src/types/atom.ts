@@ -225,7 +225,7 @@ export interface ChartGeneratorCtx extends BaseContext {
   /** field mapping result */
   cell: Cell;
   /** vizSchema */
-  vizSchema: VizSchema;
+  vizSchema?: VizSchema;
   /** chart spec */
   spec: any;
   /** chart advistor result */

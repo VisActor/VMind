@@ -7,7 +7,6 @@ export interface SimpleVChartSpec {
     | 'area'
     | 'line'
     | 'bar'
-    | 'histogram'
     | 'rangeColumn'
     | 'rangeArea'
     | 'map'
@@ -28,7 +27,6 @@ export interface SimpleVChartSpec {
     | 'sunburst'
     | 'circlePacking'
     | 'heatmap'
-    | 'correlation'
     | 'liquid'
     | 'venn'
     | 'mosaic';
@@ -63,10 +61,12 @@ export interface SimpleVChartSpec {
   /**
    * 返回所有的坐标轴，注意：
    * 直角坐标系的坐标轴可以位于'top' | 'left' | 'right' |'bottom', 极坐标系可以位于'radius' | 'angle'
-   * hasGrid 表示是否存在垂直于轴线方向的网格线或者网格快
+   * hasGrid 表示是否存在垂直于轴线方向的网格线或者网格块
+   * 当坐标轴不可见时，visible 为 false
    */
   axes?: {
-    type: 'band' | 'linear' | 'time';
+    visible?: boolean;
+    type: 'band' | 'linear';
     orient: 'top' | 'left' | 'right' | 'bottom' | 'radius' | 'angle';
     hasGrid?: boolean;
   }[];

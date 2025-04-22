@@ -131,6 +131,12 @@ function createImage(spec, options = {}) {
   spec.height = options.height ?? 300;
 
   try {
+    if (spec.type === 'liquid') {
+      VChart.registerLiquidChart();
+    } else if (spec.type === 'venn') {
+      VChart.registerVennChart();
+    }
+
     const vchart = new VChart.default(spec, {
       mode: 'node',
       modeParams: canvas,
@@ -180,7 +186,8 @@ function compareSpec(spec, specByLLM, checkPaths = []) {
   };
 }
 
-const testImage = async (model, vmind) => {
+const testImage = async vmind => {
+  const model = vmind.llm.options.model;
   if (!modelResultMap[model]) {
     modelResultMap[model] = { totalCount: 0, successCount: 0, errorCount: 0, record: {}, score: 0 };
   }
@@ -204,6 +211,11 @@ const testImage = async (model, vmind) => {
       if (error) {
         modelResultMap[model].errorCount += 1;
       } else {
+        modelResultMap[model].record[specName] = {
+          score: 0,
+          specByLLM,
+          simpleVChartSpec: vmind.data2ChartSchedule.context?.simpleVChartSpec
+        };
         const llmImageBase64 = createImage(specByLLM, {
           needBase64: false,
           saveImageDir: 'images',
@@ -214,12 +226,8 @@ const testImage = async (model, vmind) => {
 
         modelResultMap[model].successCount += 1;
         modelScore += score * (llmImageBase64 ? 1 : 0); // 如果没有生成图片，不计入分数
-        modelResultMap[model].record[specName] = {
-          score,
-          diffPaths,
-          specByLLM,
-          simpleVChartSpec: vmind.data2ChartSchedule.context?.simpleVChartSpec
-        };
+        modelResultMap[model].record[specName].score = score;
+        modelResultMap[model].record[specName].diffPaths = diffPaths;
       }
     } catch (err) {
       console.log(`[error] - ${specName}`, err, vmind.data2ChartSchedule.context?.simpleVChartSpec);
@@ -242,14 +250,14 @@ const testImage = async (model, vmind) => {
   generateResultHtml();
 };
 
-const getGptVMind = (showThoughts = false) => {
+const getGptVMind = (model, showThoughts = false) => {
   const gptKey = process.env.VITE_GPT_KEY;
   const gptURL = process.env.VITE_GPT_JEST_URL;
 
   if (gptKey && gptURL) {
     const vmind = new VMind({
       url: gptURL,
-      model: Model.GPT_4o,
+      model,
       showThoughts: showThoughts,
       headers: {
         'api-key': gptKey
@@ -261,4 +269,4 @@ const getGptVMind = (showThoughts = false) => {
   return null;
 };
 
-testImage(Model.GPT_4o, getGptVMind());
+testImage(getGptVMind(Model.GPT_4o));

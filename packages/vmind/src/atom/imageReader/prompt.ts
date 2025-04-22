@@ -14,7 +14,7 @@ When executing the task, you need to meet the following requirements:
 \`\`\`
 {
     /** 图表的类型 */
-    type:  "common"|"area"|"line"|"bar"|"histogram"|"rangeColumn"|"rangeArea"|"map"|"pie"|"radar"|"rose"|"scatter"|"sequence"|"circularProgress"|"linearProgress"|"wordCloud"|"funnel"|"waterfall"|"boxPlot"|"gauge"|"sankey"|"treemap"|"sunburst"|"circlePacking"|"heatmap"|"correlation"|"liquid"|"venn"|"mosaic";
+    type:  "common"|"area"|"line"|"bar"|"rangeColumn"|"rangeArea"|"map"|"pie"|"radar"|"rose"|"scatter"|"sequence"|"circularProgress"|"linearProgress"|"wordCloud"|"funnel"|"waterfall"|"boxPlot"|"gauge"|"sankey"|"treemap"|"sunburst"|"circlePacking"|"heatmap"|"liquid"|"venn"|"mosaic";
    /**
   * "none" - 无坐标系
   * "rect" - 直角坐标系
@@ -46,9 +46,10 @@ When executing the task, you need to meet the following requirements:
   /** 
   * 返回所有的坐标轴，注意：
   * 直角坐标系的坐标轴可以位于'top' | 'left' | 'right' |'bottom', 极坐标系可以位于'radius' | 'angle' 
-  * hasGrid 表示是否存在垂直于轴线方向的网格线或者网格快
+  * hasGrid 表示是否存在垂直于轴线方向的网格线或者网格块
+  * 当坐标轴不可见时，visible 为 false
   */
-  axes?: {  type: 'band' | 'linear' | 'time'; orient: 'top' | 'left' | 'right' |'bottom' | 'radius' | 'angle'; hasGrid?: boolean }[];
+  axes?: { visible?: boolean; type: 'band' | 'linear'; orient: 'top' | 'left' | 'right' |'bottom' | 'radius' | 'angle'; hasGrid?: boolean }[];
   /**
    * 指标组件，一般在环形图、水波图、进度条等图表中，用于展示特定的指标数据，一般位于图表的中心或者底部
    */

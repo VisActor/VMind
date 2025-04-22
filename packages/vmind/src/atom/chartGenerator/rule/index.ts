@@ -1,8 +1,9 @@
 import type { SimpleVChartSpec } from '../../../atom/imageReader/interface';
 import { ROLE, DataType, ChartType } from '../../../types';
 import type { Cell, ChartGeneratorCtx } from '../../../types';
-import type { GenerateChartCellContext } from '../type';
+import type { GenerateChartCellContext, SimpleVChartSpecMockContext } from '../type';
 import { formatTypeToVMind } from '../spec/chartTypeUtils';
+import { unfoldTransform } from '../../../utils/unfold';
 
 /**
  * 根据规则去模拟LLM 生成结果
@@ -27,25 +28,55 @@ export const getRuleLLMContent = (context: ChartGeneratorCtx) => {
   return null;
 };
 
-export const getCellContextBySimpleVChartSpec = (
-  simpleVChartSpec: SimpleVChartSpec
-): {
-  ctx: Partial<GenerateChartCellContext>;
-  mockLLMContent: {
-    CHART_TYPE: ChartType;
-    FIELD_MAP: Cell;
-    stackOrPercent?: 'stack' | 'percent';
-    transpose?: boolean;
-  };
-} => {
+const formatDataTable = (simpleVChartSpec: SimpleVChartSpec, data: any[]): any[] => {
+  if (simpleVChartSpec.type === 'rangeColumn') {
+    const firstDatum = data[0];
+
+    if (firstDatum && 'group' in firstDatum) {
+      const groups = data.reduce((acc: any[], cur: any) => {
+        if (!acc.includes(cur.group)) {
+          acc.push(cur.group);
+        }
+        return acc;
+      }, []);
+
+      if (groups.length === 2) {
+        const newData = unfoldTransform(
+          {
+            keyField: 'group',
+            valueField: 'value',
+            groupBy: 'name'
+          },
+          data
+        );
+
+        return newData.map(entry => {
+          return {
+            name: entry.name,
+            value: entry[groups[0]],
+            value1: entry[groups[1]]
+          };
+        });
+      }
+    }
+  }
+
+  return data;
+};
+
+export const getCellContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec): SimpleVChartSpecMockContext => {
   const { type, transpose, stackOrPercent, coordinate, data, series, palette } = simpleVChartSpec;
   const cell: Cell = {};
-  const dataTable =
+
+  const dataTable = formatDataTable(
+    simpleVChartSpec,
     data ??
-    series.reduce((acc: any[], cur: any) => {
-      acc.push(...cur.data);
-      return acc;
-    }, []);
+      series.reduce((acc: any[], cur: any) => {
+        acc.push(...cur.data);
+        return acc;
+      }, [])
+  );
+
   const firstDatum = dataTable?.[0];
   const chartType =
     type === 'common'
@@ -65,9 +96,12 @@ export const getCellContextBySimpleVChartSpec = (
   if (coordinate === 'polar') {
     if (type === 'pie') {
       cell.angle = 'value';
-    } else {
+    } else if (type === 'rose') {
       cell.angle = 'name';
       cell.radius = 'value';
+    } else if (type === 'radar') {
+      cell.x = 'name';
+      cell.y = 'value';
     }
     cell.category = 'name';
   } else if (coordinate === 'rect' || chartType === 'funnel') {
@@ -88,6 +122,15 @@ export const getCellContextBySimpleVChartSpec = (
 
     return res;
   }, []);
+
+  if (chartType === 'rangeColumn' && 'value1' in firstDatum) {
+    cell.y = ['value', 'value1'];
+    fieldInfo.push({
+      fieldName: 'value1',
+      type: DataType.FLOAT,
+      role: ROLE.MEASURE
+    });
+  }
 
   return {
     mockLLMContent: {

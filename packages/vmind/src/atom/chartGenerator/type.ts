@@ -16,7 +16,6 @@ export type ChartKnowledge = {
 export interface GenerateChartCellContext extends ChartGeneratorCtx {
   colors?: string[];
   chartTheme?: ChartTheme | string;
-  vizSchema: VizSchema;
   chartTypeList: ChartType[];
   /** only use in map chart */
   basemapOption?: BasemapOption;
@@ -46,4 +45,14 @@ export interface ChartGeneratorOptions extends BaseOptions {
   basemapOption?: BasemapOption;
   colorPalette?: string[];
   theme?: ChartTheme | string;
+}
+
+export interface SimpleVChartSpecMockContext {
+  ctx: Partial<GenerateChartCellContext>;
+  mockLLMContent: {
+    CHART_TYPE: ChartType;
+    FIELD_MAP: Cell;
+    stackOrPercent?: 'stack' | 'percent';
+    transpose?: boolean;
+  };
 }
