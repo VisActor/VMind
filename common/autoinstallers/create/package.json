@@ -10,7 +10,7 @@
     "prettier": "2.7.1",
     "prompts": "2.4.2",
     "string.prototype.replaceall": "1.0.6",
-    "ts-node": "10.9.0",
+    "ts-node": "^10.9.2",
     "zx": "4.2.0"
   },
   "devDependencies": {

@@ -43,7 +43,7 @@
     "@types/node": "*",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
-    "ts-node": "10.9.0",
+    "ts-node": "^10.9.2",
     "typescript": "4.9.5",
     "@internal/ts-config": "workspace:*",
     "@internal/eslint-config": "workspace:*",
