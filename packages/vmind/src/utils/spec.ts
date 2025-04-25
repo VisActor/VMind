@@ -10,14 +10,11 @@ import {
   FOLD_VALUE_SUB,
   GROUP_FIELD
 } from '@visactor/chart-advisor';
-import {
-  data,
-  funnelData,
-  legend,
-  sankeyData,
-  sequenceData,
-  wordCloudData
-} from '../atom/chartGenerator/spec/transformers';
+import { data, discreteLegend as legend } from '../atom/chartGenerator/spec/transformers/common';
+import { funnelData } from '../atom/chartGenerator/spec/transformers/funnel';
+import { sankeyData } from '../atom/chartGenerator/spec/transformers/sankey';
+import { sequenceData } from '../atom/chartGenerator/spec/transformers/rankingBar';
+import { wordCloudData } from '../atom/chartGenerator/spec/transformers/wordcloud';
 import { foldDataTableByYField, foldDatasetByYField } from './dataTable';
 
 /**

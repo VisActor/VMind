@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { DatasetFromText, MultipleDataCleanCtx } from '../../types/atom';
+import type { DatasetFromText, MultipleDataCleanCtx, MultipleDataCleanOptions } from '../../types';
 import { AtomName } from '../../types/atom';
-import type { MultipleDataCleanOptions } from '../type';
 import { BaseAtom } from '../base';
 import { isArray, merge } from '@visactor/vutils';
 import {
@@ -12,6 +11,8 @@ import {
   mergeDataTable
 } from './utils';
 import { pipelines } from './dataClean';
+import { Factory } from '../../core/factory';
+import type { BaseAtomConstructor } from '../../types';
 
 export class MultipleDataCleanAtom extends BaseAtom<MultipleDataCleanCtx, MultipleDataCleanOptions> {
   name = AtomName.MULTIPLE_DATA_CLEAN;
@@ -67,11 +68,6 @@ export class MultipleDataCleanAtom extends BaseAtom<MultipleDataCleanCtx, Multip
       if (this.options.hierarchicalClustering) {
         const { clusterResult = [] } = getSplitDataViewOfDataTable(newDataset, this.options.clusterThreshold);
         if (false && canMergeClusterResult(clusterResult)) {
-          /** todo */
-          newDataset = {
-            ...newDataset,
-            ...mergeClusterDataView(clusterResult)
-          };
         } else if (clusterResult.length) {
           const maxValidCount = clusterResult[0].validCellCount;
           newDataset = clusterResult
@@ -108,3 +104,10 @@ export class MultipleDataCleanAtom extends BaseAtom<MultipleDataCleanCtx, Multip
     return this.context;
   }
 }
+
+export const registerMultipleDataCleanAtom = () => {
+  Factory.registerAtom(
+    AtomName.MULTIPLE_DATA_CLEAN,
+    MultipleDataCleanAtom as unknown as BaseAtomConstructor<MultipleDataCleanCtx, MultipleDataCleanOptions>
+  );
+};

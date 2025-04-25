@@ -22,6 +22,7 @@ import { pipelineRankingBar } from './transformers/rankingBar';
 import { pipelineRose } from './transformers/rose';
 import { pipelineSankey } from './transformers/sankey';
 import { pipelineScatterPlot } from './transformers/scatter';
+import { fomartSimpleSpec } from './transformers/simpleSpec';
 import { pipelineSunburst } from './transformers/sunburst';
 import { pipelineTreemap } from './transformers/treemap';
 import { pipelineVenn } from './transformers/venn';
@@ -56,7 +57,7 @@ const pipelineMap: { [chartType: string]: any } = {
   [ChartType.VennChart.toUpperCase()]: pipelineVenn
 };
 
-const beforePipe = () => {
+const beforePipe = (context: GenerateChartCellContext) => {
   return { spec: {} };
 };
 
@@ -71,7 +72,9 @@ const afterPipe = (context: GenerateChartCellContext) => {
 
 export const getChartSpecWithContext = (context: GenerateChartCellContext) => {
   const { chartType } = context;
-  const chartSpecPipelines = [beforePipe, revisedVChartType, ...pipelineMap[chartType.toUpperCase()], theme, afterPipe];
+  const pipline = pipelineMap[chartType.toUpperCase()] ? pipelineMap[chartType.toUpperCase()] : [];
+
+  const chartSpecPipelines = [beforePipe, revisedVChartType, ...pipline, theme, fomartSimpleSpec, afterPipe];
   let newContext = { ...context };
   chartSpecPipelines.forEach(func => {
     newContext = {

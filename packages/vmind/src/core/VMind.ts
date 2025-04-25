@@ -27,9 +27,9 @@ import { getFieldInfoFromDataset } from '../utils/field';
 import { parseCSVData } from '../utils/dataTable';
 import { fillSpecTemplateWithData } from '../utils/spec';
 import { _chatToVideoWasm } from '../utils/video';
-import type { DataInsightOptions } from '../atom';
 import { merge } from '@visactor/vutils';
 import type { Insight } from '../atom/dataInsight/type';
+import type { DataInsightOptions } from '../atom/dataInsight/type';
 
 class VMind {
   private options: VMindOptions;
@@ -247,6 +247,7 @@ class VMind {
     fieldInfo?: FieldInfo[],
     dataset?: DataTable,
     options?: {
+      image?: string;
       chartTypeList?: ChartType[];
       colorPalette?: string[];
       animationDuration?: number;
@@ -255,7 +256,7 @@ class VMind {
       basemapOption?: BasemapOption;
     }
   ): Promise<ChartGeneratorCtx> {
-    const { enableDataQuery = false } = options || {};
+    const { enableDataQuery = false, image } = options || {};
     this.data2ChartSchedule.updateOptions({
       base: {
         showThoughts: this.options.showThoughts
@@ -264,14 +265,17 @@ class VMind {
         ...options
       }
     });
+    const userCommand = image ? '' : userPrompt || '';
     this.data2ChartSchedule.setNewTask({
       fieldInfo,
       dataTable: dataset,
-      command: userPrompt || ''
+      command: userCommand,
+      image
     });
     const shouldRunList: Record<string, boolean> = {
-      [AtomName.DATA_QUERY]: enableDataQuery,
-      [AtomName.CHART_COMMAND]: !userPrompt
+      [AtomName.DATA_QUERY]: enableDataQuery && !image,
+      [AtomName.CHART_COMMAND]: !userCommand && !image,
+      [AtomName.IMAGE_READER]: !!image
     };
     const { chartType, chartAdvistorRes, spec, command, cell, vizSchema, dataTable, time, usage, error } =
       await this.data2ChartSchedule.run(undefined, shouldRunList);

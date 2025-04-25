@@ -16,15 +16,17 @@ export { getVChartTypeByVmind } from './spec/chartTypeUtils';
 export const getVizSchema = (context: ChartGeneratorCtx) => {
   const { fieldInfo } = context;
   return {
-    fields: fieldInfo.map(d => ({
-      id: d.fieldName,
-      alias: d.fieldName,
-      description: d.description,
-      visible: true,
-      type: d.type,
-      role: d.role,
-      location: d.role
-    }))
+    fields:
+      fieldInfo &&
+      fieldInfo.map(d => ({
+        id: d.fieldName,
+        alias: d.fieldName,
+        description: d.description,
+        visible: true,
+        type: d.type,
+        role: d.role,
+        location: d.role
+      }))
   };
 };
 

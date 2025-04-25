@@ -1,5 +1,4 @@
-import { AtomName, type DataExtractionCtx } from '../../types/atom';
-import type { BaseOptions, DataExtractionOptions } from '../type';
+import { AtomName, type DataExtractionCtx, type DataExtractionOptions, type BaseOptions } from '../../types/atom';
 import { BaseAtom } from '../base';
 import { merge, pick } from '@visactor/vutils';
 import type { LLMMessage } from '../../types/llm';
@@ -9,6 +8,8 @@ import { formatFieldInfo, getFieldInfoFromDataset, getRoleByFieldType, hasMeasur
 import { getCtxBymeasureAutoTransfer } from '../dataClean/utils';
 import type { DatasetFromText, DataTable, FieldInfo } from '../../types';
 import { DataType } from '../../types';
+import { Factory } from '../../core/factory';
+import type { BaseAtomConstructor } from '../../types';
 
 export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtractionOptions> {
   name = AtomName.DATA_EXTRACT;
@@ -198,3 +199,10 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
     return getCtxBymeasureAutoTransfer(this.context, this.context.text) as DataExtractionCtx;
   }
 }
+
+export const registerDataExtractionAtom = () => {
+  Factory.registerAtom(
+    AtomName.DATA_EXTRACT,
+    DataExtractionAtom as unknown as BaseAtomConstructor<DataExtractionCtx, DataExtractionOptions>
+  );
+};

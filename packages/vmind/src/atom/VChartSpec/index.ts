@@ -1,8 +1,9 @@
 import { AtomName } from '../../types/atom';
-import type { BaseOptions } from '../type';
 import { BaseAtom } from '../base';
-import type { VChartSpecCtx } from '../../types';
+import type { BaseOptions, VChartSpecCtx } from '../../types';
 import { runOperactionsOfSpec } from './utils';
+import { Factory } from '../../core/factory';
+import type { BaseAtomConstructor } from '../../types';
 
 export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
   name = AtomName.VCHART_SPEC;
@@ -37,3 +38,7 @@ export class VChartSpec extends BaseAtom<VChartSpecCtx, BaseOptions> {
     return this.context;
   }
 }
+
+export const registerVChartSpecAtom = () => {
+  Factory.registerAtom(AtomName.VCHART_SPEC, VChartSpec as unknown as BaseAtomConstructor<VChartSpecCtx, BaseOptions>);
+};

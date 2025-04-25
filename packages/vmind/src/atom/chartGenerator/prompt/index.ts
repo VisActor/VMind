@@ -8,9 +8,9 @@ import {
   visualChannelInfoMap
 } from './knowledges';
 import { getStrFromArray } from '../../../utils/common';
+import type { VizSchema } from '../../../types';
 import { ChartType } from '../../../types';
 import type { VisualChannel } from '../type';
-import type { VizSchema } from '../../type';
 
 /* eslint-disable max-len */
 const ChartAdvisorPromptEnglish = (

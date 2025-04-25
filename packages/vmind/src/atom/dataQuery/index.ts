@@ -1,6 +1,5 @@
-import type { DataQueryCtx } from '../../types/atom';
+import type { DataQueryCtx, DataQueryOptions, BaseOptions } from '../../types';
 import { AtomName } from '../../types/atom';
-import type { BaseOptions, DataQueryOptions } from '../type';
 import { BaseAtom } from '../base';
 import { merge, pick } from '@visactor/vutils';
 import type { LLMMessage, LLMResponse } from '../../types/llm';
@@ -9,6 +8,8 @@ import { parseSQLResponse } from './utils';
 import type { ExecuteQueryCtx } from './executeQuery';
 import { executeDataQuery, getFinalQueryResult, patchSQLBeforeQuery, restoreDatasetAfterQuery } from './executeQuery';
 import { getFieldInfoFromDataset } from '../../utils/field';
+import { Factory } from '../../core/factory';
+import type { BaseAtomConstructor } from '../../types';
 
 export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
   name = AtomName.DATA_QUERY;
@@ -97,3 +98,10 @@ export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
     return this.context;
   }
 }
+
+export const registerDataQueryAtom = () => {
+  Factory.registerAtom(
+    AtomName.DATA_QUERY,
+    DataQueryAtom as unknown as BaseAtomConstructor<DataQueryCtx, DataQueryOptions>
+  );
+};

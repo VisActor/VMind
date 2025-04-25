@@ -40,7 +40,7 @@ export const colorBar = (context: GenerateChartCellContext) => {
 
 export const cartesianBar = (context: GenerateChartCellContext) => {
   //assign fields according to cell
-  const { cell, fieldInfo, spec, stackOrPercent } = context;
+  const { cell, fieldInfo = [], spec, stackOrPercent } = context;
   const cellNew = { ...cell };
   const flattenedXField = Array.isArray(cell.x) ? cell.x : [cell.x];
   if (cell.color && cell.color.length > 0 && cell.color !== cell.x) {

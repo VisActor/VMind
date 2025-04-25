@@ -1,6 +1,5 @@
 import type { DataInsightCtx } from '../../types/atom';
 import { AtomName } from '../../types/atom';
-import type { DataInsightOptions } from '../type';
 import { BaseAtom } from '../base';
 import { merge } from '@visactor/vutils';
 import { extractDataFromContext } from './dataProcess';
@@ -9,6 +8,9 @@ import { getInsights } from './algorithms';
 import type { LLMMessage } from '../../types/llm';
 import { getPolishPrompt } from './prompt';
 import { addPlainText } from './algorithms/template';
+import type { DataInsightOptions } from './type';
+import { Factory } from '../../core/factory';
+import type { BaseAtomConstructor } from '../../types';
 
 export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions> {
   name = AtomName.DATA_INSIGHT;
@@ -137,3 +139,10 @@ export class DataInsightAtom extends BaseAtom<DataInsightCtx, DataInsightOptions
     return this.context;
   }
 }
+
+export const registerDataInsightAtom = () => {
+  Factory.registerAtom(
+    AtomName.DATA_INSIGHT,
+    DataInsightAtom as unknown as BaseAtomConstructor<DataInsightCtx, DataInsightOptions>
+  );
+};

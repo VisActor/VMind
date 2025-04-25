@@ -7,14 +7,30 @@ import {
   MEASURE_AXIS_RIGHT_ID,
   SUB_SERIES_ID
 } from '../constants';
-import { color, data, discreteLegend, revisedVChartType, theme } from './common';
+import { color, data, discreteLegend } from './common';
 import { COLOR_FIELD } from '@visactor/chart-advisor';
 
 export const dualAxisSeries = (context: GenerateChartCellContext) => {
   //assign series in dual-axis chart
-  const { cell, spec } = context;
+  const { cell, spec, simpleVChartSpec } = context;
   const { color } = cell;
   const dataValues = spec.data.values;
+
+  if (simpleVChartSpec && simpleVChartSpec.series) {
+    spec.series = simpleVChartSpec.series.map(s => {
+      return {
+        ...s,
+        data: {
+          id: `data_${s.type}`,
+          values: s.data
+        },
+        xField: cell.x,
+        yField: cell.y[0],
+        seriesField: color ? (isArray(color) ? color[0] : color) : null
+      };
+    });
+    return { spec };
+  }
 
   spec.series = [
     {
@@ -61,7 +77,12 @@ export const dualAxisSeries = (context: GenerateChartCellContext) => {
 
 export const dualAxisAxes = (context: GenerateChartCellContext) => {
   //assign axes in dual-axis chart
-  const { spec } = context;
+  const { spec, simpleVChartSpec } = context;
+
+  if (simpleVChartSpec && simpleVChartSpec.series) {
+    return { spec };
+  }
+
   spec.axes = [
     {
       id: DIMENSION_AXIS_ID,

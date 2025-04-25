@@ -1,58 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { merge } from '@visactor/vutils';
-import type { BaseContext, Usage } from '../types/atom';
+import type { BaseContext, Usage, IBaseAtom, BaseOptions } from '../types/atom';
 import { AtomName } from '../types/atom';
-import { BaseAtom } from '../atom/base';
-import {
-  DataQueryAtom,
-  DataExtractionAtom,
-  ChartGeneratorAtom,
-  ChartCommandAtom,
-  DataInsightAtom,
-  MultipleDataCleanAtom,
-  MultipleChartCommandAtom,
-  CustomPrompt,
-  ChartQAExtraction,
-  VChartSpec,
-  SpecInsightAtom
-} from '../atom';
-import type { CombineAll, MapAtomTypes, TaskMapping } from '../types/schedule';
-import { DataCleanAtom } from '../atom/dataClean/dataClean';
-import type {
-  BaseOptions,
-  ChartCommandOptions,
-  ChartGeneratorOptions,
-  DataCleanOptions,
-  DataExtractionOptions,
-  DataInsightOptions,
-  CustomPromptOptions,
-  SpecInsightOptions
-} from '../atom/type';
-
-export interface ScheduleOptions {
-  [AtomName.BASE]?: BaseOptions;
-  [AtomName.DATA_EXTRACT]?: DataExtractionOptions;
-  [AtomName.DATA_CLEAN]?: DataCleanOptions;
-  [AtomName.MULTIPLE_DATA_CLEAN]?: DataCleanOptions;
-  [AtomName.DATA_QUERY]?: BaseOptions;
-  [AtomName.DATA_INSIGHT]?: DataInsightOptions;
-  [AtomName.SPEC_INSIGHT]?: SpecInsightOptions;
-  [AtomName.CHART_GENERATE]?: ChartGeneratorOptions;
-  [AtomName.CHART_COMMAND]?: ChartCommandOptions;
-  [AtomName.MULTIPLE_CHART_COMMAND]?: ChartCommandOptions;
-  [AtomName.CHART_QA_EXTRACTION]?: BaseOptions;
-  [AtomName.CUSTOM_PROMPT]?: CustomPromptOptions;
-  [AtomName.VCHART_SPEC]?: BaseOptions;
-}
+import type { CombineAll, MapAtomTypes, ScheduleOptions, TaskMapping } from '../types/schedule';
+import { Factory } from '../core/factory';
 
 export class Schedule<T extends AtomName[]> {
-  atomInstaces: (
-    | DataExtractionAtom
-    | DataCleanAtom
-    | DataQueryAtom
-    | ChartGeneratorAtom
-    | BaseAtom<BaseContext, BaseOptions>
-  )[];
+  atomInstaces: IBaseAtom<BaseContext, BaseOptions>[];
 
   atomList: AtomName[];
 
@@ -83,39 +37,13 @@ export class Schedule<T extends AtomName[]> {
   }
 
   getAtomOptions(atomName: AtomName) {
-    return merge({}, this.options[AtomName.BASE], this.options[atomName]);
+    return merge({}, this.options[AtomName.BASE], (this.options as any)[atomName]);
   }
 
   atomFactory(atomName: AtomName) {
     const options = this.getAtomOptions(atomName);
-    switch (atomName) {
-      case AtomName.DATA_EXTRACT:
-        return new DataExtractionAtom(this.context, options);
-      case AtomName.DATA_CLEAN:
-        return new DataCleanAtom(this.context, options);
-      case AtomName.MULTIPLE_DATA_CLEAN:
-        return new MultipleDataCleanAtom(this.context, options);
-      case AtomName.DATA_QUERY:
-        return new DataQueryAtom(this.context, options);
-      case AtomName.DATA_INSIGHT:
-        return new DataInsightAtom(this.context, options);
-      case AtomName.SPEC_INSIGHT:
-        return new SpecInsightAtom(this.context, options);
-      case AtomName.CHART_COMMAND:
-        return new ChartCommandAtom(this.context, options);
-      case AtomName.MULTIPLE_CHART_COMMAND:
-        return new MultipleChartCommandAtom(this.context, options);
-      case AtomName.CHART_GENERATE:
-        return new ChartGeneratorAtom(this.context, options);
-      case AtomName.CHART_QA_EXTRACTION:
-        return new ChartQAExtraction(this.context, options);
-      case AtomName.CUSTOM_PROMPT:
-        return new CustomPrompt(this.context, options);
-      case AtomName.VCHART_SPEC:
-        return new VChartSpec(this.context, options);
-      default:
-        return new BaseAtom(this.context, options);
-    }
+
+    return Factory.createAtom(atomName, this.context, options);
   }
 
   /** regonize user intention and parse as sub tasks to atom instances */
@@ -158,8 +86,8 @@ export class Schedule<T extends AtomName[]> {
       total_tokens: 0
     };
     for (const atom of this.atomInstaces) {
-      const { shouldRun, query: taskQuery } = subTasks?.[atom.name] || {};
-      if (shouldRunList?.[atom.name] !== false && (shouldRun || atom.shouldRunByContextUpdate(this.context))) {
+      const { shouldRun, query: taskQuery } = (subTasks as any)?.[atom.name] || {};
+      if ((shouldRunList as any)?.[atom.name] !== false && (shouldRun || atom.shouldRunByContextUpdate(this.context))) {
         this.context = await atom.run({ context: this.context, query: taskQuery });
         usage = this.addUsage(usage, atom.getContext()?.usage);
       }
@@ -183,7 +111,7 @@ export class Schedule<T extends AtomName[]> {
 
   updateOptions(options: ScheduleOptions) {
     this.options = merge({}, this.options, options);
-    this.atomInstaces.forEach(atom => atom.updateOptions(this.getAtomOptions(atom.name)));
+    this.atomInstaces.forEach(atom => atom.updateOptions(this.getAtomOptions(atom.name as AtomName)));
   }
 
   updateContext(context: any, isReplace = false) {

@@ -31,9 +31,12 @@ export const seriesField = (context: GenerateChartCellContext) => {
       }
     }
     if (!isValidColor) {
-      spec.seriesField = undefined;
-      spec.xField = xField.filter((field: string) => field !== colorField);
-      cellNew.color = undefined;
+      if (xField.includes(colorField) && xField.length > 1) {
+        // 对于分组柱图的情况，因为没有有效的分组，这种设置没有意义，所以删掉分组字段
+        spec.seriesField = undefined;
+        cellNew.color = undefined;
+        spec.xField = xField.filter((field: string) => field !== colorField);
+      }
     }
   }
   return { spec, cell: cellNew };
@@ -41,6 +44,11 @@ export const seriesField = (context: GenerateChartCellContext) => {
 
 export const axis = (context: GenerateChartCellContext) => {
   const { spec, cell, fieldInfo } = context;
+  // if (spec.axes) {
+  //   // 如果已经有轴配置，直接返回
+  //   return { spec };
+  // }
+
   const { y: celly } = cell;
   const yFields = isArray(celly) ? celly : [celly];
   const yFieldsInfo = yFields.map(field => fieldInfo.find(v => v.fieldName === field));

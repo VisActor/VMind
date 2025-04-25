@@ -14,3 +14,10 @@ export type OuterPackages = {
   defaultTimeline: DefaultTimeline;
   createCanvas: any;
 };
+
+export interface UnfoldTransformOptions {
+  groupBy?: string[] | string;
+  keyField: string;
+  valueField: string;
+  aggregateType?: 'sum' | 'min' | 'max' | 'count' | 'mean';
+}

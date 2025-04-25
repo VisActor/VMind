@@ -1,10 +1,12 @@
 import { AtomName } from '../../types/atom';
-import type { BaseOptions } from '../type';
+import type { BaseOptions } from '../../types';
 import { BaseAtom } from '../base';
 import type { LLMMessage } from '../../types/llm';
 import type { ChartQAExtractionCtx } from '../../types';
 import { getSystemPrompt } from './prompt';
 import { parseLLMJson } from '../../utils/json';
+import { Factory } from '../../core/factory';
+import type { BaseAtomConstructor } from '../../types';
 
 export class ChartQAExtraction extends BaseAtom<ChartQAExtractionCtx, BaseOptions> {
   name = AtomName.CHART_QA_EXTRACTION;
@@ -55,3 +57,10 @@ export class ChartQAExtraction extends BaseAtom<ChartQAExtractionCtx, BaseOption
     };
   }
 }
+
+export const registerChartQAExtractionAtom = () => {
+  Factory.registerAtom(
+    AtomName.CHART_QA_EXTRACTION,
+    ChartQAExtraction as unknown as BaseAtomConstructor<ChartQAExtractionCtx, BaseOptions>
+  );
+};
