@@ -20,7 +20,23 @@
       "title": {
         "zh": "快速上手",
         "en": "Getting Started"
-      }
+      },
+      "children": [
+        {
+          "path": "Getting_Started",
+          "title": {
+            "zh": "VMind快速上手",
+            "en": "Getting Started with VMind"  
+          } 
+        },
+        {
+          "path": "Quickly_Get_Started_with_VisActor_Using_Trae_Context_Doc",
+          "title": {
+            "zh": "使用Trace Context快速上手VisActor",
+            "en": "Quickly Get Started with VisActor Using Trace Context"
+          }
+        }
+      ]
     },
     {
       "path": "Contribution_Guide",
