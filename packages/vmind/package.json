@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vmind",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "browser": "esm/index.js",
@@ -103,14 +103,14 @@
     "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "@visactor/chart-advisor": "workspace:2.0.5",
+    "@visactor/chart-advisor": "workspace:2.0.6",
     "@visactor/vdataset": "~0.19.3",
     "@visactor/vutils": "~0.19.3",
     "axios": "^1.4.0",
     "json5": "~2.2.3",
     "dayjs": "~1.11.10",
     "js-yaml": "~4.1.0",
-    "@visactor/calculator": "workspace:2.0.5",
+    "@visactor/calculator": "workspace:2.0.6",
     "alasql": "~4.3.2",
     "@visactor/vchart-theme": "^1.11.2",
     "jstat": "~1.9.6",
