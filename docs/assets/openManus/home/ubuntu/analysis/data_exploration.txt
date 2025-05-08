@@ -1,0 +1,33 @@
+Amazon Fashion Sales Data Exploration - January 2025
+
+Dataset Overview:
+- 31 rows (daily sales for January 2025)
+- 10 columns including date, orders, customers, and financial metrics
+- No missing values in the dataset
+
+Columns:
+- Date: Date of sales (datetime64)
+- Orders: Number of orders per day (int64)
+- Unique Customers: Number of unique customers per day (int64)
+- Units Sold: Total units sold per day (int64)
+- Gross Sales: Total sales amount before deductions (float64)
+- Shipping Revenue: Revenue from shipping (float64)
+- Coupon Discounts: Discount amount from coupons (float64)
+- Amazon Fees: Fees paid to Amazon (float64)
+- Product Costs: Cost of products sold (float64)
+- Net Profit: Final profit after all deductions (float64)
+
+Basic Statistics:
+- Average daily orders: ~39
+- Average daily unique customers: ~39
+- Average daily units sold: ~101
+- Average daily gross sales: ~$5,348.56
+- Average daily net profit: ~$1,835.56
+- Highest daily orders: 79
+- Highest daily gross sales: $11,752.01
+- Highest daily net profit: $4,010.05
+
+Initial Observations:
+- Orders and unique customers are nearly identical, suggesting most customers place only one order
+- There appears to be significant daily variation in sales metrics
+- Further analysis needed to identify patterns by day of week and other factors

@@ -1,0 +1,85 @@
+# Amazon Fashion Sales Analysis - January 2025
+
+## Weekly Sales Summary
+ Week  Orders  Gross Sales  Net Profit  Units Sold  Average_Order_Value  Profit_Margin
+    1     226     30386.58     9871.64         595           135.442626      32.708879
+    2     275     37780.80    13559.80         697           136.042737      35.675951
+    3     316     45545.99    15827.16         851           144.970516      34.343915
+    4     248     31341.21    10050.28         607           125.066667      31.643778
+    5     148     20750.81     7593.51         387           139.948597      36.441550
+
+## Day of Week Analysis
+Day_of_Week  Orders  Gross Sales  Net Profit  Units Sold  Average_Order_Value  Profit_Margin  Conversion_Rate
+     Monday   34.75    5232.0825   1872.7900       96.75           146.423938      35.822693       100.000000
+    Tuesday   52.25    7152.3300   2410.6700      135.00           133.406436      33.274309       100.357143
+  Wednesday   30.20    4313.9020   1537.0080       81.40           143.503032      35.605238       100.000000
+   Thursday   28.60    3763.0660   1183.6480       73.20           131.742903      31.753670       100.000000
+     Friday   44.00    6015.2760   2078.3560      113.60           137.213694      34.383283       100.000000
+   Saturday   41.75    5397.4900   1805.6050      102.75           129.425496      33.383204       100.641026
+     Sunday   46.00    6054.1400   2137.7675      114.50           130.048484      34.691468       100.000000
+
+## Correlation Analysis
+                     Orders  Units Sold  Gross Sales  Net Profit  Average_Order_Value  Units_per_Order  Profit_Margin  Shipping_per_Order  Discount_per_Order
+Orders                 1.00        0.98         0.97        0.93                 0.09             0.13           0.04               -0.01                0.21
+Units Sold             0.98        1.00         0.99        0.95                 0.26             0.33           0.05                0.02                0.17
+Gross Sales            0.97        0.99         1.00        0.98                 0.32             0.32           0.14                0.01                0.17
+Net Profit             0.93        0.95         0.98        1.00                 0.38             0.31           0.33               -0.02                0.12
+Average_Order_Value    0.09        0.26         0.32        0.38                 1.00             0.89           0.41                0.07               -0.10
+Units_per_Order        0.13        0.33         0.32        0.31                 0.89             1.00           0.08                0.12               -0.12
+Profit_Margin          0.04        0.05         0.14        0.33                 0.41             0.08           1.00               -0.04               -0.32
+Shipping_per_Order    -0.01        0.02         0.01       -0.02                 0.07             0.12          -0.04                1.00               -0.39
+Discount_per_Order     0.21        0.17         0.17        0.12                -0.10            -0.12          -0.32               -0.39                1.00
+
+## Outlier Analysis (January 14th)
+                                      13
+Date                 2025-01-14 00:00:00
+Day_of_Week                      Tuesday
+Orders                                79
+Units Sold                           224
+Gross Sales                     11752.01
+Net Profit                       4010.05
+Average_Order_Value            148.75962
+Units_per_Order                 2.835443
+Profit_Margin                  34.122248
+Discount_per_Order              1.992278
+
+## Comparing January 14th (Tuesday) with average Tuesday
+Orders: Jan 14 = 79.00, Avg Tuesday = 43.33, Difference = 35.67 (82.31%)
+Units Sold: Jan 14 = 224.00, Avg Tuesday = 105.33, Difference = 118.67 (112.66%)
+Gross Sales: Jan 14 = 11752.01, Avg Tuesday = 5619.10, Difference = 6132.91 (109.14%)
+Net Profit: Jan 14 = 4010.05, Avg Tuesday = 1877.54, Difference = 2132.51 (113.58%)
+Average_Order_Value: Jan 14 = 148.76, Avg Tuesday = 128.29, Difference = 20.47 (15.96%)
+Units_per_Order: Jan 14 = 2.84, Avg Tuesday = 2.42, Difference = 0.41 (17.04%)
+Profit_Margin: Jan 14 = 34.12, Avg Tuesday = 32.99, Difference = 1.13 (3.43%)
+Discount_per_Order: Jan 14 = 1.99, Avg Tuesday = 1.64, Difference = 0.35 (21.50%)
+
+## Discount Impact Analysis
+Correlation between Discount_per_Order and other metrics:
+Discount_per_Order     1.000000
+Orders                 0.205425
+Units Sold             0.170070
+Average_Order_Value   -0.097984
+Units_per_Order       -0.120498
+Gross Sales            0.173755
+Net Profit             0.117784
+
+Impact of discount levels:
+Discount_Range    Orders  Units Sold  Gross Sales  Net Profit  Average_Order_Value  Units_per_Order  Profit_Margin
+     Low (0-1) 31.111111   79.222222  4126.292222 1426.725556           132.357850         2.541760      34.598545
+  Medium (1-2) 44.166667  116.444444  6174.531667 2129.664444           140.308968         2.637570      34.314201
+    High (2-3) 34.500000   82.000000  4381.797500 1431.975000           125.683370         2.351389      32.088781
+
+## Shipping Revenue Impact Analysis
+Correlation between Shipping_per_Order and other metrics:
+Shipping_per_Order     1.000000
+Orders                -0.008446
+Units Sold             0.019099
+Average_Order_Value    0.066474
+Units_per_Order        0.119193
+Gross Sales            0.005687
+Net Profit            -0.020329
+
+Impact of shipping levels:
+Shipping_Range    Orders  Units Sold  Gross Sales  Net Profit  Average_Order_Value  Units_per_Order  Profit_Margin
+     Low (3-5) 36.200000   91.000000  4941.178000 1704.150000           135.848036         2.519047      33.325092
+  Medium (5-6) 40.142857  102.714286  5400.252857 1911.112857           132.681980         2.509347      35.470619
