@@ -1,9 +1,80 @@
 /** Atom Function Types */
-
 import type { Cell, ChartType } from './chart';
-import type { VizSchema } from '../atom/type';
 import type { FieldInfo, DataTable } from './base';
 import type { Insight } from '../atom/dataInsight/type';
+import type { ILLMManage, ToolMessage, LLMMessage } from '../types/llm';
+import type { SimpleVChartSpec } from '../atom/imageReader/interface';
+
+export interface BaseOptions {
+  /** llm manage instance */
+  llm?: ILLMManage;
+  /** function calls */
+  tools?: ToolMessage[];
+  /** show llm thoughs or not */
+  showThoughts?: boolean;
+  /** answer language */
+  language?: 'chinese' | 'english';
+  /** max history messages saved */
+  maxMessagesCnt?: number;
+}
+
+export interface DataExtractionOptions extends BaseOptions {
+  reGenerateFieldInfo?: boolean;
+  isMultiple?: boolean;
+}
+
+export interface ChartCommandOptions extends BaseOptions {
+  useDataTable?: boolean;
+  filterByRule?: boolean;
+}
+
+export type RangeValueTransferType = 'string' | 'filter' | 'avg' | 'max' | 'min' | 'first' | 'last';
+
+export interface DataCleanOptions extends BaseOptions {
+  needNumericalFields?: boolean;
+  filterSameValueColumn?: boolean;
+  measureAutoTransfer?: boolean;
+  filterSameDataItem?: boolean;
+  filterRowWithEmptyValues?: boolean;
+  rangeValueTransfer?: RangeValueTransferType;
+  hierarchicalClustering?: boolean;
+  clusterThreshold?: number;
+}
+
+export interface MultipleDataCleanOptions extends DataCleanOptions {
+  filterRatioInDataset?: number;
+}
+
+export interface DataQueryOptions extends BaseOptions {
+  /** use SQL to execute data query or not */
+  useSQL?: boolean;
+}
+
+export interface SpecInsightOptions extends BaseOptions {
+  defaultMarkerLineStyle?: any;
+  defaultMarkerSymbolStyle?: any;
+  diffMarkerSymbolStyle?: any;
+  labelBackground?: any;
+  defaultOffsetInGrowthMarkLine?: number;
+}
+
+export interface CustomPromptOptions extends BaseOptions {
+  /** prompt template */
+  promptTemplate: string;
+}
+
+export interface SchemaFieldInfo extends Pick<FieldInfo, 'description' | 'role' | 'location' | 'type'> {
+  id: string;
+  /** aliasName */
+  alias?: string;
+  /** show or not */
+  visible?: boolean;
+}
+
+export type VizSchema = {
+  chartType?: string;
+  fields: SchemaFieldInfo[];
+};
 
 export enum AtomName {
   BASE = 'base',
@@ -18,7 +89,8 @@ export enum AtomName {
   SPEC_INSIGHT = 'specInsight',
   CHART_QA_EXTRACTION = 'chartQAExtraction',
   CUSTOM_PROMPT = 'custom_prompt',
-  VCHART_SPEC = 'vchart_spec'
+  VCHART_SPEC = 'vchart_spec',
+  IMAGE_READER = 'imageReader'
 }
 
 export interface Usage {
@@ -153,7 +225,7 @@ export interface ChartGeneratorCtx extends BaseContext {
   /** field mapping result */
   cell: Cell;
   /** vizSchema */
-  vizSchema: VizSchema;
+  vizSchema?: VizSchema;
   /** chart spec */
   spec: any;
   /** chart advistor result */
@@ -162,6 +234,11 @@ export interface ChartGeneratorCtx extends BaseContext {
     spec: any;
     score: number;
   }[];
+  /**
+   * simple vchart spec
+   * 可以用于生成详细的vchart配置
+   */
+  simpleVChartSpec?: SimpleVChartSpec;
   /** animation config */
   time?: { totalTime: number; frameArr: any[] };
 }
@@ -249,4 +326,35 @@ export interface VChartSpecCtx extends BaseContext {
 export interface DialogueChartCtx extends BaseContext {
   spec: any;
   oneSpec: any;
+}
+
+export interface IBaseAtom<Ctx extends BaseContext, O extends BaseOptions> {
+  name: string;
+  options: O;
+  isLLMAtom: boolean;
+  history: {
+    map: Map<number, Ctx>;
+    idList: number[];
+    id: number;
+  };
+
+  undo: (id?: string) => void;
+  redo: (id?: string) => void;
+  buildDefaultContext: (context: Ctx) => Ctx;
+  buildDefaultOptions: () => O;
+  updateContext: (context: Partial<Ctx>, replace?: boolean) => Ctx;
+  updateOptions: (options: Partial<O>) => void;
+  reset: (context?: Partial<Ctx>) => void;
+  getContext: () => Ctx;
+  getContextBeforeRun: () => Ctx;
+  shouldRunByContextUpdate: (context: Ctx) => boolean;
+  run: (userInput?: { context?: Ctx; query?: string; messages?: ILLMManage[] }) => Promise<Ctx>;
+  runWithChat: (query: string) => Promise<Ctx>;
+  setResponses: (messages: LLMMessage[]) => void;
+  getResponses: () => LLMMessage[];
+  clearHistory: () => void;
+}
+
+export interface BaseAtomConstructor<Ctx extends BaseContext = BaseContext, O extends BaseOptions = BaseOptions> {
+  new (context: Partial<Ctx>, options: Partial<O>): IBaseAtom<Ctx, O>;
 }

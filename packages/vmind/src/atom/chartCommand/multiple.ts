@@ -1,12 +1,13 @@
 import { isArray, merge } from '@visactor/vutils';
-import type { MultipleChartCommandsCtx, LLMMessage } from '../../types';
+import type { MultipleChartCommandsCtx, LLMMessage, ChartCommandOptions, BaseOptions } from '../../types';
 import { AtomName } from '../../types';
-import type { BaseOptions, ChartCommandOptions } from '../type';
 import { BaseAtom } from '../base';
 import { getLanguageOfText } from '../../utils/text';
 import { getChartCommandPrompt } from './prompt';
 import { getRoleByFieldType } from '../../utils/field';
 import { isValidData } from '../../utils/common';
+import { Factory } from '../../core/factory';
+import type { BaseAtomConstructor } from '../../types';
 
 export class MultipleChartCommandAtom extends BaseAtom<MultipleChartCommandsCtx, ChartCommandOptions> {
   name = AtomName.MULTIPLE_CHART_COMMAND;
@@ -106,3 +107,10 @@ export class MultipleChartCommandAtom extends BaseAtom<MultipleChartCommandsCtx,
     };
   }
 }
+
+export const registerMultipleChartCommandAtom = () => {
+  Factory.registerAtom(
+    AtomName.MULTIPLE_CHART_COMMAND,
+    MultipleChartCommandAtom as unknown as BaseAtomConstructor<MultipleChartCommandsCtx, ChartCommandOptions>
+  );
+};

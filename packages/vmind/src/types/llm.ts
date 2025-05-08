@@ -83,11 +83,13 @@ export interface ToolCall {
   };
 }
 
+export type LLMContentItem = { type: 'image_url'; image_url: { url: string } } | { type: 'text'; text: string };
+
 /** LLM Messages api */
 export interface LLMMessage {
   /** prompt role, system or user query or tool result */
   role: 'system' | 'user' | 'assistant' | 'tool';
-  content: string;
+  content: string | LLMContentItem[];
   name?: string;
   tool_calls?: ToolCall[];
   tool_call_id?: string;
@@ -135,4 +137,15 @@ export interface LLMResponse extends BaseContext {
 export interface MemoryOptions {
   /** max history messages saved */
   maxMessagesCnt?: number;
+}
+
+export interface ILLMManage {
+  options: ILLMOptions;
+  historys: Record<string, BaseContext[]>;
+
+  getDefaultOptions: () => ILLMOptions;
+  updateOptions: (options: ILLMOptions) => void;
+  run: (name: AtomName, messages: LLMMessage[], tools?: ToolMessage[]) => Promise<LLMResponse | { error: any }>;
+  parseTools: (res: LLMResponse) => { error?: any; toolCalls?: any[] };
+  parseJson: (res: LLMResponse) => { error?: any; [key: string]: any };
 }

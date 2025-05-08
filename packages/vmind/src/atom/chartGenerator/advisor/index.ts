@@ -4,7 +4,7 @@ import { chartAdvisor } from '@visactor/chart-advisor';
 import type { GenerateChartCellContext } from '../type';
 import { isValidDataTable } from '../../../utils/dataTable';
 import { chartTypeMap, getCell, typeMap, VMindChartTypeMap } from '../utils';
-import type { VizSchema } from '../../type';
+import type { VizSchema } from '../../../types/';
 import { ChartType as VMindChartType } from '../../../types';
 import type { Cell, DataTable } from '../../../types';
 import { uniqBy } from '../../../utils/common';

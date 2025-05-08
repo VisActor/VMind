@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
+
 import { stringSimilarity } from 'string-similarity-js';
 import { DataType, ROLE } from '../../../../../src';
 import type { DataCell, DataExtractionCtx, FieldInfo, DataTable } from '../../../../../src';

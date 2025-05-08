@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vmind",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "browser": "esm/index.js",
@@ -37,6 +37,7 @@
     "start": "vite ./__tests__/browser",
     "exp": "vite ./__tests__/experiment",
     "build": "bundle --clean",
+    "compile": "tsc --noEmit",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite ./__tests__/browser preview",
     "clear": "rm -rf build && rm -rf esm && rm -rf cjs",
@@ -50,7 +51,8 @@
     "release-minor": "npm version minor && npm publish && git commit -a -m 'chore: release minor version for vmind' && git push",
     "release-alpha": "npm version prerelease --preid alpha && npm publish --tag alpha && git commit -a -m 'chore: release alpha version for vmind' && git push",
     "release-beta": "npm version prerelease --preid beta && npm publish --tag beta && git commit -a -m 'chore: release beta version for vmind' && git push",
-    "release": "npm version patch && npm publish && git commit -a -m 'chore: release patch version for vmind' && git push"
+    "release": "npm version patch && npm publish && git commit -a -m 'chore: release patch version for vmind' && git push",
+    "test-image-to-spec": "ts-node --skipProject __tests__/image-to-spec/testImage.ts"
   },
   "devDependencies": {
     "vite-plugin-libcss": "~1.1.1",
@@ -97,17 +99,18 @@
     "@types/density-clustering": "~1.3.3",
     "@types/euclidean-distance": "~1.0.3",
     "express": "~4.21.1",
-    "sass": "^1.65.1"
+    "sass": "^1.65.1",
+    "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "@visactor/chart-advisor": "workspace:2.0.5",
+    "@visactor/chart-advisor": "workspace:2.0.6",
     "@visactor/vdataset": "~0.19.3",
     "@visactor/vutils": "~0.19.3",
     "axios": "^1.4.0",
     "json5": "~2.2.3",
     "dayjs": "~1.11.10",
     "js-yaml": "~4.1.0",
-    "@visactor/calculator": "workspace:2.0.5",
+    "@visactor/calculator": "workspace:2.0.6",
     "alasql": "~4.3.2",
     "@visactor/vchart-theme": "^1.11.2",
     "jstat": "~1.9.6",

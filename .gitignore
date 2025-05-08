@@ -102,6 +102,8 @@ common/scripts/pre-commit
 
 # generated documents
 docs/public/documents
+.bundle/
+packages/vmind/__tests__/image-to-spec/images
 
 # env files
 .env.local
@@ -114,3 +116,4 @@ packages/vmind/__tests__/experiment/src/results
 
 # open api demo test
 packages/node-api
+

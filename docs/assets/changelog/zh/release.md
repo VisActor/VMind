@@ -1,3 +1,17 @@
+# v2.0.5
+
+2025-04-07
+
+🆕 New Features
+
+@visactor/vmind: add insights to annotation function
+🔖 Fixes
+
+insights: fix some bug in dual-charts
+
+
+[更多详情请查看 v2.0.5](https://github.com/VisActor/VMind/releases/tag/v2.0.5)
+
 # v2.0.3
 
 2025-03-04

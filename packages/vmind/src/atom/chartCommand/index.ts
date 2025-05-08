@@ -1,12 +1,15 @@
+/**
+ * 根据数据等，生成图表指令
+ */
 import { merge } from '@visactor/vutils';
-import type { ChartCommandCtx, LLMMessage } from '../../types';
+import type { ChartCommandCtx, LLMMessage, ChartCommandOptions, BaseOptions, BaseAtomConstructor } from '../../types';
 import { AtomName } from '../../types';
-import type { BaseOptions, ChartCommandOptions } from '../type';
 import { BaseAtom } from '../base';
 import { getLanguageOfText } from '../../utils/text';
 import { getChartCommandPrompt } from './prompt';
 import { getRoleByFieldType } from '../../utils/field';
 import { isValidData } from '../../utils/common';
+import { Factory } from '../../core/factory';
 
 export class ChartCommandAtom extends BaseAtom<ChartCommandCtx, ChartCommandOptions> {
   name = AtomName.CHART_COMMAND;
@@ -85,3 +88,10 @@ export class ChartCommandAtom extends BaseAtom<ChartCommandCtx, ChartCommandOpti
     };
   }
 }
+
+export const registerChartCommandAtom = () => {
+  Factory.registerAtom(
+    AtomName.CHART_COMMAND,
+    ChartCommandAtom as unknown as BaseAtomConstructor<ChartCommandCtx, ChartCommandOptions>
+  );
+};

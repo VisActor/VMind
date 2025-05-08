@@ -35,3 +35,8 @@
 .arco-layout-has-sider {
   height: 100%;
 }
+
+.disabled-row {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

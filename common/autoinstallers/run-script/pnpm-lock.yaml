@@ -8,8 +8,8 @@ dependencies:
     specifier: 1.2.6
     version: 1.2.6
   ts-node:
-    specifier: 10.9.0
-    version: 10.9.0(@types/node@0.0.0)(typescript@5.0.2)
+    specifier: ^10.9.2
+    version: 10.9.2(@types/node@0.0.0)(typescript@5.0.2)
 
 devDependencies:
   '@types/minimist':
@@ -3396,8 +3396,8 @@ packages:
     resolution: {integrity: sha512-0z3j8R7MCjy10kc/g+qg7Ln3alJTodw9aDuVWZa3uiWqfuBMKeAeP2ocWcxoyM3D73yz3Jt/Pu4qPr4wHSdB/Q==}
     dev: false
 
-  /ts-node@10.9.0(@types/node@0.0.0)(typescript@5.0.2):
-    resolution: {integrity: sha512-bunW18GUyaCSYRev4DPf4SQpom3pWH29wKl0sDk5zE7ze19RImEVhCW7K4v3hHKkUyfWotU08ToE2RS+Y49aug==}
+  /ts-node@10.9.2(@types/node@0.0.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
       '@swc/core': '>=1.2.50'

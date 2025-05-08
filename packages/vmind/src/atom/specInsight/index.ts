@@ -1,6 +1,5 @@
-import type { SpecInsightCtx } from '../../types/atom';
+import type { SpecInsightCtx, SpecInsightOptions, BaseOptions } from '../../types';
 import { AtomName } from '../../types/atom';
-import type { SpecInsightOptions } from '../type';
 import { BaseAtom } from '../base';
 import { isNumber, isValidNumber, merge } from '@visactor/vutils';
 import { InsightType } from '../dataInsight/type';
@@ -8,6 +7,8 @@ import { getCellFromSpec } from '../../utils/spec';
 import { TrendType } from '../dataInsight/algorithms/statistics';
 import { isStackChart } from '../dataInsight/utils';
 import type { DataItem } from '../../types';
+import { Factory } from '../../core/factory';
+import type { BaseAtomConstructor } from '../../types';
 
 export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions> {
   name = AtomName.SPEC_INSIGHT;
@@ -336,3 +337,10 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
     return this.context;
   }
 }
+
+export const registerSpecInsightAtom = () => {
+  Factory.registerAtom(
+    AtomName.SPEC_INSIGHT,
+    SpecInsightAtom as unknown as BaseAtomConstructor<SpecInsightCtx, SpecInsightOptions>
+  );
+};

@@ -1,12 +1,11 @@
 import stringSimilarity from 'string-similarity-js';
 import { getRoleByFieldType } from '../../utils/field';
 import type { ClusterDataView, DatasetFromText } from '../../types/atom';
-import type { DataItem, DataTable } from '../../types';
+import type { DataItem, DataTable, RangeValueTransferType } from '../../types';
 import { DataType, ROLE, type DataCleanCtx, type FieldInfo } from '../../types';
 import { isArray, isNumber, isString, pick } from '@visactor/vutils';
 import { extractFirstNumberInString } from '../../utils/text';
 import { isValidData, uniqBy, average, convertStringToDateValue } from '../../utils/common';
-import type { RangeValueTransferType } from '../type';
 import { agglomerativeHierarchicalClustering, type ClusterDataItem } from '../../utils/cluster';
 import dayjs from 'dayjs';
 

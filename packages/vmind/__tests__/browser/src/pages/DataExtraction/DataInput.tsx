@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
 import '../index.scss';
 import { Avatar, Input, Divider, Button, Select, Checkbox, Modal, Radio, Message } from '@arco-design/web-react';

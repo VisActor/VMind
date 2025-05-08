@@ -9,7 +9,7 @@ import { LOFOutlier } from './outlier/lof';
 import { OverallTrending } from './overallTrending';
 import { TurningPoint } from './turningPoint';
 import { Volatility } from './volatility';
-import type { DataInsightOptions } from '../../type';
+import type { DataInsightOptions } from '../type';
 import { StatisticsAlo } from './outlier/statistics';
 import type { RevisedInsightParams } from './revised';
 import { filterCorrelationInsight, filterInsightByType, mergePointInsight } from './revised';
@@ -121,7 +121,9 @@ export const getInsights = (context: DataInsightExtractContext, options: DataIns
   const isStack = isStackChart(spec, chartType, cell);
   const isPercent = isPercentChart(spec, chartType, cell);
 
-  algorithms.sort((a, b) => algorithmMapping[a].priority - algorithmMapping[b].priority);
+  algorithms.sort(
+    (a: string, b: string) => (algorithmMapping as any)[a].priority - (algorithmMapping as any)[b].priority
+  );
   algorithms.forEach(key => {
     const algoInfo = algorithmMapping[key].info;
     const {

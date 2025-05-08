@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 export const VMIND_DATA_SOURCE = 'VMind_data_source';
 
 export const alasqlKeywordList = [
