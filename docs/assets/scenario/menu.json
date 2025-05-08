@@ -2,6 +2,13 @@
   "menu": "scripts",
   "children": [
     {
+      "path": "OpenManus_VMind",
+      "title": {
+        "zh": "OpenManus X VMind : 快速打造你的数据分析助手",
+        "en": "OpenManus X VMind: Quickly Build Your Data Analysis Assistant"
+      }
+    },
+    {
       "path": "Chart_Assistant",
       "title": {
         "zh": "图表助手",

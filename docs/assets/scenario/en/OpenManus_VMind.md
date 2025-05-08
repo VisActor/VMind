@@ -1,7 +1,7 @@
 # OpenManus X VMind: Quickly Build Your Data Analysis Assistant
 
 ## Introduction to OpenManus
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus.PNG" width="600">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus.PNG" width="400">
 
 [OpenManus](https://github.com/FoundationAgents/OpenManus) is a concise and versatile Agent framework. Through the pluggable design of Tools and Prompts, it supports various tool invocation capabilities such as Computer Use, Browser Use, and Planning Use.
 
@@ -26,15 +26,15 @@ So, we, [VisActor](https://www.visactor.com/) , in collaboration with the OpenMa
 
 ### Integration Method
 Compared with the application ideas of general Agents in the data analysis scenario, we have made some minor changes, as follows:
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/openmanus_agent.PNG" width="100%">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/openmanus_agent.PNG" height='200px'>
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/data_agent.png" width="100%">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/data_agent.png" height='200px'>
 
 General OpenManus uses general Python tools to generate various Python code tasks. In the data analysis scenario, this includes but is not limited to data processing, data reporting, and data visualization.
 
 Our change is to extract the data visualization part into a separate tool, making the application scenario of this tool more focused and in - depth. The functions of this tool include data visualization, data insight, and adding data insights to charts. For details, please refer to [ReadMe](https://github.com/FoundationAgents/OpenManus/blob/main/app/tool/chart_visualization/README.md):
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/openmanus_readme_en.png" width="100%">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/openmanus_readme_en.png" height='450px'>
 
 The original Python tool will then focus more on data processing/data reporting tasks.
 
@@ -204,7 +204,7 @@ So, what's the final result? Can it reach the level of Manus? Let's find out. We
 - [Original case replay address](https://manus.im/share/c3onakN6Iajcm1Vt1xAVG7?replay=1)
 - [Address of all generated products in the case](https://github.com/VisActor/VMind/tree/develop/docs/assets/openManus)
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus_case.png" width="100%">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus_case.png" heigth="450px">
 
 
 This is a typical data analysis scenario. Given monthly sales data, Manus was expected to provide a plan for a 10% sales increase in the next month. Manus completed this task very well, generating a detailed report and many data analysis results and data visualization results.
@@ -217,19 +217,19 @@ After adding VMind to OpenManus, the data analysis and chart generation capabili
 
 The agent will decompose the overall task into sub - tasks such as data processing, data analysis, data visualization, pattern recognition, strategy generation, and final report generation for execution.
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/openmanus_task_split.gif" width="100%">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/openmanus_task_split.gif" heigth="420px">
 
 **Final Report**
 
 After all tasks are completed, we generated the final data report and multiple intermediate analysis result reports. The data report also contains links to the generated visualization results.
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus_case_report.gif" width="100%">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus_case_report.gif" heigth="420px">
 
 **Visualization Results**
 
 The following is a partial display of data visualization results. It can generate interactive chart pages (rendered by VChart) with data annotations.
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus_cases_chart.gif" width="100%">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus_cases_chart.gif" heigth="420px">
 
 ## In Conclusion
 ### Summary
