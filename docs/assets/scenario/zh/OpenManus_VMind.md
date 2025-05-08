@@ -1,6 +1,6 @@
 # OpenManus X VMind : 快速打造你的数据分析助手
 ## OpenManus 简介
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus.PNG" width="600">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus.PNG" width="400">
 
 [OpenManus](https://github.com/FoundationAgents/OpenManus)  是一个简洁通用的 Agent 框架，通过可插拔的 Tools 和 Prompt 组合设计，支持 Computer Use、Browser Use 和 Planning Use 等多种工具调用能力
 在OpenManus中，你可以使用基础的manus agent来尝试完成你的各种任务和有趣的探索，也可以以OpenManus为载体，挥洒你自己的创意，通过编写独特的tools和prompt，实现独一无二的agent
@@ -26,14 +26,15 @@
 ### 接入方式
 
 相比于通用的Agent对于数据分析场景的应用思路，我们做了一些些微小的改动，具体如下：
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/openmanus_agent.PNG" width="100%">
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/data_agent.png" width="100%">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/openmanus_agent.PNG" height='200px'>
+
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/data_agent.png" height='200px'>
 
 通用的OpenManus，会使用通用的python工具去实现各种各样，各种各类的pyhton代码生成任务，在数据分析场景，包括且不限于：数据处理、数据报告、数据可视化等；
 而我们的改动在于，将数据可视化这一部分提取成了一个单独的tool，使得这个工具对应的使用场景更加聚焦和深入，这个tool的功能包括：数据可视化、数据洞察以及将数据洞察添加到图表中三个功能，详细可见[ReadMe](https://github.com/FoundationAgents/OpenManus/blob/main/app/tool/chart_visualization/README_zh.md)：
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/openmanus_readme.png" width="100%">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/openmanus_readme.png" height='450px'>
 
 而原本的python tool将会更加专注在数据处理/数据报告的任务上。
 #### Python Tool改造
@@ -199,7 +200,7 @@ class DataAnalysis(ToolCallAgent):
 - [案例中所有生成产物地址](https://github.com/VisActor/VMind/tree/develop/docs/assets/openManus)
 
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus_case.png" width="100%">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus_case.png" height="450px">
 
 这是一个典型的数据分析场景，给Manus一个月度的销售数据，期望给出下个月10%销售增长的计划；Manus很好的完成了这个任务，生成了一个详细的报告，并且产生了很多数据分析的数据结果和数据可视化结果。
 
@@ -209,20 +210,21 @@ class DataAnalysis(ToolCallAgent):
 **任务拆解**
 
 Agent会将整体任务拆分成：数据处理、数据分析，数据可视化，模式识别，策略生成和最终报告生成这几个子任务进行执行
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/openmanus_task_split.gif" width="100%">
+
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/openmanus_task_split.gif" height="420px">
 
 **最终报告**
 
 在所有任务完成之后，我们产生了最终的数据报告和多个中间分析结果的报告，数据报告中同样包含生成的可视化结果链接
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus_case_report.gif" width="100%">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus_case_report.gif" height="420px">
 
 
 **可视化结果**
 
 以下是部分数据可视化结果展示，可以生成可交互式的图表页面（VChart渲染）并且带有数据标注
 
-<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus_cases_chart.gif" width="100%">
+<img src="https://lf9-dp-fe-cms-tos.byteorg.com/obj/bit-cloud/vmind/manus_cases_chart.gif" height="420px">
 
 ## 写在最后
 ### 总结
