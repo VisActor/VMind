@@ -117,3 +117,5 @@ packages/vmind/__tests__/experiment/src/results
 # open api demo test
 packages/node-api
 
+# jest snapshots
+__snapshots__/
