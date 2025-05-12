@@ -24,7 +24,7 @@ const chartTypeMap: { [chartName: string]: string } = {
   [ChartType.SunburstChart.toUpperCase()]: 'sunburst',
   [ChartType.TreemapChart.toUpperCase()]: 'treemap',
   [ChartType.Gauge.toUpperCase()]: 'gauge',
-  [ChartType.BasicHeatMap.toUpperCase()]: 'common',
+  [ChartType.BasicHeatMap.toUpperCase()]: 'heatmap',
   [ChartType.VennChart.toUpperCase()]: 'venn'
 };
 
