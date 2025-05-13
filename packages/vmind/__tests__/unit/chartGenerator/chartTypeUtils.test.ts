@@ -44,7 +44,7 @@ describe('formatTypeToVMind', () => {
 
     expect(formatTypeToVMind('gauge')).toBe('Gauge Chart');
 
-    expect(formatTypeToVMind('heatMap')).toBe('Basic Heat Map');
+    expect(formatTypeToVMind('heatmap')).toBe('Basic Heat Map');
 
     expect(formatTypeToVMind('venn')).toBe('Venn Chart');
   });
