@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`scorer 结构断言与快照 COLUMN chartType result structure 1`] = `
+{
+  "cell": {
+    "angle": [],
+    "color": [],
+    "column": [],
+    "row": [],
+    "size": [],
+    "x": [
+      1,
+    ],
+    "y": [
+      2,
+    ],
+  },
+  "chartType": "column",
+  "dataset": [
+    {
+      "1": "A",
+      "2": "10",
+    },
+    {
+      "1": "B",
+      "2": "20",
+    },
+    {
+      "1": "C",
+      "2": "30",
+    },
+  ],
+  "fullMark": 7,
+  "originScore": 6,
+  "score": 0.8571428571428571,
+  "scoreDetails": {
+    "rule1": 1,
+    "rule2": 3,
+    "rule3": 1,
+    "rule4": 1,
+  },
+}
+`;

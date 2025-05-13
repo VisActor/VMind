@@ -102,6 +102,16 @@ export const scorer: Scorer = params => {
   const { datasets: pivotDataSet, colPivotTree, rowPivotTree } = pivot(dataset, colList, rowList, cell.y);
 
   const calBarParallel = (): ScoreResult => {
+    if (!inputDataSet || inputDataSet.length === 0) {
+      return {
+        chartType: ChartType.COLUMN_PARALLEL,
+        score: 0,
+        fullMark: 0,
+        originScore: 0,
+        scoreDetails: [],
+        error: 'Empty dataset'
+      };
+    }
     let score = 0;
     const scoreDetails: any = {};
     let totalScore = 0;
@@ -177,6 +187,16 @@ export const scorer: Scorer = params => {
   };
 
   const calBarPercent = (): ScoreResult => {
+    if (!inputDataSet || inputDataSet.length === 0) {
+      return {
+        chartType: ChartType.COLUMN_PERCENT,
+        score: 0,
+        fullMark: 0,
+        originScore: 0,
+        scoreDetails: [],
+        error: 'Empty dataset'
+      };
+    }
     let score = 0;
     let totalScore = 0;
     const scoreDetails: any = {};
@@ -273,6 +293,16 @@ export const scorer: Scorer = params => {
   };
 
   const calBar = (): ScoreResult => {
+    if (!inputDataSet || inputDataSet.length === 0) {
+      return {
+        chartType: ChartType.COLUMN,
+        score: 0,
+        fullMark: 0,
+        originScore: 0,
+        scoreDetails: [],
+        error: 'Empty dataset'
+      };
+    }
     let score = 0;
     let totalScore = 0;
     const scoreDetails: any = {};
@@ -481,6 +511,16 @@ export const scorer: Scorer = params => {
   };
 
   const calScatterplot = (): ScoreResult => {
+    if (!inputDataSet || inputDataSet.length === 0) {
+      return {
+        chartType: ChartType.SCATTER,
+        score: 0,
+        fullMark: 0,
+        originScore: 0,
+        scoreDetails: [],
+        error: 'Empty dataset'
+      };
+    }
     let score = 0;
     let totalScore = 0;
     const scoreDetails: any = {};
@@ -540,6 +580,16 @@ export const scorer: Scorer = params => {
   };
 
   const calLineChart = (): ScoreResult => {
+    if (!inputDataSet || inputDataSet.length === 0) {
+      return {
+        chartType: ChartType.LINE,
+        score: 0,
+        fullMark: 0,
+        originScore: 0,
+        scoreDetails: [],
+        error: 'Empty dataset'
+      };
+    }
     let score = 0;
     let totalScore = 0;
     const scoreDetails: any = {};
@@ -752,6 +802,16 @@ export const scorer: Scorer = params => {
   };
 
   const calPieChart = (): ScoreResult => {
+    if (!inputDataSet || inputDataSet.length === 0) {
+      return {
+        chartType: ChartType.PIE,
+        score: 0,
+        fullMark: 0,
+        originScore: 0,
+        scoreDetails: [],
+        error: 'Empty dataset'
+      };
+    }
     let score = 0;
     let totalScore = 0;
     const scoreDetails: any = {};
@@ -871,6 +931,16 @@ export const scorer: Scorer = params => {
   };
 
   const calRadar = (): ScoreResult => {
+    if (!inputDataSet || inputDataSet.length === 0) {
+      return {
+        chartType: ChartType.RADAR,
+        score: 0,
+        fullMark: 0,
+        originScore: 0,
+        scoreDetails: [],
+        error: 'Empty dataset'
+      };
+    }
     let score = 0;
     let totalScore = 0;
     const scoreDetails: any = {};
@@ -921,6 +991,16 @@ export const scorer: Scorer = params => {
   };
 
   const calWordCloud = (): ScoreResult => {
+    if (!inputDataSet || inputDataSet.length === 0) {
+      return {
+        chartType: ChartType.WORD_CLOUD,
+        score: 0,
+        fullMark: 0,
+        originScore: 0,
+        scoreDetails: [],
+        error: 'Empty dataset'
+      };
+    }
     let score = 0;
     let totalScore = 0;
     const scoreDetails: any = {};
@@ -984,6 +1064,16 @@ export const scorer: Scorer = params => {
   };
 
   const calFunnelChart = (): ScoreResult => {
+    if (!inputDataSet || inputDataSet.length === 0) {
+      return {
+        chartType: ChartType.FUNNEL,
+        score: 0,
+        fullMark: 0,
+        originScore: 0,
+        scoreDetails: [],
+        error: 'Empty dataset'
+      };
+    }
     let score = 0;
     let totalScore = 0;
     const scoreDetails: any = {};
@@ -1026,6 +1116,16 @@ export const scorer: Scorer = params => {
   };
 
   const calDualAxis = (): ScoreResult => {
+    if (!inputDataSet || inputDataSet.length === 0) {
+      return {
+        chartType: ChartType.DUAL_AXIS,
+        score: 0,
+        fullMark: 0,
+        originScore: 0,
+        scoreDetails: [],
+        error: 'Empty dataset'
+      };
+    }
     //多度量且度量之间差异过大，用双轴图
 
     let score = 0;
