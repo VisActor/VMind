@@ -13,7 +13,7 @@
     "noImplicitAny": false
   },
   "include": [
-    "src",
+    "src", "__tests__",
   ],
   // https://www.typescriptlang.org/docs/handbook/project-references.html#what-is-a-project-reference
   "references": [
