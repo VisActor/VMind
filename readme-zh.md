@@ -44,7 +44,7 @@
 
 ### 体验 Demo
 
-进入 VChart 仓库，执行
+进入 VMind 仓库，执行
 
 ```bash
 # 安装依赖
@@ -57,7 +57,7 @@ $ rush docs
 
 ### 启动开发页面
 
-进入 VChart 仓库，执行
+进入 VMind 仓库，执行
 
 ```bash
 # 安装依赖
