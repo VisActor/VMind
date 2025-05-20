@@ -532,6 +532,105 @@ export const scorer: Scorer = params => {
     });
   };
 
+  const calLineChartCombine = (): ScoreResult => {
+    // 组合折线图（用于指标量级差异大的情况）
+    if (!inputDataSet || inputDataSet.length === 0) {
+      return {
+        chartType: ChartType.EXTEND, // 用扩展类型表示组合折线图
+        score: 0,
+        fullMark: 0,
+        originScore: 0,
+        scoreDetails: [],
+        error: 'Empty dataset'
+      };
+    }
+    let score = 0;
+    let totalScore = 0;
+    const scoreDetails: any = {};
+
+    // 折线图先进行预排序
+    const lineChartDimID: UniqueId[] = sortTimeDim(dimList, maxRowNum, maxColNum);
+    const {
+      cell: lineChartCell,
+      dataset: lineDataset,
+      error,
+      errMsg
+    } = assignPivotCharts(originDataset, lineChartDimID, measureID, aliasMap, maxRowNum, maxColNum);
+    if (error) {
+      return {
+        chartType: ChartType.EXTEND,
+        score: 0,
+        scoreDetails,
+        originScore: 0,
+        fullMark: 0,
+        error: error ? errMsg : null
+      };
+    }
+    // 维度数=1且为时间，指标数>=1或维度=2且只有一个时间，指标数=1,非时间维度基数不能太多
+    const rule1Score = 2.0;
+    totalScore += rule1Score - 1.0;
+    const _colorItems: string[] = getDomainFromDataset(lineDataset, COLOR_FIELD);
+    const colorItemCardinal = lineDataset.hasOwnProperty(COLOR_FIELD) ? dataUtils.unique(_colorItems).length : 1;
+    if (timeDim.length > 0 && cell.y.length > 0 && colorItemCardinal <= 50) {
+      score += rule1Score;
+      scoreDetails.rule1 = rule1Score;
+    } else {
+      return {
+        chartType: ChartType.EXTEND,
+        score: 0,
+        scoreDetails,
+        originScore: 0,
+        fullMark: 0
+      };
+    }
+    // 指标数>1时，指标最大值里面最大的/指标Q1(下四分位数)里面最小的>100（不同指标数值不在同一个量级）
+    const rule2Score = 1.0;
+    if (measureList.length > 1) {
+      totalScore += rule2Score;
+      let minQ1 = Math.min(...measureList.map(measure => Math.abs(measure.Q1)));
+      let maxMax = Math.max(...measureList.map(measure => Math.abs(measure.max)));
+      if (minQ1 === 0) minQ1 = 1;
+      if (maxMax === 0) maxMax = 1;
+      if (maxMax / minQ1 > 100) {
+        score += rule2Score;
+        scoreDetails.rule2 = rule2Score;
+      }
+    }
+    // 变异系数>x (需要调整)
+    const rule3Score = 1.0;
+    totalScore += rule3Score;
+    const coefficientFlag = measureList.reduce((prev, cur) => {
+      if (!prev) return false;
+      if (cur.coefficient) return cur.coefficient >= 0.2;
+      return true;
+    }, true);
+    if (coefficientFlag) {
+      score += rule3Score;
+      scoreDetails.rule3 = rule3Score;
+    }
+    // 计算cells和dataset
+    const combineMetadata = processCombination(
+      datasetWithoutFold,
+      lineChartDimID,
+      measureID,
+      aliasMap,
+      maxRowNum,
+      maxColNum
+    );
+    const combineDatasets: Dataset[] = combineMetadata.map(metaData => metaData.dataset);
+    // 透视分析
+    const { datasets: combinePivotDataSet } = pivotCombination(combineDatasets, colList, rowList);
+    return {
+      chartType: ChartType.EXTEND, // 用扩展类型表示组合折线图
+      score: score / totalScore,
+      scoreDetails,
+      originScore: score,
+      fullMark: totalScore,
+      cell: combineMetadata.map(metaData => metaData.cell),
+      dataset: combinePivotDataSet
+    };
+  };
+
   const calPieChart = (): ScoreResult => {
     if (!inputDataSet || inputDataSet.length === 0) {
       return {
@@ -593,6 +692,42 @@ export const scorer: Scorer = params => {
         return { mutate: { score, totalScore, scoreDetails } };
       }
     });
+  };
+
+  const calMeasureCard = (): ScoreResult => {
+    let score = 0;
+    let totalScore = 0;
+    const scoreDetails: any = {};
+
+    //1<=指标数<=3，维度数=0
+    const rule1Score = 2.0;
+    totalScore += rule1Score;
+    if (dimList.length === 0 && measureList.length <= 3 && measureList.length >= 1) {
+      score += rule1Score;
+      scoreDetails.rule1 = rule1Score;
+    } else {
+      return {
+        chartType: ChartType.MEASURE_CARD,
+        score: 0,
+        scoreDetails,
+        originScore: 0,
+        fullMark: 0
+      };
+    }
+
+    const cardData = assignMeasureCard(datasetWithoutFold, dimensionID, measureID, aliasMap);
+
+    const { cardCell, dataset: cardDataset } = cardData;
+
+    return {
+      chartType: ChartType.MEASURE_CARD,
+      score: score / totalScore,
+      originScore: score,
+      fullMark: totalScore,
+      scoreDetails,
+      cell: cardCell,
+      dataset: cardDataset
+    };
   };
 
   const calRadar = (): ScoreResult => {
@@ -817,14 +952,17 @@ export const scorer: Scorer = params => {
     calBar,
     calBarPercent,
     calBarParallel,
-    calCombination,
+    // calCombination,
     calScatterplot,
     calLineChart,
+    // calLineChartCombine,
     calPieChart,
+    // calMeasureCard,
     calRadar,
     calWordCloud,
     calFunnelChart,
     calDualAxis
+    // calTable
   ];
 
   return scoreCalculators;
