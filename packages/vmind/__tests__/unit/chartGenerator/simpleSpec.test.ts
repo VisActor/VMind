@@ -295,3 +295,35 @@ it('rangeColumn', () => {
     }
   ]);
 });
+
+
+it('areaChart', () => {
+  const areaChart = {
+    type: 'area',
+    data: {
+      values: [
+        { month: 'Jan', value: 100, category: 'A' },
+        { month: 'Feb', value: 120, category: 'A' },
+        { month: 'Mar', value: 140, category: 'A' },
+        { month: 'Apr', value: 130, category: 'A' },
+        { month: 'May', value: 150, category: 'A' },
+        { month: 'Jan', value: 80, category: 'B' },
+        { month: 'Feb', value: 90, category: 'B' },
+        { month: 'Mar', value: 110, category: 'B' },
+        { month: 'Apr', value: 100, category: 'B' },
+        { month: 'May', value: 120, category: 'B' }
+      ]
+    },
+    xField: 'month',
+    yField: 'value',
+    seriesField: 'category',
+    stack: true
+  };
+
+  const { spec } = convertSimpleSpecToSpec(areaChart as SimpleVChartSpec);
+
+  expect(spec.xField).toBe('month');
+  expect(spec.yField).toBe('value');
+  expect(spec.seriesField).toBe('category');
+  expect(spec.stack).toBe(true);
+});
