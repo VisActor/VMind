@@ -2,6 +2,7 @@ import { Dict } from '@visactor/vutils';
 import { getChartSpecWithContext } from '../../src/atom/chartGenerator/spec';
 import type { GenerateChartCellContext } from '../../src/atom/chartGenerator/type';
 import { ChartType } from '../../src/types';
+import { BASIC_HEAT_MAP_COLOR_THEMES } from '../../src/atom/chartGenerator/spec/constants';
 import { builtinThemeMap } from '../../src/atom/chartGenerator/const';
 import { BuiltinThemeType } from '../../src/atom/chartGenerator/const';
 import { COLOR_THEMES } from '../../src/atom/chartGenerator/spec/constants';
@@ -74,121 +75,113 @@ for (let i = 0; i < items.length; i++) {
 }
 
 describe('getChartSpecWithContext', () => {
-  it('should generate full spec for heapmap chart with simpleVChartSpec', () => {
-    //console.log("data",data);
-    const context = {
-      chartTypeList: CHART_TYPE_LIST,
-      cell: { x: 'var1', y: 'var2', size: 'value' },
-      dataTable: data,
-      chartType: ChartType.BasicHeatMap.toUpperCase(),
-      colors: ['#f57c6e', '#f2b56f', '#f2a7da', '#84c3b7', '#88d8db', '#71b7ed', '#b8aeeb', '#f2a7da', '#fae69e'],
-      totalTime: 5,
-      simpleVChartSpec: {
-        type: 'heatmap',
-        legends: [
-          {
-            visible: true,
-            orient: 'right',
-            position: 'start',
-            type: 'color',
-            field: 'value'
+  const baseContext = {
+    chartTypeList: CHART_TYPE_LIST,
+    cell: { x: 'var1', y: 'var2', size: 'value' },
+    dataTable: data,
+    chartType: ChartType.BasicHeatMap.toUpperCase(),
+    totalTime: 5
+  };
+
+  // test for `basicHeatMapColor`
+  it('should generate correct linear color scale for heatmap', () => {
+    const context = { ...baseContext };
+    const result = getChartSpecWithContext(context);
+
+    expect(result.spec.color).toEqual({
+      type: 'linear',
+      domain: [
+        {
+          dataId: 'data',
+          fields: [context.cell.size]
+        }
+      ],
+      range: BASIC_HEAT_MAP_COLOR_THEMES
+    });
+  });
+
+  // test for `basicHeatMapSeries`
+  it('should generate correct series dimension for heatmap', () => {
+    const context = { ...baseContext };
+    const result = getChartSpecWithContext(context);
+
+    expect(result.spec.series[0]).toEqual({
+      type: 'heatmap',
+      regionId: 'region0',
+      xField: context.cell.x,
+      yField: context.cell.y,
+      valueField: context.cell.size,
+      cell: {
+        style: {
+          fill: {
+            field: context.cell.size,
+            scale: 'color'
           }
-        ],
-        title: [{ text: 'Correlation Coefficient', orient: 'top' }],
-        dataZoom: [{ orient: 'left' }, { orient: 'bottom' }],
-        axes: [
-          {
-            type: 'band',
-            orient: 'bottom',
-            hasGrid: false
-          },
-          {
-            type: 'band',
-            orient: 'left',
-            hasGrid: false
-          }
-        ],
-        indicator: [
-          {
-            title: 'Cluster A',
-            content: ['Overlap A']
-          }
-        ],
-        background: '#ffffff'
+        }
       }
-    };
-    const result = getChartSpecWithContext(context);
-    //console.log("basic spec", JSON.stringify(result.spec, null, 2));
-
-    expect(result.spec).toBeDefined();
-    expect(result.spec.type).toBe('heatmap');
-    expect(result.spec.data[0].values).toEqual(data);
+    });
   });
 
-  it('should generate full spec for heapmap chart without simpleVChartSpec', () => {
-    const context = {
-      chartTypeList: CHART_TYPE_LIST,
-      cell: { x: 'var1', y: 'var2', size: 'value' },
-      dataTable: data,
-      chartType: ChartType.BasicHeatMap.toUpperCase(),
-      colors: ['#f57c6e', '#f2b56f', '#f2a7da', '#84c3b7', '#88d8db', '#71b7ed', '#b8aeeb', '#f2a7da', '#fae69e'],
-      totalTime: 5
-    };
+  // test for `basicHeatMapRegion`
+  it('should generate correct region dimensions for heatmap', () => {
+    const context = { ...baseContext };
     const result = getChartSpecWithContext(context);
-    //console.log("basic spec", JSON.stringify(result.spec, null, 2));
 
-    expect(result.spec).toBeDefined();
-    expect(result.spec.type).toBe('heatmap');
-    expect(result.spec.data[0].values).toEqual(data);
+    expect(result.spec.region).toEqual([
+      {
+        id: 'region0',
+        width: 200,
+        height: 200,
+        padding: { top: 40 }
+      }
+    ]);
   });
 
-  it('should apply string theme and colors are undefined', () => {
-    const context = {
-      chartTypeList: CHART_TYPE_LIST,
-      cell: { x: 'var1', y: 'var2', size: 'value' },
-      dataTable: data,
-      chartType: ChartType.BasicHeatMap.toUpperCase(),
-      colors: ['#f57c6e', '#f2b56f', '#f2a7da', '#84c3b7', '#88d8db', '#71b7ed', '#b8aeeb', '#f2a7da', '#fae69e'],
-      chartTheme: 'semiThemeLight',
-      totalTime: 5
-    };
-
+  // test for `basicHeatMapAxes`
+  it('should generate axes with correct rotation and dimensions', () => {
+    const context = { ...baseContext };
     const result = getChartSpecWithContext(context);
-    expect(result.spec.theme).toEqual(builtinThemeMap[BuiltinThemeType.SemiThemeLight]);
-    expect(result.spec.color).toBeUndefined();
+
+    expect(result.spec.axes[0]).toMatchObject({
+      orient: 'bottom',
+      type: 'band',
+      label: {
+        space: 10,
+        style: {
+          textAlign: 'left',
+          textBaseline: 'middle',
+          angle: 90,
+          fontSize: 8
+        }
+      },
+      height: expect.any(Function)
+    });
+
+    expect(result.spec.axes[1]).toMatchObject({
+      orient: 'left',
+      type: 'band',
+      grid: { visible: false },
+      domainLine: { visible: false },
+      label: { space: 10, style: { fontSize: 8 } },
+      bandPadding: 0
+    });
+
+    const heightFunc = result.spec.axes[0].height;
+    expect(heightFunc({ height: 400 })).toBe(400 - 314);
   });
 
-  it('should apply custom object theme and colors are undefined', () => {
-    const context = {
-      chartTypeList: CHART_TYPE_LIST,
-      cell: { x: 'var1', y: 'var2', size: 'value' },
-      dataTable: data,
-      chartType: ChartType.BasicHeatMap.toUpperCase(),
-      colors: ['#f57c6e', '#f2b56f', '#f2a7da', '#84c3b7', '#88d8db', '#71b7ed', '#b8aeeb', '#f2a7da', '#fae69e'],
-      chartTheme: { colorScheme: ['#1a2b3c'] },
-      totalTime: 5
-    };
-
+  // test for `basicHeatMapLegend`
+  it('should position legend on the right for heatmap', () => {
+    const context = { ...baseContext };
     const result = getChartSpecWithContext(context);
-    expect(result.spec.theme).toEqual({ colorScheme: ['#1a2b3c'] });
-    expect(result.spec.color).toBeUndefined();
-  });
 
-  it('should handle missing dataTable fields gracefully', () => {
-    const context = {
-      chartTypeList: CHART_TYPE_LIST,
-      cell: { x: 'var1', y: 'var2', size: 'value' },
-      dataTable: [{}],
-      chartType: ChartType.BasicHeatMap.toUpperCase(),
-      colors: ['#f57c6e', '#f2b56f', '#f2a7da', '#84c3b7', '#88d8db', '#71b7ed', '#b8aeeb', '#f2a7da', '#fae69e'],
-      chartTheme: { colorScheme: ['#1a2b3c'] },
-      totalTime: 5
-    };
-
-    const result = getChartSpecWithContext(context);
-    //console.log("basic spec", JSON.stringify(result.spec, null, 2));
-    expect(result.spec).toBeDefined();
-    expect(result.spec.type).toBe('heatmap');
+    expect(result.spec.legends).toEqual({
+      visible: true,
+      orient: 'right',
+      position: 'start',
+      type: 'color',
+      field: 'value'
+    });
   });
 
   it('should handle missing cell fields gracefully', () => {
@@ -196,14 +189,23 @@ describe('getChartSpecWithContext', () => {
       chartTypeList: CHART_TYPE_LIST,
       cell: {},
       dataTable: data,
-      chartType: ChartType.BasicHeatMap.toUpperCase(),
-      colors: ['#f57c6e', '#f2b56f', '#f2a7da', '#84c3b7', '#88d8db', '#71b7ed', '#b8aeeb', '#f2a7da', '#fae69e'],
-      chartTheme: { colorScheme: ['#1a2b3c'] },
-      totalTime: 5
+      chartType: ChartType.BasicHeatMap.toUpperCase()
     };
 
     const result = getChartSpecWithContext(context);
-    //console.log("basic spec", JSON.stringify(result.spec, null, 2));
+    expect(result.spec).toBeDefined();
+    expect(result.spec.type).toBe('heatmap');
+  });
+
+  it('should handle missing dataTable fields gracefully', () => {
+    const context = {
+      chartTypeList: CHART_TYPE_LIST,
+      cell: { x: 'var1', y: 'var2', size: 'value' },
+      dataTable: [{}],
+      chartType: ChartType.BasicHeatMap.toUpperCase()
+    };
+
+    const result = getChartSpecWithContext(context);
     expect(result.spec).toBeDefined();
     expect(result.spec.type).toBe('heatmap');
   });
