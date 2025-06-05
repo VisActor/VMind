@@ -52,7 +52,7 @@ function generateDataStructure() {
   const createCountries = (names: string[]) =>
     names.map(country => ({
       name: country,
-      children: createRegions(6) // 每个国家6个地区
+      children: createRegions(6)
     }));
 
   return [
@@ -63,19 +63,20 @@ function generateDataStructure() {
   ];
 }
 const dataItem = generateDataStructure();
-//console.log("dataItem", JSON.stringify(dataItem, null, 2));
 
 describe('getChartSpecWithContext', () => {
+  const baseContext = {
+    chartTypeList: CHART_TYPE_LIST,
+    cell: { x: 'category', size: 'value' },
+    dataTable: dataItem,
+    chartType: ChartType.BubbleCirclePacking.toUpperCase(),
+    totalTime: 5
+  };
+
   it('should generate full spec for circlepacking chart with diverse inputs', () => {
-    //console.log("data",data);
     const context = {
-      chartTypeList: CHART_TYPE_LIST,
-      cell: { x: 'name', size: 'value' },
-      dataTable: dataItem,
-      chartType: ChartType.BubbleCirclePacking.toUpperCase(),
+      ...baseContext,
       chartTheme: 'semiThemeLight',
-      colors: ['#f57c6e', '#f2b56f', '#f2a7da', '#84c3b7', '#88d8db', '#71b7ed', '#b8aeeb', '#f2a7da', '#fae69e'],
-      totalTime: 5,
       simpleVChartSpec: {
         type: 'circlePacking',
         title: [
@@ -95,7 +96,6 @@ describe('getChartSpecWithContext', () => {
       }
     };
     const result = getChartSpecWithContext(context);
-    //console.log("basic spec", JSON.stringify(result.spec, null, 2));
 
     expect(result.spec).toBeDefined();
     expect(result.spec.type).toBe('circlePacking');
@@ -115,7 +115,7 @@ describe('getChartSpecWithContext', () => {
     ]);
     expect(result.spec.dataZoom).toEqual([{ orient: 'left' }, { orient: 'bottom' }]);
     expect(result.spec.valueField).toEqual('value');
-    expect(result.spec.categoryField).toEqual('name');
+    expect(result.spec.categoryField).toEqual('category');
     expect(result.spec.drill).toEqual(true);
     expect(result.spec.layoutPadding).toEqual(5);
     expect(result.spec.animationEnter).toEqual({ easing: 'cubicInOut' });
@@ -125,13 +125,7 @@ describe('getChartSpecWithContext', () => {
   });
 
   it('should apply default colors if colors and palette are not given', () => {
-    //console.log("data",data);
-    const context = {
-      chartTypeList: CHART_TYPE_LIST,
-      cell: { x: 'name', size: 'value' },
-      dataTable: dataItem,
-      chartType: ChartType.BubbleCirclePacking.toUpperCase()
-    };
+    const context = { ...baseContext };
     const result = getChartSpecWithContext(context);
 
     expect(result.spec.color).toBeDefined();
@@ -139,12 +133,8 @@ describe('getChartSpecWithContext', () => {
   });
 
   it('should apply custom colors if colors are given', () => {
-    //console.log("data",data);
     const context = {
-      chartTypeList: CHART_TYPE_LIST,
-      cell: { x: 'name', size: 'value' },
-      dataTable: dataItem,
-      chartType: ChartType.BubbleCirclePacking.toUpperCase(),
+      ...baseContext,
       colors: ['#f57c6e', '#f2b56f', '#f2a7da', '#84c3b7', '#88d8db', '#71b7ed', '#b8aeeb', '#f2a7da', '#fae69e']
     };
     const result = getChartSpecWithContext(context);
@@ -165,10 +155,7 @@ describe('getChartSpecWithContext', () => {
 
   it('should apply string theme and colors are undefined', () => {
     const context = {
-      chartTypeList: CHART_TYPE_LIST,
-      cell: { x: 'name', size: 'value' },
-      dataTable: dataItem,
-      chartType: ChartType.BubbleCirclePacking.toUpperCase(),
+      ...baseContext,
       chartTheme: 'semiThemeLight',
       colors: ['#f57c6e', '#f2b56f', '#f2a7da', '#84c3b7', '#88d8db', '#71b7ed', '#b8aeeb', '#f2a7da', '#fae69e']
     };
@@ -180,10 +167,7 @@ describe('getChartSpecWithContext', () => {
 
   it('should apply custom object theme and colors are undefined', () => {
     const context = {
-      chartTypeList: CHART_TYPE_LIST,
-      cell: { x: 'name', size: 'value' },
-      dataTable: dataItem,
-      chartType: ChartType.BubbleCirclePacking.toUpperCase(),
+      ...baseContext,
       chartTheme: { colorScheme: ['#1a2b3c'] },
       colors: ['#f57c6e', '#f2b56f', '#f2a7da', '#84c3b7', '#88d8db', '#71b7ed', '#b8aeeb', '#f2a7da', '#fae69e']
     };
@@ -193,43 +177,41 @@ describe('getChartSpecWithContext', () => {
     expect(result.spec.color).toBeUndefined();
   });
 
-  it('should generate correct bubble circle packing spec', () => {
-    const buble_data = new Array(19).fill(0).map((_, i) => {
-      return {
-        name: `bubble-${i + 1}`,
-        value: i + 1
-      };
-    });
+  // test for `bubbleCirclePackingData`
+  it('should preserve "value" field when size is "value"', () => {
     const context = {
       chartTypeList: CHART_TYPE_LIST,
-      transpose: false,
-      command: 'Generate a Bubble Circle Packing chart',
-      cell: { x: 'name', size: 'value' },
-      dataTable: buble_data,
-      chartType: ChartType.BubbleCirclePacking.toUpperCase()
+      cell: { x: 'category', size: 'other' },
+      chartType: ChartType.BubbleCirclePacking.toUpperCase(),
+      totalTime: 5,
+      dataTable: [
+        { category: 'A', value: 20, other: 5 },
+        { category: 'B', value: 15, other: 3 }
+      ]
     };
-    const { chartType, spec } = getChartSpecWithContext(context);
-    //console.log("bubble spec", JSON.stringify(spec, null, 2));
-    expect(chartType).toBe(ChartType.BubbleCirclePacking);
-    expect(spec.type).toBe('circlePacking');
-    expect(spec.data.values).toEqual(buble_data);
+
+    const result = getChartSpecWithContext(context);
+    expect(result.spec.data.values).toMatchObject([
+      { category: 'A', value: 5 },
+      { category: 'B', value: 3 }
+    ]);
   });
 
-  it('should generate correct nulti-root circle packing spec', () => {
-    const multi_root_data = dataItem[0].children;
+  // test for `bubbleCirclePackingField`
+  it('should generate correct categoryField', () => {
     const context = {
       chartTypeList: CHART_TYPE_LIST,
-      transpose: false,
-      command: 'Generate a Multi-root Circle Packing chart',
-      cell: { x: 'name', size: 'value' },
-      dataTable: multi_root_data,
-      chartType: ChartType.BubbleCirclePacking.toUpperCase()
+      cell: { color: 'category', size: 'value', x: 'hahaha' },
+      chartType: ChartType.BubbleCirclePacking.toUpperCase(),
+      totalTime: 5,
+      dataTable: [
+        { category: 'A', value: 20 },
+        { category: 'B', value: 15 }
+      ]
     };
-    const { chartType, spec } = getChartSpecWithContext(context);
-    //console.log("multi-root spec", JSON.stringify(spec, null, 2));
-    expect(chartType).toBe(ChartType.BubbleCirclePacking);
-    expect(spec.type).toBe('circlePacking');
-    expect(spec.data.values).toEqual(multi_root_data);
+
+    const result = getChartSpecWithContext(context);
+    expect(result.spec.categoryField).toEqual(context.cell.color || context.cell.x);
   });
 
   it('should handle missing dataTable fields gracefully', () => {
@@ -240,7 +222,6 @@ describe('getChartSpecWithContext', () => {
     };
 
     const result = getChartSpecWithContext(context);
-    //console.log("basic spec", JSON.stringify(result.spec, null, 2));
     expect(result.spec).toBeDefined();
     expect(result.spec.type).toBe('circlePacking');
   });
@@ -253,7 +234,6 @@ describe('getChartSpecWithContext', () => {
     };
 
     const result = getChartSpecWithContext(context);
-    //console.log("basic spec", JSON.stringify(result.spec, null, 2));
     expect(result.spec).toBeDefined();
     expect(result.spec.type).toBe('circlePacking');
   });
