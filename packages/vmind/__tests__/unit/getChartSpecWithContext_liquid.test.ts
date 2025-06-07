@@ -16,8 +16,9 @@ describe('getChartSpecWithContext', () => {
     const { chartType, spec } = getChartSpecWithContext(context);
     expect(chartType).toBe(ChartType.LiquidChart);
     expect(spec.type).toBe('liquid');
-    expect(spec.valueField).not.toBeNull();
+    expect(spec.valueField).toBe(context.cell.value);
     expect(spec.data.values).toEqual(data);
+    expect(spec.indicatorSmartInvert).toBe(true);
   });
 
   it('should generate correct basic liquid spec with custom title', () => {
@@ -36,7 +37,8 @@ describe('getChartSpecWithContext', () => {
     expect(chartType).toBe(ChartType.LiquidChart);
     expect(spec.type).toBe('liquid');
     expect(spec.data.values).toEqual(data);
-    expect(spec.valueField).not.toBeNull();
+    expect(spec.valueField).toBe(context.cell.value);
     expect(spec.indicator.title.style.text).toBe('当前进度');
+    expect(spec.indicatorSmartInvert).toBe(true);
   });
 });
