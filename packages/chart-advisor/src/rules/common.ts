@@ -1,4 +1,4 @@
-import { Rule, ScoringConfig, ChartData } from '../types';
+import { Rule, ScoringConfig, ChartData } from '../types/index';
 import { coefficientOfVariation } from '../utils/calculation';
 
 // 数据量范围检查
@@ -6,11 +6,11 @@ export const dataRangeRule = (config: ScoringConfig): Rule => ({
   name: 'dataRange',
   weight: config.weights.dataRange,
   check: (data: ChartData) => ({
-    passed: Array.isArray(data.bars)
-      ? data.bars.length >= config.thresholds.minBarNumber && data.bars.length <= config.thresholds.maxBarNumber
+    passed: Array.isArray(data.data)
+      ? data.data.length >= config.thresholds.minBarNumber && data.data.length <= config.thresholds.maxBarNumber
       : false,
     score: 1,
-    details: `Bar count: ${Array.isArray(data.bars) ? data.bars.length : 0}`
+    details: `Data count: ${Array.isArray(data.data) ? data.data.length : 0}`
   })
 });
 
@@ -30,9 +30,12 @@ export const dataDistributionRule = (config: ScoringConfig): Rule => ({
   name: 'dataDistribution',
   weight: config.weights.dataDistribution,
   check: (data: ChartData) => {
-    // 假设 bars 中有 value 字段
-    const values = Array.isArray(data.bars)
-      ? data.bars.map((d: any) => d.value).filter((v: any) => typeof v === 'number')
+    if (!data.metrics || data.metrics.length === 0) {
+      return { passed: false, score: 0, details: 'No metrics available for distribution check' };
+    }
+    const metricField = data.metrics[0];
+    const values = Array.isArray(data.data)
+      ? data.data.map((d: any) => d[metricField]).filter((v: any) => typeof v === 'number')
       : [];
     const coef = coefficientOfVariation(values);
     // 以 0.2 作为分布合理的阈值（可根据实际需求调整）

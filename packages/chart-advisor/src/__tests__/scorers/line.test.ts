@@ -6,17 +6,17 @@ describe('Line Scorer', () => {
 
   it('should return full score for valid line chart data', () => {
     const data = {
-      bars: [
-        { value: 1 },
-        { value: 2 },
-        { value: 3 },
-        { value: 4 },
-        { value: 5 },
-        { value: 6 },
-        { value: 7 },
-        { value: 8 },
-        { value: 9 },
-        { value: 10 }
+      data: [
+        { metric1: 1 },
+        { metric1: 2 },
+        { metric1: 3 },
+        { metric1: 4 },
+        { metric1: 5 },
+        { metric1: 6 },
+        { metric1: 7 },
+        { metric1: 8 },
+        { metric1: 9 },
+        { metric1: 10 }
       ],
       dimensions: ['dim1'],
       metrics: ['metric1'],
@@ -30,7 +30,7 @@ describe('Line Scorer', () => {
 
   it('should return zero score for invalid bar count', () => {
     const data = {
-      bars: [],
+      data: [],
       dimensions: ['dim1'],
       metrics: ['metric1'],
       chartType: 'line'
@@ -42,17 +42,17 @@ describe('Line Scorer', () => {
 
   it('should return zero score for missing dimensions/metrics', () => {
     const data = {
-      bars: [
-        { value: 1 },
-        { value: 2 },
-        { value: 3 },
-        { value: 4 },
-        { value: 5 },
-        { value: 6 },
-        { value: 7 },
-        { value: 8 },
-        { value: 9 },
-        { value: 10 }
+      data: [
+        { metric1: 1 },
+        { metric1: 2 },
+        { metric1: 3 },
+        { metric1: 4 },
+        { metric1: 5 },
+        { metric1: 6 },
+        { metric1: 7 },
+        { metric1: 8 },
+        { metric1: 9 },
+        { metric1: 10 }
       ],
       dimensions: [],
       metrics: [],

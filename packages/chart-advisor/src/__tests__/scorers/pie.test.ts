@@ -6,7 +6,7 @@ describe('Pie Scorer', () => {
 
   it('should return full score for valid pie chart data', () => {
     const data = {
-      bars: [{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }, { value: 5 }],
+      data: [{ metric1: 1 }, { metric1: 2 }, { metric1: 3 }, { metric1: 4 }, { metric1: 5 }],
       dimensions: ['dim1'],
       metrics: ['metric1'],
       chartType: 'pie'
@@ -19,7 +19,7 @@ describe('Pie Scorer', () => {
 
   it('should return zero score for invalid bar count', () => {
     const data = {
-      bars: [],
+      data: [],
       dimensions: ['dim1'],
       metrics: ['metric1'],
       chartType: 'pie'
@@ -31,7 +31,7 @@ describe('Pie Scorer', () => {
 
   it('should return zero score for missing dimensions/metrics', () => {
     const data = {
-      bars: [{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }, { value: 5 }],
+      data: [{ metric1: 1 }, { metric1: 2 }, { metric1: 3 }, { metric1: 4 }, { metric1: 5 }],
       dimensions: [],
       metrics: [],
       chartType: 'pie'
