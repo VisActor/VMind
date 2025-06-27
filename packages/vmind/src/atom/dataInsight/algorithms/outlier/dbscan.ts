@@ -4,17 +4,18 @@ import clustering from 'density-clustering';
 import normalize from 'array-normalize';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
-import type { FieldInfo } from '../../../../types';
-import { ChartType, ROLE, type DataItem } from '../../../../types';
+import { ChartType } from '../../../../types';
+import type { DataItem } from '@visactor/generate-vchart';
+import { DataRole, type FieldInfoItem } from '@visactor/generate-vchart';
 
 export interface DbscanOptions {
   eps?: number;
   minPts?: number;
 }
 
-const isMeasureField = (field: string, fieldInfo: FieldInfo[]) => {
+const isMeasureField = (field: string, fieldInfo: FieldInfoItem[]) => {
   const fieldInfoItem = fieldInfo.find(v => v.fieldName === field);
-  return fieldInfoItem && fieldInfoItem.role === ROLE.MEASURE;
+  return fieldInfoItem && fieldInfoItem.role === DataRole.MEASURE;
 };
 
 const dbscanAlgo = (context: DataInsightExtractContext, options: DbscanOptions) => {

@@ -1,6 +1,7 @@
 import type { ITheme as ChartTheme } from '@visactor/vchart';
-import type { BasemapOption, Cell, ChartGeneratorCtx, ChartType, DataTable, VizSchema } from '../../types';
+import type { Cell, ChartGeneratorCtx, ChartType } from '../../types';
 import type { BaseOptions } from '../../types/atom';
+import type { BasemapOption, DataTable } from '@visactor/generate-vchart';
 
 export type VisualChannel = 'x' | 'y' | 'color' | 'angle' | 'radius' | 'size' | 'value' | 'source' | 'target' | 'time';
 
@@ -14,14 +15,7 @@ export type ChartKnowledge = {
 };
 
 export interface GenerateChartCellContext extends ChartGeneratorCtx {
-  colors?: string[];
-  chartTheme?: ChartTheme | string;
   chartTypeList: ChartType[];
-  /** only use in map chart */
-  basemapOption?: BasemapOption;
-  totalTime?: number;
-  stackOrPercent?: 'stack' | 'percent';
-  transpose?: boolean;
 }
 
 export interface ChartAdvistorResult {

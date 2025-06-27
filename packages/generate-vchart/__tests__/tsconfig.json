@@ -1,0 +1,7 @@
+{
+  "extends": "@internal/ts-config/tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {}
+  },
+  "references": []
+}

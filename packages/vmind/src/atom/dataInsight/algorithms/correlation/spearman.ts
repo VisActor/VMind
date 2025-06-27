@@ -3,8 +3,8 @@ import { isArray } from '@visactor/vutils';
 import { spearmanCoefficient } from '../statistics';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
-import type { DataTable } from '../../../../types';
 import { ChartType } from '../../../../types';
+import type { DataTable } from '@visactor/generate-vchart';
 
 export interface SpearmanOptions {
   threshold?: number;

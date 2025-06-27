@@ -4,10 +4,11 @@
 import { isArray } from '@visactor/vutils';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
-import { ChartType, type DataItem } from '../../../../types';
+import { ChartType } from '../../../../types';
 import { getIntersection, isValidData } from '../../../../utils/common';
 import { getMeanAndstdDev } from '../statistics';
 import { isPercenSeries } from '../../utils';
+import type { DataItem } from '@visactor/generate-vchart';
 
 export interface DataPoint {
   index: number;

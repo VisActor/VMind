@@ -1,7 +1,8 @@
 import { isArray, isNumber } from '@visactor/vutils';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
-import { ChartType, type DataItem } from '../../../../types';
+import { ChartType } from '../../../../types';
+import type { DataItem } from '@visactor/generate-vchart';
 
 const getMajorityInGroup = (
   dataset: { index: number; dataItem: DataItem }[],

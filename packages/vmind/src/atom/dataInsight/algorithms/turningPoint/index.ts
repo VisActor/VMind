@@ -1,10 +1,11 @@
-import { isArray, isNumber } from '@visactor/vutils';
+import { isArray } from '@visactor/vutils';
 
 import BayesianChangePoint from 'bayesian-changepoint';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
-import { ChartType, type DataItem } from '../../../../types';
+import { ChartType } from '../../../../types';
 import { isPercenSeries } from '../../utils';
+import type { DataItem } from '@visactor/generate-vchart';
 
 const breakpointVerifier = (next: any, prev: any): boolean => {
   if (Math.abs(next.data - prev.data) >= 1) {

@@ -1,16 +1,9 @@
 import { FOLD_NAME, FOLD_VALUE } from '@visactor/chart-advisor';
 import { array, isArray, isNil } from '@visactor/vutils';
-import {
-  getDataListByField,
-  getFieldByDataType,
-  getFieldByRole,
-  getFieldsByDataType,
-  getRemainedFields
-} from '../../utils/field';
-import { foldDataTableByYField, isValidDataTable } from '../../utils/dataTable';
+import { getDataListByField, getRemainedFields } from '../../utils/field';
+import { foldDataTableByYField } from '../../utils/dataTable';
 import { replaceAll } from '../../utils/text';
-import type { FieldInfo } from '../../types';
-import { ChartType, DataType, ROLE } from '../../types';
+import { ChartType } from '../../types';
 import {
   NEED_COLOR_FIELD_CHART_LIST,
   NEED_SIZE_FIELD_CHART_LIST,
@@ -19,6 +12,15 @@ import {
 } from './const';
 import type { GenerateChartCellContext } from './type';
 import { isValidData } from '../../utils/common';
+import type { FieldInfoItem } from '@visactor/generate-vchart';
+import {
+  DataRole,
+  DataType,
+  getAllFieldsByDataType,
+  getFieldsByDataType,
+  getFieldsByRoleType,
+  isValidDataTable
+} from '@visactor/generate-vchart';
 
 export const getContextAfterRevised = (context: GenerateChartCellContext) => {
   const revisedFuncList = [
@@ -70,7 +72,7 @@ export const patchTransposeField = (context: GenerateChartCellContext) => {
     const { x, y } = cell;
     const arrayX = array(x);
     const arrayY = array(y);
-    const fieldMapping: Record<string, FieldInfo> = fieldInfo.reduce(
+    const fieldMapping: Record<string, FieldInfoItem> = fieldInfo.reduce(
       (prev, curv) => ({
         ...prev,
         [curv.fieldName]: curv
@@ -78,8 +80,8 @@ export const patchTransposeField = (context: GenerateChartCellContext) => {
       {}
     );
     const transpoeField =
-      arrayX.every(field => !!fieldMapping[field] && fieldMapping[field].role === ROLE.MEASURE) &&
-      arrayY.every(field => !!fieldMapping[field] && fieldMapping[field].role === ROLE.DIMENSION);
+      arrayX.every(field => !!fieldMapping[field] && fieldMapping[field].role === DataRole.MEASURE) &&
+      arrayY.every(field => !!fieldMapping[field] && fieldMapping[field].role === DataRole.DIMENSION);
     if (transpoeField) {
       return {
         ...context,
@@ -291,7 +293,7 @@ export const patchPieChart = (context: GenerateChartCellContext) => {
 
       if (!cellNew.color) {
         //No color fields are assigned, select a discrete field from the remaining fields as color field
-        const colorField = getFieldByRole(remainedFields, ROLE.DIMENSION);
+        const colorField = getFieldsByRoleType(remainedFields, DataRole.DIMENSION);
         if (colorField) {
           cellNew.color = colorField.fieldName;
         } else if (remainedFields?.[0]) {
@@ -300,7 +302,7 @@ export const patchPieChart = (context: GenerateChartCellContext) => {
       }
       if (!cellNew.angle) {
         //no angle field are assigned, select a continuous field from the remaining field to assign to the angle
-        const angleField = getFieldByDataType(remainedFields, [DataType.FLOAT, DataType.INT]);
+        const angleField = getFieldsByDataType(remainedFields, [DataType.FLOAT, DataType.INT]);
         if (angleField) {
           cellNew.angle = angleField.fieldName;
         } else {
@@ -344,7 +346,7 @@ export const patchWordCloud = (context: GenerateChartCellContext) => {
         if (newSize) {
           cellNew.size = newSize;
         } else {
-          const sizeField = getFieldByDataType(remainedFields, [DataType.INT, DataType.FLOAT]);
+          const sizeField = getFieldsByDataType(remainedFields, [DataType.INT, DataType.FLOAT]);
           if (sizeField) {
             cellNew.size = sizeField.fieldName;
           } else {
@@ -357,7 +359,7 @@ export const patchWordCloud = (context: GenerateChartCellContext) => {
         if (newColor) {
           cellNew.color = newColor;
         } else {
-          const colorField = getFieldByRole(remainedFields, ROLE.DIMENSION);
+          const colorField = getFieldsByRoleType(remainedFields, DataRole.DIMENSION);
           if (colorField) {
             cellNew.color = colorField.fieldName;
           } else if (remainedFields?.[0]) {
@@ -382,11 +384,11 @@ export const patchDynamicBarChart = (context: GenerateChartCellContext) => {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
 
       //Dynamic bar chart does not have a time field, choose a discrete field as time.
-      const timeField = getFieldByDataType(remainedFields, [DataType.DATE]);
+      const timeField = getFieldsByDataType(remainedFields, [DataType.DATE]);
       if (timeField) {
         cellNew.time = timeField.fieldName;
       } else {
-        const stringField = getFieldByDataType(remainedFields, [DataType.STRING]);
+        const stringField = getFieldsByDataType(remainedFields, [DataType.STRING]);
         if (stringField) {
           cellNew.time = stringField.fieldName;
         } else {
@@ -425,7 +427,7 @@ export const patchCartesianXField = (context: GenerateChartCellContext) => {
     if (!cellNew.x) {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
       //没有分配x字段，从剩下的字段里选择一个离散字段分配到x上
-      const xField = getFieldByRole(remainedFields, ROLE.DIMENSION);
+      const xField = getFieldsByRoleType(remainedFields, DataRole.DIMENSION);
       if (xField) {
         cellNew.x = xField.fieldName;
       } else {
@@ -450,7 +452,7 @@ export const patchNeedColor = (context: GenerateChartCellContext) => {
       cellNew.color = colorField[0];
     } else {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
-      const colorField = getFieldByRole(remainedFields, ROLE.DIMENSION);
+      const colorField = getFieldsByRoleType(remainedFields, DataRole.DIMENSION);
       if (colorField) {
         cellNew.color = colorField.fieldName;
       } else if (remainedFields?.[0]) {
@@ -475,7 +477,7 @@ export const patchNeedSize = (context: GenerateChartCellContext) => {
       cellNew.size = sizeField[0];
     } else {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
-      const sizeField = getFieldByRole(remainedFields, ROLE.MEASURE);
+      const sizeField = getFieldsByRoleType(remainedFields, DataRole.MEASURE);
       if (sizeField) {
         cellNew.size = sizeField.fieldName;
       } else {
@@ -493,7 +495,7 @@ export const patchRangeColumnChart = (context: GenerateChartCellContext) => {
   const { chartType, cell, fieldInfo } = context;
   const cellNew = { ...cell };
   const remainedFields = getRemainedFields(cellNew, fieldInfo);
-  const numericFields = getFieldsByDataType(remainedFields, [DataType.FLOAT, DataType.INT]);
+  const numericFields = getAllFieldsByDataType(remainedFields, [DataType.FLOAT, DataType.INT]);
   if (chartType === ChartType.RangeColumnChart.toUpperCase()) {
     if (cellNew.y && cellNew.y instanceof Array && cellNew.y.length === 2) {
       return { cell: cellNew };
@@ -524,7 +526,7 @@ export const patchLinearProgressChart = (context: GenerateChartCellContext) => {
       cellNew.x = xField[0];
     } else {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
-      const xField = getFieldByRole(remainedFields, ROLE.DIMENSION);
+      const xField = getFieldsByRoleType(remainedFields, DataRole.DIMENSION);
       if (xField) {
         cellNew.x = xField.fieldName;
       } else {
@@ -537,7 +539,7 @@ export const patchLinearProgressChart = (context: GenerateChartCellContext) => {
       cellNew.y = yField[0];
     } else {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
-      const yField = getFieldByRole(remainedFields, ROLE.MEASURE);
+      const yField = getFieldsByRoleType(remainedFields, DataRole.MEASURE);
       if (yField) {
         cellNew.y = yField.fieldName;
       } else {
@@ -560,7 +562,7 @@ export const patchBasicHeatMapChart = (context: GenerateChartCellContext) => {
       cellNew.y = colorField[1];
     } else {
       const remainedFields = getRemainedFields(cellNew, fieldInfo);
-      const colorField = getFieldsByDataType(remainedFields, [DataType.STRING]);
+      const colorField = getAllFieldsByDataType(remainedFields, [DataType.STRING]);
       if (colorField.length >= 2) {
         cellNew.x = colorField[0];
         cellNew.y = colorField[1];

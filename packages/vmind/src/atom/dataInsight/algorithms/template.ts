@@ -1,12 +1,12 @@
 import { ChartType } from '../../../types';
-import type { DataCell, FieldInfo } from '../../../types';
 import type { InsightTextContent } from '../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../type';
 import { DEFAULT_SERIES_NAME } from '../const';
 import { TrendType } from './statistics';
-import { getFieldIdInCell } from '../../../utils/field';
+import type { DataCell, FieldInfoItem } from '@visactor/generate-vchart';
+import { getFieldIdInCell } from '@visactor/generate-vchart';
 
-const getFieldInfoById = (fieldInfo: FieldInfo[], fieldId: string) => {
+const getFieldInfoById = (fieldInfo: FieldInfoItem[], fieldId: string) => {
   return fieldInfo.find(info => info.fieldName === fieldId);
 };
 export const isEmptySeries = (seriesName: any) => !seriesName || seriesName === DEFAULT_SERIES_NAME;

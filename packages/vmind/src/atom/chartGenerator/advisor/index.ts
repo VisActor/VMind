@@ -2,12 +2,13 @@ import type { ChartType } from '@visactor/chart-advisor';
 import { chartAdvisor } from '@visactor/chart-advisor';
 
 import type { GenerateChartCellContext } from '../type';
-import { isValidDataTable } from '../../../utils/dataTable';
 import { chartTypeMap, getCell, typeMap, VMindChartTypeMap } from '../utils';
 import type { VizSchema } from '../../../types/';
 import { ChartType as VMindChartType } from '../../../types';
-import type { Cell, DataTable } from '../../../types';
+import type { Cell } from '../../../types';
 import { uniqBy } from '../../../utils/common';
+import type { DataTable } from '@visactor/generate-vchart';
+import { isValidDataTable } from '@visactor/generate-vchart';
 
 /**
  * call @visactor/chart-advisor to get the list of advised charts

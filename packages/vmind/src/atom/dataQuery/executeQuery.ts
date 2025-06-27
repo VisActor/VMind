@@ -1,5 +1,5 @@
 import alasql from 'alasql';
-import type { DataQueryCtx, DataTable, FieldInfo } from '../../types';
+import type { DataQueryCtx } from '../../types';
 import {
   matchColumnName,
   parseRespondField,
@@ -11,6 +11,7 @@ import {
   swapMap
 } from './utils';
 import { VMIND_DATA_SOURCE } from './const';
+import type { DataTable, FieldInfoItem } from '@visactor/generate-vchart';
 
 /**
  * patch the errors in sql according to the feature of alasql:
@@ -25,7 +26,7 @@ type PatchSQLResult = {
   validDataset: DataTable;
   columnReplaceMap: Map<string, string>;
   sqlReplaceMap: Map<string, string>;
-  llmFieldInfo: FieldInfo[];
+  llmFieldInfo: FieldInfoItem[];
 };
 export const patchSQLBeforeQuery = (context: DataQueryCtx): PatchSQLResult => {
   const { sql, dataTable, fieldInfo, llmFieldInfo: propsLLMFieldInfo } = context;
@@ -95,7 +96,7 @@ export const executeDataQuery = (context: PatchSQLResult) => {
 
 type RestoreResult = {
   datasetAfterQuery: DataTable;
-  llmFieldInfo: FieldInfo[];
+  llmFieldInfo: FieldInfoItem[];
 };
 /**
  * restore the dataset after query according to replace maps
@@ -104,7 +105,7 @@ type RestoreResult = {
  * @returns restored dataset
  */
 export const restoreDatasetAfterQuery = (
-  context: { llmFieldInfo: FieldInfo[] } & QueryResult & PatchSQLResult
+  context: { llmFieldInfo: FieldInfoItem[] } & QueryResult & PatchSQLResult
 ): RestoreResult => {
   const { columnReplaceMap, sqlReplaceMap, alasqlDataset, llmFieldInfo: propsLLMFieldInfo } = context;
   //restore the dataset

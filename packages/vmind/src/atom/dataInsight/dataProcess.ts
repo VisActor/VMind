@@ -1,9 +1,7 @@
 import { sumDimensionValues } from './utils';
-import type { DataCell, DataTable } from '../../types';
 import { ChartType, type DataInsightCtx } from '../../types';
 import { isArray, isValidNumber } from '@visactor/vutils';
 import { DEFAULT_SERIES_NAME } from './const';
-import { getFieldInfoFromDataset } from '../../utils/field';
 import {
   getCellFromSpec,
   getChartTypeFromSpec,
@@ -14,6 +12,8 @@ import {
 import type { DimValueDataMap } from './type';
 import { transferFieldInfo } from '../dataClean/utils';
 import { transferMeasureInTable } from '../../utils/dataTable';
+import type { DataCell, DataItem, DataTable } from '@visactor/generate-vchart';
+import { getFieldInfoFromDataset } from '@visactor/generate-vchart';
 
 interface AxesDataInfoCtx {
   spec: any;
@@ -151,7 +151,7 @@ export const extractDataFromContext = (context: DataInsightCtx) => {
   const seriesField: string = isArray(color) ? color[0] : color;
   const seriesDataMap: DimValueDataMap = {};
   if (seriesField && ![ChartType.PieChart, ChartType.RoseChart].includes(chartType)) {
-    dataset.forEach((dataItem, index) => {
+    dataset.forEach((dataItem: DataItem, index: number) => {
       const groupBy = dataItem[seriesField];
       if (!groupBy || (chartType === ChartType.WaterFallChart && groupBy === 'total')) {
         return;
@@ -162,7 +162,7 @@ export const extractDataFromContext = (context: DataInsightCtx) => {
       seriesDataMap[groupBy].push({ index, dataItem });
     });
   } else {
-    seriesDataMap[DEFAULT_SERIES_NAME] = dataset.map((dataItem, index) => ({ index, dataItem }));
+    seriesDataMap[DEFAULT_SERIES_NAME] = dataset.map((dataItem: DataItem, index: number) => ({ index, dataItem }));
   }
 
   const xField: string = isArray(cellx) ? cellx[0] : cellx;

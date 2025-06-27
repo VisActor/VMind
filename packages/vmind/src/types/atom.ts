@@ -1,9 +1,9 @@
 /** Atom Function Types */
 import type { Cell, ChartType } from './chart';
-import type { FieldInfo, DataTable } from './base';
 import type { Insight } from '../atom/dataInsight/type';
 import type { ILLMManage, ToolMessage, LLMMessage } from '../types/llm';
 import type { SimpleVChartSpec } from '../atom/imageReader/interface';
+import type { DataTable, FieldInfoItem, GenerateChartInput } from '@visactor/generate-vchart';
 
 export interface BaseOptions {
   /** llm manage instance */
@@ -63,7 +63,7 @@ export interface CustomPromptOptions extends BaseOptions {
   promptTemplate: string;
 }
 
-export interface SchemaFieldInfo extends Pick<FieldInfo, 'description' | 'role' | 'location' | 'type'> {
+export interface SchemaFieldInfo extends Pick<FieldInfoItem, 'description' | 'role' | 'type'> {
   id: string;
   /** aliasName */
   alias?: string;
@@ -122,7 +122,7 @@ export interface ClusterDataView {
   /** cluster result */
   dataTable: DataTable;
   /** cluster field */
-  fieldInfo: FieldInfo[];
+  fieldInfo: FieldInfoItem[];
   /** valid count of measure fields */
   validColumnLength: number;
   /** table row length */
@@ -142,7 +142,7 @@ export interface DatasetFromText {
   /** data table of dataset */
   dataTable: DataTable;
   /** field info of dataset */
-  fieldInfo: FieldInfo[];
+  fieldInfo: FieldInfoItem[];
   /** data position in text */
   textRange?: [string, string];
 }
@@ -152,7 +152,7 @@ export interface DataExtractionCtx extends BaseContext {
   /** text object of data extraction */
   text: string;
   /** extra fieldsInfo of dataTable */
-  fieldInfo?: FieldInfo[];
+  fieldInfo?: FieldInfoItem[];
   /** Data Table values */
   dataTable?: DataTable;
   /** multiple results */
@@ -166,7 +166,7 @@ export interface ChartCommandCtx extends BaseContext {
   /** summary of data table */
   summary?: string;
   /** extra fieldsInfo of dataTable */
-  fieldInfo?: FieldInfo[];
+  fieldInfo?: FieldInfoItem[];
   /** Data Table values */
   dataTable?: DataTable;
   /** command */
@@ -175,7 +175,7 @@ export interface ChartCommandCtx extends BaseContext {
 
 export interface DataCleanCtx extends BaseContext {
   /** extra fieldsInfo of dataTable */
-  fieldInfo?: FieldInfo[];
+  fieldInfo?: FieldInfoItem[];
   /** Data Table values */
   dataTable?: DataTable;
   /** clutser result */
@@ -201,9 +201,9 @@ export interface DataQueryCtx extends BaseContext {
   /** current summary of dataTable */
   dataTableSummary?: string;
   /** extra fieldsInfo of dataTable */
-  fieldInfo?: FieldInfo[];
+  fieldInfo?: FieldInfoItem[];
   /** fieldsInfo of sql query result */
-  llmFieldInfo?: FieldInfo[];
+  llmFieldInfo?: FieldInfoItem[];
   /** Data Table values */
   dataTable: DataTable;
   /** user's command */
@@ -213,11 +213,7 @@ export interface DataQueryCtx extends BaseContext {
 }
 
 /** Context of Chart Generator Atom */
-export interface ChartGeneratorCtx extends BaseContext {
-  /** extra fieldsInfo of dataTable */
-  fieldInfo?: FieldInfo[];
-  /** Data Table values */
-  dataTable: DataTable;
+export interface ChartGeneratorCtx extends BaseContext, GenerateChartInput {
   /** command */
   command: string;
   /** chart type generator result */
@@ -249,7 +245,7 @@ export interface DataInsightCtx extends BaseContext {
   /** data tabel */
   dataTable?: DataTable;
   /** fieldsInfo of dataTable */
-  fieldInfo?: FieldInfo[];
+  fieldInfo?: FieldInfoItem[];
   /** final insight */
   insights: Insight[];
   /** chartType of vchart */

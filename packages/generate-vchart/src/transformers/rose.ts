@@ -1,0 +1,56 @@
+import { isValid } from '@visactor/vutils';
+import { GenerateChartInput } from '../types/transform';
+import { color, commonLabel, data, discreteLegend } from './common';
+
+export const roseField = (context: GenerateChartInput) => {
+  const { cell, spec } = context;
+  spec.valueField = cell.radius ?? cell.angle;
+  const colorField = cell.color ?? cell.category;
+
+  if (isValid(colorField)) {
+    spec.categoryField = cell.category ?? cell.color;
+    spec.seriesField = cell.color ?? cell.category;
+  }
+  spec.outerRadius = 0.8;
+  spec.innerRadius = 0.2;
+
+  return { spec };
+};
+
+export const roseAxis = (context: GenerateChartInput) => {
+  const { spec } = context;
+
+  spec.axes = [
+    {
+      orient: 'angle',
+      domainLine: {
+        visible: false
+      },
+      grid: {
+        visible: false,
+        alignWithLabel: false
+      },
+      label: {
+        visible: true
+      }
+    },
+    {
+      orient: 'radius',
+      grid: {
+        visible: false,
+        smooth: true
+      }
+    }
+  ];
+  return { spec };
+};
+
+export const pipelineRose = [
+  data,
+  color,
+  roseField,
+  roseAxis,
+  discreteLegend,
+  commonLabel
+  //animationCartesianPie,
+];

@@ -1,14 +1,16 @@
 /**
  * Using Z-score and IQR to detect abnormal value.
  */
-import { isArray, uniqArray } from '@visactor/vutils';
+import { isArray } from '@visactor/vutils';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
-import { ChartType, DataType, type DataItem } from '../../../../types';
+import { ChartType } from '../../../../types';
 import { getIntersection } from '../../../../utils/common';
 import { getAbnormalByIQR, getAbnormalByZScores, type DataPoint } from './statistics';
 import { LOF } from './lof';
 import { isPercenSeries } from '../../utils';
+import type { DataItem } from '@visactor/generate-vchart';
+import { DataType } from '@visactor/generate-vchart';
 
 function getDistanceList(dataList: DataPoint[], isTimeSeries: boolean) {
   const res = [];
