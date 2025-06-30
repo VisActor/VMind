@@ -95,10 +95,7 @@ describe('getChartSpecWithContext', () => {
         x: 'category',
         y: ['min', 'q1', 'median', 'q3', 'max']
       },
-      chartType: ChartType.BoxPlot.toUpperCase(),
-      spec: {
-        type: 'boxPlot'
-      }
+      chartType: ChartType.BoxPlot.toUpperCase()
     };
     const { chartType, spec } = getChartSpecWithContext(context);
 
