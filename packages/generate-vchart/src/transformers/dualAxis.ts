@@ -7,8 +7,20 @@ import {
   SUB_SERIES_ID,
   COLOR_FIELD
 } from '../utils/constants';
-import { color, data, discreteLegend } from './common';
+import { color, data, discreteLegend, formatXFields } from './common';
 import { GenerateChartInput } from '../types/transform';
+
+export const formatFieldsOfDualAxis = (context: GenerateChartInput) => {
+  const { chartType, cell } = context;
+  const cellNew: any = { ...cell };
+  //Dual-axis drawing yLeft and yRight
+
+  cellNew.y = [cellNew.y, cellNew.yLeft, cellNew.yRight, cellNew.y1, cellNew.y2].filter(Boolean).flat();
+
+  return {
+    cell: cellNew
+  };
+};
 
 export const dualAxisSeries = (context: GenerateChartInput) => {
   //assign series in dual-axis chart
@@ -97,4 +109,12 @@ export const dualAxisAxes = (context: GenerateChartInput) => {
   return { spec };
 };
 
-export const pipelineDualAxis = [data, color, dualAxisSeries, dualAxisAxes, discreteLegend];
+export const pipelineDualAxis = [
+  formatXFields,
+  formatFieldsOfDualAxis,
+  data,
+  color,
+  dualAxisSeries,
+  dualAxisAxes,
+  discreteLegend
+];

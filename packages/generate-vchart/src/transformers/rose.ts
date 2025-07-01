@@ -1,9 +1,11 @@
 import { isValid } from '@visactor/vutils';
 import { GenerateChartInput } from '../types/transform';
-import { color, commonLabel, data, discreteLegend } from './common';
+import { color, commonLabel, data, discreteLegend, formatColorFields } from './common';
 
 export const roseField = (context: GenerateChartInput) => {
-  const { cell, spec } = context;
+  const { cell } = formatColorFields(context, ['color', 'category', 'label']);
+
+  const { spec } = context;
   spec.valueField = cell.radius ?? cell.angle;
   const colorField = cell.color ?? cell.category;
 
@@ -14,7 +16,7 @@ export const roseField = (context: GenerateChartInput) => {
   spec.outerRadius = 0.8;
   spec.innerRadius = 0.2;
 
-  return { spec };
+  return { spec, cell };
 };
 
 export const roseAxis = (context: GenerateChartInput) => {

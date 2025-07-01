@@ -1,5 +1,5 @@
 import { LINEAR_COLOR_THEMES } from '../utils/constants';
-import { data, discreteLegend } from './common';
+import { data, discreteLegend, formatXFields } from './common';
 import { axis, seriesField } from './cartesian';
 import { GenerateChartInput } from '../types/transform';
 import { DataRole } from '../utils/enum';
@@ -70,6 +70,7 @@ export const stackLine = (context: GenerateChartInput) => {
 };
 
 export const pipelineLine = [
+  formatXFields,
   data,
   colorLine,
   cartesianLine,

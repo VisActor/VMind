@@ -1,4 +1,3 @@
-import { allThemeMap } from '@visactor/vchart-theme';
 import {
   DEFAULT_ANIMATION_DURATION,
   COLOR_THEMES,
@@ -6,10 +5,99 @@ import {
   DEFAULT_VIDEO_LENGTH_LONG,
   ONE_BY_ONE_GROUP_SIZE
 } from '../utils/constants';
-import { isArray } from '@visactor/vutils';
+import { isArray, isValid } from '@visactor/vutils';
 import { DataTable, GenerateChartInput } from '../types/transform';
 import { isValidDataTable } from '../utils/data';
-import { getFieldIdInCell } from '../utils/field';
+import { getFieldIdInCell, getFieldsByRoleType, getRemainedFields } from '../utils/field';
+import { DataRole } from '../utils/enum';
+
+export const findRequiredDimensionField = (context: GenerateChartInput, supportedColorFieldNames: string[]) => {
+  const { cell, fieldInfo } = context;
+
+  const colorField = supportedColorFieldNames.map(name => cell[name]).filter(Boolean);
+
+  if (colorField.length !== 0) {
+    return colorField[0];
+  } else {
+    const remainedFields = getRemainedFields(cell, fieldInfo);
+    const colorField = getFieldsByRoleType(remainedFields, DataRole.DIMENSION);
+    if (colorField) {
+      return colorField.fieldName;
+    } else if (remainedFields?.[0]) {
+      return remainedFields[0].fieldName;
+    }
+  }
+  return undefined;
+};
+
+export const findRequiredMeasureField = (context: GenerateChartInput, supportedFieldNames: string[]) => {
+  const { cell, fieldInfo } = context;
+
+  const sizeField = supportedFieldNames
+    .map(name => cell[name])
+    .filter(Boolean)
+    .flat();
+
+  if (sizeField.length !== 0) {
+    return sizeField[0];
+  } else {
+    const remainedFields = getRemainedFields(cell, fieldInfo);
+    const sizeField = getFieldsByRoleType(remainedFields, DataRole.MEASURE);
+    if (sizeField) {
+      return sizeField.fieldName;
+    } else {
+      return remainedFields?.[0]?.fieldName;
+    }
+  }
+};
+
+export const formatColorFields = (context: GenerateChartInput, supportedColorFieldNames: string[]) => {
+  const { cell } = context;
+  const field = findRequiredDimensionField(context, supportedColorFieldNames);
+
+  if (isValid(field)) {
+    return {
+      cell: {
+        ...cell,
+        color: field
+      }
+    };
+  }
+
+  return { cell };
+};
+
+export const formatSizeFields = (context: GenerateChartInput, supportedSizeFieldNames: string[]) => {
+  const { cell } = context;
+  const field = findRequiredMeasureField(context, supportedSizeFieldNames);
+
+  if (isValid(field)) {
+    return {
+      cell: {
+        ...cell,
+        size: field
+      }
+    };
+  }
+
+  return { cell };
+};
+
+export const formatXFields = (context: GenerateChartInput) => {
+  const { cell } = context;
+  const field = findRequiredDimensionField(context, ['x']);
+
+  if (isValid(field)) {
+    return {
+      cell: {
+        ...cell,
+        x: field
+      }
+    };
+  }
+
+  return { cell };
+};
 
 export const data = (context: GenerateChartInput) => {
   const { dataTable, spec } = context;

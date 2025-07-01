@@ -1,6 +1,34 @@
+import { DataType } from '../utils/enum';
 import { GenerateChartInput } from '../types/transform';
 import { BASIC_HEAT_MAP_COLOR_THEMES } from '../utils/constants';
-import { arrayData, color } from './common';
+import { color, data, formatSizeFields } from './common';
+import { getAllFieldsByDataType, getRemainedFields } from '../utils/field';
+
+export const formatFieldsOfBasicHeatMapChart = (context: GenerateChartInput) => {
+  const { cell, fieldInfo } = context;
+  let cellNew: any = { ...cell };
+  const colorField = [cellNew.x, cellNew.y, cellNew.label, cellNew.color].filter(Boolean).flat();
+  if (colorField.length >= 2) {
+    cellNew.x = colorField[0];
+    cellNew.y = colorField[1];
+  } else {
+    const remainedFields = getRemainedFields(cellNew, fieldInfo);
+    const colorField = getAllFieldsByDataType(remainedFields, [DataType.STRING]);
+    if (colorField.length >= 2) {
+      cellNew.x = colorField[0];
+      cellNew.y = colorField[1];
+    } else {
+      cellNew.x = remainedFields?.[0].fieldName;
+      cellNew.y = remainedFields[1].fieldName;
+    }
+  }
+
+  cellNew = formatSizeFields(context, ['size', 'value']).cell;
+
+  return {
+    cell: cellNew
+  };
+};
 
 export const basicHeatMapSeries = (context: GenerateChartInput) => {
   const { spec, cell } = context;
@@ -76,7 +104,8 @@ export const basicHeatMapLegend = (context: GenerateChartInput) => {
 };
 
 export const pipelineBasicHeatMap = [
-  arrayData,
+  formatFieldsOfBasicHeatMapChart,
+  data,
   color,
   basicHeatMapSeries,
   basicHeatMapColor,

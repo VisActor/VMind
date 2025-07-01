@@ -1,6 +1,6 @@
 import { isArray } from '@visactor/vutils';
 import { BasemapOption, GenerateChartInput } from '../types/transform';
-import { arrayData, color } from './common';
+import { arrayData, color, formatColorFields, formatSizeFields } from './common';
 
 export const DEFAULT_MAP_OPTION: BasemapOption = {
   regionProjectType: null,
@@ -33,12 +33,14 @@ export const basemap = (context: GenerateChartInput) => {
 };
 
 export const mapField = (context: GenerateChartInput) => {
-  const { spec, cell } = context;
+  let { cell } = formatColorFields(context, ['color', 'label']);
+  cell = formatSizeFields({ ...context, cell }, ['size', 'value', 'y']).cell;
+  const { spec } = context;
 
   spec.nameField = cell.color;
   spec.valueField = cell.size;
   spec.nameProperty = cell.color;
-  return { spec };
+  return { spec, cell };
 };
 
 export const mapDisplayConf = (context: GenerateChartInput) => {

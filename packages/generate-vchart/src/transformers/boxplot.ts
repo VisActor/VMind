@@ -1,7 +1,69 @@
-import { array } from '@visactor/vutils';
-import { color, data, discreteLegend } from './common';
+import { array, isNil } from '@visactor/vutils';
+import { color, data, discreteLegend, formatXFields } from './common';
 import { isValidDataTable } from '../utils/data';
 import { GenerateChartInput } from '../types/transform';
+
+export const formatFieldsOfBoxPlot = (context: GenerateChartInput) => {
+  const { chartType, cell } = context;
+  const cellNew = {
+    ...cell
+  };
+  const { y } = cellNew;
+
+  if (typeof y === 'string' && y.split(',').length > 1) {
+    cellNew.y = y.split(',').map(str => str.trim());
+  } else if (isNil(y) || y.length === 0) {
+    const {
+      lower_whisker,
+      lowerWhisker,
+      min,
+      lower,
+      lowerBox,
+      lower_box,
+      q1,
+      lower_quartile,
+      lowerQuartile,
+      midline,
+      median,
+      q3,
+      upperBox,
+      upper_box,
+      upper_quartile,
+      upperQuartile,
+      upper_whisker,
+      upperWhisker,
+      max,
+      upper
+    } = cellNew as any;
+
+    cellNew.y = [
+      lower_whisker,
+      lowerWhisker,
+      min,
+      lower,
+      lowerBox,
+      lower_box,
+      q1,
+      lower_quartile,
+      lowerQuartile,
+      midline,
+      median,
+      q3,
+      upperBox,
+      upper_box,
+      upper_quartile,
+      upperQuartile,
+      upper_whisker,
+      upperWhisker,
+      max,
+      upper
+    ].filter(Boolean);
+  }
+
+  return {
+    cell: cellNew
+  };
+};
 
 export const boxPlotField = (context: GenerateChartInput) => {
   const { cell, dataTable, spec } = context;
@@ -22,4 +84,4 @@ export const boxPlotField = (context: GenerateChartInput) => {
   return { spec };
 };
 
-export const pipelineBoxPlot = [data, color, boxPlotField, discreteLegend];
+export const pipelineBoxPlot = [formatXFields, formatFieldsOfBoxPlot, data, color, boxPlotField, discreteLegend];

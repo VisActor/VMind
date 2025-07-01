@@ -1,5 +1,5 @@
 import { GenerateChartInput } from '../types/transform';
-import { color, data } from './common';
+import { color, data, formatColorFields, formatSizeFields } from './common';
 
 export const bubbleCirclePackingData = (context: GenerateChartInput) => {
   const { dataTable, spec, cell } = context;
@@ -16,15 +16,17 @@ export const bubbleCirclePackingData = (context: GenerateChartInput) => {
 };
 
 export const bubbleCirclePackingField = (context: GenerateChartInput) => {
-  //assign field in spec according to cell
-  const { cell, spec } = context;
-  spec.categoryField = cell.color || cell.x;
+  let { cell } = formatColorFields(context, ['color', 'x', 'label']);
+  cell = formatSizeFields({ ...context, cell }, ['size', 'value', 'y', 'radius']).cell;
+  const { spec } = context;
+
+  spec.categoryField = cell.color ?? cell.x;
 
   if (cell.size) {
     spec.valueField = cell.size;
   }
 
-  return { spec };
+  return { spec, cell };
 };
 
 export const bubbleCirclePackingDisplayConf = (context: GenerateChartInput) => {

@@ -2,6 +2,7 @@ import { COLOR_THEMES, DEFAULT_RANKING_BAR_DURATION } from '..//utils/constants'
 import { GenerateChartInput } from '../types/transform';
 import { isValidDataTable } from '../utils/data';
 import { seriesField } from './cartesian';
+import { formatXFields } from './common';
 
 export const sequenceData = (context: GenerateChartInput) => {
   const { dataTable, cell, animationOptions, spec } = context;
@@ -252,6 +253,7 @@ export const rankingBarLabel = (context: GenerateChartInput) => {
 };
 
 export const pipelineRankingBar = [
+  formatXFields,
   sequenceData,
   colorDynamicBar,
   rankingBarField,

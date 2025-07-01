@@ -1,10 +1,26 @@
-import { isValid } from '@visactor/vutils';
+import { isNil, isValid } from '@visactor/vutils';
 import { GenerateChartInput } from '../types/transform';
 import { WORDCLOUD_NUM_LIMIT } from '../utils/constants';
 import { isValidDataTable } from '../utils/data';
-import { color } from './common';
-import { getFieldsByRoleType } from '../utils/field';
-import { DataRole } from '../utils/enum';
+import { color, formatColorFields, formatSizeFields } from './common';
+
+export const formatFieldsOfWordCloud = (context: GenerateChartInput) => {
+  //Word cloud must have color fields and size fields
+  let { cell } = context;
+
+  if (isNil(cell.size) || isNil(cell.color) || cell.color === cell.size) {
+    if (isNil(cell.size) || cell.size === cell.color) {
+      cell = formatSizeFields(context, ['weight', 'fontSize']).cell;
+    }
+
+    if (isNil(cell.color)) {
+      cell = formatColorFields({ ...context, cell }, ['text', 'word', 'label', 'x']);
+    }
+  }
+  return {
+    cell
+  };
+};
 
 export const wordCloudData = (context: GenerateChartInput) => {
   const { dataTable, spec } = context;
@@ -25,14 +41,6 @@ export const wordCloudField = (context: GenerateChartInput) => {
   if (isValid(colorField)) {
     spec.nameField = colorField;
     spec.seriesField = colorField;
-  } else {
-    //没有分配颜色字段，从剩下的字段里选择一个离散字段分配到颜色上
-    const colorField = getFieldsByRoleType(fieldInfo, DataRole.DIMENSION);
-    if (colorField) {
-      spec.nameField = colorField.fieldName;
-      spec.seriesField = colorField.fieldName;
-      cellNew.category = colorField.fieldName;
-    }
   }
 
   if (isValid(cell.size)) {
@@ -54,6 +62,7 @@ export const wordCloudDisplayConf = (context: GenerateChartInput) => {
   return { spec };
 };
 export const pipelineWordCloud = [
+  formatFieldsOfWordCloud,
   wordCloudData,
   color,
   wordCloudField,

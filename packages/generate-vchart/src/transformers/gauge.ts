@@ -1,11 +1,14 @@
 import { GenerateChartInput } from '../types/transform';
-import { arrayData, color } from './common';
+import { arrayData, color, formatColorFields, formatSizeFields } from './common';
 
 export const gaugeField = (context: GenerateChartInput) => {
-  const { spec, cell } = context;
+  let { cell } = formatColorFields(context, ['color', 'label']);
+  cell = formatSizeFields({ ...context, cell }, ['size', 'value']).cell;
+
+  const { spec } = context;
   spec.valueField = cell.size;
   spec.categoryField = cell.color;
-  return { spec };
+  return { spec, cell };
 };
 
 export const gaugeDisplayConf = (context: GenerateChartInput) => {

@@ -1,18 +1,55 @@
+import { DataRole } from '../utils/enum';
 import { GenerateChartInput } from '../types/transform';
-import { color, data } from './common';
+import { color, data, formatColorFields } from './common';
+import { getFieldsByRoleType, getRemainedFields } from '../utils/field';
+import { isValid } from '@visactor/vutils';
+
+export const formatFieldsOfLinearProgressChart = (context: GenerateChartInput) => {
+  const { cell, fieldInfo } = context;
+  const cellNew = { ...cell };
+  const xField = [cellNew.x, cellNew.color].filter(Boolean).flat();
+  if (xField.length !== 0) {
+    cellNew.x = xField[0];
+  } else {
+    const remainedFields = getRemainedFields(cellNew, fieldInfo);
+    const xField = getFieldsByRoleType(remainedFields, DataRole.DIMENSION);
+    if (xField) {
+      cellNew.x = xField.fieldName;
+    } else {
+      cellNew.x = remainedFields?.[0].fieldName;
+    }
+  }
+
+  const yField = [cellNew.y, cellNew.size, cellNew.value, cellNew.radius, cellNew.angle].filter(Boolean).flat();
+  if (yField.length !== 0) {
+    cellNew.y = yField[0];
+  } else {
+    const remainedFields = getRemainedFields(cellNew, fieldInfo);
+    const yField = getFieldsByRoleType(remainedFields, DataRole.MEASURE);
+    if (yField) {
+      cellNew.y = yField.fieldName;
+    } else {
+      cellNew.y = remainedFields?.[0].fieldName;
+    }
+  }
+  return {
+    cell: cellNew
+  };
+};
 
 export const linearProgressField = (context: GenerateChartInput) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { spec } = context;
+  const { cell } = formatColorFields(context, ['color', 'x', 'label']);
 
   spec.xField = cell.y;
   spec.yField = cell.x;
-  if (cell.color) {
+  if (isValid(cell.color)) {
     spec.seriesField = cell.color;
   }
   spec.cornerRadius = 20;
 
-  return { spec };
+  return { spec, cell };
 };
 
 export const linearProgressAxes = (context: GenerateChartInput) => {
@@ -49,4 +86,10 @@ export const linearProgressAxes = (context: GenerateChartInput) => {
   return { spec };
 };
 
-export const pipelineLinearProgress = [data, color, linearProgressField, linearProgressAxes];
+export const pipelineLinearProgress = [
+  formatFieldsOfLinearProgressChart,
+  data,
+  color,
+  linearProgressField,
+  linearProgressAxes
+];

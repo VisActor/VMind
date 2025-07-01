@@ -1,13 +1,16 @@
+import { isValid } from '@visactor/vutils';
 import { GenerateChartInput } from '../types/transform';
-import { color, data, indicator } from './common';
+import { color, data, findRequiredMeasureField, formatSizeFields, indicator } from './common';
 
 export const liquidField = (context: GenerateChartInput) => {
-  const { cell, spec } = context;
+  const { spec, cell } = context;
 
-  spec.valueField = cell.value;
+  const valueField = findRequiredMeasureField(context, ['value', 'size']);
+
+  spec.valueField = valueField;
   spec.indicatorSmartInvert = true;
 
-  return { spec };
+  return { spec, cell: isValid(valueField) ? { ...cell, value: valueField } : cell };
 };
 
 export const pipelineLiquid = [data, color, liquidField, indicator];

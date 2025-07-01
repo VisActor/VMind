@@ -1,17 +1,18 @@
 import { DEFAULT_ANIMATION_DURATION, DEFAULT_VIDEO_LENGTH, ONE_BY_ONE_GROUP_SIZE } from '../utils/constants';
 import { GenerateChartInput } from '../types/transform';
-import { color, data, discreteLegend, oneByOneDelayFunc } from './common';
+import { color, data, discreteLegend, formatSizeFields, formatXFields, oneByOneDelayFunc } from './common';
 import { DataRole } from '../utils/enum';
+import { isValid } from '@visactor/vutils';
 
 export const scatterField = (context: GenerateChartInput) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { spec, cell } = context;
   spec.xField = cell.x;
   spec.yField = cell.y;
-  if (cell.color) {
+  if (isValid(cell.color)) {
     spec.seriesField = cell.color;
   }
-  if (cell.size) {
+  if (isValid(cell.size)) {
     spec.sizeField = cell.size;
     spec.size = {
       type: 'linear'
@@ -62,6 +63,7 @@ export const animationScatter = (context: GenerateChartInput) => {
 };
 
 export const pipelineScatterPlot = [
+  formatXFields,
   data,
   color,
   scatterField,

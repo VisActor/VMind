@@ -215,18 +215,18 @@ export interface DataQueryCtx extends BaseContext {
 /** Context of Chart Generator Atom */
 export interface ChartGeneratorCtx extends BaseContext, GenerateChartInput {
   /** command */
-  command: string;
+  command?: string;
   /** chart type generator result */
-  chartType?: ChartType;
+  chartType?: string;
   /** field mapping result */
   cell: Cell;
   /** vizSchema */
   vizSchema?: VizSchema;
   /** chart spec */
-  spec: any;
+  spec?: any;
   /** chart advistor result */
   chartAdvistorRes?: {
-    chartType: ChartType;
+    chartType: string;
     spec: any;
     score: number;
   }[];

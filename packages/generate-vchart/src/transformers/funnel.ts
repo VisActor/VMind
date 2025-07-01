@@ -1,6 +1,6 @@
 import { GenerateChartInput } from '../types/transform';
 import { isValidDataTable } from '../utils/data';
-import { color, commonLabel, discreteLegend } from './common';
+import { color, commonLabel, discreteLegend, formatXFields } from './common';
 
 export const funnelData = (context: GenerateChartInput) => {
   const { dataTable, cell, spec } = context;
@@ -24,4 +24,4 @@ export const funnelField = (context: GenerateChartInput) => {
   return { spec };
 };
 
-export const pipelineFunnel = [funnelData, color, funnelField, discreteLegend, commonLabel];
+export const pipelineFunnel = [formatXFields, funnelData, color, funnelField, discreteLegend, commonLabel];

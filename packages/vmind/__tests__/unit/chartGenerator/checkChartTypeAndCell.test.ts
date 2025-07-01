@@ -1,11 +1,11 @@
+import { DataRole, DataType, type FieldInfoItem } from '@visactor/generate-vchart';
 import { checkChartTypeAndCell } from '../../../src/atom/chartGenerator/utils';
-import { ROLE, DataType, FieldInfo } from '../../../src/types/';
 
 describe('checkChartTypeAndCell', () => {
-  const mockFieldInfo: FieldInfo[] = [
-    { fieldName: 'field1', type: DataType.STRING, role: ROLE.DIMENSION },
-    { fieldName: 'field2', type: DataType.INT, role: ROLE.MEASURE },
-    { fieldName: 'field3', type: DataType.INT, role: ROLE.MEASURE }
+  const mockFieldInfo: FieldInfoItem[] = [
+    { fieldName: 'field1', type: DataType.STRING, role: DataRole.DIMENSION },
+    { fieldName: 'field2', type: DataType.INT, role: DataRole.MEASURE },
+    { fieldName: 'field3', type: DataType.INT, role: DataRole.MEASURE }
   ];
 
   describe('field validation', () => {

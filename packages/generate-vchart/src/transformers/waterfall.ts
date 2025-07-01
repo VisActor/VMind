@@ -1,6 +1,6 @@
 import { GenerateChartInput } from '../types/transform';
 import { axis } from './cartesian';
-import { color, data, discreteLegend } from './common';
+import { color, data, discreteLegend, formatXFields } from './common';
 
 export const waterfallField = (context: GenerateChartInput) => {
   //assign field in spec according to cell
@@ -24,4 +24,12 @@ export const waterfallStackLabel = (context: GenerateChartInput) => {
   return { spec };
 };
 
-export const pipelineWaterfall = [data, color, waterfallField, axis, waterfallStackLabel, discreteLegend];
+export const pipelineWaterfall = [
+  formatXFields,
+  data,
+  color,
+  waterfallField,
+  axis,
+  waterfallStackLabel,
+  discreteLegend
+];

@@ -15,7 +15,7 @@ export type ChartKnowledge = {
 };
 
 export interface GenerateChartCellContext extends ChartGeneratorCtx {
-  chartTypeList: ChartType[];
+  chartTypeList?: (ChartType | string)[];
 }
 
 export interface ChartAdvistorResult {

@@ -128,3 +128,9 @@ export const getFieldInfoFromDataset = (dataset: DataItem[]): FieldInfoItem[] =>
   });
   return getFieldInfo(dataset, Array.from(columns) as string[]);
 };
+
+export const getRemainedFields = (cell: Record<string, string | string[]>, fieldInfo: FieldInfoItem[]) => {
+  const usedFields = Object.values(cell).flat();
+  const remainedFields = fieldInfo.filter(f => !usedFields.includes(f.fieldName));
+  return remainedFields;
+};

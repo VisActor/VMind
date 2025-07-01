@@ -1,11 +1,14 @@
-import { color, discreteLegend } from './common';
+import { color, discreteLegend, formatColorFields, formatSizeFields } from './common';
 import { DataCell, GenerateChartInput } from '../types/transform';
 import { array, isArray, isString, isValid } from '@visactor/vutils';
 
 export const vennData = (context: GenerateChartInput) => {
-  const { dataTable, spec, cell } = context;
+  const { dataTable, spec } = context;
+  let { cell } = formatColorFields(context, ['color', 'x', 'label', 'sets']);
+  cell = formatSizeFields({ ...context, cell }, ['size', 'value']).cell;
+  const colorField = cell.color;
 
-  if (isArray(cell.color) && cell.color.length === 2) {
+  if (isArray(colorField) && colorField.length === 2) {
     const id2dataMap: Record<
       DataCell,
       {
@@ -13,8 +16,8 @@ export const vennData = (context: GenerateChartInput) => {
         value: DataCell;
       }
     > = {};
-    const setsField = cell.color[0];
-    const nameField = cell.color[1];
+    const setsField = colorField[0];
+    const nameField = colorField[1];
     dataTable.forEach(data => {
       if (id2dataMap[data[setsField]]) {
         id2dataMap[data[setsField]].sets.push(data[nameField]);
@@ -29,24 +32,24 @@ export const vennData = (context: GenerateChartInput) => {
     spec.valueField = 'value';
     spec.categoryField = 'sets';
     spec.seriesField = 'sets';
-  } else if (isString(cell.sets)) {
+  } else if (isString(colorField)) {
     spec.data = {
       values: dataTable.map(entry => {
-        const setString = `${entry[cell.sets as string]}`;
+        const setString = `${entry[colorField as string]}`;
         const sets = setString.split(/[,&]/).map(s => s.trim());
         return {
           ...entry,
-          [cell.sets as string]: sets
+          [colorField as string]: sets
         };
       })
     };
 
     spec.valueField = cell.size;
-    spec.categoryField = cell.sets;
-    spec.seriesField = cell.sets;
+    spec.categoryField = colorField;
+    spec.seriesField = colorField;
   }
 
-  return { spec };
+  return { spec, cell };
 };
 
 export const pipelineVenn = [vennData, color, discreteLegend];

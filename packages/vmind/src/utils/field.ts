@@ -23,12 +23,6 @@ export const getDataListByField = (dataset: DataTable, fieldName: string) => {
   return uniqArray(dataset.map(d => d[fieldName])) as (string | number)[];
 };
 
-export const getRemainedFields = (cell: Cell, fieldInfo: FieldInfoItem[]) => {
-  const usedFields = Object.values(cell).flat();
-  const remainedFields = fieldInfo.filter(f => !usedFields.includes(f.fieldName));
-  return remainedFields;
-};
-
 export const hasMeasureField = (fieldInfo: FieldInfoItem[]) => {
   return fieldInfo.some(f => f.role === DataRole.MEASURE);
 };

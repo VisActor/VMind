@@ -122,5 +122,5 @@ export interface GenerateChartInput {
   /**
    * 最终生成的图表spec
    */
-  spec: any;
+  spec?: any;
 }

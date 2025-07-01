@@ -1,9 +1,10 @@
+import { isValid } from '@visactor/vutils';
 import { GenerateChartInput } from '../types/transform';
 import { isValidDataTable } from '../utils/data';
-import { color, discreteLegend } from './common';
+import { color, discreteLegend, findRequiredMeasureField, formatSizeFields } from './common';
 
 export const sankeyData = (context: GenerateChartInput) => {
-  const { dataTable, cell, spec } = context;
+  const { dataTable, spec, cell } = context;
   const { source, target } = cell;
   const linkData = isValidDataTable(dataTable) ? dataTable : [];
   const nodes = [
@@ -34,13 +35,15 @@ export const sankeyData = (context: GenerateChartInput) => {
 };
 
 export const sankeyField = (context: GenerateChartInput) => {
-  const { cell, spec } = context;
+  const { spec, cell } = context;
+  const valueField = findRequiredMeasureField(context, ['value', 'size']);
+
   spec.sourceField = cell.source;
   spec.targetField = cell.target;
-  spec.valueField = cell.value;
+  spec.valueField = valueField;
   spec.categoryField = 'name';
 
-  return { spec };
+  return { spec, cell: isValid(valueField) ? { ...cell, value: valueField } : cell };
 };
 
 export const sankeyLabel = (context: GenerateChartInput) => {

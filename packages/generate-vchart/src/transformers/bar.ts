@@ -1,9 +1,42 @@
 import { getFieldsByRoleType } from '../utils/field';
-import { GenerateChartInput } from '../types/transform';
+import { FieldInfoItem, GenerateChartInput } from '../types/transform';
 import { COLOR_THEMES, DEFAULT_VIDEO_LENGTH } from '../utils/constants';
 import { axis, seriesField } from './cartesian';
-import { data, discreteLegend, onlyUnique } from './common';
+import { data, discreteLegend, formatXFields, onlyUnique } from './common';
 import { DataRole } from '../utils/enum';
+import { array } from '@visactor/vutils';
+
+export const formatFieldsOfBar = (context: GenerateChartInput) => {
+  const { cell, transpose, fieldInfo } = context;
+
+  if (transpose) {
+    const { x, y } = cell;
+    const arrayX = array(x);
+    const arrayY = array(y);
+    const fieldMapping: Record<string, FieldInfoItem> = fieldInfo.reduce(
+      (prev, curv) => ({
+        ...prev,
+        [curv.fieldName]: curv
+      }),
+      {}
+    );
+
+    if (
+      arrayX.every(field => !!fieldMapping[field] && fieldMapping[field].role === DataRole.MEASURE) &&
+      arrayY.every(field => !!fieldMapping[field] && fieldMapping[field].role === DataRole.DIMENSION)
+    ) {
+      return {
+        ...context,
+        cell: {
+          ...cell,
+          x: y,
+          y: x
+        }
+      };
+    }
+  }
+  return context;
+};
 
 export const colorBar = (context: GenerateChartInput) => {
   const { colors, chartTheme, spec } = context;
@@ -111,6 +144,8 @@ export const animationCartesianBar = (context: GenerateChartInput) => {
 };
 
 export const pipelineBar = [
+  formatXFields,
+  formatFieldsOfBar,
   data,
   colorBar,
   cartesianBar,

@@ -6,7 +6,8 @@ module.exports = {
   moduleNameMapper: {
     ...baseJestConfig.moduleNameMapper,
     '@visactor/calculator': path.resolve(__dirname, '../calculator/src'),
-    '@visactor/chart-advisor': path.resolve(__dirname, '../chart-advisor/src')
+    '@visactor/chart-advisor': path.resolve(__dirname, '../chart-advisor/src'),
+    '@visactor/generate-vchart': path.resolve(__dirname, '../generate-vchart/src')
   },
   transform: {
     '^.+\\.tsx?$': [
