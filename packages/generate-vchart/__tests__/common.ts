@@ -1,5 +1,7 @@
 import { FieldInfoItem } from '../src/types/transform';
 
+export const ONE_FIELD_DATA = [{ name: 'A' }, { name: 'B' }];
+
 export const TWO_FIELD_DATA = [
   { name: 'A', value: 100 },
   { name: 'B', value: 80 }

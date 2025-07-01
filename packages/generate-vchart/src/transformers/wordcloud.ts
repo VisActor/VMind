@@ -9,12 +9,12 @@ export const formatFieldsOfWordCloud = (context: GenerateChartInput) => {
   let { cell } = context;
 
   if (isNil(cell.size) || isNil(cell.color) || cell.color === cell.size) {
-    if (isNil(cell.size) || cell.size === cell.color) {
-      cell = formatSizeFields(context, ['weight', 'fontSize']).cell;
+    if (isNil(cell.color)) {
+      cell = formatColorFields(context, ['text', 'word', 'label', 'x']).cell;
     }
 
-    if (isNil(cell.color)) {
-      cell = formatColorFields({ ...context, cell }, ['text', 'word', 'label', 'x']);
+    if (isNil(cell.size) || cell.size === cell.color) {
+      cell = formatSizeFields({ ...context, cell }, ['weight', 'fontSize']).cell;
     }
   }
   return {

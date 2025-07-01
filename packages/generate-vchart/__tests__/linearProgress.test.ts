@@ -30,6 +30,7 @@ describe('genetateChart of linear progress', () => {
       color: ['#1DD0F3', '#2693FF', '#3259F4', '#1B0CA1', '#CB2BC6', '#FF581D', '#FBBB16', '#F6FB17', '#73EC55'],
       xField: 'value',
       yField: 'name',
+      seriesField: 'name',
       cornerRadius: 20,
       axes: [
         {

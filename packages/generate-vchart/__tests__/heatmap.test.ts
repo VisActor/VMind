@@ -16,12 +16,10 @@ describe('generateChart', () => {
 
     expect(spec).toEqual({
       type: 'heatmap',
-      data: [
-        {
-          id: 'data',
-          values: SUNBURST_DATA
-        }
-      ],
+      data: {
+        id: 'data',
+        values: SUNBURST_DATA
+      },
       color: {
         type: 'linear',
         domain: [
