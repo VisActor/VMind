@@ -73,7 +73,7 @@ export const boxPlotField = (context: GenerateChartInput) => {
   spec.xField = x;
   // assign y field
   // 1. sort y field according to its value
-  array(y).sort((a, b) => data[0]?.[a] ?? 0 - data[0]?.[b] ?? 0);
+  array(y).sort((a, b) => (data[0]?.[a] ?? 0) - (data[0]?.[b] ?? 0));
   const yFieldsLen = y.length;
   // 2. Map the maximum, minimum, median, and upper and lower quartiles respectively according to numerical value.
   spec.minField = y[0]; // Minimum value field: the field with the smallest value.

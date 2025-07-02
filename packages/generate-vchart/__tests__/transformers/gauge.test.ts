@@ -1,4 +1,4 @@
-import { generateChart } from '../src';
+import { generateChart } from '../../src';
 
 describe('generateChart', () => {
   it('should generate gauge chart', () => {

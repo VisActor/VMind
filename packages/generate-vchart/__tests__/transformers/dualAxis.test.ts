@@ -1,5 +1,5 @@
-import { generateChart } from '../src';
-import { DUAL_AXIS_DATA_FOUR, DUAL_AXIS_DATA_THREE, THREE_FIELD_DATA } from './common';
+import { generateChart } from '../../src';
+import { DUAL_AXIS_DATA_FOUR, DUAL_AXIS_DATA_THREE, THREE_FIELD_DATA } from '../common';
 
 describe('generate dual axis chart', () => {
   it('should generate a common chart with line and bar', () => {

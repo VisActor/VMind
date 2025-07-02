@@ -1,4 +1,4 @@
-import { validateDate } from '../src';
+import { validateDate } from '../../src';
 
 describe('validateDate', () => {
   it('validateDate("test") should return false', () => {

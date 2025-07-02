@@ -1,34 +1,40 @@
-import { generateChart } from '../src';
+import { generateChart } from '../../src';
 
-describe('generateChart', () => {
-  it('should generate liquid chart', () => {
-    const { spec } = generateChart('liquid', {
+describe('genetateChart of linear progress', () => {
+  it('should generate linear progress chart', () => {
+    const { spec } = generateChart('circular_progress', {
       dataTable: [
         {
-          x: 'x',
-          y: 0.68
+          name: 'x',
+          value: 0.68
         }
       ],
       cell: {
-        value: 'y'
+        color: 'name',
+        value: 'value'
       },
       spec: {}
     });
 
     expect(spec).toEqual({
-      type: 'liquid',
-      valueField: 'y',
+      type: 'circularProgress',
       data: {
         id: 'data',
         values: [
           {
-            x: 'x',
-            y: 0.68
+            name: 'x',
+            value: 0.68
           }
         ]
       },
       color: ['#1DD0F3', '#2693FF', '#3259F4', '#1B0CA1', '#CB2BC6', '#FF581D', '#FBBB16', '#F6FB17', '#73EC55'],
-      indicatorSmartInvert: true,
+      categoryField: 'name',
+      valueField: 'value',
+      seriesField: 'name',
+      radius: 0.8,
+      innerRadius: 0.7,
+      roundCap: true,
+      cornerRadius: 20,
       indicator: {
         visible: true,
         fixed: true,
@@ -40,7 +46,7 @@ describe('generateChart', () => {
           style: {
             fontSize: 16,
             fill: 'gray',
-            text: 'y'
+            text: 'value'
           }
         },
         content: [

@@ -1,5 +1,5 @@
-import { generateChart } from '../src';
-import { ONE_FIELD_DATA, TWO_FIELD_DATA } from './common';
+import { generateChart } from '../../src';
+import { ONE_FIELD_DATA, TWO_FIELD_DATA } from '../common';
 
 describe('generate wordcloud', () => {
   it('should generate wordcloud chart', () => {

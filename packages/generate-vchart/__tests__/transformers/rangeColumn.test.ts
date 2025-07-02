@@ -1,5 +1,5 @@
-import { generateChart } from '../src';
-import { DUAL_AXIS_DATA_THREE } from './common';
+import { generateChart } from '../../src';
+import { DUAL_AXIS_DATA_THREE } from '../common';
 
 describe('generateChart of rangeColumn', () => {
   it('should generate rangeColumn chart', () => {

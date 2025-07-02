@@ -1,5 +1,5 @@
-import { generateChart } from '../src';
-import { TWO_FIELD_DATA } from './common';
+import { generateChart } from '../../src';
+import { TWO_FIELD_DATA } from '../common';
 
 describe('generate funnel chart', () => {
   it('should generate simple funnel chart', () => {

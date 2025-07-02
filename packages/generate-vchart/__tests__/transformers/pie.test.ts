@@ -1,5 +1,5 @@
-import { generateChart } from '../src';
-import { COLORS, THREE_FIELD_DATA, TWO_FIELD_DATA } from './common';
+import { generateChart } from '../../src';
+import { COLORS, THREE_FIELD_DATA, TWO_FIELD_DATA } from '../common';
 
 describe('generate pie chart', () => {
   it('should generate bar chart when only specify angle field', () => {

@@ -1,5 +1,5 @@
-import { generateChart } from '../src';
-import { TWO_FIELD_DATA } from './common';
+import { generateChart } from '../../src';
+import { TWO_FIELD_DATA } from '../common';
 
 describe('generate radar chart of dataTable which has two field', () => {
   it('should generate radar chart', () => {

@@ -1,5 +1,5 @@
-import { generateChart } from '../src';
-import { SUNBURST_DATA } from './common';
+import { generateChart } from '../../src';
+import { SUNBURST_DATA } from '../common';
 
 describe('generateChart of sunburst', () => {
   it('should generate sunburst chart', () => {

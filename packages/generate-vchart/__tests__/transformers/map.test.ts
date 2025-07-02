@@ -1,5 +1,5 @@
-import { generateChart } from '../src';
-import { MAP_DATA } from './common';
+import { generateChart } from '../../src';
+import { MAP_DATA } from '../common';
 
 describe('generate map chart', () => {
   it('generate map chart', () => {

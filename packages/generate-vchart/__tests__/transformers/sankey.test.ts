@@ -1,5 +1,5 @@
-import { generateChart } from '../src';
-import { SANKEY_DATA } from './common';
+import { generateChart } from '../../src';
+import { SANKEY_DATA } from '../common';
 
 describe('sankey', () => {
   it('should generate a sankey chart spec', () => {

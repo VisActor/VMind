@@ -1,6 +1,6 @@
-import { generateChart } from '../src';
-import { BASIC_HEAT_MAP_COLOR_THEMES } from '../src/utils/constants';
-import { SUNBURST_DATA } from './common';
+import { generateChart } from '../../src';
+import { BASIC_HEAT_MAP_COLOR_THEMES } from '../../src/utils/constants';
+import { SUNBURST_DATA } from '../common';
 
 describe('generateChart', () => {
   it('should generate heatmap chart', () => {

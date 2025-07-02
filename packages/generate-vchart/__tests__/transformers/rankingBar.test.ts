@@ -1,5 +1,5 @@
-import { generateChart } from '../src';
-import { COLORS, RANKING_BAR_DATA, THREE_FIELD_DATA, THREE_FIELD_DATA_1, TWO_FIELD_DATA } from './common';
+import { generateChart } from '../../src';
+import { COLORS, RANKING_BAR_DATA } from '../common';
 
 describe('generate rankingBar', () => {
   it('should generate linear gradient rectangles', () => {

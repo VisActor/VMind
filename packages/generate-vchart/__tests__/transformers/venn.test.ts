@@ -1,4 +1,4 @@
-import { generateChart } from '../src';
+import { generateChart } from '../../src';
 
 describe('generateChart of venn', () => {
   it('should generate venn chart', () => {

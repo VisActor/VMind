@@ -27,8 +27,8 @@ export const scatterAxis = (context: GenerateChartInput) => {
 
   const xField = spec.xField;
   const yField = spec.yField;
-  const xFieldInfo = fieldInfo.find(field => xField === field.fieldName);
-  const yFieldInfo = fieldInfo.find(field => yField === field.fieldName);
+  const xFieldInfo = fieldInfo?.find(field => xField === field.fieldName);
+  const yFieldInfo = fieldInfo?.find(field => yField === field.fieldName);
   spec.axes = [
     {
       orient: 'bottom',

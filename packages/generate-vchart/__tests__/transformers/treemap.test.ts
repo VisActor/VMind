@@ -1,5 +1,5 @@
-import { generateChart } from '../src';
-import { TREEMAP_DATA } from './common';
+import { generateChart } from '../../src';
+import { TREEMAP_DATA } from '../common';
 
 describe('generateChart of treemap', () => {
   it('should generate treemap', () => {

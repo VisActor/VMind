@@ -1,5 +1,5 @@
-import { generateChart } from '../src';
-import { TWO_FIELD_DATA } from './common';
+import { generateChart } from '../../src';
+import { TWO_FIELD_DATA } from '../common';
 
 describe('generateChart of circlePacking', () => {
   it('should generate circlePacking chart', () => {
