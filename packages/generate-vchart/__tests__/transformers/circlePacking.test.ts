@@ -22,7 +22,10 @@ describe('generateChart of circlePacking', () => {
       categoryField: 'name',
       valueField: 'value',
       drill: true,
-      layoutPadding: 5
+      layoutPadding: 5,
+      label: {
+        visible: true
+      }
     });
   });
 });

@@ -25,11 +25,12 @@ describe('generateChart of waterfall', () => {
         text: '总计'
       },
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
         {
           orient: 'left',
           title: { visible: false },
-          type: 'linear'
+          type: 'linear',
+          visible: true
         }
       ],
       stackLabel: {

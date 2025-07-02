@@ -218,7 +218,8 @@ describe('Linear Progress Chart Transformers', () => {
         type: 'band',
         domainLine: { visible: false },
         tick: { visible: false },
-        label: { formatMethod: null }
+        label: { formatMethod: null },
+        visible: true
       });
 
       // Bottom axis (linear)
@@ -287,7 +288,7 @@ describe('Linear Progress Chart Transformers', () => {
 
   describe('pipelineLinearProgress', () => {
     it('should have correct pipeline order and functions', () => {
-      expect(pipelineLinearProgress).toHaveLength(5);
+      expect(pipelineLinearProgress).toHaveLength(7);
       expect(pipelineLinearProgress[0]).toBe(formatFieldsOfLinearProgressChart);
       // Note: data, color functions are imported from common, so we test by name
       expect(pipelineLinearProgress[1].name).toBe('data');
@@ -425,7 +426,8 @@ describe('Linear Progress Chart Transformers', () => {
             label: {},
             tick: {
               visible: false
-            }
+            },
+            visible: true
           },
           {
             orient: 'bottom',

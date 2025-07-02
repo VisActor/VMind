@@ -22,7 +22,16 @@ describe('generateChart of rangeColumn', () => {
       yField: 'name',
       xField: ['value', 'value1'],
       direction: 'horizontal',
-      label: { visible: true }
+      label: { visible: true },
+      axes: [
+        { orient: 'left', title: { visible: false }, type: 'band', visible: true },
+        {
+          orient: 'bottom',
+          title: { visible: false },
+          type: 'linear',
+          visible: true
+        }
+      ]
     });
   });
 });

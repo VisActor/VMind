@@ -48,6 +48,7 @@ describe('generateChart', () => {
       ],
       axes: [
         {
+          visible: true,
           orient: 'bottom',
           type: 'band',
           grid: {
@@ -58,6 +59,7 @@ describe('generateChart', () => {
           }
         },
         {
+          visible: true,
           orient: 'left',
           type: 'band',
           grid: {

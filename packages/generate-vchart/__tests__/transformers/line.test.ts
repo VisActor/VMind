@@ -113,14 +113,16 @@ describe('generate line chart of dataTable which has two field', () => {
           type: 'band',
           title: {
             visible: false
-          }
+          },
+          visible: true
         },
         {
           orient: 'left',
           type: 'linear',
           title: {
             visible: false
-          }
+          },
+          visible: true
         }
       ]
     });
@@ -141,8 +143,8 @@ describe('generate line chart of dataTable which has two field', () => {
     expect(spec).toEqual({
       type: 'line',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
-        { orient: 'left', title: { visible: false }, type: 'linear' }
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
+        { orient: 'left', title: { visible: false }, type: 'linear', visible: true }
       ],
       data: {
         id: 'data',
@@ -170,9 +172,10 @@ describe('generate line chart of dataTable which has two field', () => {
     expect(spec).toEqual({
       type: 'line',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
-        { orient: 'left', title: { visible: false }, type: 'linear' }
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
+        { orient: 'left', title: { visible: false }, type: 'linear', visible: true }
       ],
+      theme: 'dark',
       data: {
         id: 'data',
         values: TWO_FIELD_DATA
@@ -208,8 +211,8 @@ describe('generate line chart of dataTable which has two field', () => {
     expect(spec).toEqual({
       type: 'line',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
-        { orient: 'left', title: { visible: false }, type: 'linear' }
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
+        { orient: 'left', title: { visible: false }, type: 'linear', visible: true }
       ],
       color: COLORS,
       data: {
@@ -237,8 +240,8 @@ describe('generate line chart of dataTable which has two field', () => {
     expect(spec).toEqual({
       type: 'line',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
-        { orient: 'left', title: { visible: false }, type: 'linear' }
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
+        { orient: 'left', title: { visible: false }, type: 'linear', visible: true }
       ],
       color: COLORS,
       data: {
@@ -266,8 +269,8 @@ describe('generate line chart of dataTable which has two field', () => {
     expect(spec).toEqual({
       type: 'line',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
-        { orient: 'left', title: { visible: false }, type: 'linear' }
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
+        { orient: 'left', title: { visible: false }, type: 'linear', visible: true }
       ],
       color: COLORS,
       data: {
@@ -296,8 +299,8 @@ describe('generate line chart of dataTable which has three field', () => {
     expect(spec).toEqual({
       type: 'line',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
-        { orient: 'left', title: { visible: false }, type: 'linear' }
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
+        { orient: 'left', title: { visible: false }, type: 'linear', visible: true }
       ],
       color: [
         {
@@ -421,11 +424,12 @@ describe('generate line chart of dataTable which has three field', () => {
     expect(chart.spec).toEqual({
       type: 'line',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
         {
           orient: 'left',
           title: { visible: false },
-          type: 'linear'
+          type: 'linear',
+          visible: true
         }
       ],
       legends: [
@@ -474,14 +478,16 @@ describe('generate line chart of dataTable which has three field', () => {
           type: 'band',
           title: {
             visible: false
-          }
+          },
+          visible: true
         },
         {
           orient: 'left',
           type: 'linear',
           title: {
             visible: false
-          }
+          },
+          visible: true
         }
       ],
       legends: [
@@ -524,14 +530,16 @@ describe('generate line chart of dataTable which has three field', () => {
           type: 'band',
           title: {
             visible: false
-          }
+          },
+          visible: true
         },
         {
           orient: 'left',
           type: 'linear',
           title: {
             visible: false
-          }
+          },
+          visible: true
         }
       ],
       legends: [
@@ -577,14 +585,16 @@ describe('generate line chart of dataTable which has three field', () => {
           type: 'band',
           title: {
             visible: false
-          }
+          },
+          visible: true
         },
         {
           orient: 'left',
           type: 'linear',
           title: {
             visible: false
-          }
+          },
+          visible: true
         }
       ],
       legends: [
@@ -637,14 +647,16 @@ describe('generate line chart of dataTable which has three field', () => {
           type: 'band',
           title: {
             visible: false
-          }
+          },
+          visible: true
         },
         {
           orient: 'left',
           type: 'linear',
           title: {
             visible: false
-          }
+          },
+          visible: true
         }
       ]
     });

@@ -146,12 +146,14 @@ describe('Scatter Chart Transformers', () => {
       expect(result.spec.axes[0]).toEqual({
         orient: 'bottom',
         type: 'linear',
-        title: { visible: false }
+        title: { visible: false },
+        visible: true
       });
       expect(result.spec.axes[1]).toEqual({
         orient: 'left',
         type: 'linear',
-        title: { visible: false }
+        title: { visible: false },
+        visible: true
       });
     });
 
@@ -175,12 +177,14 @@ describe('Scatter Chart Transformers', () => {
       expect(result.spec.axes[0]).toEqual({
         orient: 'bottom',
         type: 'band',
-        title: { visible: false }
+        title: { visible: false },
+        visible: true
       });
       expect(result.spec.axes[1]).toEqual({
         orient: 'left',
         type: 'band',
-        title: { visible: false }
+        title: { visible: false },
+        visible: true
       });
     });
 
@@ -430,7 +434,7 @@ describe('Scatter Chart Transformers', () => {
 
   describe('pipelineScatterPlot', () => {
     it('should have correct pipeline structure', () => {
-      expect(pipelineScatterPlot).toHaveLength(6);
+      expect(pipelineScatterPlot).toHaveLength(7);
       expect(pipelineScatterPlot[0].name).toBe('formatXFields');
       expect(pipelineScatterPlot[1].name).toBe('data');
       expect(pipelineScatterPlot[2].name).toBe('color');
@@ -628,11 +632,12 @@ describe('Scatter Chart Transformers', () => {
         type: 'scatter',
         color: ['#1DD0F3', '#2693FF', '#3259F4', '#1B0CA1', '#CB2BC6', '#FF581D', '#FBBB16', '#F6FB17', '#73EC55'],
         axes: [
-          { orient: 'bottom', title: { visible: false }, type: 'linear' },
+          { orient: 'bottom', title: { visible: false }, type: 'linear', visible: true },
           {
             orient: 'left',
             title: { visible: false },
-            type: 'linear'
+            type: 'linear',
+            visible: true
           }
         ],
         data: { id: 'data', values: SCATTER_DATA_TWO },
@@ -657,11 +662,12 @@ describe('Scatter Chart Transformers', () => {
         type: 'scatter',
         color: ['#1DD0F3', '#2693FF', '#3259F4', '#1B0CA1', '#CB2BC6', '#FF581D', '#FBBB16', '#F6FB17', '#73EC55'],
         axes: [
-          { orient: 'bottom', title: { visible: false }, type: 'linear' },
+          { orient: 'bottom', title: { visible: false }, type: 'linear', visible: true },
           {
             orient: 'left',
             title: { visible: false },
-            type: 'linear'
+            type: 'linear',
+            visible: true
           }
         ],
         data: { id: 'data', values: SCATTER_DATA_FOUR },

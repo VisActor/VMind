@@ -37,14 +37,16 @@ describe('generate rose chart', () => {
           },
           label: {
             visible: true
-          }
+          },
+          visible: true
         },
         {
           orient: 'radius',
           grid: {
             visible: false,
             smooth: true
-          }
+          },
+          visible: true
         }
       ],
       legends: [

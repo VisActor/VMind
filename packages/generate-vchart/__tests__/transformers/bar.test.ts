@@ -15,11 +15,12 @@ describe('generate bar chart of dataTable which has two field', () => {
     expect(chart.spec).toEqual({
       type: 'bar',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
         {
           orient: 'left',
           title: { visible: false },
-          type: 'linear'
+          type: 'linear',
+          visible: true
         }
       ],
       color: [
@@ -158,9 +159,10 @@ describe('generate bar chart of dataTable which has two field', () => {
 
     expect(spec).toEqual({
       type: 'bar',
+      theme: 'dark',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
-        { orient: 'left', title: { visible: false }, type: 'linear' }
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
+        { orient: 'left', title: { visible: false }, type: 'linear', visible: true }
       ],
       data: {
         id: 'data',
@@ -194,8 +196,8 @@ describe('generate bar chart of dataTable which has two field', () => {
     expect(spec).toEqual({
       type: 'bar',
       axes: [
-        { orient: 'left', title: { visible: false }, type: 'band' },
-        { orient: 'bottom', title: { visible: false }, type: 'linear' }
+        { orient: 'left', title: { visible: false }, type: 'band', visible: true },
+        { orient: 'bottom', title: { visible: false }, type: 'linear', visible: true }
       ],
       color: COLORS,
       data: {
@@ -223,8 +225,8 @@ describe('generate bar chart of dataTable which has two field', () => {
     expect(spec).toEqual({
       type: 'bar',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
-        { orient: 'left', title: { visible: false }, type: 'linear' }
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
+        { orient: 'left', title: { visible: false }, type: 'linear', visible: true }
       ],
       color: COLORS,
       data: {
@@ -251,8 +253,8 @@ describe('generate bar chart of dataTable which has two field', () => {
     expect(spec).toEqual({
       type: 'bar',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
-        { orient: 'left', title: { visible: false }, type: 'linear' }
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
+        { orient: 'left', title: { visible: false }, type: 'linear', visible: true }
       ],
       color: COLORS,
       data: {
@@ -280,11 +282,12 @@ describe('generate bar chart of dataTable which has three field', () => {
     expect(chart.spec).toEqual({
       type: 'bar',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
         {
           orient: 'left',
           title: { visible: false },
-          type: 'linear'
+          type: 'linear',
+          visible: true
         }
       ],
       legends: [
@@ -419,11 +422,12 @@ describe('generate bar chart of dataTable which has three field', () => {
     expect(chart.spec).toEqual({
       type: 'bar',
       axes: [
-        { orient: 'bottom', title: { visible: false }, type: 'band' },
+        { orient: 'bottom', title: { visible: false }, type: 'band', visible: true },
         {
           orient: 'left',
           title: { visible: false },
-          type: 'linear'
+          type: 'linear',
+          visible: true
         }
       ],
       legends: [
@@ -471,14 +475,16 @@ describe('generate bar chart of dataTable which has three field', () => {
           type: 'band',
           title: {
             visible: false
-          }
+          },
+          visible: true
         },
         {
           orient: 'left',
           type: 'linear',
           title: {
             visible: false
-          }
+          },
+          visible: true
         }
       ],
       legends: [
@@ -520,14 +526,16 @@ describe('generate bar chart of dataTable which has three field', () => {
           type: 'band',
           title: {
             visible: false
-          }
+          },
+          visible: true
         },
         {
           orient: 'left',
           type: 'linear',
           title: {
             visible: false
-          }
+          },
+          visible: true
         }
       ],
       legends: [
@@ -572,14 +580,16 @@ describe('generate bar chart of dataTable which has three field', () => {
           type: 'band',
           title: {
             visible: false
-          }
+          },
+          visible: true
         },
         {
           orient: 'left',
           type: 'linear',
           title: {
             visible: false
-          }
+          },
+          visible: true
         }
       ],
       legends: [
@@ -594,7 +604,7 @@ describe('generate bar chart of dataTable which has three field', () => {
     });
   });
 
-  it('should node generate group bar chart because no valid seriesField', () => {
+  it('should not generate group bar chart because no valid seriesField', () => {
     const { spec } = generateChart('bar', {
       dataTable: THREE_FIELD_DATA_1,
       colors: COLORS,
@@ -614,21 +624,22 @@ describe('generate bar chart of dataTable which has three field', () => {
       color: COLORS,
       xField: ['name'],
       yField: 'value',
-      seriesField: undefined,
       axes: [
         {
           orient: 'bottom',
           type: 'band',
           title: {
             visible: false
-          }
+          },
+          visible: true
         },
         {
           orient: 'left',
           type: 'linear',
           title: {
             visible: false
-          }
+          },
+          visible: true
         }
       ]
     });
@@ -886,8 +897,6 @@ describe('transposeField function', () => {
     expect(result.spec.xField).toBe('value');
     expect(result.spec.yField).toBe('name');
     expect(result.spec.direction).toBe('horizontal');
-    expect(result.spec.axes[0].orient).toBe('left');
-    expect(result.spec.axes[1].orient).toBe('bottom');
   });
 
   it('should not transpose when transpose is false', () => {
@@ -922,7 +931,7 @@ describe('transposeField function', () => {
     expect(result.spec.direction).toBe('horizontal');
   });
 
-  it('should handle partial axes configuration', () => {
+  it('should not handle partial axes configuration', () => {
     const { transposeField } = require('../../src/transformers/bar');
     const context = {
       transpose: true,
@@ -934,7 +943,7 @@ describe('transposeField function', () => {
     };
 
     const result = transposeField(context);
-    expect(result.spec.axes[0].orient).toBe('left');
+    expect(result.spec.axes).toEqual([{ orient: 'bottom', type: 'band' }]);
   });
 });
 

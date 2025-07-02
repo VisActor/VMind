@@ -49,8 +49,10 @@ export const seriesField = (context: GenerateChartInput) => {
 
 export const axis = (context: GenerateChartInput) => {
   const { spec, cell, fieldInfo, axes, transpose } = context;
-  const bandAxisOrient = transpose ? 'left' : 'bottom';
-  const linearAxisOrient = transpose ? 'bottom' : 'left';
+  // 现在只有柱图和rangeColumn 支持了转置
+  const validTranspose = transpose && (spec.type === 'bar' || spec.type === 'rangeColumn');
+  const bandAxisOrient = validTranspose ? 'left' : 'bottom';
+  const linearAxisOrient = validTranspose ? 'bottom' : 'left';
 
   const { y: celly } = cell;
   const yFields = isArray(celly) ? celly : [celly];

@@ -18,7 +18,10 @@ describe('generate radar chart of dataTable which has two field', () => {
       area: { visible: true },
       axes: [
         {
+          type: 'linear',
+          visible: true,
           orient: 'radius', // radius axis
+
           zIndex: 100,
 
           domainLine: {
@@ -34,6 +37,8 @@ describe('generate radar chart of dataTable which has two field', () => {
         },
         {
           orient: 'angle', // angle axis
+          type: 'band',
+          visible: true,
           zIndex: 50,
           tick: {
             visible: false
@@ -70,6 +75,7 @@ describe('generate radar chart of dataTable which has two field', () => {
       axes: [
         {
           orient: 'radius', // radius axis
+          type: 'linear',
           zIndex: 100,
 
           domainLine: {
@@ -81,10 +87,13 @@ describe('generate radar chart of dataTable which has two field', () => {
           },
           grid: {
             smooth: false
-          }
+          },
+          visible: true
         },
         {
-          orient: 'angle', // angle axis
+          orient: 'angle', // angle axis,
+          type: 'band',
+          visible: true,
           zIndex: 50,
           tick: {
             visible: false

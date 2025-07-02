@@ -123,7 +123,10 @@ export const arrayData = (context: GenerateChartInput) => {
 export const discreteLegend = (context: GenerateChartInput) => {
   const { cell, spec, legends } = context;
 
-  if (legends === false || (!(cell.color || cell.category) && !spec.seriesField && spec.type !== 'common')) {
+  if (
+    legends === false ||
+    (!legends && !(cell.color || cell.category) && !spec.seriesField && spec.type !== 'common')
+  ) {
     return { spec };
   }
   spec.legends = legends ?? [

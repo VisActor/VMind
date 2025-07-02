@@ -80,13 +80,15 @@ describe('generate dual axis chart', () => {
         {
           id: 'dimensionAxis',
           type: 'band',
-          orient: 'bottom'
+          orient: 'bottom',
+          visible: true
         },
         {
           id: 'measureAxisLeft',
           seriesId: 'mainSeries',
           type: 'linear',
-          orient: 'left'
+          orient: 'left',
+          visible: true
         },
         {
           id: 'measureAxisRight',
@@ -98,7 +100,8 @@ describe('generate dual axis chart', () => {
           },
           grid: {
             visible: false
-          }
+          },
+          visible: true
         }
       ],
       legends: [
@@ -169,15 +172,16 @@ describe('generate dual axis chart', () => {
       ],
       labelLayout: 'region',
       axes: [
-        { id: 'dimensionAxis', type: 'band', orient: 'bottom' },
-        { id: 'measureAxisLeft', seriesId: 'mainSeries', type: 'linear', orient: 'left' },
+        { id: 'dimensionAxis', type: 'band', orient: 'bottom', visible: true },
+        { id: 'measureAxisLeft', seriesId: 'mainSeries', type: 'linear', orient: 'left', visible: true },
         {
           id: 'measureAxisRight',
           seriesId: 'subSeries',
           type: 'linear',
           orient: 'right',
           tick: { visible: false },
-          grid: { visible: false }
+          grid: { visible: false },
+          visible: true
         }
       ],
       legends: [{ orient: 'right', type: 'discrete', item: { visible: true } }]

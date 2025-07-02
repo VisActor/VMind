@@ -37,7 +37,7 @@ export const rangeColumnDisplayConf = (context: GenerateChartInput) => {
   const { spec } = context;
   spec.direction = 'horizontal';
 
-  return { spec };
+  return { spec, transpose: true };
 };
 
 export const pipelineRangeColumn = [
@@ -48,6 +48,6 @@ export const pipelineRangeColumn = [
   rangeColumnField,
   commonLegend,
   labelForDefaultShow,
-  axis,
-  rangeColumnDisplayConf
+  rangeColumnDisplayConf,
+  axis
 ];
