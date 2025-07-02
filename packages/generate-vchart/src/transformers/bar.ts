@@ -4,7 +4,7 @@ import { COLOR_THEMES, DEFAULT_VIDEO_LENGTH } from '../utils/constants';
 import { axis, seriesField } from './cartesian';
 import { data, discreteLegend, formatXFields, onlyUnique } from './common';
 import { DataRole } from '../utils/enum';
-import { array } from '@visactor/vutils';
+import { array, isValid } from '@visactor/vutils';
 
 export const formatFieldsOfBar = (context: GenerateChartInput) => {
   const { cell, transpose, fieldInfo } = context;
@@ -76,17 +76,18 @@ export const cartesianBar = (context: GenerateChartInput) => {
   const { cell, fieldInfo = [], stackOrPercent, spec } = context;
   const cellNew = { ...cell };
   const flattenedXField = Array.isArray(cell.x) ? cell.x : [cell.x];
+  const colorField = array(cell.color)?.[0];
 
   /**
    * 柱图只允许一个color Field
    */
-  if (cell.color && cell.color !== cell.x) {
+  if (isValid(colorField) && !flattenedXField.includes(colorField)) {
     flattenedXField.push(cell.color as string);
   }
   spec.xField = flattenedXField;
   spec.yField = cell.y;
-  if (cell.color) {
-    spec.seriesField = cell.color;
+  if (isValid(colorField)) {
+    spec.seriesField = colorField;
   } else {
     //没有分配颜色字段，从剩下的字段里选择一个离散字段分配到颜色上
     const remainedFields = fieldInfo.filter(

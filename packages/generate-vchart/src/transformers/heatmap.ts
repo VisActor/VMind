@@ -18,8 +18,8 @@ export const formatFieldsOfBasicHeatMapChart = (context: GenerateChartInput) => 
       cellNew.x = colorField[0];
       cellNew.y = colorField[1];
     } else {
-      cellNew.x = remainedFields?.[0].fieldName;
-      cellNew.y = remainedFields[1].fieldName;
+      cellNew.x = remainedFields?.[0]?.fieldName;
+      cellNew.y = remainedFields?.[1]?.fieldName;
     }
   }
 
