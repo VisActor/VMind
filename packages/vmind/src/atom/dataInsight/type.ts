@@ -1,5 +1,4 @@
 import type { Cell, ChartType } from '../../types/chart';
-import type { DataCell, FieldInfo, DataTable, DataItem } from '../../types/base';
 import type { AbnormalTrendOptions } from './algorithms/abnormalTrend';
 import type { PearsonOptions } from './algorithms/correlation/pearson';
 import type { OverallTrendingOptions } from './algorithms/overallTrending';
@@ -14,6 +13,7 @@ import type { DifferenceOptions } from './algorithms/outlier/difference';
 import type { PageHinkleyOptions } from './algorithms/drift';
 import type { BaseStatisticsOptions } from './algorithms/base/baseStatistics';
 import type { BaseOptions } from '../../types/atom';
+import type { DataCell, DataItem, DataTable, FieldInfoItem } from '@visactor/generate-vchart';
 
 export enum AlgorithmType {
   OverallTrending = 'overallTrend',
@@ -113,7 +113,7 @@ export type InsightAlgorithm = {
 export type DataProcessOutput = {
   chartType: ChartType;
   cell: DataCell;
-  fieldInfo: FieldInfo[];
+  fieldInfo: FieldInfoItem[];
   dataTable: DataTable;
   seriesDataMap: Record<string | number, { index: number; dataItem: DataItem }[]>;
 };
@@ -151,7 +151,7 @@ export interface AxesDataInfo {
 export interface DataInsightExtractContext {
   dataset: DataTable;
   originDataset: DataTable;
-  fieldInfo: FieldInfo[];
+  fieldInfo: FieldInfoItem[];
   dimensionDataMap: DimValueDataMap;
   dimensionSumMap: Record<string, number[]>;
   dimensionStackSumMap: Record<string, number[]>;

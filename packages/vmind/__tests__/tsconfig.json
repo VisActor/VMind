@@ -2,11 +2,22 @@
   "extends": "@internal/ts-config/tsconfig.base.json",
   "include": ["./", "../src"],
   "compilerOptions": {
-    "paths": {
-      "@visactor/calculator": ["../../calculator/src"],
-      "@visactor/chart-advisor": ["../../chart-advisor/src"]
-    },
+    // "paths": {
+    //   "@visactor/calculator": ["../../calculator/src"],
+    //   "@visactor/chart-advisor": ["../../chart-advisor/src"],
+    //   "@visactor/generate-vchart": ["../../generate-vchart/src"]
+    // },
     "lib": ["DOM", "ESNext"]
   },
-  "references": []
+  "references": [
+    {
+      "path": "../../calculator"
+    },
+    {
+      "path": "../../chart-advisor"
+    },
+    {
+      "path": "../../generate-vchart"
+    }
+  ]
 }

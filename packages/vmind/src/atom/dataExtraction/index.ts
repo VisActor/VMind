@@ -4,12 +4,13 @@ import { merge, pick } from '@visactor/vutils';
 import type { LLMMessage } from '../../types/llm';
 import { getBasePrompt, getFieldInfoPrompt, getUserQuery } from './prompt/prompt';
 import { getLanguageOfText } from '../../utils/text';
-import { formatFieldInfo, getFieldInfoFromDataset, getRoleByFieldType, hasMeasureField } from '../../utils/field';
+import { formatFieldInfo, getRoleByFieldType, hasMeasureField } from '../../utils/field';
 import { getCtxBymeasureAutoTransfer } from '../dataClean/utils';
-import type { DatasetFromText, DataTable, FieldInfo } from '../../types';
-import { DataType } from '../../types';
+import type { DatasetFromText } from '../../types';
 import { Factory } from '../../core/factory';
 import type { BaseAtomConstructor } from '../../types';
+import type { DataTable, FieldInfoItem } from '@visactor/generate-vchart';
+import { DataType, getFieldInfoFromDataset } from '@visactor/generate-vchart';
 
 export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtractionOptions> {
   name = AtomName.DATA_EXTRACT;
@@ -115,9 +116,9 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
     ];
   }
 
-  revisedFieldInfo(dataTable: DataTable, fieldInfo: any[]): FieldInfo[] {
+  revisedFieldInfo(dataTable: DataTable, fieldInfo: any[]): FieldInfoItem[] {
     const fieldInfoByData = getFieldInfoFromDataset(dataTable);
-    const fieldMapping: Record<string, FieldInfo> = fieldInfoByData.reduce(
+    const fieldMapping: Record<string, FieldInfoItem> = fieldInfoByData.reduce(
       (prev, curV) => ({
         ...prev,
         [curV.fieldName]: curV
@@ -127,7 +128,7 @@ ${language === 'english' ? 'Extracted text is bellow:' : '提取文本如下：'
     return fieldInfo.map(info => {
       const { fieldName, type, isRatio, unit } = info;
       const mapInfo = fieldMapping?.[fieldName];
-      let finalType = type === 'dimension' ? DataType.STRING : DataType.NUMERICAL;
+      let finalType: string = type === 'dimension' ? DataType.STRING : DataType.NUMERICAL;
       if (isRatio) {
         finalType = DataType.RATIO;
       } else {

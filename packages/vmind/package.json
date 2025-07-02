@@ -104,6 +104,7 @@
   },
   "dependencies": {
     "@visactor/chart-advisor": "workspace:2.0.6",
+    "@visactor/generate-vchart": "workspace:2.0.6",
     "@visactor/vdataset": "~0.19.3",
     "@visactor/vutils": "~0.19.3",
     "axios": "^1.4.0",
@@ -112,7 +113,7 @@
     "js-yaml": "~4.1.0",
     "@visactor/calculator": "workspace:2.0.6",
     "alasql": "~4.3.2",
-    "@visactor/vchart-theme": "^1.11.2",
+    "@visactor/vchart-theme": "~1.12.2",
     "jstat": "~1.9.6",
     "@stdlib/stats-base-dists-t-quantile": "0.2.1",
     "array-normalize": "~2.0.0",

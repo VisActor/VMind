@@ -1,8 +1,8 @@
 import { isArray, isNumber } from '@visactor/vutils';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
-import { type DataItem } from '../../../../types';
 import { isPercenSeries } from '../../utils';
+import type { DataItem } from '@visactor/generate-vchart';
 
 const getExtremeValue = (
   dataset: { index: number; dataItem: DataItem }[],

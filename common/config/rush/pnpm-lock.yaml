@@ -140,6 +140,55 @@ importers:
       typescript: 4.9.5
       undici-types: 5.28.4
 
+  ../../packages/generate-vchart:
+    specifiers:
+      '@internal/bundler': workspace:*
+      '@internal/eslint-config': workspace:*
+      '@internal/jest-config': workspace:*
+      '@internal/ts-config': workspace:*
+      '@jest/globals': ~29.5.0
+      '@rushstack/eslint-patch': ~1.1.4
+      '@types/jest': ~29.5.0
+      '@types/node': '*'
+      '@typescript-eslint/eslint-plugin': 5.30.0
+      '@typescript-eslint/parser': 5.30.0
+      '@visactor/vchart-theme': ~1.12.2
+      '@visactor/vutils': ~0.19.3
+      dayjs: ~1.11.10
+      jest: ~29.5.0
+      jest-environment-jsdom: ~29.5.0
+      node-sql-parser: ~4.17.0
+      npm-run-all: ^4.1.5
+      rimraf: ^3.0.2
+      ts-jest: ~29.2.5
+      ts-node: ^10.9.2
+      ts-pattern: ~4.1.4
+      typescript: 4.9.5
+    dependencies:
+      '@visactor/vchart-theme': 1.12.2
+      '@visactor/vutils': 0.19.5
+      dayjs: 1.11.13
+      node-sql-parser: 4.17.0
+      ts-pattern: 4.1.4
+    devDependencies:
+      '@internal/bundler': link:../../tools/bundler
+      '@internal/eslint-config': link:../../share/eslint-config
+      '@internal/jest-config': link:../../share/jest-config
+      '@internal/ts-config': link:../../share/ts-config
+      '@jest/globals': 29.5.0
+      '@rushstack/eslint-patch': 1.1.4
+      '@types/jest': 29.5.14
+      '@types/node': 22.15.1
+      '@typescript-eslint/eslint-plugin': 5.30.0_dwvk2jxdxtyxgoclhbqbxvd22a
+      '@typescript-eslint/parser': 5.30.0_typescript@4.9.5
+      jest: 29.5.0_mb2oyrpzg3jg7gqunu3hmdvhw4
+      jest-environment-jsdom: 29.5.0
+      npm-run-all: 4.1.5
+      rimraf: 3.0.2
+      ts-jest: 29.2.6_doipufordlnvh5g4adbwayvyvy
+      ts-node: 10.9.2_h6k6hc6r4guqd4kfcmr723djsq
+      typescript: 4.9.5
+
   ../../packages/vmind:
     specifiers:
       '@arco-design/web-react': 2.46.1
@@ -165,8 +214,9 @@ importers:
       '@typescript-eslint/parser': 5.30.0
       '@visactor/calculator': workspace:2.0.6
       '@visactor/chart-advisor': workspace:2.0.6
+      '@visactor/generate-vchart': workspace:2.0.6
       '@visactor/vchart': ^1.13.2
-      '@visactor/vchart-theme': ^1.11.2
+      '@visactor/vchart-theme': ~1.12.2
       '@visactor/vdataset': ~0.19.3
       '@visactor/vrender-core': 0.21.8
       '@visactor/vutils': ~0.19.3
@@ -210,6 +260,7 @@ importers:
       '@stdlib/stats-base-dists-t-quantile': 0.2.1
       '@visactor/calculator': link:../calculator
       '@visactor/chart-advisor': link:../chart-advisor
+      '@visactor/generate-vchart': link:../generate-vchart
       '@visactor/vchart-theme': 1.12.2_@visactor+vchart@1.13.9
       '@visactor/vdataset': 0.19.5
       '@visactor/vutils': 0.19.5
@@ -5302,6 +5353,12 @@ packages:
   /@ungap/promise-all-settled/1.1.2:
     resolution: {integrity: sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==}
     dev: true
+
+  /@visactor/vchart-theme/1.12.2:
+    resolution: {integrity: sha512-r298TUdK+CKbHGVYWgQnNSEB5uqpFvF2/aMNZ/2POQnd2CovAPJOx2nTE6hAcOn8rra2FwJ2xF8AyP1O5OhrTw==}
+    peerDependencies:
+      '@visactor/vchart': '>=1.10.4'
+    dev: false
 
   /@visactor/vchart-theme/1.12.2_@visactor+vchart@1.13.9:
     resolution: {integrity: sha512-r298TUdK+CKbHGVYWgQnNSEB5uqpFvF2/aMNZ/2POQnd2CovAPJOx2nTE6hAcOn8rra2FwJ2xF8AyP1O5OhrTw==}

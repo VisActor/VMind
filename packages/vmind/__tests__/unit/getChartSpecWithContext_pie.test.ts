@@ -1,5 +1,6 @@
 import { getChartSpecWithContext } from '../../src/atom/chartGenerator/spec';
-import { ChartType, DataType, ROLE } from '../../src/types';
+import { ChartType } from '../../src/types';
+import { DataType, DataRole } from '@visactor/generate-vchart';
 
 const dataTable = [
   {
@@ -43,12 +44,12 @@ describe('getChartSpecWithContext', () => {
         {
           fieldName: 'brand_name',
           type: DataType.STRING,
-          role: ROLE.DIMENSION
+          role: DataRole.DIMENSION
         },
         {
           fieldName: 'market_share',
           type: DataType.RATIO,
-          role: ROLE.MEASURE
+          role: DataRole.MEASURE
         }
       ],
       cell: {

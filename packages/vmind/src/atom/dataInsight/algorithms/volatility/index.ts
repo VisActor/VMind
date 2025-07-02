@@ -3,9 +3,9 @@ import { isArray } from '@visactor/vutils';
 import { coefficientVariation } from '../statistics';
 import type { DataInsightExtractContext } from '../../type';
 import { InsightType, type Insight, type InsightAlgorithm } from '../../type';
-import type { DataTable } from '../../../../types';
 import { ChartType } from '../../../../types';
 import { isPercenSeries } from '../../utils';
+import type { DataTable } from '@visactor/generate-vchart';
 
 export interface VolatilityOptions {
   threshold?: number;

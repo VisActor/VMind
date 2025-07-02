@@ -6,7 +6,7 @@ import type { ChartGeneratorCtx, LLMMessage, BaseAtomConstructor } from '../../t
 import { AtomName } from '../../types/atom';
 import { BaseAtom } from '../base';
 import { merge } from '@visactor/vutils';
-import { DEFAULT_MAP_OPTION, SUPPORTED_CHART_LIST } from './const';
+import { SUPPORTED_CHART_LIST } from './const';
 import { getPrompt, revisedUserInput } from './prompt';
 import { getContextAfterRevised } from './llmResultRevise';
 import { checkChartTypeAndCell, getVizSchema } from './utils';
@@ -15,8 +15,8 @@ import { getCellContextBySimpleVChartSpec, getRuleLLMContent } from './rule';
 import { getCellContextByAdvisor } from './advisor';
 import type { ChartType } from '../../types';
 import type { GenerateChartCellContext, ChartGeneratorOptions } from './type';
-import { getFieldInfoFromDataset } from '../../utils/field';
 import { Factory } from '../../core/factory';
+import { getFieldInfoFromDataset } from '@visactor/generate-vchart';
 
 export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGeneratorOptions> {
   name = AtomName.CHART_GENERATE;
@@ -53,7 +53,6 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
       ...super.buildDefaultOptions(),
       useChartAdvisor: false,
       chartTypeList: SUPPORTED_CHART_LIST,
-      basemapOption: DEFAULT_MAP_OPTION,
       unsupportChartTypeList: [],
       useChartRule: false
     };

@@ -5,10 +5,11 @@ import { isArray } from '@visactor/vutils';
 import normalize from 'array-normalize';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
-import { ChartType, type DataItem } from '../../../../types';
+import { ChartType } from '../../../../types';
 import { PageHinkley } from './pageHinkley';
 import { getMeanAndstdDev } from '../statistics';
 import { isPercenSeries } from '../../utils';
+import type { DataItem } from '@visactor/generate-vchart';
 
 export interface PageHinkleyOptions {
   delta?: number;

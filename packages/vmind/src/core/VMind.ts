@@ -1,13 +1,9 @@
 import { LLMManage } from './llm';
 import type {
-  BasemapOption,
   ChartGeneratorCtx,
   ChartTheme,
   ChartType,
   ClusterDataView,
-  DataItem,
-  DataTable,
-  FieldInfo,
   OuterPackages,
   TimeType,
   Usage,
@@ -23,13 +19,14 @@ import {
   getScheduleLLmOptions
 } from '../applications';
 import type { Schedule } from '../schedule';
-import { getFieldInfoFromDataset } from '../utils/field';
 import { parseCSVData } from '../utils/dataTable';
 import { fillSpecTemplateWithData } from '../utils/spec';
 import { _chatToVideoWasm } from '../utils/video';
 import { merge } from '@visactor/vutils';
 import type { Insight } from '../atom/dataInsight/type';
 import type { DataInsightOptions } from '../atom/dataInsight/type';
+import type { DataItem, DataTable, FieldInfoItem } from '@visactor/generate-vchart';
+import { getFieldInfoFromDataset, type BasemapOption } from '@visactor/generate-vchart';
 
 class VMind {
   private options: VMindOptions;
@@ -75,7 +72,7 @@ class VMind {
    * @param csvString csv data user want to visualize
    * @returns fieldInfo and raw dataset.
    */
-  parseCSVData(csvString: string): { fieldInfo: FieldInfo[]; dataset: DataItem[] } {
+  parseCSVData(csvString: string): { fieldInfo: FieldInfoItem[]; dataset: DataItem[] } {
     //Parse CSV Data without LLM
     //return dataset and fieldInfo
     return parseCSVData(csvString);
@@ -100,7 +97,7 @@ class VMind {
   async dataQuery(
     userPrompt: string, //user's intent of visualization, usually aspect in data that they want to visualize
     dataset: DataTable,
-    fieldInfo?: FieldInfo[]
+    fieldInfo?: FieldInfoItem[]
   ) {
     this.dataQuerySchedule.setNewTask({
       command: userPrompt,
@@ -128,15 +125,15 @@ class VMind {
     text: string,
     userPrompt?: string,
     options?: {
-      fieldInfo?: FieldInfo[];
+      fieldInfo?: FieldInfoItem[];
       hierarchicalClustering?: boolean;
       clusterThreshold?: number;
     }
   ): Promise<{
     extractDataTable: DataTable;
     dataTable: DataTable;
-    fieldInfo: FieldInfo[];
-    extractFieldInfo: FieldInfo[];
+    fieldInfo: FieldInfoItem[];
+    extractFieldInfo: FieldInfoItem[];
     usage: Usage;
     clusterResult: ClusterDataView[];
   }> {
@@ -179,7 +176,7 @@ class VMind {
     text: string,
     userPrompt?: string,
     options?: {
-      fieldInfo?: FieldInfo[];
+      fieldInfo?: FieldInfoItem[];
       chartTypeList?: ChartType[];
       colorPalette?: string[];
       animationDuration?: number;
@@ -244,7 +241,7 @@ class VMind {
    */
   async generateChart(
     userPrompt?: string, //user's intent of visualization, usually aspect in data that they want to visualize
-    fieldInfo?: FieldInfo[],
+    fieldInfo?: FieldInfoItem[],
     dataset?: DataTable,
     options?: {
       image?: string;

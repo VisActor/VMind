@@ -3,8 +3,9 @@ import euclideanDistance from 'euclidean-distance';
 import { isArray } from '@visactor/vutils';
 import type { InsightAlgorithm } from '../../type';
 import { InsightType, type DataInsightExtractContext, type Insight } from '../../type';
-import { ChartType, type DataItem } from '../../../../types';
+import { ChartType } from '../../../../types';
 import { isPercenSeries } from '../../utils';
+import type { DataItem } from '@visactor/generate-vchart';
 
 type knnItem = number[];
 type KnnMap = knnItem[][];

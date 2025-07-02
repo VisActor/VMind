@@ -1,11 +1,7 @@
-import { Dict } from '@visactor/vutils';
 import { getChartSpecWithContext } from '../../src/atom/chartGenerator/spec';
-import type { GenerateChartCellContext } from '../../src/atom/chartGenerator/type';
 import { ChartType } from '../../src/types';
-import { BASIC_HEAT_MAP_COLOR_THEMES } from '../../src/atom/chartGenerator/spec/constants';
-import { builtinThemeMap } from '../../src/atom/chartGenerator/const';
-import { BuiltinThemeType } from '../../src/atom/chartGenerator/const';
-import { COLOR_THEMES } from '../../src/atom/chartGenerator/spec/constants';
+import type { DataItem } from '@visactor/generate-vchart';
+import { BASIC_HEAT_MAP_COLOR_THEMES } from '@visactor/generate-vchart';
 
 const CHART_TYPE_LIST = [
   'Bar Chart',
@@ -58,12 +54,7 @@ const rawData = [
   -0.265259, -0.198362, -0.162374, -0.535984, -0.52232, 0.310521, -0.105199, 1.0, -0.080153, -0.091423, 0.068577,
   0.033209, 0.155095, 0.00798, 0.011466, 0.066397, -0.064886, -0.080153, 1.0
 ];
-interface DataPoint {
-  var1: string;
-  var2: string;
-  value: number;
-}
-const data: DataPoint[] = [];
+const data: DataItem[] = [];
 for (let i = 0; i < items.length; i++) {
   for (let j = 0; j < items.length; j++) {
     data.push({
@@ -107,7 +98,6 @@ describe('getChartSpecWithContext', () => {
 
     expect(result.spec.series[0]).toEqual({
       type: 'heatmap',
-      regionId: 'region0',
       xField: context.cell.x,
       yField: context.cell.y,
       valueField: context.cell.size,
@@ -122,21 +112,6 @@ describe('getChartSpecWithContext', () => {
     });
   });
 
-  // test for `basicHeatMapRegion`
-  it('should generate correct region dimensions for heatmap', () => {
-    const context = { ...baseContext };
-    const result = getChartSpecWithContext(context);
-
-    expect(result.spec.region).toEqual([
-      {
-        id: 'region0',
-        width: 200,
-        height: 200,
-        padding: { top: 40 }
-      }
-    ]);
-  });
-
   // test for `basicHeatMapAxes`
   it('should generate axes with correct rotation and dimensions', () => {
     const context = { ...baseContext };
@@ -144,30 +119,15 @@ describe('getChartSpecWithContext', () => {
 
     expect(result.spec.axes[0]).toMatchObject({
       orient: 'bottom',
-      type: 'band',
-      label: {
-        space: 10,
-        style: {
-          textAlign: 'left',
-          textBaseline: 'middle',
-          angle: 90,
-          fontSize: 8
-        }
-      },
-      height: expect.any(Function)
+      type: 'band'
     });
 
     expect(result.spec.axes[1]).toMatchObject({
       orient: 'left',
       type: 'band',
       grid: { visible: false },
-      domainLine: { visible: false },
-      label: { space: 10, style: { fontSize: 8 } },
-      bandPadding: 0
+      domainLine: { visible: false }
     });
-
-    const heightFunc = result.spec.axes[0].height;
-    expect(heightFunc({ height: 400 })).toBe(400 - 314);
   });
 
   // test for `basicHeatMapLegend`

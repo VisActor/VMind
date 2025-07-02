@@ -1,4 +1,4 @@
-import type { SpecInsightCtx, SpecInsightOptions, BaseOptions } from '../../types';
+import type { SpecInsightCtx, SpecInsightOptions } from '../../types';
 import { AtomName } from '../../types/atom';
 import { BaseAtom } from '../base';
 import { isNumber, isValidNumber, merge } from '@visactor/vutils';
@@ -6,9 +6,9 @@ import { InsightType } from '../dataInsight/type';
 import { getCellFromSpec } from '../../utils/spec';
 import { TrendType } from '../dataInsight/algorithms/statistics';
 import { isStackChart } from '../dataInsight/utils';
-import type { DataItem } from '../../types';
 import { Factory } from '../../core/factory';
 import type { BaseAtomConstructor } from '../../types';
+import type { DataItem } from '@visactor/generate-vchart';
 
 export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions> {
   name = AtomName.SPEC_INSIGHT;
@@ -270,12 +270,12 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
   protected runBeforeLLM(): SpecInsightCtx {
     const { spec, insights, chartType } = this.context;
     const newSpec = merge({}, spec);
-    const cell = getCellFromSpec(spec, chartType);
+    const { cell, transpose } = getCellFromSpec(spec, chartType);
     const pointIndexMap: Record<string, boolean> = {};
     const isStack = isStackChart(spec, chartType, cell);
     insights.forEach(insight => {
       const { type, data, value, fieldId, info } = insight;
-      const direction = cell.isTransposed
+      const direction = transpose
         ? Number(value) >= 0
           ? 'right'
           : 'left'
@@ -315,7 +315,7 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
           break;
         case InsightType.Avg:
           this.getAvgMarkLine(newSpec, Number(value), {
-            position: cell.isTransposed ? 'x' : 'y',
+            position: transpose ? 'x' : 'y',
             text: formatV ? `Avg: ${formatV}` : 'Avg',
             info
           });
@@ -323,7 +323,7 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
         case InsightType.OverallTrend:
           this.getGrowthMarkLine(newSpec, {
             coordinates: info.overall.coordinates,
-            isTransposed: cell.isTransposed,
+            isTransposed: transpose,
             text:
               value === TrendType.INCREASING
                 ? `+${(info.change * 100).toFixed(1)}%`

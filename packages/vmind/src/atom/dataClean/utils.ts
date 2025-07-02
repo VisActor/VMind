@@ -1,13 +1,15 @@
 import stringSimilarity from 'string-similarity-js';
 import { getRoleByFieldType } from '../../utils/field';
 import type { ClusterDataView, DatasetFromText } from '../../types/atom';
-import type { DataItem, DataTable, RangeValueTransferType } from '../../types';
-import { DataType, ROLE, type DataCleanCtx, type FieldInfo } from '../../types';
+import type { RangeValueTransferType } from '../../types';
+import { type DataCleanCtx } from '../../types';
 import { isArray, isNumber, isString, pick } from '@visactor/vutils';
 import { extractFirstNumberInString } from '../../utils/text';
 import { isValidData, uniqBy, average, convertStringToDateValue } from '../../utils/common';
 import { agglomerativeHierarchicalClustering, type ClusterDataItem } from '../../utils/cluster';
 import dayjs from 'dayjs';
+import type { DataItem, DataTable } from '@visactor/generate-vchart';
+import { DataRole, DataType, type FieldInfoItem } from '@visactor/generate-vchart';
 
 const removeFieldInfoInCtx = (context: DataCleanCtx, cleanFieldKey: string[]) => {
   if (!cleanFieldKey.length) {
@@ -16,7 +18,7 @@ const removeFieldInfoInCtx = (context: DataCleanCtx, cleanFieldKey: string[]) =>
   const { fieldInfo = [], dataTable = [] } = context || {};
   const newFieldInfo = fieldInfo.filter(info => !cleanFieldKey.includes(info.fieldName));
   const fieldNameList = newFieldInfo.map(info => info.fieldName);
-  const newDataTable = dataTable.map(dataItem => pick(dataItem, fieldNameList));
+  const newDataTable = dataTable.map((dataItem: any) => pick(dataItem, fieldNameList));
 
   return {
     ...context,
@@ -25,11 +27,10 @@ const removeFieldInfoInCtx = (context: DataCleanCtx, cleanFieldKey: string[]) =>
   };
 };
 
-export const transferFieldInfo = (context: DataCleanCtx, fieldMapping?: Record<string, FieldInfo>) => {
+export const transferFieldInfo = (context: DataCleanCtx, fieldMapping?: Record<string, FieldInfoItem>) => {
   (context.fieldInfo || []).forEach(info => {
-    if (!info.role || !info.location) {
+    if (!info.role) {
       info.role = getRoleByFieldType(info.type);
-      info.location = info.role as any;
     }
     if (fieldMapping?.[info.fieldName]) {
       info.alias = info.alias ?? fieldMapping[info.fieldName]?.alias;
@@ -49,7 +50,7 @@ export const getCtxByfilterSameValueColumn = (context: DataCleanCtx) => {
   if (dataTable.length > 1 && fieldInfo.length) {
     const cleanFieldKey: string[] = [];
     fieldInfo.forEach(info => {
-      if (info.role === ROLE.MEASURE) {
+      if (info.role === DataRole.MEASURE) {
         return;
       }
       let shouldFilter = true;
@@ -67,7 +68,7 @@ export const getCtxByfilterSameValueColumn = (context: DataCleanCtx) => {
   if (dataTable.length && fieldInfo.length) {
     const cleanFieldKey: string[] = [];
     fieldInfo.forEach(info => {
-      if (info.role === ROLE.DIMENSION && !isValidData(dataTable[0][info.fieldName])) {
+      if (info.role === DataRole.DIMENSION && !isValidData(dataTable[0][info.fieldName])) {
         cleanFieldKey.push(info.fieldName);
       }
     });
@@ -82,7 +83,7 @@ export const getCtxByfilterSameValueColumn = (context: DataCleanCtx) => {
  * @returns
  */
 export const getCtxByneedNumericalFields = (context: DataCleanCtx) => {
-  if (context.fieldInfo.findIndex(info => info.role === ROLE.MEASURE) === -1) {
+  if (context.fieldInfo.findIndex(info => info.role === DataRole.MEASURE) === -1) {
     return {
       ...context,
       dataTable: [],
@@ -94,9 +95,9 @@ export const getCtxByneedNumericalFields = (context: DataCleanCtx) => {
 
 export const sortDataTableByDate = (context: DataCleanCtx) => {
   const { dataTable, fieldInfo } = context;
-  const dateField = fieldInfo.find(info => info.role === ROLE.DIMENSION && info.type === DataType.DATE);
+  const dateField = fieldInfo.find(info => info.role === DataRole.DIMENSION && info.type === DataType.DATE);
   if (dateField) {
-    dataTable.sort((a, b) => {
+    dataTable.sort((a: any, b: any) => {
       const dateA = dayjs(convertStringToDateValue(`${a[dateField.fieldName]}`));
       const dateB = dayjs(convertStringToDateValue(`${b[dateField.fieldName]}`));
       if (dateA.isValid() && dateB.isValid()) {
@@ -118,7 +119,7 @@ export const getCtxBymeasureAutoTransfer = (context: DataCleanCtx, text?: string
   const isStringText = text && typeof text === 'string';
   if (dataTable.length >= 1 && fieldInfo.length) {
     fieldInfo.forEach(info => {
-      if (info.role === ROLE.DIMENSION) {
+      if (info.role === DataRole.DIMENSION) {
         return;
       }
       for (let i = 0; i < dataTable.length; i++) {
@@ -178,7 +179,7 @@ export const getCtxByfilterSameDataItem = (context: DataCleanCtx) => {
   };
 };
 
-const isDataItemWithNonEmptyValues = (dataItem: DataItem, fieldInfo: FieldInfo[]) => {
+const isDataItemWithNonEmptyValues = (dataItem: DataItem, fieldInfo: FieldInfoItem[]) => {
   return fieldInfo.some(info => isValidData(dataItem[info.fieldName]));
 };
 
@@ -189,10 +190,10 @@ const isDataItemWithNonEmptyValues = (dataItem: DataItem, fieldInfo: FieldInfo[]
  */
 export const getCtxByFilterRowWithNonEmptyValues = (context: DataCleanCtx) => {
   const { dataTable = [], fieldInfo } = context || {};
-  const measureFieldInfo = fieldInfo.filter(info => info.role === ROLE.MEASURE);
+  const measureFieldInfo = fieldInfo.filter(info => info.role === DataRole.MEASURE);
   return {
     ...context,
-    dataTable: dataTable.filter(item => isDataItemWithNonEmptyValues(item, measureFieldInfo))
+    dataTable: dataTable.filter((item: any) => isDataItemWithNonEmptyValues(item, measureFieldInfo))
   };
 };
 
@@ -221,10 +222,10 @@ export const getCtxByRangeValueTranser = (context: DataCleanCtx, type: RangeValu
   const { dataTable = [], fieldInfo } = context || {};
   return {
     ...context,
-    dataTable: dataTable.map(item => {
+    dataTable: dataTable.map((item: any) => {
       const newItem = { ...item };
       fieldInfo.forEach(info => {
-        if (info.role === ROLE.MEASURE && !isString(item[info.fieldName]) && isArray(item[info.fieldName])) {
+        if (info.role === DataRole.MEASURE && !isString(item[info.fieldName]) && isArray(item[info.fieldName])) {
           newItem[info.fieldName] = transferRangeData(item[info.fieldName] as any, type);
         }
       });
@@ -236,10 +237,10 @@ export const getCtxByRangeValueTranser = (context: DataCleanCtx, type: RangeValu
 export const revisedUnMatchedFieldInfo = (context: DataCleanCtx) => {
   const { dataTable, fieldInfo } = context;
   const dataTableFieldSet = new Set<string>();
-  dataTable.forEach(item => {
+  dataTable.forEach((item: any) => {
     Object.keys(item).forEach(key => dataTableFieldSet.add(key));
   });
-  const fieldInfoMapping: Record<string, FieldInfo> = {};
+  const fieldInfoMapping: Record<string, FieldInfoItem> = {};
   fieldInfo.forEach(info => {
     fieldInfoMapping[info.fieldName] = info;
   });
@@ -278,10 +279,10 @@ export const getCtxByValidColumnRatio = (context: DataCleanCtx, ratio = 0.2) => 
   const { dataTable = [], fieldInfo } = context || {};
   let maxCount = 0;
   const validCountOfFieldInfo = fieldInfo
-    .filter(info => info.role === ROLE.MEASURE)
+    .filter(info => info.role === DataRole.MEASURE)
     .map(info => {
-      const cell = dataTable.map(item => item[info.fieldName]);
-      const validCount = cell.filter(item => isValidData(item)).length;
+      const cell = dataTable.map((item: any) => item[info.fieldName]);
+      const validCount = cell.filter((item: any) => isValidData(item)).length;
       maxCount = Math.max(validCount, maxCount);
       return {
         fieldName: info.fieldName,
@@ -318,13 +319,13 @@ export const canMergeDataTable = (ctxA: DatasetFromText, ctxB: DatasetFromText) 
 /** get main data view and cluster result */
 export const getSplitDataViewOfDataTable = (context: DataCleanCtx, threshold = 0.4) => {
   const { dataTable = [], fieldInfo } = context || {};
-  const measureFieldInfo = fieldInfo.filter(info => info.role === ROLE.MEASURE);
-  const dimensionFieldInfo = fieldInfo.filter(info => info.role === ROLE.DIMENSION);
+  const measureFieldInfo = fieldInfo.filter(info => info.role === DataRole.MEASURE);
+  const dimensionFieldInfo = fieldInfo.filter(info => info.role === DataRole.DIMENSION);
   const clusterDataItem: ClusterDataItem[] = [];
   measureFieldInfo.forEach((item, index) => {
     clusterDataItem.push({
       id: item.fieldName,
-      value: dataTable.map(data => (isValidData(data[item.fieldName]) ? 1 : 0))
+      value: dataTable.map((data: any) => (isValidData(data[item.fieldName]) ? 1 : 0))
     });
   });
   const { clusters } = agglomerativeHierarchicalClustering(clusterDataItem, threshold);
@@ -339,18 +340,18 @@ export const getSplitDataViewOfDataTable = (context: DataCleanCtx, threshold = 0
       ...measureFieldInfo.filter(info => clusterIds.includes(info.fieldName))
     ];
     const clusterFieldIds = clusterFieldInfo.map(v => v.fieldName);
-    const clusterDataView = dataTable.map(v => pick(v, clusterFieldIds));
+    const clusterDataView = dataTable.map((v: any) => pick(v, clusterFieldIds));
     let newContext: DataCleanCtx = { dataTable: clusterDataView, fieldInfo: clusterFieldInfo };
     [getCtxByFilterRowWithNonEmptyValues, getCtxByfilterSameDataItem, getCtxByfilterSameValueColumn].forEach(func => {
       newContext = func(newContext);
     });
     let validCellCount = 0;
     let validMeasureCellCount = 0;
-    newContext.dataTable.forEach(item => {
+    newContext.dataTable.forEach((item: any) => {
       newContext.fieldInfo.forEach(info => {
         const isValid = isValidData(item[info.fieldName]);
         validCellCount += isValid ? 1 : -1;
-        validMeasureCellCount += isValid && info.role === ROLE.MEASURE ? 1 : 0;
+        validMeasureCellCount += isValid && info.role === DataRole.MEASURE ? 1 : 0;
       });
     });
     const dataView = {
@@ -397,11 +398,11 @@ export const canMergeClusterResult = (clusterResult: ClusterDataView[]) => {
 };
 
 export const mergeClusterDataView = (clusterResult: ClusterDataView[]) => {
-  const newFieldInfo: FieldInfo[] = [];
+  const newFieldInfo: FieldInfoItem[] = [];
   const newDataTable: DataTable = [{}];
   clusterResult.forEach(dataView => {
     const { fieldInfo, dataTable } = dataView;
-    const measureFields = fieldInfo.filter(info => info.role === ROLE.MEASURE);
+    const measureFields = fieldInfo.filter(info => info.role === DataRole.MEASURE);
     newFieldInfo.push(...measureFields);
     measureFields.forEach(field => {
       newDataTable[0][field.fieldName] = dataTable[0][field.fieldName];
@@ -411,22 +412,6 @@ export const mergeClusterDataView = (clusterResult: ClusterDataView[]) => {
     fieldInfo: newFieldInfo,
     dataTable: newDataTable
   };
-};
-
-const isSameFields = (a: FieldInfo[], b: FieldInfo[]) => {
-  if (a.length !== b.length) {
-    return false;
-  }
-  return a.every((info, index) => {
-    const matchInB = b.find(item => item.fieldName === info.fieldName);
-    return (
-      matchInB &&
-      matchInB.role === info.role &&
-      matchInB.type === info.type &&
-      matchInB.unit === info.unit &&
-      matchInB.dateGranularity === info.dateGranularity
-    );
-  });
 };
 
 function longestCommonSubstringAtEdges(a: string, b: string) {
@@ -461,15 +446,15 @@ export const mergeDataTable = (ctxA: DatasetFromText, ctxB: DatasetFromText) => 
   const { dataTable: tableA, summary: summaryA, textRange: rangeA } = ctxA;
   const { dataTable: tableB, summary: summaryB, textRange: rangeB } = ctxB;
   const { strA, strB, commonStr } = longestCommonSubstringAtEdges(summaryA, summaryB);
-  const newFieldInfo: FieldInfo = {
+  const newFieldInfo: FieldInfoItem = {
     fieldName: commonStr,
     description: `${summaryA} and ${summaryB}`,
-    role: ROLE.DIMENSION,
+    role: DataRole.DIMENSION,
     type: DataType.STRING
   };
   const newDataTable = [
-    ...tableA.map(v => ({ ...v, [commonStr]: strA })),
-    ...tableB.map(v => ({ ...v, [commonStr]: strB }))
+    ...tableA.map((v: any) => ({ ...v, [commonStr]: strA })),
+    ...tableB.map((v: any) => ({ ...v, [commonStr]: strB }))
   ];
   const textRange = rangeA && rangeB ? [rangeA[0], rangeB[1]] : null;
   return {

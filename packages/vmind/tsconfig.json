@@ -8,8 +8,7 @@
     "rootDir": "./src",
     "outDir": "./esm",
     "composite": true,
-    "paths": {
-    }
+    "paths": {}
   },
   "ts-node": {
     "transpileOnly": true,
@@ -20,10 +19,13 @@
   "include": ["src", "types"],
   "references": [
     {
-      "path": "../calculator",
+      "path": "../calculator"
     },
     {
-      "path": "../chart-advisor",
+      "path": "../chart-advisor"
+    },
+    {
+      "path": "../generate-vchart"
     }
   ]
 }
