@@ -1,8 +1,9 @@
+import { array, isBoolean } from '@visactor/vutils';
 import { COLOR_THEMES, DEFAULT_RANKING_BAR_DURATION } from '..//utils/constants';
-import { GenerateChartInput } from '../types/transform';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
 import { isValidDataTable } from '../utils/data';
 import { seriesField } from './cartesian';
-import { formatXFields } from './common';
+import { commonLegend, formatXFields } from './common';
 
 export const sequenceData = (context: GenerateChartInput) => {
   const { dataTable, cell, animationOptions, spec } = context;
@@ -181,30 +182,42 @@ export const rankingBarField = (context: GenerateChartInput) => {
 };
 
 export const rankingBarAxis = (context: GenerateChartInput) => {
-  const { spec } = context;
+  const { spec, axes } = context;
+  const bandAxisCfg: SimpleChartAxisInfo =
+    axes === false ? { visible: false, hasGrid: false, type: 'band' } : array(axes).find(axis => axis.type === 'band');
+  const linearAxisCfg: SimpleChartAxisInfo =
+    axes === false
+      ? { visible: false, hasGrid: false, type: 'linear' }
+      : array(axes).find(axis => axis.type === 'linear');
 
   spec.axes = [
     {
+      visible: linearAxisCfg?.visible ?? true,
+      orient: linearAxisCfg?.orient ?? 'bottom',
       animation: true,
-      orient: 'bottom',
       type: 'linear',
-      visible: true,
       title: {
         visible: false
       },
       grid: {
-        visible: true
+        visible: linearAxisCfg?.hasGrid ?? true
       }
     },
     {
+      visible: bandAxisCfg?.visible ?? true,
+      orient: bandAxisCfg?.orient ?? 'left',
       animation: true,
       id: 'axis-left',
-      orient: 'left',
       tick: { visible: false },
       title: {
         visible: false
       },
-      type: 'band'
+      type: 'band',
+      ...(isBoolean(bandAxisCfg?.hasGrid)
+        ? {
+            grid: { visible: bandAxisCfg.hasGrid }
+          }
+        : {})
     }
   ];
 
@@ -236,19 +249,22 @@ export const customMark = (context: GenerateChartInput) => {
 };
 
 export const rankingBarLabel = (context: GenerateChartInput) => {
-  const { spec } = context;
+  const { spec, label } = context;
 
-  spec.label = {
-    visible: true,
-    style: {
-      fill: '#FFFFFF',
-      stroke: null
-    },
-    animation: {
-      duration: spec.animationUpdate.axis.duration,
-      easing: 'linear'
-    }
-  };
+  if (label !== false) {
+    spec.label = {
+      ...array(label)[0],
+      visible: true,
+      style: {
+        fill: '#FFFFFF',
+        stroke: null
+      },
+      animation: {
+        duration: spec.animationUpdate.axis.duration,
+        easing: 'linear'
+      }
+    };
+  }
   return { spec };
 };
 
@@ -261,5 +277,6 @@ export const pipelineRankingBar = [
   seriesField,
   // commonLabel,
   customMark,
-  rankingBarLabel
+  rankingBarLabel,
+  commonLegend
 ];

@@ -1,4 +1,4 @@
-import { isArray } from '@visactor/vutils';
+import { array, isArray, isBoolean } from '@visactor/vutils';
 import {
   DIMENSION_AXIS_ID,
   MAIN_SERIES_ID,
@@ -7,8 +7,8 @@ import {
   SUB_SERIES_ID,
   COLOR_FIELD
 } from '../utils/constants';
-import { color, data, discreteLegend, formatXFields } from './common';
-import { GenerateChartInput } from '../types/transform';
+import { color, data, discreteLegend, formatXFields, labelForDefaultHide } from './common';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
 
 export const formatFieldsOfDualAxis = (context: GenerateChartInput) => {
   const { chartType, cell } = context;
@@ -79,31 +79,55 @@ export const dualAxisSeries = (context: GenerateChartInput) => {
 
 export const dualAxisAxes = (context: GenerateChartInput) => {
   //assign axes in dual-axis chart
-  const { spec, series } = context;
+  const { spec, series, axes } = context;
 
   if (series) {
     return { spec };
   }
 
+  const bandAxisCfg: SimpleChartAxisInfo =
+    axes === false ? { visible: false, hasGrid: false, type: 'band' } : array(axes).find(axis => axis.type === 'band');
+  const leftAxisCfg: SimpleChartAxisInfo =
+    axes === false
+      ? { visible: false, hasGrid: false, type: 'linear' }
+      : array(axes).find(axis => axis.type === 'linear' && axis.orient === 'left');
+  const rightAxisCfg: SimpleChartAxisInfo =
+    axes === false
+      ? { visible: false, hasGrid: false, type: 'linear' }
+      : array(axes).find(axis => axis.type === 'linear' && axis.orient === 'right');
+
   spec.axes = [
     {
       id: DIMENSION_AXIS_ID,
+      visible: bandAxisCfg?.visible ?? true,
       type: 'band',
-      orient: 'bottom'
+      orient: bandAxisCfg?.orient ?? 'bottom',
+      ...(isBoolean(bandAxisCfg?.hasGrid)
+        ? {
+            grid: { visible: bandAxisCfg.hasGrid }
+          }
+        : {})
     },
     {
       id: MEASURE_AXIS_LEFT_ID,
       seriesId: MAIN_SERIES_ID,
+      visible: leftAxisCfg?.visible ?? true,
       type: 'linear',
-      orient: 'left'
+      orient: 'left',
+      ...(isBoolean(leftAxisCfg?.hasGrid)
+        ? {
+            grid: { visible: leftAxisCfg.hasGrid }
+          }
+        : {})
     },
     {
       id: MEASURE_AXIS_RIGHT_ID,
       seriesId: SUB_SERIES_ID,
       type: 'linear',
       orient: 'right',
+      visible: rightAxisCfg?.visible ?? true,
       tick: { visible: false },
-      grid: { visible: false }
+      grid: { visible: rightAxisCfg?.hasGrid ?? false }
     }
   ];
   return { spec };
@@ -116,5 +140,6 @@ export const pipelineDualAxis = [
   color,
   dualAxisSeries,
   dualAxisAxes,
-  discreteLegend
+  discreteLegend,
+  labelForDefaultHide
 ];

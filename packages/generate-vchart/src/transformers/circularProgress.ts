@@ -1,5 +1,13 @@
 import { GenerateChartInput } from '../types/transform';
-import { color, data, formatColorFields, formatSizeFields, indicator } from './common';
+import {
+  color,
+  commonLegend,
+  data,
+  formatColorFields,
+  formatSizeFields,
+  indicator,
+  labelForDefaultHide
+} from './common';
 
 export const circularProgressField = (context: GenerateChartInput) => {
   let { cell } = formatColorFields(context, ['color', 'x', 'label']);
@@ -20,4 +28,11 @@ export const circularProgressField = (context: GenerateChartInput) => {
   return { spec, cell };
 };
 
-export const pipelineCircularProgress = [data, color, circularProgressField, indicator];
+export const pipelineCircularProgress = [
+  data,
+  color,
+  circularProgressField,
+  commonLegend,
+  indicator,
+  labelForDefaultHide
+];

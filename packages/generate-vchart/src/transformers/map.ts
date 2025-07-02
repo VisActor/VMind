@@ -1,6 +1,6 @@
-import { isArray } from '@visactor/vutils';
+import { array, isArray } from '@visactor/vutils';
 import { BasemapOption, GenerateChartInput } from '../types/transform';
-import { arrayData, color, formatColorFields, formatSizeFields } from './common';
+import { arrayData, color, formatColorFields, formatSizeFields, labelForDefaultHide } from './common';
 
 export const DEFAULT_MAP_OPTION: BasemapOption = {
   regionProjectType: null,
@@ -44,7 +44,7 @@ export const mapField = (context: GenerateChartInput) => {
 };
 
 export const mapDisplayConf = (context: GenerateChartInput) => {
-  const { spec, cell } = context;
+  const { spec, cell, legends } = context;
   if (isArray(spec.color)) {
     spec.color = {
       type: 'linear',
@@ -52,15 +52,33 @@ export const mapDisplayConf = (context: GenerateChartInput) => {
     };
   }
 
-  spec.legends = [
-    {
-      visible: true,
-      type: 'color',
-      field: cell.size,
-      orient: 'bottom',
-      position: 'start'
+  if (legends !== false) {
+    if (isArray(legends) && legends.length >= 2) {
+      const colorLegend = legends.find(entry => entry.type === 'color');
+
+      spec.legends = [
+        {
+          visible: true,
+          type: 'color',
+          orient: 'bottom',
+          position: 'start',
+          ...colorLegend,
+          field: cell.size
+        },
+        ...legends.filter(item => item !== colorLegend)
+      ];
+    } else {
+      spec.legends = {
+        visible: true,
+        type: 'color',
+        orient: 'bottom',
+        position: 'start',
+        ...array(legends)[0],
+        field: cell.size
+      };
     }
-  ];
+  }
+
   spec.area = {
     style: {
       fill: {
@@ -73,4 +91,4 @@ export const mapDisplayConf = (context: GenerateChartInput) => {
   return { spec };
 };
 
-export const pipelineMapChart = [basemap, color, arrayData, mapField, mapDisplayConf];
+export const pipelineMapChart = [basemap, color, arrayData, mapField, mapDisplayConf, labelForDefaultHide];

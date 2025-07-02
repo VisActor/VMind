@@ -1,8 +1,9 @@
 import { DataType } from '../utils/enum';
-import { GenerateChartInput } from '../types/transform';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
 import { BASIC_HEAT_MAP_COLOR_THEMES } from '../utils/constants';
-import { color, data, formatSizeFields } from './common';
+import { color, data, formatSizeFields, labelForDefaultHide } from './common';
 import { getAllFieldsByDataType, getRemainedFields } from '../utils/field';
+import { array, isArray } from '@visactor/vutils';
 
 export const formatFieldsOfBasicHeatMapChart = (context: GenerateChartInput) => {
   const { cell, fieldInfo } = context;
@@ -65,23 +66,34 @@ export const basicHeatMapColor = (context: GenerateChartInput) => {
   return { spec };
 };
 export const basicHeatMapAxes = (context: GenerateChartInput) => {
-  const { spec } = context;
+  const { spec, axes } = context;
+  const bottomAxis =
+    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'bottom');
+  const topAxis =
+    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'top');
+  const leftAxis =
+    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'left');
+  const rightAxis =
+    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'right');
+
   spec.axes = [
     {
-      orient: 'bottom',
+      visible: !(axes === false || (axes && !bottomAxis && !topAxis)),
+      orient: !bottomAxis && topAxis ? 'top' : 'bottom',
       type: 'band',
       grid: {
-        visible: false
+        visible: (bottomAxis ?? topAxis)?.hasGrid ?? false
       },
       domainLine: {
         visible: false
       }
     },
     {
-      orient: 'left',
+      visible: !(axes === false || (axes && !leftAxis && !rightAxis)),
+      orient: !leftAxis && rightAxis ? 'right' : 'left',
       type: 'band',
       grid: {
-        visible: false
+        visible: (leftAxis ?? rightAxis)?.hasGrid ?? false
       },
       domainLine: {
         visible: false
@@ -92,14 +104,34 @@ export const basicHeatMapAxes = (context: GenerateChartInput) => {
 };
 
 export const basicHeatMapLegend = (context: GenerateChartInput) => {
-  const { spec } = context;
-  spec.legends = {
-    visible: true,
-    orient: 'right',
-    position: 'start',
-    type: 'color',
-    field: 'value'
-  };
+  const { spec, legends } = context;
+
+  if (legends !== false) {
+    if (isArray(legends) && legends.length >= 2) {
+      const colorLegend = legends.find(entry => entry.type === 'color');
+
+      spec.legends = [
+        {
+          visible: true,
+          orient: 'right',
+          position: 'start',
+          ...colorLegend,
+          field: 'value'
+        },
+        ...legends.filter(item => item !== colorLegend)
+      ];
+    } else {
+      spec.legends = {
+        visible: true,
+        orient: 'right',
+        position: 'start',
+        type: 'color',
+        ...array(legends)[0],
+        field: 'value'
+      };
+    }
+  }
+
   return { spec };
 };
 
@@ -110,5 +142,6 @@ export const pipelineBasicHeatMap = [
   basicHeatMapSeries,
   basicHeatMapColor,
   basicHeatMapAxes,
-  basicHeatMapLegend
+  basicHeatMapLegend,
+  labelForDefaultHide
 ];

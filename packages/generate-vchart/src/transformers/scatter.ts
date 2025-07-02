@@ -1,8 +1,16 @@
 import { DEFAULT_ANIMATION_DURATION, DEFAULT_VIDEO_LENGTH, ONE_BY_ONE_GROUP_SIZE } from '../utils/constants';
-import { GenerateChartInput } from '../types/transform';
-import { color, data, discreteLegend, formatSizeFields, formatXFields, oneByOneDelayFunc } from './common';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
+import {
+  color,
+  data,
+  discreteLegend,
+  formatSizeFields,
+  formatXFields,
+  labelForDefaultHide,
+  oneByOneDelayFunc
+} from './common';
 import { DataRole } from '../utils/enum';
-import { isValid } from '@visactor/vutils';
+import { array, isBase64, isBoolean, isValid } from '@visactor/vutils';
 
 export const scatterField = (context: GenerateChartInput) => {
   //assign field in spec according to cell
@@ -23,26 +31,39 @@ export const scatterField = (context: GenerateChartInput) => {
 };
 
 export const scatterAxis = (context: GenerateChartInput) => {
-  const { spec, fieldInfo } = context;
+  const { spec, axes, fieldInfo } = context;
+  const bottomAxis =
+    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'bottom');
+  const topAxis =
+    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'top');
+  const leftAxis =
+    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'left');
+  const rightAxis =
+    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'right');
 
   const xField = spec.xField;
   const yField = spec.yField;
   const xFieldInfo = fieldInfo?.find(field => xField === field.fieldName);
   const yFieldInfo = fieldInfo?.find(field => yField === field.fieldName);
+
   spec.axes = [
     {
-      orient: 'bottom',
+      visible: !(axes === false || (axes && !bottomAxis && !topAxis)),
+      orient: !bottomAxis && topAxis ? 'top' : 'bottom',
       type: xFieldInfo?.role === DataRole.DIMENSION ? 'band' : 'linear',
       title: {
         visible: false
-      }
+      },
+      ...(isBoolean((bottomAxis ?? topAxis)?.hasGrid) ? { grid: { visible: (bottomAxis ?? topAxis).hasGrid } } : {})
     },
     {
-      orient: 'left',
+      visible: !(axes === false || (axes && !leftAxis && !rightAxis)),
+      orient: !leftAxis && rightAxis ? 'right' : 'left',
       type: yFieldInfo?.role === DataRole.DIMENSION ? 'band' : 'linear',
       title: {
         visible: false
-      }
+      },
+      ...(isBoolean((leftAxis ?? rightAxis)?.hasGrid) ? { grid: { visible: (leftAxis ?? rightAxis).hasGrid } } : {})
     }
   ];
   return { spec };
@@ -68,6 +89,7 @@ export const pipelineScatterPlot = [
   color,
   scatterField,
   scatterAxis,
-  discreteLegend
+  discreteLegend,
+  labelForDefaultHide
   //animationOneByOne,
 ];

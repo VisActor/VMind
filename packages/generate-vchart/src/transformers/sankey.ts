@@ -1,7 +1,14 @@
 import { isValid } from '@visactor/vutils';
 import { GenerateChartInput } from '../types/transform';
 import { isValidDataTable } from '../utils/data';
-import { color, discreteLegend, findRequiredMeasureField, formatSizeFields } from './common';
+import {
+  color,
+  discreteLegend,
+  findRequiredMeasureField,
+  formatSizeFields,
+  handleMaybeArray,
+  labelForDefaultShow
+} from './common';
 
 export const sankeyData = (context: GenerateChartInput) => {
   const { dataTable, spec, cell } = context;
@@ -46,13 +53,4 @@ export const sankeyField = (context: GenerateChartInput) => {
   return { spec, cell: isValid(valueField) ? { ...cell, value: valueField } : cell };
 };
 
-export const sankeyLabel = (context: GenerateChartInput) => {
-  const { spec } = context;
-
-  spec.label = {
-    visible: true
-  };
-  return { spec };
-};
-
-export const pipelineSankey = [sankeyData, color, sankeyField, sankeyLabel, discreteLegend];
+export const pipelineSankey = [sankeyData, color, sankeyField, labelForDefaultShow, discreteLegend];

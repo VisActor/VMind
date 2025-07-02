@@ -1,6 +1,6 @@
-import { isValid } from '@visactor/vutils';
-import { GenerateChartInput } from '../types/transform';
-import { color, data, discreteLegend } from './common';
+import { array, isBoolean, isValid } from '@visactor/vutils';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
+import { color, data, discreteLegend, labelForDefaultHide } from './common';
 
 export const radarField = (context: GenerateChartInput) => {
   const { cell, spec } = context;
@@ -34,12 +34,20 @@ export const radarDisplayConf = (context: GenerateChartInput) => {
 };
 
 export const radarAxis = (context: GenerateChartInput) => {
-  const { spec } = context;
+  const { spec, axes } = context;
+  const bandAxisCfg: SimpleChartAxisInfo =
+    axes === false ? { visible: false, hasGrid: false, type: 'band' } : array(axes).find(axis => axis.type === 'band');
+  const linearAxisCfg: SimpleChartAxisInfo =
+    axes === false
+      ? { visible: false, hasGrid: false, type: 'linear' }
+      : array(axes).find(axis => axis.type === 'linear');
 
   spec.axes = [
     {
+      visible: linearAxisCfg?.visible ?? true,
       orient: 'radius', // radius axis
       zIndex: 100,
+      type: 'linear',
 
       domainLine: {
         visible: false
@@ -53,7 +61,9 @@ export const radarAxis = (context: GenerateChartInput) => {
       }
     },
     {
+      visible: bandAxisCfg?.visible ?? true,
       orient: 'angle', // angle axis
+      type: 'band',
       zIndex: 50,
       tick: {
         visible: false
@@ -66,6 +76,18 @@ export const radarAxis = (context: GenerateChartInput) => {
       }
     }
   ];
+  if (isBoolean(linearAxisCfg?.hasGrid)) {
+    spec.axes[0].grid = {
+      ...spec.axes[0].grid,
+      visible: linearAxisCfg.hasGrid
+    };
+  }
+
+  if (isBoolean(bandAxisCfg?.hasGrid)) {
+    spec.axes[1].grid = {
+      visible: bandAxisCfg.hasGrid
+    };
+  }
 
   return { spec };
 };
@@ -76,7 +98,8 @@ export const pipelineRadar = [
   radarField,
   radarDisplayConf,
   radarAxis,
-  discreteLegend
+  discreteLegend,
+  labelForDefaultHide
   // commonLabel,
   //animationCartisianLine,
 ];

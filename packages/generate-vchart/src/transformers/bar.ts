@@ -2,7 +2,7 @@ import { getFieldsByRoleType } from '../utils/field';
 import { FieldInfoItem, GenerateChartInput } from '../types/transform';
 import { COLOR_THEMES, DEFAULT_VIDEO_LENGTH } from '../utils/constants';
 import { axis, seriesField } from './cartesian';
-import { data, discreteLegend, formatXFields, onlyUnique } from './common';
+import { data, discreteLegend, formatXFields, labelForDefaultHide, onlyUnique } from './common';
 import { DataRole } from '../utils/enum';
 import { array, isValid } from '@visactor/vutils';
 
@@ -109,20 +109,12 @@ export const cartesianBar = (context: GenerateChartInput) => {
 };
 
 export const transposeField = (context: GenerateChartInput) => {
-  const { transpose, spec } = context;
+  const { transpose, spec, axes } = context;
 
   if (transpose) {
     const newSpec = { ...spec, xField: spec.yField, yField: spec.xField, direction: 'horizontal' };
-    const bottomAxis = (newSpec.axes || []).find((axis: any) => axis.orient === 'bottom');
-    const leftAxis = (newSpec.axes || []).find((axis: any) => axis.orient === 'left');
-    if (bottomAxis) {
-      bottomAxis.orient = 'left';
-    }
-    if (leftAxis) {
-      leftAxis.orient = 'bottom';
-    }
+
     return {
-      ...context,
       spec: newSpec
     };
   }
@@ -153,7 +145,6 @@ export const pipelineBar = [
   seriesField,
   axis,
   discreteLegend,
-  // commonLabel,
+  labelForDefaultHide,
   transposeField
-  //animationCartesianBar,
 ];

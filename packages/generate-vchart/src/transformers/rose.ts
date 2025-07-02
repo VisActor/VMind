@@ -1,5 +1,5 @@
-import { isValid } from '@visactor/vutils';
-import { GenerateChartInput } from '../types/transform';
+import { array, isValid } from '@visactor/vutils';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
 import { color, commonLabel, data, discreteLegend, formatColorFields } from './common';
 
 export const roseField = (context: GenerateChartInput) => {
@@ -20,16 +20,23 @@ export const roseField = (context: GenerateChartInput) => {
 };
 
 export const roseAxis = (context: GenerateChartInput) => {
-  const { spec } = context;
+  const { spec, axes } = context;
+  const bandAxisCfg: SimpleChartAxisInfo =
+    axes === false ? { visible: false, hasGrid: false, type: 'band' } : array(axes).find(axis => axis.type === 'band');
+  const linearAxisCfg: SimpleChartAxisInfo =
+    axes === false
+      ? { visible: false, hasGrid: false, type: 'linear' }
+      : array(axes).find(axis => axis.type === 'linear');
 
   spec.axes = [
     {
+      visible: bandAxisCfg?.visible ?? true,
       orient: 'angle',
       domainLine: {
         visible: false
       },
       grid: {
-        visible: false,
+        visible: bandAxisCfg?.hasGrid ?? false,
         alignWithLabel: false
       },
       label: {
@@ -37,9 +44,10 @@ export const roseAxis = (context: GenerateChartInput) => {
       }
     },
     {
+      visible: linearAxisCfg?.visible ?? true,
       orient: 'radius',
       grid: {
-        visible: false,
+        visible: linearAxisCfg?.hasGrid ?? false,
         smooth: true
       }
     }

@@ -1,8 +1,8 @@
 import { DataRole } from '../utils/enum';
-import { GenerateChartInput } from '../types/transform';
-import { color, data, formatColorFields } from './common';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
+import { color, commonLegend, data, formatColorFields, labelForDefaultHide } from './common';
 import { getFieldsByRoleType, getRemainedFields } from '../utils/field';
-import { isValid } from '@visactor/vutils';
+import { array, isBoolean, isValid } from '@visactor/vutils';
 
 export const formatFieldsOfLinearProgressChart = (context: GenerateChartInput) => {
   const { cell, fieldInfo } = context;
@@ -54,25 +54,37 @@ export const linearProgressField = (context: GenerateChartInput) => {
 
 export const linearProgressAxes = (context: GenerateChartInput) => {
   //assign field in spec according to cell
-  const { cell, spec } = context;
+  const { cell, spec, axes } = context;
   const hasSingleData = spec.data.values && spec.data.values.length === 1;
+  const bandAxisCfg: SimpleChartAxisInfo =
+    axes === false ? { visible: false, hasGrid: false, type: 'band' } : array(axes).find(axis => axis.type === 'band');
+  const linearAxisCfg: SimpleChartAxisInfo =
+    axes === false
+      ? { visible: false, hasGrid: false, type: 'linear' }
+      : array(axes).find(axis => axis.type === 'linear');
 
   spec.axes = [
     {
-      orient: 'left',
+      visible: bandAxisCfg?.visible ?? true,
+      orient: bandAxisCfg?.orient ?? 'left',
       type: 'band',
       domainLine: { visible: false },
       tick: { visible: false },
       label: {
         formatMethod: hasSingleData ? (val: any) => `${cell.x}: ${val}` : null
-      }
+      },
+      ...(isBoolean(bandAxisCfg?.hasGrid)
+        ? {
+            grid: { visible: bandAxisCfg.hasGrid }
+          }
+        : {})
     },
     {
-      orient: 'bottom',
+      visible: linearAxisCfg?.visible ?? true,
+      orient: linearAxisCfg?.orient ?? 'bottom',
       type: 'linear',
-      visible: true,
       grid: {
-        visible: false
+        visible: linearAxisCfg?.hasGrid ?? false
       },
       label: {
         formatMethod: (val: number) => {
@@ -91,5 +103,7 @@ export const pipelineLinearProgress = [
   data,
   color,
   linearProgressField,
-  linearProgressAxes
+  linearProgressAxes,
+  commonLegend,
+  labelForDefaultHide
 ];

@@ -1,5 +1,5 @@
 import { GenerateChartInput } from '../types/transform';
-import { color, data, formatColorFields, formatSizeFields } from './common';
+import { color, commonLegend, data, formatColorFields, formatSizeFields, labelForDefaultShow } from './common';
 
 export const bubbleCirclePackingData = (context: GenerateChartInput) => {
   const { dataTable, spec, cell } = context;
@@ -41,5 +41,7 @@ export const pipelineBubbleCirclePacking = [
   data,
   color,
   bubbleCirclePackingField,
-  bubbleCirclePackingDisplayConf
+  bubbleCirclePackingDisplayConf,
+  commonLegend,
+  labelForDefaultShow
 ];
