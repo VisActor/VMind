@@ -146,14 +146,12 @@ describe('Scatter Chart Transformers', () => {
       expect(result.spec.axes[0]).toEqual({
         orient: 'bottom',
         type: 'linear',
-        title: { visible: false },
-        visible: true
+        title: { visible: false }
       });
       expect(result.spec.axes[1]).toEqual({
         orient: 'left',
         type: 'linear',
-        title: { visible: false },
-        visible: true
+        title: { visible: false }
       });
     });
 
@@ -177,14 +175,12 @@ describe('Scatter Chart Transformers', () => {
       expect(result.spec.axes[0]).toEqual({
         orient: 'bottom',
         type: 'band',
-        title: { visible: false },
-        visible: true
+        title: { visible: false }
       });
       expect(result.spec.axes[1]).toEqual({
         orient: 'left',
         type: 'band',
-        title: { visible: false },
-        visible: true
+        title: { visible: false }
       });
     });
 
@@ -632,12 +628,11 @@ describe('Scatter Chart Transformers', () => {
         type: 'scatter',
         color: ['#1DD0F3', '#2693FF', '#3259F4', '#1B0CA1', '#CB2BC6', '#FF581D', '#FBBB16', '#F6FB17', '#73EC55'],
         axes: [
-          { orient: 'bottom', title: { visible: false }, type: 'linear', visible: true },
+          { orient: 'bottom', title: { visible: false }, type: 'linear' },
           {
             orient: 'left',
             title: { visible: false },
-            type: 'linear',
-            visible: true
+            type: 'linear'
           }
         ],
         data: { id: 'data', values: SCATTER_DATA_TWO },
@@ -662,12 +657,11 @@ describe('Scatter Chart Transformers', () => {
         type: 'scatter',
         color: ['#1DD0F3', '#2693FF', '#3259F4', '#1B0CA1', '#CB2BC6', '#FF581D', '#FBBB16', '#F6FB17', '#73EC55'],
         axes: [
-          { orient: 'bottom', title: { visible: false }, type: 'linear', visible: true },
+          { orient: 'bottom', title: { visible: false }, type: 'linear' },
           {
             orient: 'left',
             title: { visible: false },
-            type: 'linear',
-            visible: true
+            type: 'linear'
           }
         ],
         data: { id: 'data', values: SCATTER_DATA_FOUR },

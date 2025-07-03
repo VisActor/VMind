@@ -526,7 +526,7 @@ export const parseAxesOfChart = (
     filters: ((axes: SimpleChartAxisInfo) => any)[];
   }[]
 ) => {
-  const finalAxes = [];
+  const finalAxes: any[] = [];
   const { axes } = context;
 
   defaultAxesCfg.forEach(({ defaultConfig, userConfig, filters }) => {

@@ -24,12 +24,11 @@ describe('generateChart of rangeColumn', () => {
       direction: 'horizontal',
       label: { visible: true },
       axes: [
-        { orient: 'left', title: { visible: false }, type: 'band', visible: true },
+        { orient: 'left', title: { visible: false }, type: 'band' },
         {
           orient: 'bottom',
           title: { visible: false },
-          type: 'linear',
-          visible: true
+          type: 'linear'
         }
       ]
     });

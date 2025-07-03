@@ -218,14 +218,12 @@ describe('Linear Progress Chart Transformers', () => {
         type: 'band',
         domainLine: { visible: false },
         tick: { visible: false },
-        label: { formatMethod: null },
-        visible: true
+        label: { formatMethod: null }
       });
 
       // Bottom axis (linear)
       expect(result.spec.axes[1].orient).toBe('bottom');
       expect(result.spec.axes[1].type).toBe('linear');
-      expect(result.spec.axes[1].visible).toBe(true);
       expect(result.spec.axes[1].grid.visible).toBe(false);
       expect(result.spec.axes[1].label.flush).toBe(true);
     });
@@ -426,13 +424,11 @@ describe('Linear Progress Chart Transformers', () => {
             label: {},
             tick: {
               visible: false
-            },
-            visible: true
+            }
           },
           {
             orient: 'bottom',
             type: 'linear',
-            visible: true,
             grid: {
               visible: false
             },
