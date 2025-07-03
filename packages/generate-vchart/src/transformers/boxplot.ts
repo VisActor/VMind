@@ -4,7 +4,7 @@ import { isValidDataTable } from '../utils/data';
 import { GenerateChartInput } from '../types/transform';
 
 export const formatFieldsOfBoxPlot = (context: GenerateChartInput) => {
-  const { chartType, cell } = context;
+  const { cell } = context;
   const cellNew = {
     ...cell
   };

@@ -16,7 +16,7 @@ let modelResultMap: any = {};
 
 function generateResultHtml(models: string[]) {
   const mockModels = ['', ...models];
-  const specNames = models.reduce((res, model) => {
+  const specNames = models.reduce((res: string[], model: string) => {
     const { record } = modelResultMap[model];
 
     Object.keys(record).forEach(specName => {
