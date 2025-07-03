@@ -1,6 +1,6 @@
 import { array, isValid } from '@visactor/vutils';
 import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
-import { color, commonLabel, data, discreteLegend, formatColorFields } from './common';
+import { color, commonLabel, data, discreteLegend, formatColorFields, parseAxesOfChart } from './common';
 
 export const roseField = (context: GenerateChartInput) => {
   const { cell } = formatColorFields(context, ['color', 'category', 'label']);
@@ -20,38 +20,45 @@ export const roseField = (context: GenerateChartInput) => {
 };
 
 export const roseAxis = (context: GenerateChartInput) => {
-  const { spec, axes } = context;
-  const bandAxisCfg: SimpleChartAxisInfo =
-    axes === false ? { visible: false, hasGrid: false, type: 'band' } : array(axes).find(axis => axis.type === 'band');
-  const linearAxisCfg: SimpleChartAxisInfo =
-    axes === false
-      ? { visible: false, hasGrid: false, type: 'linear' }
-      : array(axes).find(axis => axis.type === 'linear');
+  const { spec } = context;
 
-  spec.axes = [
+  spec.axes = parseAxesOfChart(context, [
     {
-      visible: bandAxisCfg?.visible ?? true,
-      orient: 'angle',
-      domainLine: {
-        visible: false
+      defaultConfig: {
+        orient: 'angle',
+        domainLine: {
+          visible: false
+        },
+        grid: {
+          visible: false
+        },
+        label: {
+          visible: true
+        }
       },
-      grid: {
-        visible: bandAxisCfg?.hasGrid ?? false,
-        alignWithLabel: false
+      userConfig: {
+        grid: {
+          alignWithLabel: false
+        }
       },
-      label: {
-        visible: true
-      }
+      filters: [axis => axis.orient === 'angle']
     },
     {
-      visible: linearAxisCfg?.visible ?? true,
-      orient: 'radius',
-      grid: {
-        visible: linearAxisCfg?.hasGrid ?? false,
-        smooth: true
-      }
+      defaultConfig: {
+        orient: 'radius',
+        grid: {
+          visible: false
+        }
+      },
+      userConfig: {
+        grid: {
+          smooth: true
+        }
+      },
+      filters: [axis => axis.orient === 'radius']
     }
-  ];
+  ]);
+
   return { spec };
 };
 

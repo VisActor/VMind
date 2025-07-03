@@ -1,6 +1,7 @@
 import { array, isArray, isBoolean, uniqArray } from '@visactor/vutils';
 import { DataCell, GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
 import { DataRole } from '../utils/enum';
+import { parseAxesOfChart } from './common';
 
 export const seriesField = (context: GenerateChartInput) => {
   const { spec, fieldInfo, dataTable, cell } = context;
@@ -59,48 +60,44 @@ export const axis = (context: GenerateChartInput) => {
   const yFieldsInfo = yFields.map(field => fieldInfo.find(v => v.fieldName === field));
   const isAllRatio = yFieldsInfo.every(v => !!v?.ratioGranularity);
   const isSameUnit = uniqArray(yFieldsInfo.map(v => v?.unit).filter(v => !!v)).length === 1;
-  const bandAxisCfg: SimpleChartAxisInfo =
-    axes === false ? { visible: false, hasGrid: false, type: 'band' } : array(axes).find(axis => axis.type === 'band');
-  const linearAxisCfg: SimpleChartAxisInfo =
-    axes === false
-      ? { visible: false, hasGrid: false, type: 'linear' }
-      : array(axes).find(axis => axis.type === 'linear');
 
-  spec.axes = [
+  spec.axes = parseAxesOfChart(context, [
     {
-      visible: bandAxisCfg?.visible ?? true,
-      orient: bandAxisCfg?.orient ?? bandAxisOrient,
-      type: 'band',
-      title: {
-        visible: false
-      }
+      defaultConfig: {
+        orient: bandAxisOrient,
+        type: 'band',
+        title: {
+          visible: false
+        }
+      },
+      filters: [axis => axis.type === 'band']
     },
     {
-      visible: linearAxisCfg?.visible ?? true,
-      orient: linearAxisCfg?.orient ?? linearAxisOrient,
-      type: 'linear',
-      title: {
-        visible: false
-      }
+      defaultConfig: {
+        orient: linearAxisOrient,
+        type: 'linear',
+        title: {
+          visible: false
+        }
+      },
+      userConfig: {
+        ...(isAllRatio
+          ? {
+              label: { formatter: `{label:~%}` }
+            }
+          : {}),
+        ...(isSameUnit && !['%', '‰'].includes(yFieldsInfo[0]?.unit)
+          ? {
+              unit: {
+                visible: true,
+                text: yFieldsInfo[0]?.unit
+              }
+            }
+          : {})
+      },
+      filters: [axis => axis.type === 'linear']
     }
-  ];
+  ]);
 
-  if (isBoolean(bandAxisCfg?.hasGrid)) {
-    spec.axes[0].grid = { visible: bandAxisCfg.hasGrid };
-  }
-  if (isBoolean(linearAxisCfg?.hasGrid)) {
-    spec.axes[0].grid = { visible: linearAxisCfg.hasGrid };
-  }
-
-  if (isAllRatio) {
-    spec.axes[1].label = { formatter: `{label:~%}` };
-  }
-
-  if (isSameUnit && !['%', '‰'].includes(yFieldsInfo[0]?.unit)) {
-    spec.axes[1].unit = {
-      visible: true,
-      text: yFieldsInfo[0]?.unit
-    };
-  }
   return { spec };
 };

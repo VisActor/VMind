@@ -109,7 +109,7 @@ export const cartesianBar = (context: GenerateChartInput) => {
 };
 
 export const transposeField = (context: GenerateChartInput) => {
-  const { transpose, spec, axes } = context;
+  const { transpose, spec } = context;
 
   if (transpose) {
     const newSpec = { ...spec, xField: spec.yField, yField: spec.xField, direction: 'horizontal' };

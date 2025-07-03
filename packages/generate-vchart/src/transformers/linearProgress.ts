@@ -1,6 +1,6 @@
 import { DataRole } from '../utils/enum';
 import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
-import { color, commonLegend, data, formatColorFields, labelForDefaultHide } from './common';
+import { color, commonLegend, data, formatColorFields, labelForDefaultHide, parseAxesOfChart } from './common';
 import { getFieldsByRoleType, getRemainedFields } from '../utils/field';
 import { array, isBoolean, isValid } from '@visactor/vutils';
 
@@ -54,46 +54,41 @@ export const linearProgressField = (context: GenerateChartInput) => {
 
 export const linearProgressAxes = (context: GenerateChartInput) => {
   //assign field in spec according to cell
-  const { cell, spec, axes } = context;
+  const { cell, spec } = context;
   const hasSingleData = spec.data.values && spec.data.values.length === 1;
-  const bandAxisCfg: SimpleChartAxisInfo =
-    axes === false ? { visible: false, hasGrid: false, type: 'band' } : array(axes).find(axis => axis.type === 'band');
-  const linearAxisCfg: SimpleChartAxisInfo =
-    axes === false
-      ? { visible: false, hasGrid: false, type: 'linear' }
-      : array(axes).find(axis => axis.type === 'linear');
 
-  spec.axes = [
+  spec.axes = parseAxesOfChart(context, [
     {
-      visible: bandAxisCfg?.visible ?? true,
-      orient: bandAxisCfg?.orient ?? 'left',
-      type: 'band',
-      domainLine: { visible: false },
-      tick: { visible: false },
-      label: {
-        formatMethod: hasSingleData ? (val: any) => `${cell.x}: ${val}` : null
+      defaultConfig: {
+        type: 'band',
+        orient: 'left',
+        domainLine: { visible: false },
+        tick: { visible: false }
       },
-      ...(isBoolean(bandAxisCfg?.hasGrid)
-        ? {
-            grid: { visible: bandAxisCfg.hasGrid }
-          }
-        : {})
+      userConfig: {
+        label: {
+          formatMethod: hasSingleData ? (val: any) => `${cell.x}: ${val}` : null
+        }
+      },
+      filters: [axis => axis.type === 'band']
     },
     {
-      visible: linearAxisCfg?.visible ?? true,
-      orient: linearAxisCfg?.orient ?? 'bottom',
-      type: 'linear',
-      grid: {
-        visible: linearAxisCfg?.hasGrid ?? false
+      defaultConfig: {
+        type: 'linear',
+        orient: 'bottom',
+        grid: { visible: false }
       },
-      label: {
-        formatMethod: (val: number) => {
-          return val >= 0 && val <= 1 ? `${val * 100}%` : val;
-        },
-        flush: true
-      }
+      userConfig: {
+        label: {
+          formatMethod: (val: number) => {
+            return val >= 0 && val <= 1 ? `${val * 100}%` : val;
+          },
+          flush: true
+        }
+      },
+      filters: [axis => axis.type === 'linear']
     }
-  ];
+  ]);
 
   return { spec };
 };

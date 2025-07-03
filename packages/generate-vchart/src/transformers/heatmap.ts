@@ -1,7 +1,7 @@
 import { DataType } from '../utils/enum';
 import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
 import { BASIC_HEAT_MAP_COLOR_THEMES } from '../utils/constants';
-import { color, data, formatSizeFields, labelForDefaultHide } from './common';
+import { color, data, formatSizeFields, labelForDefaultHide, parseAxesOfChart } from './common';
 import { getAllFieldsByDataType, getRemainedFields } from '../utils/field';
 import { array, isArray } from '@visactor/vutils';
 
@@ -67,39 +67,36 @@ export const basicHeatMapColor = (context: GenerateChartInput) => {
 };
 export const basicHeatMapAxes = (context: GenerateChartInput) => {
   const { spec, axes } = context;
-  const bottomAxis =
-    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'bottom');
-  const topAxis =
-    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'top');
-  const leftAxis =
-    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'left');
-  const rightAxis =
-    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'right');
 
-  spec.axes = [
+  spec.axes = parseAxesOfChart(context, [
     {
-      visible: !(axes === false || (axes && !bottomAxis && !topAxis)),
-      orient: !bottomAxis && topAxis ? 'top' : 'bottom',
-      type: 'band',
-      grid: {
-        visible: (bottomAxis ?? topAxis)?.hasGrid ?? false
+      defaultConfig: {
+        orient: 'bottom',
+        grid: { visible: false },
+        domainLine: {
+          visible: false
+        }
       },
-      domainLine: {
-        visible: false
-      }
+      userConfig: {
+        type: 'band'
+      },
+      filters: [axis => axis.orient === 'bottom', axis => axis.orient === 'top']
     },
     {
-      visible: !(axes === false || (axes && !leftAxis && !rightAxis)),
-      orient: !leftAxis && rightAxis ? 'right' : 'left',
-      type: 'band',
-      grid: {
-        visible: (leftAxis ?? rightAxis)?.hasGrid ?? false
+      defaultConfig: {
+        orient: 'left',
+        grid: { visible: false },
+        domainLine: {
+          visible: false
+        }
       },
-      domainLine: {
-        visible: false
-      }
+      userConfig: {
+        type: 'band'
+      },
+      filters: [axis => axis.orient === 'left', axis => axis.orient === 'right']
     }
-  ];
+  ]);
+
   return { spec };
 };
 

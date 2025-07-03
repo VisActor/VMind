@@ -7,7 +7,7 @@ import {
   SUB_SERIES_ID,
   COLOR_FIELD
 } from '../utils/constants';
-import { color, data, discreteLegend, formatXFields, labelForDefaultHide } from './common';
+import { color, data, discreteLegend, formatXFields, labelForDefaultHide, parseAxesOfChart } from './common';
 import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
 
 export const formatFieldsOfDualAxis = (context: GenerateChartInput) => {
@@ -85,51 +85,43 @@ export const dualAxisAxes = (context: GenerateChartInput) => {
     return { spec };
   }
 
-  const bandAxisCfg: SimpleChartAxisInfo =
-    axes === false ? { visible: false, hasGrid: false, type: 'band' } : array(axes).find(axis => axis.type === 'band');
-  const leftAxisCfg: SimpleChartAxisInfo =
-    axes === false
-      ? { visible: false, hasGrid: false, type: 'linear' }
-      : array(axes).find(axis => axis.type === 'linear' && axis.orient === 'left');
-  const rightAxisCfg: SimpleChartAxisInfo =
-    axes === false
-      ? { visible: false, hasGrid: false, type: 'linear' }
-      : array(axes).find(axis => axis.type === 'linear' && axis.orient === 'right');
-
-  spec.axes = [
+  spec.axes = parseAxesOfChart(context, [
     {
-      id: DIMENSION_AXIS_ID,
-      visible: bandAxisCfg?.visible ?? true,
-      type: 'band',
-      orient: bandAxisCfg?.orient ?? 'bottom',
-      ...(isBoolean(bandAxisCfg?.hasGrid)
-        ? {
-            grid: { visible: bandAxisCfg.hasGrid }
-          }
-        : {})
+      defaultConfig: {
+        type: 'band',
+        orient: 'bottom'
+      },
+      userConfig: {
+        id: DIMENSION_AXIS_ID
+      },
+      filters: [axis => axis.type === 'band']
     },
     {
-      id: MEASURE_AXIS_LEFT_ID,
-      seriesId: MAIN_SERIES_ID,
-      visible: leftAxisCfg?.visible ?? true,
-      type: 'linear',
-      orient: 'left',
-      ...(isBoolean(leftAxisCfg?.hasGrid)
-        ? {
-            grid: { visible: leftAxisCfg.hasGrid }
-          }
-        : {})
+      defaultConfig: {
+        type: 'linear',
+        orient: 'left'
+      },
+      userConfig: {
+        id: MEASURE_AXIS_LEFT_ID,
+        seriesId: MAIN_SERIES_ID
+      },
+      filters: [axis => axis.type === 'linear' && axis.orient === 'left']
     },
     {
-      id: MEASURE_AXIS_RIGHT_ID,
-      seriesId: SUB_SERIES_ID,
-      type: 'linear',
-      orient: 'right',
-      visible: rightAxisCfg?.visible ?? true,
-      tick: { visible: false },
-      grid: { visible: rightAxisCfg?.hasGrid ?? false }
+      defaultConfig: {
+        type: 'linear',
+        orient: 'right',
+        tick: { visible: false },
+        grid: { visible: false }
+      },
+      userConfig: {
+        id: MEASURE_AXIS_RIGHT_ID,
+        seriesId: SUB_SERIES_ID
+      },
+      filters: [axis => axis.type === 'linear' && axis.orient === 'right']
     }
-  ];
+  ]);
+
   return { spec };
 };
 

@@ -7,7 +7,8 @@ import {
   formatSizeFields,
   formatXFields,
   labelForDefaultHide,
-  oneByOneDelayFunc
+  oneByOneDelayFunc,
+  parseAxesOfChart
 } from './common';
 import { DataRole } from '../utils/enum';
 import { array, isBase64, isBoolean, isValid } from '@visactor/vutils';
@@ -31,41 +32,39 @@ export const scatterField = (context: GenerateChartInput) => {
 };
 
 export const scatterAxis = (context: GenerateChartInput) => {
-  const { spec, axes, fieldInfo } = context;
-  const bottomAxis =
-    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'bottom');
-  const topAxis =
-    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'top');
-  const leftAxis =
-    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'left');
-  const rightAxis =
-    axes === false ? undefined : (array(axes) as SimpleChartAxisInfo[]).find(axis => axis.orient === 'right');
-
+  const { spec, fieldInfo } = context;
   const xField = spec.xField;
   const yField = spec.yField;
   const xFieldInfo = fieldInfo?.find(field => xField === field.fieldName);
   const yFieldInfo = fieldInfo?.find(field => yField === field.fieldName);
 
-  spec.axes = [
+  spec.axes = parseAxesOfChart(context, [
     {
-      visible: !(axes === false || (axes && !bottomAxis && !topAxis)),
-      orient: !bottomAxis && topAxis ? 'top' : 'bottom',
-      type: xFieldInfo?.role === DataRole.DIMENSION ? 'band' : 'linear',
-      title: {
-        visible: false
+      defaultConfig: {
+        orient: 'bottom',
+        title: {
+          visible: false
+        }
       },
-      ...(isBoolean((bottomAxis ?? topAxis)?.hasGrid) ? { grid: { visible: (bottomAxis ?? topAxis).hasGrid } } : {})
+      userConfig: {
+        type: xFieldInfo?.role === DataRole.DIMENSION ? 'band' : 'linear'
+      },
+      filters: [axis => axis.orient === 'bottom', axis => axis.orient === 'top']
     },
     {
-      visible: !(axes === false || (axes && !leftAxis && !rightAxis)),
-      orient: !leftAxis && rightAxis ? 'right' : 'left',
-      type: yFieldInfo?.role === DataRole.DIMENSION ? 'band' : 'linear',
-      title: {
-        visible: false
+      defaultConfig: {
+        orient: 'left',
+        title: {
+          visible: false
+        }
       },
-      ...(isBoolean((leftAxis ?? rightAxis)?.hasGrid) ? { grid: { visible: (leftAxis ?? rightAxis).hasGrid } } : {})
+      userConfig: {
+        type: yFieldInfo?.role === DataRole.DIMENSION ? 'band' : 'linear'
+      },
+      filters: [axis => axis.orient === 'left', axis => axis.orient === 'right']
     }
-  ];
+  ]);
+
   return { spec };
 };
 

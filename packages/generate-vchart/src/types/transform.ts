@@ -97,6 +97,10 @@ export interface SimpleChartAxisInfo {
   type: 'band' | 'linear';
   orient?: 'top' | 'left' | 'right' | 'bottom' | 'radius' | 'angle';
   hasGrid?: boolean;
+  title?: string;
+  hasAxisLine?: boolean;
+  hasTick?: boolean;
+  hasLabel?: boolean;
 }
 
 /**

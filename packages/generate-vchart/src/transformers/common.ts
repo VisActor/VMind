@@ -5,8 +5,8 @@ import {
   DEFAULT_VIDEO_LENGTH_LONG,
   ONE_BY_ONE_GROUP_SIZE
 } from '../utils/constants';
-import { array, isArray, isNil, isValid } from '@visactor/vutils';
-import { DataTable, GenerateChartInput } from '../types/transform';
+import { array, isArray, isBoolean, isNil, isValid, merge } from '@visactor/vutils';
+import { DataTable, GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
 import { isValidDataTable } from '../utils/data';
 import { getFieldIdInCell, getFieldsByRoleType, getRemainedFields } from '../utils/field';
 import { DataRole } from '../utils/enum';
@@ -513,4 +513,85 @@ export const addSimpleComponents = (context: GenerateChartInput) => {
   }
 
   return { spec };
+};
+
+export const parseAxesOfChart = (
+  context: GenerateChartInput,
+  defaultAxesCfg: {
+    defaultConfig: any;
+    userConfig?: any;
+    /**
+     * 多个filters 表示按照优先级去寻找合适的轴配置，第一个条件的优先级最高
+     */
+    filters: ((axes: SimpleChartAxisInfo) => any)[];
+  }[]
+) => {
+  const finalAxes = [];
+  const { axes } = context;
+
+  defaultAxesCfg.forEach(({ defaultConfig, userConfig, filters }) => {
+    let axisCfg: any;
+
+    if (axes === false) {
+      axisCfg = { visible: false, hasGrid: false, hasAxisLine: false, hasTick: false, hasLabel: false };
+    } else if (axes) {
+      const axesArray = array(axes) as SimpleChartAxisInfo[];
+
+      for (let i = 0; i < filters.length; i++) {
+        axisCfg = axesArray.find(filters[i]);
+
+        if (axisCfg) {
+          break;
+        }
+      }
+    }
+
+    if (axisCfg) {
+      const { type, orient, visible, hasGrid, title, hasAxisLine, hasTick, hasLabel } = axisCfg as any;
+      const generatedAxis: any = {};
+
+      if (isValid(type)) {
+        generatedAxis.type = type;
+      }
+      if (isValid(type)) {
+        generatedAxis.orient = orient;
+      }
+
+      if (isBoolean(visible)) {
+        generatedAxis.visible = visible;
+      }
+      if (isBoolean(hasGrid)) {
+        generatedAxis.grid = {
+          visible: hasGrid
+        };
+      }
+      if (isBoolean(hasAxisLine)) {
+        generatedAxis.domainLine = {
+          visible: hasAxisLine
+        };
+      }
+      if (isBoolean(hasTick)) {
+        generatedAxis.tick = {
+          visible: hasTick
+        };
+      }
+      if (isBoolean(hasLabel)) {
+        generatedAxis.label = {
+          visible: hasLabel
+        };
+      }
+      if (isValid(title)) {
+        generatedAxis.title = {
+          visible: true,
+          text: title
+        };
+      }
+
+      finalAxes.push(merge(defaultConfig, generatedAxis, userConfig));
+    } else {
+      finalAxes.push(merge(defaultConfig, userConfig));
+    }
+  });
+
+  return finalAxes;
 };
