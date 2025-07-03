@@ -51,7 +51,9 @@ const difference = (context: DataInsightExtractContext, options: DifferenceOptio
   const { y: celly, x: cellx } = cell;
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
   const xField = isArray(cellx) ? cellx[0] : cellx;
-  const isTimeSeries = [DataType.TIME, DataType.DATE].includes(fieldInfo.find(info => info.fieldName === xField).type);
+  const isTimeSeries = ([DataType.TIME, DataType.DATE] as string[]).includes(
+    fieldInfo.find(info => info.fieldName === xField).type
+  );
 
   Object.keys(seriesDataMap).forEach(group => {
     const dataset: { index: number; dataItem: DataItem }[] = seriesDataMap[group];

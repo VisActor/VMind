@@ -50,9 +50,11 @@ export class LLMManage {
       this.historys[name] = [];
     }
     try {
+      // 先提取自定义请求函数，确保类型安全
+      const customFunc = customRequestFunc?.[name];
       const res: LLMResponse =
-        customRequestFunc?.[name] && isFunction(customRequestFunc[name])
-          ? await customRequestFunc[name](messages, tools, this.options)
+        customFunc && isFunction(customFunc)
+          ? await customFunc(messages, tools, this.options)
           : await axios(url, {
               method,
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
