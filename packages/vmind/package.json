@@ -52,7 +52,7 @@
     "release-alpha": "npm version prerelease --preid alpha && npm publish --tag alpha && git commit -a -m 'chore: release alpha version for vmind' && git push",
     "release-beta": "npm version prerelease --preid beta && npm publish --tag beta && git commit -a -m 'chore: release beta version for vmind' && git push",
     "release": "npm version patch && npm publish && git commit -a -m 'chore: release patch version for vmind' && git push",
-    "test-image-to-spec": "ts-node --skipProject __tests__/image-to-spec/testImage.ts"
+    "test-image-to-spec": "jest ./__tests__/image-to-spec/testImage.test.ts"
   },
   "devDependencies": {
     "vite-plugin-libcss": "~1.1.1",

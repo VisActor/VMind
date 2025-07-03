@@ -1,6 +1,7 @@
 {
   "extends": "@internal/ts-config/tsconfig.base.json",
   "include": ["./", "../src"],
+  "exclude": ["./image-to-spec/spec/**/*"],
   "compilerOptions": {
     "lib": ["DOM", "ESNext"]
   },

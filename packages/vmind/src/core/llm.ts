@@ -52,24 +52,28 @@ export class LLMManage {
     try {
       // 先提取自定义请求函数，确保类型安全
       const customFunc = customRequestFunc?.[name];
-      const res: LLMResponse =
-        customFunc && isFunction(customFunc)
-          ? await customFunc(messages, tools, this.options)
-          : await axios(url, {
-              method,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              headers: headers as any,
-              data: {
-                model,
-                messages,
-                tools,
-                max_tokens: maxTokens,
-                temperature,
-                stream: false,
-                frequency_penalty,
-                top_p
-              }
-            }).then(response => response.data);
+      let res: any;
+
+      if (customFunc && isFunction(customFunc)) {
+        res = await customFunc(messages, tools, this.options);
+      } else {
+        res = await axios(url, {
+          method,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          headers: headers as any,
+          data: {
+            model,
+            messages,
+            tools,
+            max_tokens: maxTokens,
+            temperature,
+            stream: false,
+            frequency_penalty,
+            top_p
+          }
+        });
+        res = res.data;
+      }
 
       const { logId, id } = res;
       this.historys[name].push({

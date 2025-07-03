@@ -190,7 +190,7 @@ const spec = {
   tooltip: {
     mark: {
       title: {
-        value: (val: number) => {
+        value: val => {
           return val?.datum?.map(data => data.name).join(' / ');
         }
       }

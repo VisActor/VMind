@@ -25,8 +25,13 @@ import {
   mockUserInput17
 } from '../browser/src/constants/mockData';
 
-const TEST_GPT = false;
-const TEST_SKYLARK = true;
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+
+// 读取 .env.local 文件
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
+
+const TEST_GPT = true;
 const ShowThoughts = false;
 const EnableDataQuery = true;
 
@@ -90,7 +95,6 @@ const testPerformance = (model: Model, vmind: VMind) => {
     (modelResultMap as any)[model].totalCount += 1;
   });
 };
-
 const dataList = Object.keys(demoDataList);
 
 const gptKey = process.env.VITE_GPT_KEY;

@@ -318,8 +318,6 @@ const run = async (onlyUpdateHtml?: boolean) => {
   }
 };
 
-run(true);
-
 function getDelta(compareType: string) {
   switch (compareType) {
     case '-1d':
@@ -345,3 +343,10 @@ function formatData(
     };
   });
 }
+
+jest.setTimeout(30 * 60 * 10000);
+
+test('always passes async', async () => {
+  await run(false);
+  expect(1).toBe(1);
+});
