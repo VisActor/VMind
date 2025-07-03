@@ -1,5 +1,5 @@
 import { GenerateChartInput } from '../types/transform';
-import { arrayData, color, formatColorFields, formatSizeFields } from './common';
+import { arrayData, color, commonLegend, formatColorFields, formatSizeFields } from './common';
 
 export const gaugeField = (context: GenerateChartInput) => {
   let { cell } = formatColorFields(context, ['color', 'label']);
@@ -20,4 +20,4 @@ export const gaugeDisplayConf = (context: GenerateChartInput) => {
   return { spec };
 };
 
-export const pipelineGauge = [arrayData, color, gaugeField, gaugeDisplayConf];
+export const pipelineGauge = [arrayData, color, gaugeField, gaugeDisplayConf, commonLegend];

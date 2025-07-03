@@ -1,8 +1,8 @@
 import { DataRole } from '../utils/enum';
-import { GenerateChartInput } from '../types/transform';
-import { color, data, formatColorFields } from './common';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
+import { color, commonLegend, data, formatColorFields, labelForDefaultHide, parseAxesOfChart } from './common';
 import { getFieldsByRoleType, getRemainedFields } from '../utils/field';
-import { isValid } from '@visactor/vutils';
+import { array, isBoolean, isValid } from '@visactor/vutils';
 
 export const formatFieldsOfLinearProgressChart = (context: GenerateChartInput) => {
   const { cell, fieldInfo } = context;
@@ -57,31 +57,38 @@ export const linearProgressAxes = (context: GenerateChartInput) => {
   const { cell, spec } = context;
   const hasSingleData = spec.data.values && spec.data.values.length === 1;
 
-  spec.axes = [
+  spec.axes = parseAxesOfChart(context, [
     {
-      orient: 'left',
-      type: 'band',
-      domainLine: { visible: false },
-      tick: { visible: false },
-      label: {
-        formatMethod: hasSingleData ? (val: any) => `${cell.x}: ${val}` : null
-      }
+      defaultConfig: {
+        type: 'band',
+        orient: 'left',
+        domainLine: { visible: false },
+        tick: { visible: false }
+      },
+      userConfig: {
+        label: {
+          formatMethod: hasSingleData ? (val: any) => `${cell.x}: ${val}` : null
+        }
+      },
+      filters: [axis => axis.type === 'band']
     },
     {
-      orient: 'bottom',
-      type: 'linear',
-      visible: true,
-      grid: {
-        visible: false
+      defaultConfig: {
+        type: 'linear',
+        orient: 'bottom',
+        grid: { visible: false }
       },
-      label: {
-        formatMethod: (val: number) => {
-          return val >= 0 && val <= 1 ? `${val * 100}%` : val;
-        },
-        flush: true
-      }
+      userConfig: {
+        label: {
+          formatMethod: (val: number) => {
+            return val >= 0 && val <= 1 ? `${val * 100}%` : val;
+          },
+          flush: true
+        }
+      },
+      filters: [axis => axis.type === 'linear']
     }
-  ];
+  ]);
 
   return { spec };
 };
@@ -91,5 +98,7 @@ export const pipelineLinearProgress = [
   data,
   color,
   linearProgressField,
-  linearProgressAxes
+  linearProgressAxes,
+  commonLegend,
+  labelForDefaultHide
 ];

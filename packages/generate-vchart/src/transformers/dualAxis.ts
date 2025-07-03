@@ -1,4 +1,4 @@
-import { isArray } from '@visactor/vutils';
+import { array, isArray, isBoolean } from '@visactor/vutils';
 import {
   DIMENSION_AXIS_ID,
   MAIN_SERIES_ID,
@@ -7,8 +7,8 @@ import {
   SUB_SERIES_ID,
   COLOR_FIELD
 } from '../utils/constants';
-import { color, data, discreteLegend, formatXFields } from './common';
-import { GenerateChartInput } from '../types/transform';
+import { color, data, discreteLegend, formatXFields, labelForDefaultHide, parseAxesOfChart } from './common';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
 
 export const formatFieldsOfDualAxis = (context: GenerateChartInput) => {
   const { chartType, cell } = context;
@@ -79,33 +79,49 @@ export const dualAxisSeries = (context: GenerateChartInput) => {
 
 export const dualAxisAxes = (context: GenerateChartInput) => {
   //assign axes in dual-axis chart
-  const { spec, series } = context;
+  const { spec, series, axes } = context;
 
   if (series) {
     return { spec };
   }
 
-  spec.axes = [
+  spec.axes = parseAxesOfChart(context, [
     {
-      id: DIMENSION_AXIS_ID,
-      type: 'band',
-      orient: 'bottom'
+      defaultConfig: {
+        type: 'band',
+        orient: 'bottom'
+      },
+      userConfig: {
+        id: DIMENSION_AXIS_ID
+      },
+      filters: [axis => axis.type === 'band']
     },
     {
-      id: MEASURE_AXIS_LEFT_ID,
-      seriesId: MAIN_SERIES_ID,
-      type: 'linear',
-      orient: 'left'
+      defaultConfig: {
+        type: 'linear',
+        orient: 'left'
+      },
+      userConfig: {
+        id: MEASURE_AXIS_LEFT_ID,
+        seriesId: MAIN_SERIES_ID
+      },
+      filters: [axis => axis.type === 'linear' && axis.orient === 'left']
     },
     {
-      id: MEASURE_AXIS_RIGHT_ID,
-      seriesId: SUB_SERIES_ID,
-      type: 'linear',
-      orient: 'right',
-      tick: { visible: false },
-      grid: { visible: false }
+      defaultConfig: {
+        type: 'linear',
+        orient: 'right',
+        tick: { visible: false },
+        grid: { visible: false }
+      },
+      userConfig: {
+        id: MEASURE_AXIS_RIGHT_ID,
+        seriesId: SUB_SERIES_ID
+      },
+      filters: [axis => axis.type === 'linear' && axis.orient === 'right']
     }
-  ];
+  ]);
+
   return { spec };
 };
 
@@ -116,5 +132,6 @@ export const pipelineDualAxis = [
   color,
   dualAxisSeries,
   dualAxisAxes,
-  discreteLegend
+  discreteLegend,
+  labelForDefaultHide
 ];

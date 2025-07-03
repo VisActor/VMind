@@ -2,7 +2,7 @@ import { isNil, isValid } from '@visactor/vutils';
 import { GenerateChartInput } from '../types/transform';
 import { WORDCLOUD_NUM_LIMIT } from '../utils/constants';
 import { isValidDataTable } from '../utils/data';
-import { color, formatColorFields, formatSizeFields } from './common';
+import { color, commonLegend, formatColorFields, formatSizeFields } from './common';
 
 export const formatFieldsOfWordCloud = (context: GenerateChartInput) => {
   //Word cloud must have color fields and size fields
@@ -66,6 +66,7 @@ export const pipelineWordCloud = [
   wordCloudData,
   color,
   wordCloudField,
-  wordCloudDisplayConf
+  wordCloudDisplayConf,
+  commonLegend
   //animationOneByOne,
 ];

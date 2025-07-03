@@ -1,8 +1,17 @@
 import { DEFAULT_ANIMATION_DURATION, DEFAULT_VIDEO_LENGTH, ONE_BY_ONE_GROUP_SIZE } from '../utils/constants';
-import { GenerateChartInput } from '../types/transform';
-import { color, data, discreteLegend, formatSizeFields, formatXFields, oneByOneDelayFunc } from './common';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
+import {
+  color,
+  data,
+  discreteLegend,
+  formatSizeFields,
+  formatXFields,
+  labelForDefaultHide,
+  oneByOneDelayFunc,
+  parseAxesOfChart
+} from './common';
 import { DataRole } from '../utils/enum';
-import { isValid } from '@visactor/vutils';
+import { array, isBase64, isBoolean, isValid } from '@visactor/vutils';
 
 export const scatterField = (context: GenerateChartInput) => {
   //assign field in spec according to cell
@@ -24,27 +33,38 @@ export const scatterField = (context: GenerateChartInput) => {
 
 export const scatterAxis = (context: GenerateChartInput) => {
   const { spec, fieldInfo } = context;
-
   const xField = spec.xField;
   const yField = spec.yField;
   const xFieldInfo = fieldInfo?.find(field => xField === field.fieldName);
   const yFieldInfo = fieldInfo?.find(field => yField === field.fieldName);
-  spec.axes = [
+
+  spec.axes = parseAxesOfChart(context, [
     {
-      orient: 'bottom',
-      type: xFieldInfo?.role === DataRole.DIMENSION ? 'band' : 'linear',
-      title: {
-        visible: false
-      }
+      defaultConfig: {
+        orient: 'bottom',
+        title: {
+          visible: false
+        }
+      },
+      userConfig: {
+        type: xFieldInfo?.role === DataRole.DIMENSION ? 'band' : 'linear'
+      },
+      filters: [axis => axis.orient === 'bottom', axis => axis.orient === 'top']
     },
     {
-      orient: 'left',
-      type: yFieldInfo?.role === DataRole.DIMENSION ? 'band' : 'linear',
-      title: {
-        visible: false
-      }
+      defaultConfig: {
+        orient: 'left',
+        title: {
+          visible: false
+        }
+      },
+      userConfig: {
+        type: yFieldInfo?.role === DataRole.DIMENSION ? 'band' : 'linear'
+      },
+      filters: [axis => axis.orient === 'left', axis => axis.orient === 'right']
     }
-  ];
+  ]);
+
   return { spec };
 };
 
@@ -68,6 +88,7 @@ export const pipelineScatterPlot = [
   color,
   scatterField,
   scatterAxis,
-  discreteLegend
+  discreteLegend,
+  labelForDefaultHide
   //animationOneByOne,
 ];

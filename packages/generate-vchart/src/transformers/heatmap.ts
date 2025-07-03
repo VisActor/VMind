@@ -1,8 +1,9 @@
 import { DataType } from '../utils/enum';
-import { GenerateChartInput } from '../types/transform';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
 import { BASIC_HEAT_MAP_COLOR_THEMES } from '../utils/constants';
-import { color, data, formatSizeFields } from './common';
+import { color, data, formatSizeFields, labelForDefaultHide, parseAxesOfChart } from './common';
 import { getAllFieldsByDataType, getRemainedFields } from '../utils/field';
+import { array, isArray } from '@visactor/vutils';
 
 export const formatFieldsOfBasicHeatMapChart = (context: GenerateChartInput) => {
   const { cell, fieldInfo } = context;
@@ -65,41 +66,69 @@ export const basicHeatMapColor = (context: GenerateChartInput) => {
   return { spec };
 };
 export const basicHeatMapAxes = (context: GenerateChartInput) => {
-  const { spec } = context;
-  spec.axes = [
+  const { spec, axes } = context;
+
+  spec.axes = parseAxesOfChart(context, [
     {
-      orient: 'bottom',
-      type: 'band',
-      grid: {
-        visible: false
+      defaultConfig: {
+        orient: 'bottom',
+        grid: { visible: false },
+        domainLine: {
+          visible: false
+        }
       },
-      domainLine: {
-        visible: false
-      }
+      userConfig: {
+        type: 'band'
+      },
+      filters: [axis => axis.orient === 'bottom', axis => axis.orient === 'top']
     },
     {
-      orient: 'left',
-      type: 'band',
-      grid: {
-        visible: false
+      defaultConfig: {
+        orient: 'left',
+        grid: { visible: false },
+        domainLine: {
+          visible: false
+        }
       },
-      domainLine: {
-        visible: false
-      }
+      userConfig: {
+        type: 'band'
+      },
+      filters: [axis => axis.orient === 'left', axis => axis.orient === 'right']
     }
-  ];
+  ]);
+
   return { spec };
 };
 
 export const basicHeatMapLegend = (context: GenerateChartInput) => {
-  const { spec } = context;
-  spec.legends = {
-    visible: true,
-    orient: 'right',
-    position: 'start',
-    type: 'color',
-    field: 'value'
-  };
+  const { spec, legends } = context;
+
+  if (legends !== false) {
+    if (isArray(legends) && legends.length >= 2) {
+      const colorLegend = legends.find(entry => entry.type === 'color');
+
+      spec.legends = [
+        {
+          visible: true,
+          orient: 'right',
+          position: 'start',
+          ...colorLegend,
+          field: 'value'
+        },
+        ...legends.filter(item => item !== colorLegend)
+      ];
+    } else {
+      spec.legends = {
+        visible: true,
+        orient: 'right',
+        position: 'start',
+        type: 'color',
+        ...array(legends)[0],
+        field: 'value'
+      };
+    }
+  }
+
   return { spec };
 };
 
@@ -110,5 +139,6 @@ export const pipelineBasicHeatMap = [
   basicHeatMapSeries,
   basicHeatMapColor,
   basicHeatMapAxes,
-  basicHeatMapLegend
+  basicHeatMapLegend,
+  labelForDefaultHide
 ];

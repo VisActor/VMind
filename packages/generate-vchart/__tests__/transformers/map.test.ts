@@ -34,15 +34,13 @@ describe('generate map chart', () => {
       nameField: 'name',
       valueField: 'value',
       nameProperty: 'name',
-      legends: [
-        {
-          visible: true,
-          type: 'color',
-          field: 'value',
-          orient: 'bottom',
-          position: 'start'
-        }
-      ],
+      legends: {
+        visible: true,
+        type: 'color',
+        field: 'value',
+        orient: 'bottom',
+        position: 'start'
+      },
       area: {
         style: {
           fill: {

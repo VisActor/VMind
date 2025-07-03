@@ -173,6 +173,7 @@ describe('generate line chart of dataTable which has two field', () => {
         { orient: 'bottom', title: { visible: false }, type: 'band' },
         { orient: 'left', title: { visible: false }, type: 'linear' }
       ],
+      theme: 'dark',
       data: {
         id: 'data',
         values: TWO_FIELD_DATA

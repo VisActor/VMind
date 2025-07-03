@@ -28,6 +28,7 @@ const {
   pipelineVenn,
   pipelineWaterfall,
   pipelineWordCloud,
+  addSimpleComponents,
   theme
 } = allTransformers;
 
@@ -93,7 +94,7 @@ export const generateChart = (type: string, context: GenerateChartInput) => {
       context.fieldInfo = getFieldInfoFromDataset(context.dataTable);
     }
 
-    const chartSpecPipelines = [...pipeline.pipline, theme];
+    const chartSpecPipelines = [addSimpleComponents, ...pipeline.pipline, theme];
     let newContext = { ...context };
     chartSpecPipelines.forEach(func => {
       newContext = {

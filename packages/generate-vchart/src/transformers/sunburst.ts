@@ -1,6 +1,13 @@
 import { array } from '@visactor/vutils';
 import { GenerateChartInput } from '../types/transform';
-import { color, formatColorFields, formatHierarchyData, formatSizeFields, sunburstOrTreemapField } from './common';
+import {
+  color,
+  commonLegend,
+  formatColorFields,
+  formatHierarchyData,
+  formatSizeFields,
+  sunburstOrTreemapField
+} from './common';
 
 export const sunburstData = (context: GenerateChartInput) => {
   let { cell } = formatColorFields(context, ['color', 'label']);
@@ -15,7 +22,7 @@ export const sunburstData = (context: GenerateChartInput) => {
 };
 
 export const sunburstDisplayConf = (context: GenerateChartInput) => {
-  const { spec } = context;
+  const { spec, label } = context;
   spec.offsetX = 0;
   spec.offsetY = 0;
   spec.outerRadius = 1;
@@ -30,14 +37,18 @@ export const sunburstDisplayConf = (context: GenerateChartInput) => {
       }
     }
   };
-  spec.label = {
-    visible: true,
-    style: {
-      fillOpacity: (datum: { isLeaf: any }) => {
-        return datum.isLeaf ? 0.4 : 0.8;
+
+  if (label !== false) {
+    spec.label = {
+      ...array(label)[0],
+      visible: true,
+      style: {
+        fillOpacity: (datum: { isLeaf: any }) => {
+          return datum.isLeaf ? 0.4 : 0.8;
+        }
       }
-    }
-  };
+    };
+  }
   spec.tooltip = {
     mark: {
       title: {
@@ -51,4 +62,4 @@ export const sunburstDisplayConf = (context: GenerateChartInput) => {
   return { spec };
 };
 
-export const pipelineSunburst = [sunburstData, color, sunburstOrTreemapField, sunburstDisplayConf];
+export const pipelineSunburst = [sunburstData, color, sunburstOrTreemapField, sunburstDisplayConf, commonLegend];

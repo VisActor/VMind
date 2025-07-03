@@ -333,7 +333,6 @@ describe('generate rankingBar', () => {
           animation: true,
           orient: 'bottom',
           type: 'linear',
-          visible: true,
           title: {
             visible: false
           },
@@ -564,7 +563,6 @@ describe('generate rankingBar', () => {
           animation: true,
           orient: 'bottom',
           type: 'linear',
-          visible: true,
           title: {
             visible: false
           },

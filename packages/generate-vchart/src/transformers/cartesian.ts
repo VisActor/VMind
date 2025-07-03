@@ -1,6 +1,7 @@
-import { isArray, uniqArray } from '@visactor/vutils';
-import { DataCell, GenerateChartInput } from '../types/transform';
+import { array, isArray, isBoolean, uniqArray } from '@visactor/vutils';
+import { DataCell, GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
 import { DataRole } from '../utils/enum';
+import { parseAxesOfChart } from './common';
 
 export const seriesField = (context: GenerateChartInput) => {
   const { spec, fieldInfo, dataTable, cell } = context;
@@ -48,7 +49,11 @@ export const seriesField = (context: GenerateChartInput) => {
 };
 
 export const axis = (context: GenerateChartInput) => {
-  const { spec, cell, fieldInfo } = context;
+  const { spec, cell, fieldInfo, axes, transpose } = context;
+  // 现在只有柱图和rangeColumn 支持了转置
+  const validTranspose = transpose && (spec.type === 'bar' || spec.type === 'rangeColumn');
+  const bandAxisOrient = validTranspose ? 'left' : 'bottom';
+  const linearAxisOrient = validTranspose ? 'bottom' : 'left';
 
   const { y: celly } = cell;
   const yFields = isArray(celly) ? celly : [celly];
@@ -56,32 +61,43 @@ export const axis = (context: GenerateChartInput) => {
   const isAllRatio = yFieldsInfo.every(v => !!v?.ratioGranularity);
   const isSameUnit = uniqArray(yFieldsInfo.map(v => v?.unit).filter(v => !!v)).length === 1;
 
-  spec.axes = [
+  spec.axes = parseAxesOfChart(context, [
     {
-      orient: 'bottom',
-      type: 'band',
-      title: {
-        visible: false
-      }
+      defaultConfig: {
+        orient: bandAxisOrient,
+        type: 'band',
+        title: {
+          visible: false
+        }
+      },
+      filters: [axis => axis.type === 'band']
     },
     {
-      orient: 'left',
-      type: 'linear',
-      title: {
-        visible: false
-      }
+      defaultConfig: {
+        orient: linearAxisOrient,
+        type: 'linear',
+        title: {
+          visible: false
+        }
+      },
+      userConfig: {
+        ...(isAllRatio
+          ? {
+              label: { formatter: `{label:~%}` }
+            }
+          : {}),
+        ...(isSameUnit && !['%', '‰'].includes(yFieldsInfo[0]?.unit)
+          ? {
+              unit: {
+                visible: true,
+                text: yFieldsInfo[0]?.unit
+              }
+            }
+          : {})
+      },
+      filters: [axis => axis.type === 'linear']
     }
-  ];
+  ]);
 
-  if (isAllRatio) {
-    spec.axes[1].label = { formatter: `{label:~%}` };
-  }
-
-  if (isSameUnit && !['%', '‰'].includes(yFieldsInfo[0]?.unit)) {
-    spec.axes[1].unit = {
-      visible: true,
-      text: yFieldsInfo[0]?.unit
-    };
-  }
   return { spec };
 };

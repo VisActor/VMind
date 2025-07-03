@@ -1,5 +1,13 @@
 import { array } from '@visactor/vutils';
-import { color, formatColorFields, formatHierarchyData, formatSizeFields, sunburstOrTreemapField } from './common';
+import {
+  color,
+  commonLegend,
+  formatColorFields,
+  formatHierarchyData,
+  formatSizeFields,
+  labelForDefaultShow,
+  sunburstOrTreemapField
+} from './common';
 import { GenerateChartInput } from '../types/transform';
 
 export const treemapData = (context: GenerateChartInput) => {
@@ -14,12 +22,4 @@ export const treemapData = (context: GenerateChartInput) => {
   return { spec, cell };
 };
 
-export const treemapDisplayConf = (context: GenerateChartInput) => {
-  const { spec } = context;
-  spec.label = {
-    visible: true
-  };
-  return { spec };
-};
-
-export const pipelineTreemap = [treemapData, color, sunburstOrTreemapField, treemapDisplayConf];
+export const pipelineTreemap = [treemapData, color, sunburstOrTreemapField, labelForDefaultShow, commonLegend];

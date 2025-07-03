@@ -1,6 +1,6 @@
-import { isValid } from '@visactor/vutils';
-import { GenerateChartInput } from '../types/transform';
-import { color, data, discreteLegend } from './common';
+import { array, isBoolean, isValid } from '@visactor/vutils';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
+import { color, data, discreteLegend, labelForDefaultHide, parseAxesOfChart } from './common';
 
 export const radarField = (context: GenerateChartInput) => {
   const { cell, spec } = context;
@@ -34,38 +34,52 @@ export const radarDisplayConf = (context: GenerateChartInput) => {
 };
 
 export const radarAxis = (context: GenerateChartInput) => {
-  const { spec } = context;
+  const { spec, axes } = context;
 
-  spec.axes = [
+  spec.axes = parseAxesOfChart(context, [
     {
-      orient: 'radius', // radius axis
-      zIndex: 100,
+      defaultConfig: {
+        orient: 'radius', // radius axis
+        type: 'linear',
 
-      domainLine: {
-        visible: false
+        domainLine: {
+          visible: false
+        },
+        label: {
+          visible: true
+        }
       },
-      label: {
-        visible: true,
-        space: 0
+      userConfig: {
+        zIndex: 100,
+        label: {
+          space: 0
+        },
+        grid: {
+          smooth: false
+        }
       },
-      grid: {
-        smooth: false
-      }
+      filters: [axis => axis.type === 'linear']
     },
     {
-      orient: 'angle', // angle axis
-      zIndex: 50,
-      tick: {
-        visible: false
+      defaultConfig: {
+        orient: 'angle', // angle axis
+        type: 'band',
+        tick: {
+          visible: false
+        },
+        domainLine: {
+          visible: false
+        }
       },
-      domainLine: {
-        visible: false
+      userConfig: {
+        zIndex: 50,
+        label: {
+          space: 20
+        }
       },
-      label: {
-        space: 20
-      }
+      filters: [axis => axis.type === 'band']
     }
-  ];
+  ]);
 
   return { spec };
 };
@@ -76,7 +90,8 @@ export const pipelineRadar = [
   radarField,
   radarDisplayConf,
   radarAxis,
-  discreteLegend
+  discreteLegend,
+  labelForDefaultHide
   // commonLabel,
   //animationCartisianLine,
 ];

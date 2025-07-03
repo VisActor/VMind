@@ -1,5 +1,6 @@
+import { DataRole, DataType } from '@visactor/generate-vchart';
 import { getChartSpecWithContext } from '../../src/atom/chartGenerator/spec';
-import { ChartType, DataType, ROLE } from '../../src/types';
+import { ChartType } from '../../src/types';
 
 const dataTable = [
   {
@@ -63,32 +64,32 @@ describe('getChartSpecWithContext', () => {
         {
           fieldName: 'category',
           type: DataType.STRING,
-          role: ROLE.DIMENSION
+          role: DataRole.DIMENSION
         },
         {
           fieldName: 'min',
           type: DataType.FLOAT,
-          role: ROLE.MEASURE
+          role: DataRole.MEASURE
         },
         {
           fieldName: 'q1',
           type: DataType.FLOAT,
-          role: ROLE.MEASURE
+          role: DataRole.MEASURE
         },
         {
           fieldName: 'median',
           type: DataType.FLOAT,
-          role: ROLE.MEASURE
+          role: DataRole.MEASURE
         },
         {
           fieldName: 'q3',
           type: DataType.FLOAT,
-          role: ROLE.MEASURE
+          role: DataRole.MEASURE
         },
         {
           fieldName: 'max',
           type: DataType.FLOAT,
-          role: ROLE.MEASURE
+          role: DataRole.MEASURE
         }
       ],
       cell: {

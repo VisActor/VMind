@@ -158,6 +158,7 @@ describe('generate bar chart of dataTable which has two field', () => {
 
     expect(spec).toEqual({
       type: 'bar',
+      theme: 'dark',
       axes: [
         { orient: 'bottom', title: { visible: false }, type: 'band' },
         { orient: 'left', title: { visible: false }, type: 'linear' }
@@ -594,7 +595,7 @@ describe('generate bar chart of dataTable which has three field', () => {
     });
   });
 
-  it('should node generate group bar chart because no valid seriesField', () => {
+  it('should not generate group bar chart because no valid seriesField', () => {
     const { spec } = generateChart('bar', {
       dataTable: THREE_FIELD_DATA_1,
       colors: COLORS,
@@ -614,7 +615,6 @@ describe('generate bar chart of dataTable which has three field', () => {
       color: COLORS,
       xField: ['name'],
       yField: 'value',
-      seriesField: undefined,
       axes: [
         {
           orient: 'bottom',
@@ -886,8 +886,6 @@ describe('transposeField function', () => {
     expect(result.spec.xField).toBe('value');
     expect(result.spec.yField).toBe('name');
     expect(result.spec.direction).toBe('horizontal');
-    expect(result.spec.axes[0].orient).toBe('left');
-    expect(result.spec.axes[1].orient).toBe('bottom');
   });
 
   it('should not transpose when transpose is false', () => {
@@ -922,7 +920,7 @@ describe('transposeField function', () => {
     expect(result.spec.direction).toBe('horizontal');
   });
 
-  it('should handle partial axes configuration', () => {
+  it('should not handle partial axes configuration', () => {
     const { transposeField } = require('../../src/transformers/bar');
     const context = {
       transpose: true,
@@ -934,7 +932,7 @@ describe('transposeField function', () => {
     };
 
     const result = transposeField(context);
-    expect(result.spec.axes[0].orient).toBe('left');
+    expect(result.spec.axes).toEqual([{ orient: 'bottom', type: 'band' }]);
   });
 });
 

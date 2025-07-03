@@ -1,7 +1,8 @@
 import { getAllFieldsByDataType, getRemainedFields } from '../utils/field';
 import { GenerateChartInput } from '../types/transform';
-import { color, data, formatXFields } from './common';
+import { color, commonLegend, data, formatXFields, labelForDefaultShow } from './common';
 import { DataType } from '../utils/enum';
+import { axis } from './cartesian';
 
 export const formatFieldsOfRangeColumn = (context: GenerateChartInput) => {
   // Range Column Chart's y field must length == 2
@@ -35,10 +36,8 @@ export const rangeColumnField = (context: GenerateChartInput) => {
 export const rangeColumnDisplayConf = (context: GenerateChartInput) => {
   const { spec } = context;
   spec.direction = 'horizontal';
-  spec.label = {
-    visible: true
-  };
-  return { spec };
+
+  return { spec, transpose: true };
 };
 
 export const pipelineRangeColumn = [
@@ -47,5 +46,8 @@ export const pipelineRangeColumn = [
   data,
   color,
   rangeColumnField,
-  rangeColumnDisplayConf
+  commonLegend,
+  labelForDefaultShow,
+  rangeColumnDisplayConf,
+  axis
 ];

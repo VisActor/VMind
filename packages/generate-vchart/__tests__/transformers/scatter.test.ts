@@ -430,7 +430,7 @@ describe('Scatter Chart Transformers', () => {
 
   describe('pipelineScatterPlot', () => {
     it('should have correct pipeline structure', () => {
-      expect(pipelineScatterPlot).toHaveLength(6);
+      expect(pipelineScatterPlot).toHaveLength(7);
       expect(pipelineScatterPlot[0].name).toBe('formatXFields');
       expect(pipelineScatterPlot[1].name).toBe('data');
       expect(pipelineScatterPlot[2].name).toBe('color');

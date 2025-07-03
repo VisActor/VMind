@@ -385,14 +385,14 @@ describe('Common Transformers', () => {
     });
 
     it('should not modify existing legends configuration', () => {
-      const existingLegends = [{ visible: false, orient: 'top' }];
+      const existingLegends = [{ visible: false, orient: 'top' as const }];
       const context: GenerateChartInput = {
         cell: { x: 'name', y: 'value', color: 'category' },
         fieldInfo,
         dataTable: [],
+        legends: existingLegends,
         spec: {
-          seriesField: 'category',
-          legends: existingLegends
+          seriesField: 'category'
         }
       };
 

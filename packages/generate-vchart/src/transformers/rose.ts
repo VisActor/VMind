@@ -1,6 +1,6 @@
-import { isValid } from '@visactor/vutils';
-import { GenerateChartInput } from '../types/transform';
-import { color, commonLabel, data, discreteLegend, formatColorFields } from './common';
+import { array, isValid } from '@visactor/vutils';
+import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
+import { color, commonLabel, data, discreteLegend, formatColorFields, parseAxesOfChart } from './common';
 
 export const roseField = (context: GenerateChartInput) => {
   const { cell } = formatColorFields(context, ['color', 'category', 'label']);
@@ -22,28 +22,43 @@ export const roseField = (context: GenerateChartInput) => {
 export const roseAxis = (context: GenerateChartInput) => {
   const { spec } = context;
 
-  spec.axes = [
+  spec.axes = parseAxesOfChart(context, [
     {
-      orient: 'angle',
-      domainLine: {
-        visible: false
+      defaultConfig: {
+        orient: 'angle',
+        domainLine: {
+          visible: false
+        },
+        grid: {
+          visible: false
+        },
+        label: {
+          visible: true
+        }
       },
-      grid: {
-        visible: false,
-        alignWithLabel: false
+      userConfig: {
+        grid: {
+          alignWithLabel: false
+        }
       },
-      label: {
-        visible: true
-      }
+      filters: [axis => axis.orient === 'angle']
     },
     {
-      orient: 'radius',
-      grid: {
-        visible: false,
-        smooth: true
-      }
+      defaultConfig: {
+        orient: 'radius',
+        grid: {
+          visible: false
+        }
+      },
+      userConfig: {
+        grid: {
+          smooth: true
+        }
+      },
+      filters: [axis => axis.orient === 'radius']
     }
-  ];
+  ]);
+
   return { spec };
 };
 

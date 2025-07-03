@@ -1,5 +1,5 @@
 import { array, isNil } from '@visactor/vutils';
-import { color, data, discreteLegend, formatXFields } from './common';
+import { color, data, discreteLegend, formatXFields, labelForDefaultHide } from './common';
 import { isValidDataTable } from '../utils/data';
 import { GenerateChartInput } from '../types/transform';
 
@@ -84,4 +84,12 @@ export const boxPlotField = (context: GenerateChartInput) => {
   return { spec };
 };
 
-export const pipelineBoxPlot = [formatXFields, formatFieldsOfBoxPlot, data, color, boxPlotField, discreteLegend];
+export const pipelineBoxPlot = [
+  formatXFields,
+  formatFieldsOfBoxPlot,
+  data,
+  color,
+  boxPlotField,
+  discreteLegend,
+  labelForDefaultHide
+];
