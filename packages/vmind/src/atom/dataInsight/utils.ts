@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { isArray, isNumber } from '@visactor/vutils';
-import type { Cell, DataItem } from '../../types';
+import type { Cell } from '../../types';
 import { ChartType } from '../../types';
+import type { DataItem } from '@visactor/generate-vchart';
 
 export const isStackChartInAxes = (series: any[], chartType: ChartType) => {
   if (chartType !== ChartType.DualAxisChart || !series.length) {

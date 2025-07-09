@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataType, type DataTable, type FieldInfo } from '../../../../../src/index';
+import { DataType, type DataTable, type FieldInfoItem } from '@visactor/generate-vchart';
 import type { TableColumnProps } from '@arco-design/web-react';
 import { Card, Spin, Table, Tooltip } from '@arco-design/web-react';
 import { isArray } from '@visactor/vutils';
@@ -7,7 +7,7 @@ import { isArray } from '@visactor/vutils';
 export interface TableProps {
   data: {
     dataTable: DataTable;
-    fieldInfo: FieldInfo[];
+    fieldInfo: FieldInfoItem[];
   }[];
 }
 export const SimpleTable = (props: TableProps) => {
@@ -17,7 +17,7 @@ export const SimpleTable = (props: TableProps) => {
   }
   return data.map((v, index) => {
     const { dataTable, fieldInfo } = v;
-    const columns: TableColumnProps[] = fieldInfo.map((info: FieldInfo) => {
+    const columns: TableColumnProps[] = fieldInfo.map((info: FieldInfoItem) => {
       return {
         title: (
           <div className="column-title">
@@ -53,11 +53,11 @@ export const SimpleTable = (props: TableProps) => {
 interface Props {
   dataExtractionResult: {
     dataTable: DataTable;
-    fieldInfo: FieldInfo[];
+    fieldInfo: FieldInfoItem[];
   }[];
   dataCleanResult: {
     dataTable: DataTable;
-    fieldInfo: FieldInfo[];
+    fieldInfo: FieldInfoItem[];
   }[];
   loading: boolean;
   style?: any;

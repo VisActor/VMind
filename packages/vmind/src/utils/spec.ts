@@ -1,7 +1,7 @@
 import { array, isArray, isString, merge, uniqArray } from '@visactor/vutils';
+import type { Cell } from '../types';
 import { ChartType } from '../types';
-import type { DataItem, DataTable, DataCell, Cell, FieldInfo } from '../types';
-import { getFieldInfoFromDataset } from './field';
+import type { DataItem, DataTable, DataCell, FieldInfoItem } from '@visactor/generate-vchart';
 import {
   COLOR_FIELD,
   FOLD_NAME,
@@ -10,11 +10,7 @@ import {
   FOLD_VALUE_SUB,
   GROUP_FIELD
 } from '@visactor/chart-advisor';
-import { data, discreteLegend as legend } from '../atom/chartGenerator/spec/transformers/common';
-import { funnelData } from '../atom/chartGenerator/spec/transformers/funnel';
-import { sankeyData } from '../atom/chartGenerator/spec/transformers/sankey';
-import { sequenceData } from '../atom/chartGenerator/spec/transformers/rankingBar';
-import { wordCloudData } from '../atom/chartGenerator/spec/transformers/wordcloud';
+import { getFieldInfoFromDataset, transformers } from '@visactor/generate-vchart';
 import { foldDataTableByYField, foldDatasetByYField } from './dataTable';
 
 /**
@@ -104,73 +100,83 @@ export const getFieldMappingFromSpec = (spec: any) => {
  * @param spec
  * @returns
  */
-export const getCellFromSpec = (spec: any, vmindChartType?: ChartType): Cell => {
+export const getCellFromSpec = (spec: any, vmindChartType?: ChartType): { cell: Cell; transpose?: boolean } => {
   if (!spec) {
-    return {};
+    return { cell: {} };
   }
   const { type, direction } = spec;
-  const isTransposed = direction === 'horizontal';
+  const transpose = direction === 'horizontal';
   if (type === 'bar' && spec.player) {
     //dynamic bar chart
     const time = spec.timeField;
     const x = spec.yField;
     const y = spec.xField;
     const color = spec.seriesField;
-    return { time, x, y, color, isTransposed };
+    return { cell: { time, x, y, color }, transpose };
   }
   if (['bar', 'line', 'area'].includes(type)) {
     const x = spec.xField;
     const y = spec.yField;
     const color = spec.seriesField;
-    return { x, y, color, isTransposed };
+    return { cell: { x, y, color }, transpose };
   }
   if ('radar' === type) {
     return {
-      x: spec.categoryField,
-      y: spec.valueField,
-      color: spec.seriesField
+      cell: {
+        x: spec.categoryField,
+        y: spec.valueField,
+        color: spec.seriesField
+      }
     };
   }
   if (['pie', 'rose'].includes(type)) {
     return {
-      x: spec.categoryField,
-      y: spec.valueField,
-      color: spec.categoryField,
-      angle: spec.valueField
+      cell: {
+        x: spec.categoryField,
+        y: spec.valueField,
+        color: spec.categoryField,
+        angle: spec.valueField
+      }
     };
   }
   if ('scatter' === type) {
     return {
-      color: spec.seriesField,
-      size: spec.sizeField,
-      x: spec.xField,
-      y: spec.yField
+      cell: {
+        color: spec.seriesField,
+        size: spec.sizeField,
+        x: spec.xField,
+        y: spec.yField
+      }
     };
   }
   if ('boxPlot' === type) {
     return {
-      x: spec.xField,
-      y: [spec.minField, spec.q1Field, spec.medianField, spec.q3Field, spec.maxField].filter(Boolean)
+      cell: {
+        x: spec.xField,
+        y: [spec.minField, spec.q1Field, spec.medianField, spec.q3Field, spec.maxField].filter(Boolean)
+      }
     };
   }
   if ('common' === type) {
     if ([ChartType.BarChart, ChartType.AreaChart, ChartType.LineChart].includes(vmindChartType)) {
       // single-chart parsed by common type
       return {
-        x: uniqArray(
-          spec.series
-            .map((s: any) => s.xField)
-            .filter((xField: string) => !!xField)
-            .flat()
-        ),
-        y: uniqArray(
-          spec.series
-            .map((s: any) => s.yField)
-            .filter((yField: string) => !!yField)
-            .flat()
-        ),
-        color: spec.series[0].seriesField,
-        isTransposed: isTransposed || spec.series.every((s: any) => s.direction === 'horizontal')
+        cell: {
+          x: uniqArray(
+            spec.series
+              .map((s: any) => s.xField)
+              .filter((xField: string) => !!xField)
+              .flat()
+          ),
+          y: uniqArray(
+            spec.series
+              .map((s: any) => s.yField)
+              .filter((yField: string) => !!yField)
+              .flat()
+          ),
+          color: spec.series[0].seriesField
+        },
+        transpose: transpose || spec.series.every((s: any) => s.direction === 'horizontal')
       };
     }
     //dual-axis chart
@@ -178,45 +184,56 @@ export const getCellFromSpec = (spec: any, vmindChartType?: ChartType): Cell => 
     if (vmindChartType === ChartType.DualAxisChart) {
       const seriesField = uniqArray(series.map((s: any) => s?.seriesField).filter((v: string) => !!v));
       return {
-        x: series[0]?.xField,
-        y: uniqArray([series[0]?.yField, series[1]?.yField].filter(Boolean)),
-        color: seriesField?.length === 1 ? seriesField[0] : undefined,
-        isTransposed
+        cell: {
+          x: series[0]?.xField,
+          y: uniqArray([series[0]?.yField, series[1]?.yField].filter(Boolean)),
+          color: seriesField?.length === 1 ? seriesField[0] : undefined
+        },
+        transpose
       };
     }
     return getCellFromSpec(series[0], vmindChartType);
   }
   if (type === 'wordCloud') {
     return {
-      color: spec.nameField,
-      size: spec.valueField
+      cell: {
+        color: spec.nameField,
+        size: spec.valueField
+      }
     };
   }
   if (type === 'funnel') {
     return {
-      x: spec.categoryField,
-      y: spec.valueField
+      cell: {
+        x: spec.categoryField,
+        y: spec.valueField
+      }
     };
   }
   if ('waterfall' === type) {
     return {
-      x: spec.xField,
-      y: spec.yField,
-      color: spec?.seriesField
+      cell: {
+        x: spec.xField,
+        y: spec.yField,
+        color: spec?.seriesField
+      }
     };
   }
   if (type === 'sankey') {
     return {
-      source: spec.sourceField,
-      target: spec.targetField,
-      value: spec.valueField
+      cell: {
+        source: spec.sourceField,
+        target: spec.targetField,
+        value: spec.valueField
+      }
     };
   }
-  return {};
+  return { cell: {} };
 };
 
-export const revisedCell = (cell: Cell, dataset: DataTable) => {
-  const { color } = cell;
+export const revisedCell = (options: { cell: Cell; transpose?: boolean }, dataset: DataTable) => {
+  const { cell, transpose } = options;
+  const { color } = options.cell;
   const colorField = isArray(color) ? color[0] : color;
   if (colorField) {
     const colorList = uniqArray(dataset.map(d => d[colorField])) as DataCell[];
@@ -224,7 +241,7 @@ export const revisedCell = (cell: Cell, dataset: DataTable) => {
       cell.color = undefined;
     }
   }
-  if (cell.isTransposed) {
+  if (transpose) {
     const temp = cell.x;
     cell.x = cell.y;
     cell.y = temp;
@@ -238,7 +255,7 @@ export const revisedCell = (cell: Cell, dataset: DataTable) => {
  * @param fieldInfo
  * @returns
  */
-const removeInvalidFieldFromCell = (cell: Cell, fieldInfo: FieldInfo[]) => {
+const removeInvalidFieldFromCell = (cell: Cell, fieldInfo: FieldInfoItem[]) => {
   const fieldList = fieldInfo
     .map(f => f.fieldName)
     .concat([
@@ -296,7 +313,7 @@ export const fillSpecTemplateWithData = (template: any, dataset: DataTable, prop
 
   if (type === 'bar' && template.player) {
     //dynamic bar chart
-    const { spec } = sequenceData(context);
+    const { spec } = transformers.sequenceData(context);
     return spec;
   }
   if (['bar', 'line'].includes(type)) {
@@ -325,8 +342,8 @@ export const fillSpecTemplateWithData = (template: any, dataset: DataTable, prop
       cells: [cellNew],
       totalTime
     };
-    const { spec: spec1 } = data(contextNew);
-    const { spec } = legend({ ...contextNew, spec: spec1 });
+    const { spec: spec1 } = transformers.data(contextNew);
+    const { spec } = transformers.discreteLegend({ ...contextNew, spec: spec1 });
     return spec;
   }
   if (['pie', 'scatter', 'rose', 'radar', 'waterfall', 'boxPlot'].includes(type)) {
@@ -353,7 +370,7 @@ export const fillSpecTemplateWithData = (template: any, dataset: DataTable, prop
       cells: [cellNew],
       totalTime
     };
-    const { spec } = data(contextNew);
+    const { spec } = transformers.data(contextNew);
     return spec;
   }
   if ('common' === type) {
@@ -375,8 +392,8 @@ export const fillSpecTemplateWithData = (template: any, dataset: DataTable, prop
       subSeriesData = foldDatasetByYField(datasetNew, [Object.keys(foldMap)[1]], fieldInfo, FOLD_NAME, FOLD_VALUE_SUB);
     }
 
-    const { spec: spec1 } = data(context);
-    const { spec: finalSpec } = legend({ ...context, spec: spec1 });
+    const { spec: spec1 } = transformers.data(context);
+    const { spec: finalSpec } = transformers.discreteLegend({ ...context, spec: spec1 });
 
     //const { spec } = dualAxisSeries({ ...context, spec: spec2 });
     const { cartesianInfo, y } = cellNew;
@@ -407,17 +424,17 @@ export const fillSpecTemplateWithData = (template: any, dataset: DataTable, prop
     return finalSpec;
   }
   if (type === 'wordCloud') {
-    const { spec } = wordCloudData(context);
+    const { spec } = transformers.wordCloudData(context);
     return spec;
   }
   if (type === 'funnel') {
-    const { spec } = funnelData(context);
+    const { spec } = transformers.funnelData(context);
     return spec;
   }
   if (type === 'sankey') {
-    const { spec } = sankeyData(context);
+    const { spec } = transformers.sankeyData(context);
     return spec;
   }
-  const { spec } = data(context);
+  const { spec } = transformers.data(context);
   return spec;
 };

@@ -2,8 +2,8 @@
 import { isArray } from '@visactor/vutils';
 import type { DataInsightExtractContext } from '../type';
 import { InsightType, type Insight } from '../type';
-import type { DataCell } from '../../../types';
 import { ChartType } from '../../../types';
+import type { DataCell } from '@visactor/generate-vchart';
 
 export interface RevisedInsightParams {
   insights: Insight[];

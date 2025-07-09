@@ -3,13 +3,7 @@ import type { DatasetFromText, MultipleDataCleanCtx, MultipleDataCleanOptions } 
 import { AtomName } from '../../types/atom';
 import { BaseAtom } from '../base';
 import { isArray, merge } from '@visactor/vutils';
-import {
-  canMergeClusterResult,
-  canMergeDataTable,
-  getSplitDataViewOfDataTable,
-  mergeClusterDataView,
-  mergeDataTable
-} from './utils';
+import { canMergeClusterResult, getSplitDataViewOfDataTable } from './utils';
 import { pipelines } from './dataClean';
 import { Factory } from '../../core/factory';
 import type { BaseAtomConstructor } from '../../types';

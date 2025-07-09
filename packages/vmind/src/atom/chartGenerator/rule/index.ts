@@ -1,9 +1,10 @@
 import type { SimpleVChartSpec } from '../../../atom/imageReader/interface';
-import { ROLE, DataType, ChartType } from '../../../types';
+import { ChartType } from '../../../types';
 import type { Cell, ChartGeneratorCtx } from '../../../types';
-import type { GenerateChartCellContext, SimpleVChartSpecMockContext } from '../type';
+import type { SimpleVChartSpecMockContext } from '../type';
 import { formatTypeToVMind } from '../spec/chartTypeUtils';
 import { unfoldTransform } from '../../../utils/unfold';
+import { DataRole, DataType } from '@visactor/generate-vchart';
 
 /**
  * 根据规则去模拟LLM 生成结果
@@ -12,7 +13,7 @@ import { unfoldTransform } from '../../../utils/unfold';
  */
 export const getRuleLLMContent = (context: ChartGeneratorCtx) => {
   const { fieldInfo } = context;
-  const measureFields = fieldInfo.filter(field => field.role === ROLE.MEASURE);
+  const measureFields = fieldInfo.filter(field => field.role === DataRole.MEASURE);
   let chartType = null;
   const cell: Cell = {};
 
@@ -116,7 +117,7 @@ export const getCellContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartS
       res.push({
         fieldName: field,
         type: field === 'value' ? DataType.FLOAT : DataType.STRING,
-        role: field === 'value' ? ROLE.MEASURE : ROLE.DIMENSION
+        role: field === 'value' ? DataRole.MEASURE : DataRole.DIMENSION
       });
     }
 
@@ -128,7 +129,7 @@ export const getCellContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartS
     fieldInfo.push({
       fieldName: 'value1',
       type: DataType.FLOAT,
-      role: ROLE.MEASURE
+      role: DataRole.MEASURE
     });
   }
 

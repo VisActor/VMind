@@ -1,9 +1,8 @@
 import { DataSet, DataView, csvParser, fold as vdatasetFold } from '@visactor/vdataset';
-import { getFieldInfo } from './field';
-import { DataType } from '../types';
-import { isArray, isNil, isNumber } from '@visactor/vutils';
+import { isNil, isNumber } from '@visactor/vutils';
 import { FOLD_NAME, FOLD_VALUE, fold } from '@visactor/chart-advisor';
-import { ROLE, type DataItem, type DataTable, type FieldInfo } from '../types';
+import type { DataItem, DataTable, FieldInfoItem } from '@visactor/generate-vchart';
+import { DataRole, DataType, getFieldInfo } from '@visactor/generate-vchart';
 
 export const parseCSVWithVChart = (csvString: string) => {
   //Parse csv string to VChart Dataview so it can be directly used in VChart spec
@@ -28,9 +27,9 @@ export const getDataset = (csvString: string): { dataset: DataItem[]; columns: s
 /**
  * convert number string to number in dataset
  */
-export const convertNumberField = (dataset: DataItem[], fieldInfo: FieldInfo[]) => {
+export const convertNumberField = (dataset: DataItem[], fieldInfo: FieldInfoItem[]) => {
   const numberFields = fieldInfo
-    .filter(field => [DataType.INT, DataType.FLOAT].includes(field.type))
+    .filter(field => ([DataType.INT, DataType.FLOAT] as string[]).includes(field.type))
     .map(field => field.fieldName);
   dataset.forEach(d => {
     numberFields.forEach(numberField => {
@@ -42,7 +41,7 @@ export const convertNumberField = (dataset: DataItem[], fieldInfo: FieldInfo[]) 
   return dataset;
 };
 
-export const parseCSVData = (csvString: string): { fieldInfo: FieldInfo[]; dataset: DataItem[] } => {
+export const parseCSVData = (csvString: string): { fieldInfo: FieldInfoItem[]; dataset: DataItem[] } => {
   //parse the CSV string to get information about the fields(fieldInfo) and dataset object
   const { dataset, columns } = getDataset(csvString);
   const fieldInfo = getFieldInfo(dataset, columns);
@@ -53,7 +52,7 @@ export const parseCSVData = (csvString: string): { fieldInfo: FieldInfo[]; datas
 export const foldDatasetByYField = (
   dataset: DataItem[],
   yFieldList: string[],
-  fieldInfo: FieldInfo[],
+  fieldInfo: FieldInfoItem[],
   foldName: any = FOLD_NAME,
   foldValue: any = FOLD_VALUE
 ) => {
@@ -65,7 +64,7 @@ export const foldDatasetByYField = (
 export const foldDataTableByYField = (
   dataTable: DataItem[],
   yFieldList: string[],
-  fieldInfo: FieldInfo[],
+  fieldInfo: FieldInfoItem[],
   foldName: any = FOLD_NAME,
   foldValue: any = FOLD_VALUE
 ) => {
@@ -74,13 +73,9 @@ export const foldDataTableByYField = (
   return fold(dataTable as any, yFieldList, foldName, foldValue, aliasMap, false);
 };
 
-export const isValidDataTable = (dataTable?: DataTable | undefined | null) => {
-  return !isNil(dataTable) && isArray(dataTable) && dataTable.length > 0;
-};
-
-export const transferMeasureInTable = (dataTable: DataItem[], fieldInfo: FieldInfo[]) => {
+export const transferMeasureInTable = (dataTable: DataItem[], fieldInfo: FieldInfoItem[]) => {
   const newDataTable: DataTable = [];
-  const measureFields = fieldInfo.filter(field => field.role === ROLE.MEASURE);
+  const measureFields = fieldInfo.filter(field => field.role === DataRole.MEASURE);
   if (measureFields.length) {
     dataTable.forEach(row => {
       const newRow = { ...row };

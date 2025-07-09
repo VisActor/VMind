@@ -3,11 +3,11 @@ import { isArray } from '@visactor/vutils';
 import { originalMKTest, TrendType } from '../statistics';
 import type { DataInsightExtractContext } from '../../type';
 import { InsightType, type Insight, type InsightAlgorithm } from '../../type';
-import type { DataCell } from '../../../../types';
 import { ChartType } from '../../../../types';
 import { overallTrendingAlgo } from '../overallTrending';
 import { isValidData } from '../.../../../../../utils/common';
 import { isPercenSeries, isStackSeries } from '../../utils';
+import type { DataCell } from '@visactor/generate-vchart';
 
 type TrendInfo = {
   trend: string;

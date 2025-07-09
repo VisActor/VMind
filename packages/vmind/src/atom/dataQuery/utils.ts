@@ -2,10 +2,9 @@ import JSON5 from 'json5';
 import { isArray, isString, uniqArray } from '@visactor/vutils';
 import { capitalize, replaceAll } from '../../utils/text';
 import { alasqlKeywordList } from './const';
-import type { DataItem, DataTable, FieldInfo } from '../../types';
-import { ROLE } from '../../types';
 import alasql from 'alasql';
-import { detectFieldType } from '../../utils/field';
+import type { DataItem, DataTable, FieldInfoItem } from '@visactor/generate-vchart';
+import { DataRole, detectFieldType } from '@visactor/generate-vchart';
 
 export function generateRandomString(len: number) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -281,12 +280,12 @@ export const replaceBlankSpace = (sql: string, fieldNames: string[]) => {
  */
 export const sumAllMeasureFields = (
   sql: string,
-  fieldInfo: FieldInfo[],
+  fieldInfo: FieldInfoItem[],
   columnReplaceMap: Map<string, string>,
   sqlReplaceMap: Map<string, string>
 ) => {
   const measureFieldsInSql = fieldInfo
-    .filter(field => field.role === ROLE.MEASURE)
+    .filter(field => field.role === DataRole.MEASURE)
     .map(field => {
       const { fieldName } = field;
       const replacedName1 = replaceString(fieldName, columnReplaceMap);

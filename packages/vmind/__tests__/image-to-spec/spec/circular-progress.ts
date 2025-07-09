@@ -73,15 +73,15 @@ const spec = {
       dataId: 'id0',
       visible: true,
       style: {
-        x: (datum, ctx, elements, dataView) => {
+        x: (datum: any, ctx: any) => {
           return ctx.getCenter().x;
         },
-        y: (datum, ctx, elements, dataView) => {
+        y: (datum: any, ctx: any) => {
           const outerRadius =
             Math.min(ctx.getRegion().getLayoutRect().width, ctx.getRegion().getLayoutRect().height) * 0.5 * radius;
           return outerRadius + ctx.getCenter().y;
         },
-        maxLineWidth: (datum, ctx, elements, dataView) => {
+        maxLineWidth: (datum: any, ctx: any) => {
           return ctx.getRegion().getLayoutRect().width;
         },
         fontSize: 12,

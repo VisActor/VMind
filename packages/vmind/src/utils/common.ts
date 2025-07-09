@@ -1,25 +1,8 @@
+import type { DataCell } from '@visactor/generate-vchart';
 import { isFunction, isValidNumber } from '@visactor/vutils';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import type { DataCell } from '../types';
-
 dayjs.extend(customParseFormat);
-
-export const sampleSize = (array: any, n: number) => {
-  const length = array === null ? 0 : array.length;
-  if (!length || n < 1) {
-    return [];
-  }
-  n = n > length ? length : n;
-  const randIndexs = [];
-  while (randIndexs.length < n) {
-    const rand = Math.floor(Math.random() * length);
-    if (randIndexs.indexOf(rand) === -1) {
-      randIndexs.push(rand);
-    }
-  }
-  return randIndexs.map(i => array[i]);
-};
 
 export const uniqBy = (array: any, key: string | ((item: any) => string)) => {
   const seen = new Set();
@@ -70,19 +53,6 @@ const dateFormats = [
     format: (match: string, month: string, day: string) => `${month.padStart(2, '0')}-${day.padStart(2, '0')}`
   }
 ];
-function isQuarterDate(date: string) {
-  const patterns = [/^\d{4}-Q[1-4]$/, /^\d{4}年第[一二三四]季度$/, /^Q[1-4]$/, /^\d{4}年-Q[1-4]$/];
-  return patterns.some(pattern => pattern.test(date));
-}
-export function validateDate(date: any) {
-  const formaterDate = `${date}`.trim();
-  //check if the string is a data string
-  return (
-    dayjs(formaterDate).isValid() ||
-    dateFormats.find(v => new Date(formaterDate.replace(v.regex, v.format)).toString() !== 'Invalid Date') ||
-    isQuarterDate(formaterDate)
-  );
-}
 
 function convertQuarterToMonth(quarter: string) {
   switch (quarter) {

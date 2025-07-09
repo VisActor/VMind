@@ -1,10 +1,11 @@
 import { isArray } from '@visactor/vutils';
 import type { DataTypeName } from '@visactor/chart-advisor';
 import { ChartType } from '@visactor/chart-advisor';
-import type { Cell, FieldInfo } from '../../types';
+import type { Cell } from '../../types';
 import { ChartType as VMindChartType } from '../../types';
 import type { ChartGeneratorCtx } from '../../types';
-import { DEFAULT_VIDEO_LENGTH, VIDEO_LENGTH_BY_CHART_TYPE } from './spec/constants';
+import type { FieldInfoItem } from '@visactor/generate-vchart';
+import { DEFAULT_VIDEO_LENGTH, VIDEO_LENGTH_BY_CHART_TYPE } from '@visactor/generate-vchart';
 
 export { getVChartTypeByVmind } from './spec/chartTypeUtils';
 
@@ -24,8 +25,7 @@ export const getVizSchema = (context: ChartGeneratorCtx) => {
         description: d.description,
         visible: true,
         type: d.type,
-        role: d.role,
-        location: d.role
+        role: d.role
       }))
   };
 };
@@ -123,7 +123,7 @@ const checkChannel = (cell: any, channel: string, count = 1) => {
   return false;
 };
 
-export const checkChartTypeAndCell = (chartType: string, cell: any, fieldInfo: FieldInfo[]): boolean => {
+export const checkChartTypeAndCell = (chartType: string, cell: any, fieldInfo: FieldInfoItem[]): boolean => {
   const fieldList = fieldInfo.map(f => f.fieldName);
   const cellFields: (string | string[])[] = Object.values(cell);
   cellFields.forEach((cellField: string | string[]) => {

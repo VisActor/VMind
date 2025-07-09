@@ -96,6 +96,7 @@ common/autoinstallers/*/.npmrc
 # build
 .rollup.cache/
 tsconfig.tsbuildinfo
+*.tsbuildinfo
 
 # git-hook
 common/scripts/pre-commit
@@ -116,4 +117,3 @@ packages/vmind/__tests__/experiment/src/results
 
 # open api demo test
 packages/node-api
-

@@ -7,9 +7,9 @@ import { getQueryDatasetPrompt } from './prompt';
 import { parseSQLResponse } from './utils';
 import type { ExecuteQueryCtx } from './executeQuery';
 import { executeDataQuery, getFinalQueryResult, patchSQLBeforeQuery, restoreDatasetAfterQuery } from './executeQuery';
-import { getFieldInfoFromDataset } from '../../utils/field';
 import { Factory } from '../../core/factory';
 import type { BaseAtomConstructor } from '../../types';
+import { getFieldInfoFromDataset } from '@visactor/generate-vchart';
 
 export class DataQueryAtom extends BaseAtom<DataQueryCtx, DataQueryOptions> {
   name = AtomName.DATA_QUERY;

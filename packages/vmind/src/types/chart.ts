@@ -27,37 +27,6 @@ export enum ChartType {
   DynamicBarChart = 'Dynamic Bar Chart'
 }
 
-export enum mapRegionProjectionType {
-  ALBERS = 'albers',
-  ALBERS_USA = 'albersUsa',
-  AZIMUTHAL_EQUAL_AREA = 'azimuthalEqualArea',
-  AZIMUTHAL_EQUIDISTANT = 'azimuthalEquidistant',
-  CONIC_CONFORMAL = 'conicConformal',
-  CONIC_EQUAL_AREA = 'conicEqualArea',
-  CONIC_EQUIDISTANT = 'conicEquidistant',
-  EQUAL_EARTH = 'equalEarth',
-  EQUIRECTANGULAR = 'equirectangular',
-  GNOMONIC = 'gnomonic',
-  MERCATOR = 'mercator',
-  NATURAL_EARTH1 = 'naturalEarth1',
-  ORTHOGRAPHIC = 'orthographic',
-  STEREOGRAPHIC = 'stereographic',
-  TRANSVERSE_MERCATOR = 'transverseMercator'
-}
-
-export enum MapRegionCoordinate {
-  CARTESIAN = 'cartesian',
-  POLAR = 'polar',
-  GEO = 'geo'
-}
-
-export type BasemapOption = {
-  regionProjectType: mapRegionProjectionType;
-  regionCoordinate: MapRegionCoordinate;
-  zoom: number;
-  center: number[];
-};
-
 export type Cell = {
   //字段映射，可用的视觉通道：["x","y","color","size","angle","time"]
   x?: string | string[];
@@ -71,8 +40,6 @@ export type Cell = {
   target?: string;
   value?: string;
   category?: string;
-  // if true, x and y will be transposed
-  isTransposed?: boolean;
 };
 
 export type VMindTheme = {

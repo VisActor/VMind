@@ -1,0 +1,14 @@
+/**
+ * NOTE: this file is symlink to '@aeolian/dev-config/tsconfig/build.esm.json'
+ */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "es",
+    "target": "es2018",
+    "module": "ESNext",
+    "noEmit": false,
+    "sourceMap": false,
+    "noImplicitAny": false
+  }
+}
