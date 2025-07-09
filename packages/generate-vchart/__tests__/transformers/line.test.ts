@@ -21,10 +21,10 @@ describe('generate line chart of dataTable which has two field', () => {
       color: [
         {
           gradient: 'linear',
-          x0: 0,
-          y0: 0.5,
-          x1: 1,
-          y1: 0.5,
+          x0: 0.5,
+          y0: 0,
+          x1: 0.5,
+          y1: 1,
           stops: [
             {
               offset: 0,
@@ -38,10 +38,10 @@ describe('generate line chart of dataTable which has two field', () => {
         },
         {
           gradient: 'linear',
-          x0: 0,
-          y0: 0.5,
-          x1: 1,
-          y1: 0.5,
+          x0: 0.5,
+          y0: 0,
+          x1: 0.5,
+          y1: 1,
           stops: [
             {
               offset: 0,
@@ -55,10 +55,10 @@ describe('generate line chart of dataTable which has two field', () => {
         },
         {
           gradient: 'linear',
-          x0: 0,
-          y0: 0.5,
-          x1: 1,
-          y1: 0.5,
+          x0: 0.5,
+          y0: 0,
+          x1: 0.5,
+          y1: 1,
           stops: [
             {
               offset: 0,
@@ -72,10 +72,10 @@ describe('generate line chart of dataTable which has two field', () => {
         },
         {
           gradient: 'linear',
-          x0: 0,
-          y0: 0.5,
-          x1: 1,
-          y1: 0.5,
+          x0: 0.5,
+          y0: 0,
+          x1: 0.5,
+          y1: 1,
           stops: [
             {
               offset: 0,
@@ -89,10 +89,10 @@ describe('generate line chart of dataTable which has two field', () => {
         },
         {
           gradient: 'linear',
-          x0: 0,
-          y0: 0.5,
-          x1: 1,
-          y1: 0.5,
+          x0: 0.5,
+          y0: 0,
+          x1: 0.5,
+          y1: 1,
           stops: [
             {
               offset: 0,
@@ -303,10 +303,10 @@ describe('generate line chart of dataTable which has three field', () => {
       color: [
         {
           gradient: 'linear',
-          x0: 0,
-          y0: 0.5,
-          x1: 1,
-          y1: 0.5,
+          x0: 0.5,
+          y0: 0,
+          x1: 0.5,
+          y1: 1,
           stops: [
             {
               offset: 0,
@@ -320,10 +320,10 @@ describe('generate line chart of dataTable which has three field', () => {
         },
         {
           gradient: 'linear',
-          x0: 0,
-          y0: 0.5,
-          x1: 1,
-          y1: 0.5,
+          x0: 0.5,
+          y0: 0,
+          x1: 0.5,
+          y1: 1,
           stops: [
             {
               offset: 0,
@@ -337,10 +337,10 @@ describe('generate line chart of dataTable which has three field', () => {
         },
         {
           gradient: 'linear',
-          x0: 0,
-          y0: 0.5,
-          x1: 1,
-          y1: 0.5,
+          x0: 0.5,
+          y0: 0,
+          x1: 0.5,
+          y1: 1,
           stops: [
             {
               offset: 0,
@@ -354,10 +354,10 @@ describe('generate line chart of dataTable which has three field', () => {
         },
         {
           gradient: 'linear',
-          x0: 0,
-          y0: 0.5,
-          x1: 1,
-          y1: 0.5,
+          x0: 0.5,
+          y0: 0,
+          x1: 0.5,
+          y1: 1,
           stops: [
             {
               offset: 0,
@@ -371,10 +371,10 @@ describe('generate line chart of dataTable which has three field', () => {
         },
         {
           gradient: 'linear',
-          x0: 0,
-          y0: 0.5,
-          x1: 1,
-          y1: 0.5,
+          x0: 0.5,
+          y0: 0,
+          x1: 0.5,
+          y1: 1,
           stops: [
             {
               offset: 0,

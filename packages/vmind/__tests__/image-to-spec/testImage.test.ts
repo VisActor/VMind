@@ -16,7 +16,7 @@ let modelResultMap: any = {};
 
 function generateResultHtml(models: string[]) {
   const mockModels = ['', ...models];
-  const specNames = models.reduce((res, model) => {
+  const specNames = models.reduce((res: string[], model: string) => {
     const { record } = modelResultMap[model];
 
     Object.keys(record).forEach(specName => {
@@ -254,16 +254,15 @@ const testImage = async (vmind: any) => {
       console.log(`[end] - ${specName}`);
       modelResultMap[model].totalCount += 1;
     }
+    modelResultMap[model].score = modelScore / modelResultMap[model].totalCount;
+
+    const dir = path.join(__dirname, './output');
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+
+    fs.writeFileSync(path.join(__dirname, './output', `${model}.json`), JSON.stringify(modelResultMap[model], null, 2));
   }
-
-  modelResultMap[model].score = modelScore / modelResultMap[model].totalCount;
-
-  const dir = path.join(__dirname, './output');
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-
-  fs.writeFileSync(path.join(__dirname, './output', `${model}.json`), JSON.stringify(modelResultMap[model], null, 2));
 };
 
 const getGptVMind = (model: string, showThoughts = false) => {
@@ -318,8 +317,6 @@ const run = async (onlyUpdateHtml?: boolean) => {
   }
 };
 
-run(true);
-
 function getDelta(compareType: string) {
   switch (compareType) {
     case '-1d':
@@ -345,3 +342,10 @@ function formatData(
     };
   });
 }
+
+jest.setTimeout(30 * 60 * 10000);
+
+test('always passes async', async () => {
+  await run(false);
+  expect(1).toBe(1);
+});

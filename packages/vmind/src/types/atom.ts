@@ -230,6 +230,7 @@ export interface ChartGeneratorCtx extends BaseContext, GenerateChartInput {
     spec: any;
     score: number;
   }[];
+  chartSource?: string;
   /**
    * simple vchart spec
    * 可以用于生成详细的vchart配置

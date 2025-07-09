@@ -10,7 +10,6 @@ import { DataRole } from '../../src/utils/enum';
 
 describe('Linear Progress Chart Transformers', () => {
   const baseContext: GenerateChartInput = {
-    chartType: 'linearProgress',
     cell: { x: 'category', y: 'value' },
     dataTable: [
       { category: 'Task A', value: 0.8 },
@@ -297,7 +296,6 @@ describe('Linear Progress Chart Transformers', () => {
 
     it('should execute pipeline correctly end-to-end', () => {
       let context: GenerateChartInput = {
-        chartType: 'linearProgress',
         cell: { x: 'name', y: 'progress' },
         dataTable: [
           { name: 'Project A', progress: 0.75 },
@@ -327,7 +325,6 @@ describe('Linear Progress Chart Transformers', () => {
 
     it('should handle complex field mapping through pipeline', () => {
       let context: GenerateChartInput = {
-        chartType: 'linearProgress',
         cell: { color: 'department', size: 'completion' },
         dataTable: [
           { department: 'Engineering', completion: 0.85 },
@@ -356,7 +353,6 @@ describe('Linear Progress Chart Transformers', () => {
 
     it('should handle single data point through pipeline', () => {
       let context: GenerateChartInput = {
-        chartType: 'linearProgress',
         cell: { x: 'task', y: 'done' },
         dataTable: [{ task: 'Single Task', done: 0.9 }],
         spec: {},

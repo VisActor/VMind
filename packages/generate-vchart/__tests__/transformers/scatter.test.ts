@@ -6,7 +6,6 @@ import { SCATTER_DATA_FOUR, SCATTER_DATA_TWO, SCATTER_FIELD_INFO, SCATTER_FIELD_
 
 describe('Scatter Chart Transformers', () => {
   const baseContext: GenerateChartInput = {
-    chartType: 'scatter',
     cell: { x: 'x_axis', y: 'y_axis' },
     dataTable: [
       { x_axis: 10, y_axis: 20 },
@@ -441,7 +440,6 @@ describe('Scatter Chart Transformers', () => {
 
     it('should execute pipeline correctly for basic scatter chart', () => {
       let context: GenerateChartInput = {
-        chartType: 'scatter',
         cell: { x: 'x_val', y: 'y_val' },
         dataTable: [
           { x_val: 10, y_val: 20 },
@@ -470,7 +468,6 @@ describe('Scatter Chart Transformers', () => {
 
     it('should execute pipeline correctly for scatter chart with color and size', () => {
       let context: GenerateChartInput = {
-        chartType: 'scatter',
         cell: { x: 'x_val', y: 'y_val', color: 'category', size: 'magnitude' },
         dataTable: [
           { x_val: 10, y_val: 20, category: 'A', magnitude: 5 },
@@ -502,7 +499,6 @@ describe('Scatter Chart Transformers', () => {
 
     it('should handle mixed axis types through pipeline', () => {
       let context: GenerateChartInput = {
-        chartType: 'scatter',
         cell: { x: 'category', y: 'value' },
         dataTable: [
           { category: 'A', value: 10 },
@@ -528,7 +524,6 @@ describe('Scatter Chart Transformers', () => {
 
     it('should handle complex field mapping through pipeline', () => {
       let context: GenerateChartInput = {
-        chartType: 'scatter',
         cell: { x: 'x_auto', y: 'y_auto', color: 'department', size: 'experience' },
         dataTable: [
           { department: 'Engineering', experience: 5, x_auto: 10, y_auto: 20 },
@@ -559,7 +554,6 @@ describe('Scatter Chart Transformers', () => {
 
     it('should execute pipeline with missing fieldInfo gracefully', () => {
       let context: GenerateChartInput = {
-        chartType: 'scatter',
         cell: { x: 'x_val', y: 'y_val' },
         dataTable: [
           { x_val: 10, y_val: 20 },
@@ -585,7 +579,6 @@ describe('Scatter Chart Transformers', () => {
 
     it('should execute pipeline with null cell values gracefully', () => {
       let context: GenerateChartInput = {
-        chartType: 'scatter',
         cell: { x: 'x_val', y: 'y_val', color: null, size: null },
         dataTable: [
           { x_val: 10, y_val: 20 },

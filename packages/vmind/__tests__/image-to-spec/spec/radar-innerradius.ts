@@ -2,7 +2,7 @@ const mockData = [];
 for (let i = 0; i < 24; i++) {
   mockData.push({
     key: `key${i}`,
-    value: parseInt(Math.random() * 10, 10)
+    value: Math.floor(Math.random() * 10)
   });
 }
 const spec = {
