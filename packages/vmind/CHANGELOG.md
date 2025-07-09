@@ -1,6 +1,15 @@
 # Change Log - @visactor/vmind
 
-This log was last generated on Thu, 08 May 2025 06:29:26 GMT and should not be manually modified.
+This log was last generated on Wed, 09 Jul 2025 07:37:22 GMT and should not be manually modified.
+
+## 2.0.7
+Wed, 09 Jul 2025 07:37:22 GMT
+
+### Updates
+
+- fix: fix gradient of line
+
+
 
 ## 2.0.6
 Thu, 08 May 2025 06:29:26 GMT
