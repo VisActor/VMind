@@ -4,7 +4,7 @@ import type { Cell, ChartGeneratorCtx } from '../../../types';
 import type { SimpleVChartSpecMockContext } from '../type';
 import { formatTypeToVMind } from '../spec/chartTypeUtils';
 import { unfoldTransform } from '../../../utils/unfold';
-import { DataRole, DataType } from '@visactor/generate-vchart';
+import { DataRole, DataType, getFieldInfoFromDataset } from '@visactor/generate-vchart';
 
 /**
  * 根据规则去模拟LLM 生成结果
@@ -112,17 +112,7 @@ export const getCellContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartS
     cell.size = 'value';
   }
 
-  const fieldInfo = ['name', 'value', 'group'].reduce((res, field) => {
-    if (firstDatum && field in firstDatum) {
-      res.push({
-        fieldName: field,
-        type: field === 'value' ? DataType.FLOAT : DataType.STRING,
-        role: field === 'value' ? DataRole.MEASURE : DataRole.DIMENSION
-      });
-    }
-
-    return res;
-  }, []);
+  const fieldInfo = getFieldInfoFromDataset(dataTable);
 
   if (chartType === 'rangeColumn' && 'value1' in firstDatum) {
     cell.y = ['value', 'value1'];
