@@ -17,10 +17,10 @@ export const colorLine = (context: GenerateChartInput) => {
     //应用渐变色
     spec.color = LINEAR_COLOR_THEMES.map(c => ({
       gradient: 'linear',
-      x0: 0,
-      y0: 0.5,
-      x1: 1,
-      y1: 0.5,
+      x0: 0.5,
+      y0: 0,
+      x1: 0.5,
+      y1: 1,
       stops: [
         {
           offset: 0,
