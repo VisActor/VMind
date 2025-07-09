@@ -4,7 +4,7 @@ import { color, data, discreteLegend, labelForDefaultHide, parseAxesOfChart } fr
 
 export const radarField = (context: GenerateChartInput) => {
   const { cell, spec } = context;
-  const categoryField = cell.x ?? cell.angle;
+  const categoryField = cell.x ?? cell.angle ?? cell.category;
   if (isValid(categoryField)) {
     spec.categoryField = categoryField;
   }

@@ -6,7 +6,6 @@ describe('BoxPlot Chart Generator', () => {
   describe('formatFieldsOfBoxPlot', () => {
     it('should split comma-separated y string into array', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: 'min, q1, median, q3, max' },
         dataTable: [],
         spec: {}
@@ -19,7 +18,6 @@ describe('BoxPlot Chart Generator', () => {
 
     it('should handle comma-separated string with extra spaces', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: '  min,  q1  , median,q3   ,max  ' },
         dataTable: [],
         spec: {}
@@ -32,7 +30,6 @@ describe('BoxPlot Chart Generator', () => {
 
     it('should keep array y field unchanged', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: ['y1', 'y2', 'y3', 'y4', 'y5'] },
         dataTable: [],
         spec: {}
@@ -45,7 +42,6 @@ describe('BoxPlot Chart Generator', () => {
 
     it('should keep single string y field unchanged when no comma', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: 'value' },
         dataTable: [],
         spec: {}
@@ -58,7 +54,6 @@ describe('BoxPlot Chart Generator', () => {
 
     it('should extract fields from cell when y is null', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: {
           x: 'category',
           y: null,
@@ -79,7 +74,6 @@ describe('BoxPlot Chart Generator', () => {
 
     it('should extract fields from cell when y is undefined', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: {
           x: 'category',
           lower_whisker: 'lowerWhiskerField',
@@ -111,7 +105,6 @@ describe('BoxPlot Chart Generator', () => {
 
     it('should extract fields from cell when y is empty array', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: {
           x: 'category',
           y: [],
@@ -144,7 +137,6 @@ describe('BoxPlot Chart Generator', () => {
 
     it('should filter out falsy values when extracting fields', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: {
           x: 'category',
           y: null,
@@ -177,8 +169,7 @@ describe('BoxPlot Chart Generator', () => {
       const context: GenerateChartInput = {
         cell: { x: 'category', y: ['y3', 'y1', 'y5', 'y2', 'y4'] },
         dataTable: sampleData,
-        spec: {},
-        chartType: 'boxplot'
+        spec: {}
       };
 
       const result = boxPlotField(context);
@@ -190,8 +181,7 @@ describe('BoxPlot Chart Generator', () => {
       const context: GenerateChartInput = {
         cell: { x: 'category', y: ['y3', 'y1', 'y5', 'y2', 'y4'] }, // unsorted
         dataTable: sampleData, // y1=10, y2=20, y3=30, y4=40, y5=50
-        spec: {},
-        chartType: 'boxplot'
+        spec: {}
       };
 
       const result = boxPlotField(context);
@@ -208,8 +198,7 @@ describe('BoxPlot Chart Generator', () => {
       const context: GenerateChartInput = {
         cell: { x: 'category', y: ['y1'] },
         dataTable: sampleData,
-        spec: {},
-        chartType: 'boxplot'
+        spec: {}
       };
 
       const result = boxPlotField(context);
@@ -225,8 +214,7 @@ describe('BoxPlot Chart Generator', () => {
       const context: GenerateChartInput = {
         cell: { x: 'category', y: ['y2', 'y1'] },
         dataTable: sampleData, // y1=10, y2=20
-        spec: {},
-        chartType: 'boxplot'
+        spec: {}
       };
 
       const result = boxPlotField(context);
@@ -243,8 +231,7 @@ describe('BoxPlot Chart Generator', () => {
       const context: GenerateChartInput = {
         cell: { x: 'category', y: ['y3', 'y1', 'y2'] },
         dataTable: sampleData, // y1=10, y2=20, y3=30
-        spec: {},
-        chartType: 'boxplot'
+        spec: {}
       };
 
       const result = boxPlotField(context);
@@ -261,8 +248,7 @@ describe('BoxPlot Chart Generator', () => {
       const context: GenerateChartInput = {
         cell: { x: 'category', y: ['y1', 'y2', 'y3'] },
         dataTable: [],
-        spec: {},
-        chartType: 'boxplot'
+        spec: {}
       };
 
       const result = boxPlotField(context);
@@ -276,8 +262,7 @@ describe('BoxPlot Chart Generator', () => {
       const context: GenerateChartInput = {
         cell: { x: 'category', y: ['y1', 'y2', 'y3'] },
         dataTable: 'invalid' as any,
-        spec: {},
-        chartType: 'boxplot'
+        spec: {}
       };
 
       const result = boxPlotField(context);
@@ -296,8 +281,7 @@ describe('BoxPlot Chart Generator', () => {
       const context: GenerateChartInput = {
         cell: { x: 'category', y: ['y2', 'y1', 'y3'] },
         dataTable: dataWithMissingValues,
-        spec: {},
-        chartType: 'boxplot'
+        spec: {}
       };
 
       const result = boxPlotField(context);
@@ -311,8 +295,7 @@ describe('BoxPlot Chart Generator', () => {
       const context: GenerateChartInput = {
         cell: { x: 'category', y: ['value'] },
         dataTable: [{ category: 'A', value: 100 }],
-        spec: {},
-        chartType: 'boxplot'
+        spec: {}
       };
 
       const result = boxPlotField(context);
@@ -498,7 +481,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
   describe('formatFieldsOfBoxPlot edge cases', () => {
     it('should handle null y field', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: null as any },
         dataTable: [],
         spec: {}
@@ -512,7 +494,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should handle undefined y field', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: undefined as any },
         dataTable: [],
         spec: {}
@@ -526,7 +507,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should handle empty array y field', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: [] as any },
         dataTable: [],
         spec: {}
@@ -540,7 +520,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should handle empty string y field', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: '' },
         dataTable: [],
         spec: {}
@@ -554,7 +533,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should handle string with only commas', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: ',,,' },
         dataTable: [],
         spec: {}
@@ -566,7 +544,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should handle single comma', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: 'field1,field2' },
         dataTable: [],
         spec: {}
@@ -578,7 +555,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should extract from boxplot specific fields when available', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: {
           x: 'category',
           y: null as any,
@@ -608,7 +584,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
   describe('boxPlotField edge cases', () => {
     it('should handle empty dataTable', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: ['y1', 'y2', 'y3', 'y4', 'y5'] },
         dataTable: [],
         spec: {}
@@ -622,7 +597,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should handle invalid dataTable', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: ['y1', 'y2', 'y3', 'y4', 'y5'] },
         dataTable: null as any,
         spec: {}
@@ -636,7 +610,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should handle single y field', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: ['single_field'] },
         dataTable: [{ category: 'A', single_field: 10 }],
         spec: {}
@@ -652,7 +625,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should handle two y fields', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: ['field1', 'field2'] },
         dataTable: [{ category: 'A', field1: 5, field2: 15 }],
         spec: {}
@@ -668,7 +640,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should sort y fields by their values in dataTable', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: ['high', 'low', 'medium'] },
         dataTable: [{ category: 'A', high: 100, low: 10, medium: 50 }],
         spec: {}
@@ -682,7 +653,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should handle missing values in dataTable', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: ['field1', 'field2', 'field3'] },
         dataTable: [{ category: 'A', field1: 10 }], // field2 and field3 missing
         spec: {}
@@ -696,7 +666,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should handle equal values in all fields', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: ['field1', 'field2', 'field3', 'field4', 'field5'] },
         dataTable: [
           {
@@ -721,7 +690,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should handle string x field', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: 'category', y: ['y1', 'y2'] },
         dataTable: [{ category: 'A', y1: 5, y2: 15 }],
         spec: {}
@@ -733,7 +701,6 @@ describe('BoxPlot Edge Cases and Error Handling', () => {
 
     it('should handle array x field', () => {
       const context: GenerateChartInput = {
-        chartType: 'boxplot',
         cell: { x: ['cat1', 'cat2'], y: ['y1', 'y2'] },
         dataTable: [{ cat1: 'A', cat2: 'B', y1: 5, y2: 15 }],
         spec: {}

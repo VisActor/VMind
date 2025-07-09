@@ -175,6 +175,10 @@ export interface GenerateChartInput {
    */
   dataTable: DataTable;
   /**
+   * field mapping result
+   */
+  cell: Record<string, string | string[]>;
+  /**
    * 数据对应的字段配置
    */
   fieldInfo?: FieldInfoItem[];
@@ -182,14 +186,6 @@ export interface GenerateChartInput {
    * 系列配置
    */
   series?: SimpleChartSeriesInfo[];
-  /**
-   * field mapping result
-   */
-  cell: Record<string, string | string[]>;
-  /**
-   * chart type generator result
-   */
-  chartType?: string;
   /**
    * 图表配色
    */

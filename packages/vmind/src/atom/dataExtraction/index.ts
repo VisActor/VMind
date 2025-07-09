@@ -95,7 +95,9 @@ export class DataExtractionAtom extends BaseAtom<DataExtractionCtx, DataExtracti
         ...addtionContent
       ];
     }
-    const fieldInfoContent = fieldInfo.map(info => pick(info, ['fieldName', 'dataExample', 'type', 'description']));
+    const fieldInfoContent = (fieldInfo as any[]).map(info =>
+      pick(info, ['fieldName', 'dataExample', 'type', 'description'])
+    );
     const fieldInfoString = JSON.stringify(fieldInfoContent);
     const userContent = `User's fieldInfo is bellow:
 \`\`\` TypeScript

@@ -392,7 +392,8 @@ export const canMergeClusterResult = (clusterResult: ClusterDataView[]) => {
   return clusterResult.every(dataView => {
     const { fieldInfo, dataTable } = dataView;
     return (
-      dataTable.length === 1 && fieldInfo.findIndex(info => [DataType.DATE, DataType.TIME].includes(info.type)) === -1
+      dataTable.length === 1 &&
+      fieldInfo.findIndex(info => ([DataType.DATE, DataType.TIME] as string[]).includes(info.type)) === -1
     );
   });
 };

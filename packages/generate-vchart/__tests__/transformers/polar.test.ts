@@ -4,7 +4,6 @@ import { GenerateChartInput } from '../../src/types/transform';
 describe('Polar Chart Transformers', () => {
   describe('animationPie', () => {
     const baseContext: GenerateChartInput = {
-      chartType: 'pie',
       cell: { color: 'category' },
       dataTable: [
         { category: 'A', value: 100 },

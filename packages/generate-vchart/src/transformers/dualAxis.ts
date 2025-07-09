@@ -11,7 +11,7 @@ import { color, data, discreteLegend, formatXFields, labelForDefaultHide, parseA
 import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
 
 export const formatFieldsOfDualAxis = (context: GenerateChartInput) => {
-  const { chartType, cell } = context;
+  const { cell } = context;
   const cellNew: any = { ...cell };
   //Dual-axis drawing yLeft and yRight
 
