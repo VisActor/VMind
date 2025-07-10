@@ -41,11 +41,16 @@ export const formatFieldsOfBar = (context: GenerateChartInput) => {
 export const colorBar = (context: GenerateChartInput) => {
   const { colors, chartTheme, spec } = context;
   // spec.data = [dataTable]
+
   if (chartTheme) {
     return { spec };
   }
   if (colors && colors.length > 0) {
     spec.color = colors;
+  } else if (spec.stack) {
+    const colorThemes = COLOR_THEMES.default;
+
+    spec.color = colorThemes.slice();
   } else {
     const colorThemes = COLOR_THEMES.default;
     //apply transparent gradient
@@ -140,8 +145,8 @@ export const pipelineBar = [
   formatXFields,
   formatFieldsOfBar,
   data,
-  colorBar,
   cartesianBar,
+  colorBar,
   seriesField,
   axis,
   discreteLegend,

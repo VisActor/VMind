@@ -182,7 +182,7 @@ export const color = (context: GenerateChartInput) => {
   if (colors && colors.length > 0) {
     spec.color = colors;
   } else {
-    spec.color = COLOR_THEMES.default;
+    spec.color = COLOR_THEMES.default.slice();
   }
 
   return { spec };
