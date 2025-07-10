@@ -30,22 +30,17 @@ describe('generateChart', () => {
         ],
         range: BASIC_HEAT_MAP_COLOR_THEMES
       },
-      series: [
-        {
-          type: 'heatmap',
-          xField: 'country',
-          yField: 'region',
-          valueField: 'value',
-          cell: {
-            style: {
-              fill: {
-                field: 'value',
-                scale: 'color'
-              }
-            }
+      xField: 'country',
+      yField: 'region',
+      valueField: 'value',
+      cell: {
+        style: {
+          fill: {
+            field: 'value',
+            scale: 'color'
           }
         }
-      ],
+      },
       axes: [
         {
           orient: 'bottom',
@@ -249,22 +244,17 @@ describe('generateChart', () => {
         ],
         range: ['#feedde', '#fdbe85', '#fd8d3c', '#e6550d', '#a63603']
       },
-      series: [
-        {
-          type: 'heatmap',
-          xField: 'Time',
-          yField: 'Day',
-          valueField: 'Value',
-          cell: {
-            style: {
-              fill: {
-                field: 'Value',
-                scale: 'color'
-              }
-            }
+      xField: 'Time',
+      yField: 'Day',
+      valueField: 'Value',
+      cell: {
+        style: {
+          fill: {
+            field: 'Value',
+            scale: 'color'
           }
         }
-      ],
+      },
       axes: [
         {
           orient: 'bottom',

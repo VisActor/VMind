@@ -36,6 +36,7 @@ export const basicHeatMapSeries = (context: GenerateChartInput) => {
 
   spec.xField = cell.x;
   spec.yField = cell.y;
+  spec.valueField = cell.size;
   spec.cell = {
     style: {
       fill: {
