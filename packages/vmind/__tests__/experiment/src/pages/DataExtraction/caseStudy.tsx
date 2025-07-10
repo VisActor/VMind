@@ -292,7 +292,7 @@ export function DataExtractionResult() {
         </Select>
       </div>
       <Divider style={{ margin: '8px 0' }} />
-      <div className="sub-title">Comparision Result:</div>
+      <div className="sub-title">Comparison Result:</div>
       <div className="compare">
         <div className="title">
           <div style={{ width: '20%' }}>

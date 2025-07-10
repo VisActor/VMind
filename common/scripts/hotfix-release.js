@@ -81,7 +81,7 @@ function run() {
       const pkgJsonPath = path.join(__dirname, '../../', package.projectFolder, 'package.json')
       const pkgJson = getPackageJson(pkgJsonPath)
 
-      // 5. add the the changes
+      // 5. add the changes
       spawnSync('sh', ['-c', `git add --all`], {
         stdio: 'inherit',
         shell: false,

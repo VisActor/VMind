@@ -6,7 +6,7 @@ import type { CombineAll, MapAtomTypes, ScheduleOptions, TaskMapping } from '../
 import { Factory } from '../core/factory';
 
 export class Schedule<T extends AtomName[]> {
-  atomInstaces: IBaseAtom<BaseContext, BaseOptions>[];
+  atomInstances: IBaseAtom<BaseContext, BaseOptions>[];
 
   atomList: AtomName[];
 
@@ -24,13 +24,13 @@ export class Schedule<T extends AtomName[]> {
     this.atomList = atomList;
     this.options = options || {};
     this.query = '';
-    this.atomInstaces = atomList.map(atomName => this.atomFactory(atomName));
+    this.atomInstances = atomList.map(atomName => this.atomFactory(atomName));
     this.setNewTask(context);
   }
 
   initContext() {
     this.context = {} as T;
-    this.atomInstaces.forEach(atom => {
+    this.atomInstances.forEach(atom => {
       this.context = atom.buildDefaultContext(this.context);
       atom.reset();
     });
@@ -85,7 +85,7 @@ export class Schedule<T extends AtomName[]> {
       completion_tokens: 0,
       total_tokens: 0
     };
-    for (const atom of this.atomInstaces) {
+    for (const atom of this.atomInstances) {
       const { shouldRun, query: taskQuery } = (subTasks as any)?.[atom.name] || {};
       if ((shouldRunList as any)?.[atom.name] !== false && (shouldRun || atom.shouldRunByContextUpdate(this.context))) {
         this.context = await atom.run({ context: this.context, query: taskQuery });
@@ -103,7 +103,7 @@ export class Schedule<T extends AtomName[]> {
   setNewTask(context: any) {
     this.initContext();
     this.updateContext(context);
-    this.atomInstaces.forEach(atom => {
+    this.atomInstances.forEach(atom => {
       atom.reset(this.context);
       atom.clearHistory();
     });
@@ -111,7 +111,7 @@ export class Schedule<T extends AtomName[]> {
 
   updateOptions(options: ScheduleOptions) {
     this.options = merge({}, this.options, options);
-    this.atomInstaces.forEach(atom => atom.updateOptions(this.getAtomOptions(atom.name as AtomName)));
+    this.atomInstances.forEach(atom => atom.updateOptions(this.getAtomOptions(atom.name as AtomName)));
   }
 
   updateContext(context: any, isReplace = false) {
@@ -125,12 +125,12 @@ export class Schedule<T extends AtomName[]> {
    */
   getContext(atomName?: AtomName): CombineAll<MapAtomTypes<T>> {
     if (atomName) {
-      const atomInstaces = this.atomInstaces.find(atom => atom.name === atomName);
-      if (!atomInstaces) {
+      const atomInstances = this.atomInstances.find(atom => atom.name === atomName);
+      if (!atomInstances) {
         console.error(`Doesn\'t exist ${atomName}`);
         return null as any;
       }
-      return atomInstaces.getContext() as any;
+      return atomInstances.getContext() as any;
     }
     return this.context;
   }

@@ -2611,8 +2611,8 @@ const realEstateData = {
   ]
 };
 
-const enviromentData = {
-  domain: 'enviroment',
+const environmentData = {
+  domain: 'environment',
   data: [
     {
       isEnglish: false,
@@ -6574,7 +6574,7 @@ const transposition = {
 export const dataExtractionCommonDataset = [
   economyData,
   technologyData,
-  enviromentData,
+  environmentData,
   cultureSportsData,
   agricultureData,
   retailData,
