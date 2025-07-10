@@ -13,6 +13,7 @@ const {
   pipelineFunnel,
   pipelineGauge,
   pipelineLine,
+  pipelineArea,
   pipelineLinearProgress,
   pipelineLiquid,
   pipelineMapChart,
@@ -41,7 +42,7 @@ const pipelineMap: {
 } = {
   bar: { type: 'bar', aliasName: 'Bar Chart', pipline: pipelineBar },
   line: { type: 'line', aliasName: 'Line Chart', pipline: pipelineLine },
-  area: { type: 'area', aliasName: 'Area Chart', pipline: pipelineLine },
+  area: { type: 'area', aliasName: 'Area Chart', pipline: pipelineArea },
   pie: { type: 'pie', aliasName: 'Pie Chart', pipline: pipelinePie },
   wordcloud: { type: 'wordCloud', aliasName: 'Word Cloud', pipline: pipelineWordCloud },
   scatter: { type: 'scatter', aliasName: 'Scatter Plot', pipline: pipelineScatterPlot },
