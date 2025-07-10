@@ -292,7 +292,7 @@ describe('generateChart', () => {
         orient: 'right',
         position: 'start',
         type: 'color',
-        field: 'value'
+        field: 'Value'
       }
     });
   });

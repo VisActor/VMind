@@ -33,22 +33,17 @@ export const formatFieldsOfBasicHeatMapChart = (context: GenerateChartInput) => 
 
 export const basicHeatMapSeries = (context: GenerateChartInput) => {
   const { spec, cell } = context;
-  spec.series = [
-    {
-      type: 'heatmap',
-      xField: cell.x,
-      yField: cell.y,
-      valueField: cell.size,
-      cell: {
-        style: {
-          fill: {
-            field: cell.size,
-            scale: 'color'
-          }
-        }
+
+  spec.xField = cell.x;
+  spec.yField = cell.y;
+  spec.cell = {
+    style: {
+      fill: {
+        field: cell.size,
+        scale: 'color'
       }
     }
-  ];
+  };
   return { spec };
 };
 export const basicHeatMapColor = (context: GenerateChartInput) => {
@@ -101,7 +96,7 @@ export const basicHeatMapAxes = (context: GenerateChartInput) => {
 };
 
 export const basicHeatMapLegend = (context: GenerateChartInput) => {
-  const { spec, legends } = context;
+  const { spec, legends, cell } = context;
 
   if (legends !== false) {
     if (isArray(legends) && legends.length >= 2) {
@@ -113,7 +108,7 @@ export const basicHeatMapLegend = (context: GenerateChartInput) => {
           orient: 'right',
           position: 'start',
           ...colorLegend,
-          field: 'value'
+          field: cell.size
         },
         ...legends.filter(item => item !== colorLegend)
       ];
@@ -124,7 +119,7 @@ export const basicHeatMapLegend = (context: GenerateChartInput) => {
         position: 'start',
         type: 'color',
         ...array(legends)[0],
-        field: 'value'
+        field: cell.size
       };
     }
   }
