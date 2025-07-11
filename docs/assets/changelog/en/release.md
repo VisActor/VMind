@@ -1,3 +1,20 @@
+# v2.0.8
+
+2025-07-11
+
+
+**🐛 Bug fix**
+
+- **@visactor/vmind**: fix legend field of heatmap, and fix position of rankingBar
+
+**🔨 Refactor**
+
+- **@visactor/vmind**: update cell of radar and rose
+
+
+
+[more detail about v2.0.8](https://github.com/VisActor/VMind/releases/tag/v2.0.8)
+
 # v2.0.5
 
 2025-04-07
