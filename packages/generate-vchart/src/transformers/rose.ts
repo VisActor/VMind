@@ -6,7 +6,7 @@ export const roseField = (context: GenerateChartInput) => {
   const { cell } = formatColorFields(context, ['color', 'category', 'label']);
 
   const { spec } = context;
-  spec.valueField = cell.radius ?? cell.angle;
+  spec.valueField = cell.value ?? cell.radius;
   const colorField = cell.color ?? cell.category;
 
   if (isValid(colorField)) {

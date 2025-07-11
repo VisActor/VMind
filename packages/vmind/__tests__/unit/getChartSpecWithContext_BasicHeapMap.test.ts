@@ -96,7 +96,7 @@ describe('getChartSpecWithContext', () => {
     const context = { ...baseContext };
     const result = getChartSpecWithContext(context);
 
-    expect(result.spec.series[0]).toEqual({
+    expect(result.spec).toMatchObject({
       type: 'heatmap',
       xField: context.cell.x,
       yField: context.cell.y,

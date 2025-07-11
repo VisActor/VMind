@@ -250,4 +250,11 @@ export interface GenerateChartInput {
    * 是否显示数据标签组件，注意数据标签一般位于系列图形的周围
    */
   label?: SimpleChartLabelInfo | SimpleChartLabelInfo[] | false;
+  /**
+   * 瀑布图总计配置
+   */
+  waterfallTotal?: {
+    visible?: boolean;
+    totalText?: string;
+  };
 }
