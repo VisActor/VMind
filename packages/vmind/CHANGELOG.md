@@ -1,6 +1,18 @@
 # Change Log - @visactor/vmind
 
-This log was last generated on Wed, 09 Jul 2025 07:37:22 GMT and should not be manually modified.
+This log was last generated on Fri, 11 Jul 2025 02:43:12 GMT and should not be manually modified.
+
+## 2.0.8
+Fri, 11 Jul 2025 02:43:12 GMT
+
+### Updates
+
+- refactor: update cell of radar and rose
+
+
+- fix: fix legend field of heatmap, and fix position of rankingBar
+
+
 
 ## 2.0.7
 Wed, 09 Jul 2025 07:37:22 GMT
