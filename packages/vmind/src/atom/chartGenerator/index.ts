@@ -11,7 +11,7 @@ import { getPrompt, revisedUserInput } from './prompt';
 import { getContextAfterRevised } from './llmResultRevise';
 import { checkChartTypeAndCell, getVizSchema } from './utils';
 import { getChartSpecWithContext } from './spec';
-import { getCellContextBySimpleVChartSpec, getRuleLLMContent } from './rule';
+import { getContextBySimpleVChartSpec, getRuleLLMContent } from './rule';
 import { getCellContextByAdvisor } from './advisor';
 import type { ChartType } from '../../types';
 import type { GenerateChartCellContext, ChartGeneratorOptions } from './type';
@@ -114,9 +114,11 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
     if (simpleVChartSpec) {
       this.isLLMAtom = false;
       this._generateType = 'simpleSpec';
-      const { ctx, mockLLMContent } = getCellContextBySimpleVChartSpec(simpleVChartSpec);
-      this.updateContext(ctx);
-      this.updateContext(this.parseLLMContent(mockLLMContent));
+      // const { ctx, mockLLMContent } = getCellContextBySimpleVChartSpec(simpleVChartSpec);
+      // this.updateContext(ctx);
+      // this.updateContext(this.parseLLMContent(mockLLMContent));
+      const context = getContextBySimpleVChartSpec(simpleVChartSpec);
+      this.updateContext(context);
     } else {
       if (!fieldInfo || fieldInfo.length === 0) {
         this.updateContext({
