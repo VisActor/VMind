@@ -235,8 +235,12 @@ export const customMark = (context: GenerateChartInput) => {
         fontFamily: 'PingFang SC',
         fontWeight: 600,
         text: (datum: { year: any }) => datum.year,
-        x: () => 700,
-        y: () => 480 - 50,
+        x: (datum: any, ctx: any) => {
+          return ctx.vchart.getChart().getCanvasRect()?.width - 50;
+        },
+        y: (datum: any, ctx: any) => {
+          return ctx.vchart.getChart().getCanvasRect()?.height - 50;
+        },
         fill: 'grey',
         fillOpacity: 0.5
       }
