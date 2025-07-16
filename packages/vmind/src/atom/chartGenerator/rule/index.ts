@@ -74,7 +74,7 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
       series.reduce((acc, cur) => {
         acc.push(...cur.data);
         return acc;
-      }, [] as typeof data)
+      }, [])
   );
   const chartType =
     type === 'common'
