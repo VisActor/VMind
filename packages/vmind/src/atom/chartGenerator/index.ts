@@ -114,9 +114,6 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
     if (simpleVChartSpec) {
       this.isLLMAtom = false;
       this._generateType = 'simpleSpec';
-      // const { ctx, mockLLMContent } = getCellContextBySimpleVChartSpec(simpleVChartSpec);
-      // this.updateContext(ctx);
-      // this.updateContext(this.parseLLMContent(mockLLMContent));
       const context = getContextBySimpleVChartSpec(simpleVChartSpec);
       this.updateContext(context);
     } else {
@@ -160,6 +157,11 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
       /** use table */
       this.context.spec = null;
       return this.context;
+    }
+    if (this._generateType === 'simpleSpec') {
+      const newContext = { ...this.context };
+      this.updateContext(this.context);
+      return newContext;
     }
     const additionalCtx = {
       chartTypeList: this.finalChartTypeList,
