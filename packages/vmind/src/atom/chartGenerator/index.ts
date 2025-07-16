@@ -159,9 +159,7 @@ export class ChartGeneratorAtom extends BaseAtom<ChartGeneratorCtx, ChartGenerat
       return this.context;
     }
     if (this._generateType === 'simpleSpec') {
-      const newContext = { ...this.context };
-      this.updateContext(this.context);
-      return newContext;
+      return this.context;
     }
     const additionalCtx = {
       chartTypeList: this.finalChartTypeList,
