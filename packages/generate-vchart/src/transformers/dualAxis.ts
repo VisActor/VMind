@@ -8,7 +8,7 @@ import {
   COLOR_FIELD
 } from '../utils/constants';
 import { color, data, discreteLegend, formatXFields, labelForDefaultHide, parseAxesOfChart } from './common';
-import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
+import { GenerateChartInput } from '../types/transform';
 
 export const formatFieldsOfDualAxis = (context: GenerateChartInput) => {
   const { cell } = context;
@@ -29,11 +29,18 @@ export const dualAxisSeries = (context: GenerateChartInput) => {
   const dataValues = spec.data.values;
 
   if (series) {
+    const typeCnt = {};
     spec.series = series.map(s => {
+      const type = s.type;
+      typeCnt[type] ??= 0;
+      typeCnt[type]++;
       return {
         ...s,
+        // 添加id，供后续axes使用
+        id: `${type}${typeCnt[type]}`,
         data: {
-          id: `data_${s.type}`,
+          // 区分id，否则会报错
+          id: `data_${type}${typeCnt[type]}`,
           values: s.data
         },
         xField: cell.x,
@@ -77,11 +84,37 @@ export const dualAxisSeries = (context: GenerateChartInput) => {
   return { spec };
 };
 
+const generateAxes = (series: any[]) => {
+  const idArr = Object.values(
+    series.reduce((mp, ser) => {
+      const { type, id } = ser;
+      mp[type] ??= [];
+      mp[type].push(id);
+      return mp;
+    }, {})
+  );
+  return [
+    {
+      orient: 'left',
+      seriesId: idArr[0]
+    },
+    {
+      orient: 'right',
+      seriesId: idArr[1]
+    },
+    {
+      orient: 'bottom'
+    }
+  ];
+};
+
 export const dualAxisAxes = (context: GenerateChartInput) => {
   //assign axes in dual-axis chart
   const { spec, series, axes } = context;
 
   if (series) {
+    // 补充axes字段
+    spec.axes ??= generateAxes(spec.series);
     return { spec };
   }
 
