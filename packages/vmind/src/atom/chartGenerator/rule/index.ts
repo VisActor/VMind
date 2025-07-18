@@ -62,20 +62,27 @@ const formatDataTable = (simpleVChartSpec: SimpleVChartSpec, data: DataTable) =>
       }
     }
   }
+  // 桑基图特殊判断，直接使用大模型生成的links数据作为dataTable
+  else if (simpleVChartSpec.type === 'sankey') {
+    return simpleVChartSpec.series[0]?.links;
+  }
 
   return data;
 };
 
 export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec) => {
   const { type, data, series, coordinate, palette } = simpleVChartSpec;
-  const dataTable = formatDataTable(
-    simpleVChartSpec,
-    data ??
-      series.reduce((acc, cur) => {
-        acc.push(...cur.data);
-        return acc;
-      }, [])
-  );
+
+  const dataTable =
+    formatDataTable(
+      simpleVChartSpec,
+      data ??
+        series?.reduce((acc, cur) => {
+          acc.push(...cur.data);
+          return acc;
+        }, [])
+    ) ?? [];
+
   const chartType =
     type === 'common'
       ? series && series.length >= 2 && series.some((s, index) => index > 0 && s.type !== series[0].type)
@@ -87,9 +94,13 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
 
   const cell: Cell = {};
   const firstDatum = dataTable?.[0];
+  if (chartType === 'sankey') {
+    cell.source = 'source';
+    cell.target = 'target';
+  }
   if (firstDatum && 'group' in firstDatum) {
     cell.color = 'group';
-  } else if (palette && palette.length === dataTable.length && palette.length > 1) {
+  } else if (palette && palette.length === dataTable?.length && palette.length > 1) {
     cell.color = 'name';
   }
 
