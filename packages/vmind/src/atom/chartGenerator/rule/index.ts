@@ -1,9 +1,10 @@
+import { array } from '@visactor/vutils';
 import type { SimpleVChartSpec } from '../../../atom/imageReader/interface';
 import { ChartType } from '../../../types';
 import type { Cell, ChartGeneratorCtx } from '../../../types';
 import { unfoldTransform } from '../../../utils/unfold';
 import type { DataTable } from '@visactor/generate-vchart';
-import { DataRole, DataType, generateChart, getFieldInfoFromDataset } from '@visactor/generate-vchart';
+import { DataRole, DataType, generateChart } from '@visactor/generate-vchart';
 
 /**
  * 根据规则去模拟LLM 生成结果
@@ -29,7 +30,8 @@ export const getRuleLLMContent = (context: ChartGeneratorCtx) => {
 };
 
 const formatDataTable = (simpleVChartSpec: SimpleVChartSpec, data: DataTable) => {
-  if (simpleVChartSpec.type === 'rangeColumn') {
+  const { type } = simpleVChartSpec;
+  if (type === 'rangeColumn') {
     const firstDatum = data[0];
 
     if (firstDatum && 'group' in firstDatum) {
@@ -61,8 +63,17 @@ const formatDataTable = (simpleVChartSpec: SimpleVChartSpec, data: DataTable) =>
     }
   }
   // 桑基图特殊判断，直接使用大模型生成的links数据作为dataTable
-  else if (simpleVChartSpec.type === 'sankey') {
+  else if (type === 'sankey') {
     return simpleVChartSpec.series[0]?.links;
+  } else if (type === 'scatter') {
+    return data.map(item => {
+      const arr = array(item.value);
+      return {
+        name: arr[0],
+        value: arr[1],
+        group: item.name
+      };
+    });
   }
 
   return data;
