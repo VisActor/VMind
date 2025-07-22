@@ -227,7 +227,14 @@ export function DataInput(props: IPropsType) {
       const geoJson = await response.json();
       VChart.registerMap('map', geoJson);
     }
-    const { spec, chartAdvistorRes, time } = await vmind.generateChart(describe, undefined, finalDataset, {
+    const {
+      spec,
+      chartAdvistorRes,
+      time = {
+        totalTime: 2000,
+        frameArr: []
+      }
+    } = await vmind.generateChart(describe, undefined, finalDataset, {
       image,
       enableDataQuery: useDataQuery,
       //chartTypeList: [ChartType.BarChart, ChartType.LineChart],

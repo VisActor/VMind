@@ -4,8 +4,6 @@ import type { Cell, ChartGeneratorCtx } from '../../../types';
 import { unfoldTransform } from '../../../utils/unfold';
 import type { DataTable } from '@visactor/generate-vchart';
 import { DataRole, DataType, generateChart, getFieldInfoFromDataset } from '@visactor/generate-vchart';
-import { estimateVideoTime } from '../utils';
-import { isValid } from '@visactor/vutils';
 
 /**
  * 根据规则去模拟LLM 生成结果
@@ -122,7 +120,17 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
     cell.size = 'value';
   }
 
-  const fieldInfo = getFieldInfoFromDataset(dataTable);
+  const fieldInfo = ['name', 'value', 'group'].reduce((res, field) => {
+    if (firstDatum && field in firstDatum) {
+      res.push({
+        fieldName: field,
+        type: field === 'value' ? DataType.FLOAT : DataType.STRING,
+        role: field === 'value' ? DataRole.MEASURE : DataRole.DIMENSION
+      });
+    }
+
+    return res;
+  }, []);
 
   if (chartType === 'rangeColumn' && 'value1' in firstDatum) {
     cell.y = ['value', 'value1'];
@@ -134,11 +142,5 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
   }
 
   const context: ChartGeneratorCtx = generateChart(chartType, { ...simpleVChartSpec, dataTable, cell, fieldInfo });
-  // 添加time字段，否则无法渲染出图表
-  context.time = estimateVideoTime(
-    chartType,
-    context.spec,
-    isValid(context.animationOptions?.totalTime) ? context.animationOptions.totalTime * 1000 : undefined
-  );
   return context;
 };
