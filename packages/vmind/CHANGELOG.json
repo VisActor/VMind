@@ -2,6 +2,21 @@
   "name": "@visactor/vmind",
   "entries": [
     {
+      "version": "2.0.8",
+      "tag": "@visactor/vmind_v2.0.8",
+      "date": "Fri, 11 Jul 2025 02:43:12 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "refactor: update cell of radar and rose\n\n"
+          },
+          {
+            "comment": "fix: fix legend field of heatmap, and fix position of rankingBar\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.7",
       "tag": "@visactor/vmind_v2.0.7",
       "date": "Wed, 09 Jul 2025 07:37:22 GMT",

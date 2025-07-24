@@ -5,6 +5,7 @@ import type { Cell, ChartGeneratorCtx } from '../../../types';
 import { unfoldTransform } from '../../../utils/unfold';
 import type { DataTable } from '@visactor/generate-vchart';
 import { DataRole, DataType, generateChart } from '@visactor/generate-vchart';
+import type { GenerateChartCellContext } from '../type';
 
 /**
  * 根据规则去模拟LLM 生成结果
@@ -152,6 +153,12 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
     });
   }
 
-  const context: ChartGeneratorCtx = generateChart(chartType, { ...simpleVChartSpec, dataTable, cell, fieldInfo });
+  const context: GenerateChartCellContext = generateChart(chartType, {
+    ...simpleVChartSpec,
+    dataTable,
+    cell,
+    fieldInfo
+  });
+  context.chartType = chartType;
   return context;
 };
