@@ -113,6 +113,11 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
   } else if (palette && palette.length === dataTable?.length && palette.length > 1) {
     cell.color = 'name';
   }
+  // 上一个if之后调用，防止被覆盖
+  if (chartType === 'treemap') {
+    cell.color = ['group', 'name'];
+    cell.size = 'value';
+  }
 
   if (coordinate === 'polar') {
     if (type === 'pie') {
