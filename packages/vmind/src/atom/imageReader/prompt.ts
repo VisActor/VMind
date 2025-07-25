@@ -7,8 +7,12 @@ You will receive an image and need to generate a JSON based on the chart informa
 
 # Requirements
 When executing the task, you need to meet the following requirements:
-1. Only return JSON that can be used to recreate the chart
-2. If there are multiple series with different types in the image (e.g. lines and bars) and it is determined that a combination chart is needed, return type as 'common'. For combination charts, all data should be returned in series rather than in the top-level data field.
+1. You must first determine the type before proceeding, and the type must be one of the following:
+   "common"|"area"|"line"|"bar"|"rangeColumn"|"rangeArea"|"map"|"pie"|"radar"|"rose"|"scatter"|"sequence"|"circularProgress"|"linearProgress"|"wordCloud"|"funnel"|"waterfall"|"boxPlot"|"gauge"|"sankey"|"treemap"|"sunburst"|"circlePacking"|"heatmap"|"liquid"|"venn"|"mosaic"
+2. Only return JSON that can be used to recreate the chart
+3. If there are multiple series with different types in the image (e.g. lines and bars) and it is determined that a combination chart is needed, return type as 'common'. For combination charts, all data should be returned in series rather than in the top-level data field.
+4. You should pay attention to distinguish radar chart and rose chart
+5. If the type is treemap, the background color of each block needs to be used as the group value
 
 # Answer
 \`\`\`

@@ -1,10 +1,11 @@
+import { array } from '@visactor/vutils';
 import type { SimpleVChartSpec } from '../../../atom/imageReader/interface';
 import { ChartType } from '../../../types';
 import type { Cell, ChartGeneratorCtx } from '../../../types';
-import type { SimpleVChartSpecMockContext } from '../type';
-import { formatTypeToVMind } from '../spec/chartTypeUtils';
 import { unfoldTransform } from '../../../utils/unfold';
-import { DataRole, DataType } from '@visactor/generate-vchart';
+import type { DataTable } from '@visactor/generate-vchart';
+import { DataRole, DataType, generateChart } from '@visactor/generate-vchart';
+import type { GenerateChartCellContext } from '../type';
 
 /**
  * 根据规则去模拟LLM 生成结果
@@ -29,12 +30,13 @@ export const getRuleLLMContent = (context: ChartGeneratorCtx) => {
   return null;
 };
 
-const formatDataTable = (simpleVChartSpec: SimpleVChartSpec, data: any[]): any[] => {
-  if (simpleVChartSpec.type === 'rangeColumn') {
+const formatDataTable = (simpleVChartSpec: SimpleVChartSpec, data: DataTable) => {
+  const { type } = simpleVChartSpec;
+  if (type === 'rangeColumn') {
     const firstDatum = data[0];
 
     if (firstDatum && 'group' in firstDatum) {
-      const groups = data.reduce((acc: any[], cur: any) => {
+      const groups = data.reduce((acc, cur) => {
         if (!acc.includes(cur.group)) {
           acc.push(cur.group);
         }
@@ -61,24 +63,36 @@ const formatDataTable = (simpleVChartSpec: SimpleVChartSpec, data: any[]): any[]
       }
     }
   }
+  // 桑基图特殊判断，直接使用大模型生成的links数据作为dataTable
+  else if (type === 'sankey') {
+    return simpleVChartSpec.series[0]?.links;
+  } else if (type === 'scatter') {
+    return data.map(item => {
+      const arr = array(item.value);
+      return {
+        name: arr[0],
+        value: arr[1],
+        group: item.name
+      };
+    });
+  }
 
   return data;
 };
 
-export const getCellContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec): SimpleVChartSpecMockContext => {
-  const { type, transpose, stackOrPercent, coordinate, data, series, palette } = simpleVChartSpec;
-  const cell: Cell = {};
+export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec) => {
+  const { type, data, series, coordinate, palette } = simpleVChartSpec;
 
-  const dataTable = formatDataTable(
-    simpleVChartSpec,
-    data ??
-      series.reduce((acc: any[], cur: any) => {
-        acc.push(...cur.data);
-        return acc;
-      }, [])
-  );
+  const dataTable =
+    formatDataTable(
+      simpleVChartSpec,
+      data ??
+        series?.reduce((acc, cur) => {
+          acc.push(...cur.data);
+          return acc;
+        }, [])
+    ) ?? [];
 
-  const firstDatum = dataTable?.[0];
   const chartType =
     type === 'common'
       ? series && series.length >= 2 && series.some((s, index) => index > 0 && s.type !== series[0].type)
@@ -88,10 +102,21 @@ export const getCellContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartS
         : series?.[0]?.type ?? type
       : type;
 
+  const cell: Cell = {};
+  const firstDatum = dataTable?.[0];
+  if (chartType === 'sankey') {
+    cell.source = 'source';
+    cell.target = 'target';
+  }
   if (firstDatum && 'group' in firstDatum) {
     cell.color = 'group';
-  } else if (palette && palette.length === dataTable.length && palette.length > 1) {
+  } else if (palette && palette.length === dataTable?.length && palette.length > 1) {
     cell.color = 'name';
+  }
+  // 上一个if之后调用，防止被覆盖
+  if (chartType === 'treemap') {
+    cell.color = ['group', 'name'];
+    cell.size = 'value';
   }
 
   if (coordinate === 'polar') {
@@ -133,16 +158,12 @@ export const getCellContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartS
     });
   }
 
-  return {
-    mockLLMContent: {
-      CHART_TYPE: formatTypeToVMind(chartType) as ChartType,
-      FIELD_MAP: cell,
-      stackOrPercent,
-      transpose
-    },
-    ctx: {
-      dataTable,
-      fieldInfo
-    }
-  };
+  const context: GenerateChartCellContext = generateChart(chartType, {
+    ...simpleVChartSpec,
+    dataTable,
+    cell,
+    fieldInfo
+  });
+  context.chartType = chartType;
+  return context;
 };
