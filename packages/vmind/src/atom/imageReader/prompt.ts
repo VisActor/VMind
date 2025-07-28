@@ -10,9 +10,10 @@ When executing the task, you need to meet the following requirements:
 1. You must first determine the type before proceeding, and the type must be one of the following:
    "common"|"area"|"line"|"bar"|"rangeColumn"|"rangeArea"|"map"|"pie"|"radar"|"rose"|"scatter"|"sequence"|"circularProgress"|"linearProgress"|"wordCloud"|"funnel"|"waterfall"|"boxPlot"|"gauge"|"sankey"|"treemap"|"sunburst"|"circlePacking"|"heatmap"|"liquid"|"venn"|"mosaic"
 2. Only return JSON that can be used to recreate the chart
-3. If there are multiple series with different types in the image (e.g. lines and bars) and it is determined that a combination chart is needed, return type as 'common'. For combination charts, all data should be returned in series rather than in the top-level data field.
-4. You should pay attention to distinguish radar chart and rose chart
-5. If the type is treemap, the background color of each block needs to be used as the group value
+3. 如果图像是组合图表则返回类型为'common'。组合图的所有数据都应通过series字段返回，而不是放在顶层的data字段
+4. 如果组合图都是单向条形柱状图，则返回类型为'bar'
+5. You should pay attention to distinguish radar chart and rose chart
+6. If the type is treemap, the background color of each block needs to be used as the group value
 
 # Answer
 \`\`\`
