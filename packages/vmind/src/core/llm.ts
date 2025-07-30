@@ -44,7 +44,8 @@ export class LLMManage {
       model,
       frequencyPenalty: frequency_penalty,
       topP: top_p,
-      customRequestFunc
+      customRequestFunc,
+      customConfig = {}
     } = this.options;
     if (!this.historys[name]) {
       this.historys[name] = [];
@@ -69,7 +70,8 @@ export class LLMManage {
             temperature,
             stream: false,
             frequency_penalty,
-            top_p
+            top_p,
+            ...customConfig
           }
         });
         res = res.data;

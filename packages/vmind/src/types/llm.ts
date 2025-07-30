@@ -52,6 +52,9 @@ interface BaseLLMOptions {
   topP?: number;
   /** function call */
   functionCall?: 'auto' | 'none' | { name: string };
+
+  // 支持添加thinking等模型自定义参数
+  customConfig?: Record<string, any>;
 }
 
 /** LLM Options */
