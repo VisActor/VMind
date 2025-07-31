@@ -1,6 +1,13 @@
 # Change Log - @visactor/vmind
 
-This log was last generated on Fri, 11 Jul 2025 02:43:12 GMT and should not be manually modified.
+This log was last generated on Thu, 31 Jul 2025 08:26:24 GMT and should not be manually modified.
+
+## 2.0.9
+Thu, 31 Jul 2025 08:26:24 GMT
+
+### Updates
+
+- feat: add customConfig option to support model-specific parameters
 
 ## 2.0.8
 Fri, 11 Jul 2025 02:43:12 GMT
