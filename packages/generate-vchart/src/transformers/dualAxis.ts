@@ -47,6 +47,7 @@ export const dualAxisSeries = (context: GenerateChartInput) => {
           id: `data_${type}${typeCnt[type]}`,
           values: s.data
         },
+        // 双轴图中有多组数据，则需要补充group
         xField: group ? [cell.x, group] : cell.x,
         yField: cell.y[0],
         seriesField: group
