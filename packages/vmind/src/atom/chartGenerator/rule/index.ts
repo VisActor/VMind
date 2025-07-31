@@ -66,13 +66,15 @@ const formatDataTable = (simpleVChartSpec: SimpleVChartSpec, data: DataTable) =>
   // 桑基图特殊判断，直接使用大模型生成的links数据作为dataTable
   else if (type === 'sankey') {
     return simpleVChartSpec.series[0]?.links;
-  } else if (type === 'scatter') {
+  }
+  // 散点图认为有两个度量值
+  else if (type === 'scatter') {
     return data.map(item => {
       const arr = array(item.value);
       return {
-        name: arr[0],
-        value: arr[1],
-        group: item.name
+        name: item.name,
+        value: arr[0],
+        value1: arr[1]
       };
     });
   }
@@ -81,13 +83,13 @@ const formatDataTable = (simpleVChartSpec: SimpleVChartSpec, data: DataTable) =>
 };
 
 export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec) => {
-  const { type, data, series, coordinate, palette } = simpleVChartSpec;
+  const { type, data, series: originalSeries, coordinate, palette } = simpleVChartSpec;
 
   const dataTable =
     formatDataTable(
       simpleVChartSpec,
       data ??
-        series?.reduce((acc, cur) => {
+        originalSeries?.reduce((acc, cur) => {
           acc.push(...cur.data);
           return acc;
         }, [])
@@ -95,12 +97,28 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
 
   const chartType =
     type === 'common'
-      ? series && series.length >= 2 && series.some((s, index) => index > 0 && s.type !== series[0].type)
+      ? originalSeries &&
+        originalSeries.length >= 2 &&
+        originalSeries.some((s, index) => index > 0 && s.type !== originalSeries[0].type)
         ? type
-        : series?.[0]?.type === 'bar' && coordinate === 'polar'
+        : originalSeries?.[0]?.type === 'bar' && coordinate === 'polar'
         ? 'rose'
-        : series?.[0]?.type ?? type
+        : originalSeries?.[0]?.type ?? type
       : type;
+
+  let series = originalSeries;
+  if (chartType === 'common') {
+    // series合并相同type的数据
+    series = originalSeries?.reduce((acc, curr) => {
+      const existItem = acc.find(item => item.type === curr.type);
+      if (existItem) {
+        existItem.data.push(...curr.data);
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+  }
 
   const cell: Cell = {};
   const firstDatum = dataTable?.[0];
@@ -136,13 +154,17 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
   } else if (chartType === 'circlePacking') {
     cell.size = 'value';
   }
+  if (type === 'scatter') {
+    cell.x = 'value';
+    cell.y = 'value1';
+  }
 
-  const fieldInfo = ['name', 'value', 'group'].reduce((res, field) => {
+  const fieldInfo = ['name', 'value', 'group', 'value1'].reduce((res, field) => {
     if (firstDatum && field in firstDatum) {
       res.push({
         fieldName: field,
-        type: field === 'value' ? DataType.FLOAT : DataType.STRING,
-        role: field === 'value' ? DataRole.MEASURE : DataRole.DIMENSION
+        type: field === 'value' || field === 'value1' ? DataType.FLOAT : DataType.STRING,
+        role: field === 'value' || field === 'value1' ? DataRole.MEASURE : DataRole.DIMENSION
       });
     }
 
@@ -162,7 +184,8 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
     ...simpleVChartSpec,
     dataTable,
     cell,
-    fieldInfo
+    fieldInfo,
+    series
   });
   context.chartType = chartType;
   return context;

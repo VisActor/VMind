@@ -29,7 +29,8 @@ export interface SimpleVChartSpec {
     | 'heatmap'
     | 'liquid'
     | 'venn'
-    | 'mosaic';
+    | 'mosaic'
+    | 'bidirectionalBar';
   /**
    * "none" - 无坐标系
    * "rect" - 直角坐标系
@@ -43,9 +44,9 @@ export interface SimpleVChartSpec {
    */
   transpose?: boolean;
   /*
-   * 图表中的数据，数据需要按照明细数据的格式返回回来，name表示数据对应的维度值，value表示数据对应的度量值；group表示分组值；注意组合图不需要在这里返回数据
+   * 图表中的数据，数据需要按照明细数据的格式返回回来，name表示数据对应的维度值，value表示数据对应的度量值，对于有两个度量值的图（如散点图）value1表示第二个度量值；group表示分组值；注意组合图不需要在这里返回数据
    */
-  data?: { name: string; value: number; group?: string }[];
+  data?: { name: string; value: number; group?: string; value1?: number }[];
   /** 主要图形的配色色板 */
   palette?: string[];
   /** 背景色 */

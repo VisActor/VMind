@@ -1,4 +1,4 @@
-import { array, isArray, isBoolean } from '@visactor/vutils';
+import { isArray, isUndefined } from '@visactor/vutils';
 import {
   DIMENSION_AXIS_ID,
   MAIN_SERIES_ID,
@@ -32,8 +32,12 @@ export const dualAxisSeries = (context: GenerateChartInput) => {
     const typeCnt = {};
     spec.series = series.map(s => {
       const type = s.type;
-      typeCnt[type] ??= 0;
-      typeCnt[type]++;
+      if (isUndefined(typeCnt[type])) {
+        typeCnt[type] = 0;
+      } else {
+        typeCnt[type]++;
+      }
+      const group = color ? (isArray(color) ? color[0] : color) : null;
       return {
         ...s,
         // 添加id，供后续axes使用
@@ -43,9 +47,9 @@ export const dualAxisSeries = (context: GenerateChartInput) => {
           id: `data_${type}${typeCnt[type]}`,
           values: s.data
         },
-        xField: cell.x,
+        xField: group ? [cell.x, group] : cell.x,
         yField: cell.y[0],
-        seriesField: color ? (isArray(color) ? color[0] : color) : null
+        seriesField: group
       };
     });
     return { spec };
