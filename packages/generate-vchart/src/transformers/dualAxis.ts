@@ -33,10 +33,8 @@ export const dualAxisSeries = (context: GenerateChartInput) => {
       const group = color ? (isArray(color) ? color[0] : color) : null;
       return {
         ...s,
-        // 添加id，供后续axes使用
         id: s.type,
         data: {
-          // 区分id，否则会报错
           id: `data_${s.type}`,
           values: s.data
         },
