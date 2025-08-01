@@ -2,6 +2,18 @@
   "name": "@visactor/vmind",
   "entries": [
     {
+      "version": "2.0.9",
+      "tag": "@visactor/vmind_v2.0.9",
+      "date": "Thu, 31 Jul 2025 08:26:24 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: add customConfig option to support model-specific parameters"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.8",
       "tag": "@visactor/vmind_v2.0.8",
       "date": "Fri, 11 Jul 2025 02:43:12 GMT",
