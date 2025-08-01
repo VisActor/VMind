@@ -1,6 +1,6 @@
 {
   "name": "@visactor/generate-vchart",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description": "SQL-like query executor with DSL",
   "main": "lib",
   "module": "es",
