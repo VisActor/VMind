@@ -10,16 +10,13 @@ export const layout = (context: GenerateChartInput) => {
     row: 4,
     elements: [
       { modelId: 'title', col: 0, row: 0, colSpan: 4 },
-
       { modelId: 'legend', col: 0, row: 3, colSpan: 4 },
-
-      { modelId: 'leftAxesCountry', col: 0, row: 1 },
+      { modelId: 'leftYAxis', col: 0, row: 1 },
       { modelId: 'leftRegion', col: 1, row: 1 },
-      { modelId: 'leftAxesValue', col: 1, row: 2 },
-
+      { modelId: 'leftXAxis', col: 1, row: 2 },
       { modelId: 'rightRegion', col: 2, row: 1 },
-      { modelId: 'rightAxesCountry', col: 3, row: 1 },
-      { modelId: 'rightAxesValue', col: 2, row: 2 }
+      { modelId: 'rightYAxis', col: 3, row: 1 },
+      { modelId: 'rightXAxis', col: 2, row: 2 }
     ]
   };
   spec.region = [{ id: 'leftRegion' }, { id: 'rightRegion' }];
@@ -72,26 +69,26 @@ export const bidirectionalBarAxes = (context: GenerateChartInput) => {
   const { series } = spec;
   spec.axes = [
     {
-      id: 'leftAxesCountry',
+      id: 'leftYAxis',
       seriesId: [series[0].id],
       orient: 'left',
       type: 'band'
     },
     {
-      id: 'rightAxesCountry',
+      id: 'rightYAxis',
       seriesId: [series[1].id],
       orient: 'right',
       type: 'band'
     },
     {
-      id: 'leftAxesValue',
+      id: 'leftXAxis',
       seriesId: [series[0].id],
       orient: 'bottom',
       type: 'linear',
       inverse: true
     },
     {
-      id: 'rightAxesValue',
+      id: 'rightXAxis',
       seriesId: [series[1].id],
       orient: 'bottom',
       type: 'linear'

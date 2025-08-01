@@ -29,22 +29,15 @@ export const dualAxisSeries = (context: GenerateChartInput) => {
   const dataValues = spec.data.values;
 
   if (series) {
-    const typeCnt = {};
     spec.series = series.map(s => {
-      const type = s.type;
-      if (isUndefined(typeCnt[type])) {
-        typeCnt[type] = 0;
-      } else {
-        typeCnt[type]++;
-      }
       const group = color ? (isArray(color) ? color[0] : color) : null;
       return {
         ...s,
         // 添加id，供后续axes使用
-        id: `${type}${typeCnt[type]}`,
+        id: s.type,
         data: {
           // 区分id，否则会报错
-          id: `data_${type}${typeCnt[type]}`,
+          id: `data_${s.type}`,
           values: s.data
         },
         // 双轴图中有多组数据，则需要补充group

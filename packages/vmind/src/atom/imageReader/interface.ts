@@ -88,7 +88,10 @@ export interface SimpleVChartSpec {
    */
   label?: { position: 'top' | 'left' | 'right' | 'bottom' | 'inside' | 'outside' }[];
   /**
-   * 组合图返回图形的系列配置，非组合图不需要返回，每个系列要返回解析到的数据，数据中name表示数据对应的维度值，value表示数据对应的度量值；group表示分组值：*/
+   * 组合图返回图形的系列配置，非组合图不需要返回，每个系列要返回解析到的数据
+   * 数据中name表示数据对应的维度值，value表示数据对应的度量值；group表示分组值
+   * 如果是桑基图，则会返回links作为数据使用
+   * */
   series?: {
     type: string;
     data: { name: string; value: number; group?: string }[];
