@@ -1,24 +1,16 @@
 import { SUPPORTED_CHART_LIST } from '../../../src/atom/chartGenerator/const';
 import { getContextAfterRevised } from '../../../src/atom/chartGenerator/llmResultRevise';
-import { getCellContextBySimpleVChartSpec } from '../../../src/atom/chartGenerator/rule';
+import { getContextBySimpleVChartSpec } from '../../../src/atom/chartGenerator/rule';
 import { getChartSpecWithContext } from '../../../src/atom/chartGenerator/spec';
 import type { GenerateChartCellContext } from '../../../src/atom/chartGenerator/type';
 import type { SimpleVChartSpec } from '../../../src/atom/imageReader/interface';
 
 function convertSimpleSpecToSpec(simpleSpec: SimpleVChartSpec): any {
-  const { ctx, mockLLMContent } = getCellContextBySimpleVChartSpec(simpleSpec);
-  const { CHART_TYPE, FIELD_MAP, stackOrPercent, transpose } = mockLLMContent;
-  let newContext = {
-    ...ctx,
-    chartType: CHART_TYPE,
-    cell: FIELD_MAP,
-    chartTypeList: SUPPORTED_CHART_LIST,
-    stackOrPercent,
-    transpose
-  } as GenerateChartCellContext;
-  newContext = getContextAfterRevised(newContext);
+  let context = getContextBySimpleVChartSpec(simpleSpec);
+  context.chartTypeList = SUPPORTED_CHART_LIST;
+  context = getContextAfterRevised(context);
 
-  const { spec } = getChartSpecWithContext(newContext);
+  const { spec } = getChartSpecWithContext(context);
 
   return { spec };
 }

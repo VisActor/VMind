@@ -27,3 +27,5 @@ export * from './treemap';
 export * from './venn';
 export * from './waterfall';
 export * from './wordcloud';
+
+export * from './bidirectionalBar';

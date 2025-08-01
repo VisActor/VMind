@@ -1,4 +1,4 @@
-import { array, isArray, isBoolean } from '@visactor/vutils';
+import { isArray, isUndefined } from '@visactor/vutils';
 import {
   DIMENSION_AXIS_ID,
   MAIN_SERIES_ID,
@@ -8,7 +8,7 @@ import {
   COLOR_FIELD
 } from '../utils/constants';
 import { color, data, discreteLegend, formatXFields, labelForDefaultHide, parseAxesOfChart } from './common';
-import { GenerateChartInput, SimpleChartAxisInfo } from '../types/transform';
+import { GenerateChartInput } from '../types/transform';
 
 export const formatFieldsOfDualAxis = (context: GenerateChartInput) => {
   const { cell } = context;
@@ -30,15 +30,18 @@ export const dualAxisSeries = (context: GenerateChartInput) => {
 
   if (series) {
     spec.series = series.map(s => {
+      const group = color ? (isArray(color) ? color[0] : color) : null;
       return {
         ...s,
+        id: s.type,
         data: {
           id: `data_${s.type}`,
           values: s.data
         },
-        xField: cell.x,
+        // 双轴图中有多组数据，则需要补充group
+        xField: group ? [cell.x, group] : cell.x,
         yField: cell.y[0],
-        seriesField: color ? (isArray(color) ? color[0] : color) : null
+        seriesField: group
       };
     });
     return { spec };
@@ -77,11 +80,37 @@ export const dualAxisSeries = (context: GenerateChartInput) => {
   return { spec };
 };
 
+const generateAxes = (series: any[]) => {
+  const idArr = Object.values(
+    series.reduce((mp, ser) => {
+      const { type, id } = ser;
+      mp[type] ??= [];
+      mp[type].push(id);
+      return mp;
+    }, {})
+  );
+  return [
+    {
+      orient: 'left',
+      seriesId: idArr[0]
+    },
+    {
+      orient: 'right',
+      seriesId: idArr[1]
+    },
+    {
+      orient: 'bottom'
+    }
+  ];
+};
+
 export const dualAxisAxes = (context: GenerateChartInput) => {
   //assign axes in dual-axis chart
   const { spec, series, axes } = context;
 
   if (series) {
+    // 补充axes字段
+    spec.axes ??= generateAxes(spec.series);
     return { spec };
   }
 
