@@ -2,6 +2,18 @@
   "name": "@visactor/vmind",
   "entries": [
     {
+      "version": "2.0.10",
+      "tag": "@visactor/vmind_v2.0.10",
+      "date": "Fri, 01 Aug 2025 03:13:25 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: export type utilities from astParser module"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.9",
       "tag": "@visactor/vmind_v2.0.9",
       "date": "Thu, 31 Jul 2025 08:26:24 GMT",
