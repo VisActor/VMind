@@ -12,6 +12,25 @@ import * as dotenv from 'dotenv';
 // 读取 .env.local 文件
 dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 
+interface ModelConfig {
+  url: string;
+  apiKey: string;
+  model: string;
+}
+const customModels = (() => {
+  let index = 1;
+  const models: ModelConfig[] = [];
+  while (process.env[`VITE_CUSTOM_URL_${index}`]) {
+    models.push({
+      url: process.env[`VITE_CUSTOM_URL_${index}`],
+      apiKey: process.env[`VITE_CUSTOM_KEY_${index}`],
+      model: process.env[`VITE_CUSTOM_MODEL_${index}`]
+    });
+    index++;
+  }
+  return models;
+})();
+
 let modelResultMap: any = {};
 
 function generateResultHtml(models: string[]) {
@@ -301,16 +320,33 @@ const getArkModel = (model: string, showThoughts = false) => {
   return null;
 };
 
+const getVMindWithCustomModel = (config: ModelConfig) => {
+  const { url, apiKey, model } = config;
+  const vmind = new VMind({
+    url,
+    model,
+    headers: {
+      Authorization: `Bearer ${apiKey}`
+    }
+  });
+  return vmind;
+};
+
 const run = async (onlyUpdateHtml?: boolean) => {
-  const models = [Model.GPT_4o, 'ep-20250422120422-zd89f'];
+  // const models = [Model.GPT_4o, 'ep-20250422120422-zd89f'];
+  const models = customModels.map(model => model.model);
   const jsonFile = path.join(__dirname, './output', `${models.join('_VS_')}.json`);
 
   if (onlyUpdateHtml) {
     modelResultMap = JSON.parse(fs.readFileSync(jsonFile, { encoding: 'utf-8' }));
     generateResultHtml(models);
   } else {
-    await testImage(getGptVMind(Model.GPT_4o));
-    await testImage(getArkModel('ep-20250422120422-zd89f'));
+    // await testImage(getGptVMind(Model.GPT_4o));
+    // await testImage(getArkModel('ep-20250422120422-zd89f'));
+    for (const model of customModels) {
+      await testImage(getVMindWithCustomModel(model));
+    }
+
     fs.writeFileSync(jsonFile, JSON.stringify(modelResultMap, null, 2));
 
     generateResultHtml(models);

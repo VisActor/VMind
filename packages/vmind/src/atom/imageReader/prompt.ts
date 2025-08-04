@@ -7,14 +7,19 @@ You will receive an image and need to generate a JSON based on the chart informa
 
 # Requirements
 When executing the task, you need to meet the following requirements:
-1. Only return JSON that can be used to recreate the chart
-2. If there are multiple series with different types in the image (e.g. lines and bars) and it is determined that a combination chart is needed, return type as 'common'. For combination charts, all data should be returned in series rather than in the top-level data field.
+1. You must first determine the type before proceeding, and the type must be one of the following:
+   "common"|"area"|"line"|"bar"|"rangeColumn"|"rangeArea"|"map"|"pie"|"radar"|"rose"|"scatter"|"sequence"|"circularProgress"|"linearProgress"|"wordCloud"|"funnel"|"waterfall"|"boxPlot"|"gauge"|"sankey"|"treemap"|"sunburst"|"circlePacking"|"heatmap"|"liquid"|"venn"|"mosaic"|"bidirectionalBar"
+2. Only return JSON that can be used to recreate the chart
+3. If the image is a composite chart, return the type as 'common'. All data for composite charts must be returned through the series field, not placed in the top-level data field
+4. If all series in a composite chart are unidirectional bar charts, return the type as 'bar'; if the image is symmetrically distributed on both sides, must return the type as 'bidirectionalBar'
+5. You should pay attention to distinguish radar chart and rose chart
+6. If the type is treemap, the background color of each block needs to be used as the group value
 
 # Answer
 \`\`\`
 {
     /** 图表的类型 */
-    type:  "common"|"area"|"line"|"bar"|"rangeColumn"|"rangeArea"|"map"|"pie"|"radar"|"rose"|"scatter"|"sequence"|"circularProgress"|"linearProgress"|"wordCloud"|"funnel"|"waterfall"|"boxPlot"|"gauge"|"sankey"|"treemap"|"sunburst"|"circlePacking"|"heatmap"|"liquid"|"venn"|"mosaic";
+    type:  "common"|"area"|"line"|"bar"|"rangeColumn"|"rangeArea"|"map"|"pie"|"radar"|"rose"|"scatter"|"sequence"|"circularProgress"|"linearProgress"|"wordCloud"|"funnel"|"waterfall"|"boxPlot"|"gauge"|"sankey"|"treemap"|"sunburst"|"circlePacking"|"heatmap"|"liquid"|"venn"|"mosaic"|"bidirectionalBar";
    /**
   * "none" - 无坐标系
   * "rect" - 直角坐标系

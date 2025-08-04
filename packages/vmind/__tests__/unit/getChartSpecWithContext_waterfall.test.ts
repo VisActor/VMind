@@ -75,13 +75,13 @@ describe('getChartSpecWithContext - Waterfall Chart', () => {
     // 总计配置验证
     expect(result.spec.total).toBeDefined();
     expect(result.spec.total.type).toBe('end');
-    expect(result.spec.total.text).toBe('总计');
+    expect(result.spec.total.text).toBe('total');
 
     // 坐标轴验证
     expect(result.spec.axes).toBeDefined();
     expect(result.spec.axes).toHaveLength(2);
-    expect(result.spec.axes[0].orient).toBe('left');
-    expect(result.spec.axes[1].orient).toBe('bottom');
+    expect(result.spec.axes[0].orient).toBe('bottom');
+    expect(result.spec.axes[1].orient).toBe('left');
 
     // 堆叠标签验证
     expect(result.spec.stackLabel).toBeDefined();

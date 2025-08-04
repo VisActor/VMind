@@ -29,6 +29,7 @@ const {
   pipelineVenn,
   pipelineWaterfall,
   pipelineWordCloud,
+  pipelineBidirectionalBar,
   addSimpleComponents,
   theme
 } = allTransformers;
@@ -68,7 +69,8 @@ const pipelineMap: {
   treemap: { type: 'treemap', aliasName: 'Treemap Chart', pipline: pipelineTreemap },
   gauge: { type: 'gauge', aliasName: 'Gauge Chart', pipline: pipelineGauge },
   heatmap: { type: 'heatmap', aliasName: 'Basic Heat Map', pipline: pipelineBasicHeatMap },
-  venn: { type: 'venn', aliasName: 'Venn Chart', pipline: pipelineVenn }
+  venn: { type: 'venn', aliasName: 'Venn Chart', pipline: pipelineVenn },
+  bidirectionalBar: { type: 'common', aliasName: 'Bidirectional Bar Chart', pipline: pipelineBidirectionalBar }
 };
 
 export const findPipelineByType = (type: string) => {

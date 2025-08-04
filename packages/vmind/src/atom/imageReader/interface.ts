@@ -29,7 +29,8 @@ export interface SimpleVChartSpec {
     | 'heatmap'
     | 'liquid'
     | 'venn'
-    | 'mosaic';
+    | 'mosaic'
+    | 'bidirectionalBar';
   /**
    * "none" - 无坐标系
    * "rect" - 直角坐标系
@@ -43,9 +44,9 @@ export interface SimpleVChartSpec {
    */
   transpose?: boolean;
   /*
-   * 图表中的数据，数据需要按照明细数据的格式返回回来，name表示数据对应的维度值，value表示数据对应的度量值；group表示分组值；注意组合图不需要在这里返回数据
+   * 图表中的数据，数据需要按照明细数据的格式返回回来，name表示数据对应的维度值，value表示数据对应的度量值，对于有两个度量值的图（如散点图）value1表示第二个度量值；group表示分组值；注意组合图不需要在这里返回数据
    */
-  data?: { name: string; value: number; group?: string }[];
+  data?: { name: string; value: number; group?: string; value1?: number }[];
   /** 主要图形的配色色板 */
   palette?: string[];
   /** 背景色 */
@@ -87,8 +88,15 @@ export interface SimpleVChartSpec {
    */
   label?: { position: 'top' | 'left' | 'right' | 'bottom' | 'inside' | 'outside' }[];
   /**
-   * 组合图返回图形的系列配置，非组合图不需要返回，每个系列要返回解析到的数据，数据中name表示数据对应的维度值，value表示数据对应的度量值；group表示分组值：*/
-  series?: { type: string; data: { name: string; value: number; group?: string }[] }[];
+   * 组合图返回图形的系列配置，非组合图不需要返回，每个系列要返回解析到的数据
+   * 数据中name表示数据对应的维度值，value表示数据对应的度量值；group表示分组值
+   * 如果是桑基图，则会返回links作为数据使用
+   * */
+  series?: {
+    type: string;
+    data: { name: string; value: number; group?: string }[];
+    links?: { source: string; target: string; value: number }[];
+  }[];
 }
 
 /** Context of Chart Command Atom */
