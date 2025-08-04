@@ -1,6 +1,13 @@
 # Change Log - @visactor/vmind
 
-This log was last generated on Thu, 31 Jul 2025 08:26:24 GMT and should not be manually modified.
+This log was last generated on Fri, 01 Aug 2025 03:13:25 GMT and should not be manually modified.
+
+## 2.0.10
+Fri, 01 Aug 2025 03:13:25 GMT
+
+### Updates
+
+- feat: export type utilities from astParser module
 
 ## 2.0.9
 Thu, 31 Jul 2025 08:26:24 GMT
