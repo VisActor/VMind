@@ -44,7 +44,7 @@ __webpack_require__.r(__webpack_exports__);
  * home directory.
  *
  * @returns
- * The text of the the .npmrc.
+ * The text of the .npmrc.
  */
 function _copyAndTrimNpmrcFile(logger, sourceNpmrcPath, targetNpmrcPath) {
     logger.info(`Transforming ${sourceNpmrcPath}`); // Verbose
@@ -95,7 +95,7 @@ function _copyAndTrimNpmrcFile(logger, sourceNpmrcPath, targetNpmrcPath) {
  * IMPORTANT: THIS CODE SHOULD BE KEPT UP TO DATE WITH Utilities._syncNpmrc()
  *
  * @returns
- * The text of the the synced .npmrc, if one exists. If one does not exist, then undefined is returned.
+ * The text of the synced .npmrc, if one exists. If one does not exist, then undefined is returned.
  */
 function syncNpmrc(sourceNpmrcFolder, targetNpmrcFolder, useNpmrcPublish, logger = {
     info: console.log,
