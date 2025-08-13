@@ -14,6 +14,7 @@ When executing the task, you need to meet the following requirements:
 4. If all series in a composite chart are unidirectional bar charts, return the type as 'bar'; if the image is symmetrically distributed on both sides, must return the type as 'bidirectionalBar'
 5. You should pay attention to distinguish radar chart and rose chart
 6. If the type is treemap, the background color of each block needs to be used as the group value
+7. For the type property of each element object in the axes field, it must be 'band' or 'linear'
 
 # Answer
 \`\`\`

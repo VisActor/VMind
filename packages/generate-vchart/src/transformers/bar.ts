@@ -51,6 +51,8 @@ export const colorBar = (context: GenerateChartInput) => {
     const colorThemes = COLOR_THEMES.default;
 
     spec.color = colorThemes.slice();
+  } else if ('palette' in context && context.palette) {
+    spec.color = context.palette;
   } else {
     const colorThemes = COLOR_THEMES.default;
     //apply transparent gradient
