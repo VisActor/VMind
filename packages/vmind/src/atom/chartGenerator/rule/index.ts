@@ -104,6 +104,8 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
         : originalSeries?.[0]?.type === 'bar' && coordinate === 'polar'
         ? 'rose'
         : originalSeries?.[0]?.type ?? type
+      : type === 'bar' && 'value' in data[0] && 'value1' in data[0]
+      ? 'rangeColumn'
       : type;
 
   let series = originalSeries;
