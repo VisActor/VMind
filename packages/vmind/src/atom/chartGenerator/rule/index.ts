@@ -77,6 +77,17 @@ const formatDataTable = (simpleVChartSpec: SimpleVChartSpec, data: DataTable) =>
         value1: arr[1]
       };
     });
+  } else if (type === 'waterfall') {
+    const finalData = [];
+    for (let i = data.length - 1; i >= 0; i--) {
+      if (i === 0 || i === data.length - 1) {
+        finalData.push({ name: data[i].name, value: data[i].value });
+      } else {
+        finalData.push({ name: data[i].name, value: Number(data[i].value) - Number(data[i - 1].value) });
+      }
+    }
+    finalData.reverse();
+    return finalData;
   }
 
   return data;

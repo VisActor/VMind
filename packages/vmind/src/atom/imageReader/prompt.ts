@@ -10,12 +10,13 @@ When executing the task, you need to meet the following requirements:
 1. You must first determine the type before proceeding, and the type must be one of the following:
    "common"|"area"|"line"|"bar"|"rangeColumn"|"rangeArea"|"map"|"pie"|"radar"|"rose"|"scatter"|"sequence"|"circularProgress"|"linearProgress"|"wordCloud"|"funnel"|"waterfall"|"boxPlot"|"gauge"|"sankey"|"treemap"|"sunburst"|"circlePacking"|"heatmap"|"liquid"|"venn"|"mosaic"|"bidirectionalBar"
 2. Only return JSON that can be used to recreate the chart
-3. If the chart is a bar chart (type is 'bar') and the starting points of each bar are not aligned (i.e., not starting from 0), then each bar needs to return the corresponding starting and ending values, which are 'value' and 'value1' respectively.
-4. If the image is a composite chart, return the type as 'common'. All data for composite charts must be returned through the series field, not placed in the top-level data field
-5. If all series in a composite chart are unidirectional bar charts, return the type as 'bar'; if the image is symmetrically distributed on both sides, must return the type as 'bidirectionalBar'
-6. You should pay attention to distinguish radar chart and rose chart
-7. If the type is treemap, the background color of each block needs to be used as the group value
-8. For the type property of each element object in the axes field, it must be 'band' or 'linear'
+3. If this is a bar chart (type is 'bar'), with dashed lines connecting each bar, and different colors between bars indicating increase or decrease relationships, then the type should be returned as 'waterfall'.If the bars are arranged horizontally, return transpose as true.
+4. If the chart is a bar chart (type is 'bar') and the starting points of each bar are not aligned (i.e., not starting from 0), then each bar needs to return the corresponding starting and ending values, which are 'value' and 'value1' respectively.
+5. If the image is a composite chart, return the type as 'common'. All data for composite charts must be returned through the series field, not placed in the top-level data field
+6. If all series in a composite chart are unidirectional bar charts, return the type as 'bar'; if the image is symmetrically distributed on both sides, must return the type as 'bidirectionalBar'
+7. You should pay attention to distinguish radar chart and rose chart
+8. If the type is treemap, the background color of each block needs to be used as the group value
+9. For the type property of each element object in the axes field, it must be 'band' or 'linear'
 
 # Answer
 \`\`\`

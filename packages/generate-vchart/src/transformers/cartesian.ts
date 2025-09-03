@@ -50,8 +50,8 @@ export const seriesField = (context: GenerateChartInput) => {
 
 export const axis = (context: GenerateChartInput) => {
   const { spec, cell, fieldInfo, axes, transpose } = context;
-  // 现在只有柱图和rangeColumn 支持了转置
-  const validTranspose = transpose && (spec.type === 'bar' || spec.type === 'rangeColumn');
+  // 现在只有柱图 rangeColumn 瀑布图 支持了转置
+  const validTranspose = transpose && (spec.type === 'bar' || spec.type === 'rangeColumn' || spec.type === 'waterfall');
   const bandAxisOrient = validTranspose ? 'left' : 'bottom';
   const linearAxisOrient = validTranspose ? 'bottom' : 'left';
 
