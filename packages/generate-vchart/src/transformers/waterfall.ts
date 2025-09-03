@@ -5,9 +5,12 @@ import { color, data, discreteLegend, formatXFields, labelForDefaultHide } from 
 
 export const waterfallField = (context: GenerateChartInput) => {
   //assign field in spec according to cell
-  const { cell, spec, waterfallTotal } = context;
-  spec.xField = cell.x;
-  spec.yField = cell.y;
+  const { cell, spec, waterfallTotal, transpose } = context;
+  spec.xField = transpose ? cell.y : cell.x;
+  spec.yField = transpose ? cell.x : cell.y;
+  if (transpose) {
+    spec.direction = 'horizontal';
+  }
 
   if (waterfallTotal?.visible !== false) {
     spec.total = {
