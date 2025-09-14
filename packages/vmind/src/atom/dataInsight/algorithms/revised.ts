@@ -64,7 +64,7 @@ const getBandInsightByOutliear = (context: DataInsightExtractContext, outliearFi
       })
       .sort((a, b) => a.xIndex - b.xIndex);
     let band = [indexOfInsights[0]];
-    for (let i = 1; i <= indexOfInsights.length; i++) {
+    for (let i = 0; i <= indexOfInsights.length; i++) {
       const curIndex = indexOfInsights[i]?.xIndex;
       const prevIndex = band[band.length - 1].xIndex;
       if (i < indexOfInsights.length && curIndex - prevIndex === 1) {
@@ -86,7 +86,9 @@ const getBandInsightByOutliear = (context: DataInsightExtractContext, outliearFi
           });
           bandInsightKeys.push(...band.map(v => v.content.key));
         }
-        band = [indexOfInsights[i]];
+        if (i < indexOfInsights.length) {
+          band = [indexOfInsights[i]];
+        }
       }
     }
   });
@@ -111,6 +113,7 @@ export const mergePointInsight = (
     const key = `${data[0].index}-&&&-${seriesName}`;
     if (!outliear[key]) {
       outliear[key] = [];
+
       if (!outliearFieldMapping[seriesName]) {
         outliearFieldMapping[seriesName] = [];
       }
