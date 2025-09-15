@@ -9,7 +9,21 @@ import { isStackChart } from '../dataInsight/utils';
 import { Factory } from '../../core/factory';
 import type { BaseAtomConstructor } from '../../types';
 import type { DataItem } from '@visactor/generate-vchart';
+import VChart from '@visactor/vchart';
+// 辅助函数：通用值比较
+function compareValues(a: any, b: any): number {
+  // 如果是日期字符串，转换为时间戳比较
+  if (isDateString(a) && isDateString(b)) {
+    return new Date(a).getTime() - new Date(b).getTime();
+  }
+  // 默认按数字或字符串比较
+  return a > b ? 1 : a < b ? -1 : 0;
+}
 
+// 辅助函数：检测是否是日期字符串
+function isDateString(value: any): boolean {
+  return typeof value === 'string' && (/^\d{4}-\d{2}-\d{2}$/.test(value) || /^[A-Za-z]{3}-\d{2}$/.test(value));
+}
 export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions> {
   name = AtomName.SPEC_INSIGHT;
 
@@ -267,6 +281,180 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
     });
   }
 
+  /** generate markline of Abnormal trend by coordinates */
+  protected getAbnormalTrendMarkLine(
+    spec: any,
+    options: {
+      series_name: string;
+      text: string;
+      isTransposed: boolean;
+      info: any;
+    }
+  ) {
+    if (!spec.markLine) {
+      spec.markLine = [];
+    }
+
+    const { series_name, text, isTransposed = false, info } = options;
+
+    const datavalues = spec.data[0].values;
+    const xField = Array.isArray(spec.xField) ? spec.xField[0] : spec.xField;
+    const yField = Array.isArray(spec.yField) ? spec.yField[0] : spec.yField;
+    const { startDimValue, startValue, endDimValue, endValue } = info;
+
+    const coordinates = [
+      {
+        [xField]: startDimValue,
+        [yField]: startValue
+      },
+      {
+        [xField]: endDimValue,
+        [yField]: endValue
+      }
+    ];
+
+    spec.markLine.push({
+      type: 'type-step',
+      coordinates,
+      connectDirection: 'right',
+      expandDistance: -100,
+      line: {
+        multiSegment: true,
+        mainSegmentIndex: 1,
+        style: [
+          {
+            lineDash: [2, 2],
+            stroke: '#000',
+            lineWidth: 2
+          },
+          {
+            stroke: '#000',
+            lineWidth: 2
+          },
+          {
+            lineDash: [2, 2],
+            stroke: '#000',
+            lineWidth: 2
+          }
+        ]
+      },
+      label: {
+        position: 'middle',
+        text: text,
+        labelBackground: {
+          padding: { left: 4, right: 4, top: 4, bottom: 4 },
+          style: {
+            fill: '#fff',
+            fillOpacity: 1,
+            stroke: '#000',
+            lineWidth: 1,
+            cornerRadius: 4
+          }
+        },
+        style: {
+          fill: '#000'
+        }
+      },
+      endSymbol: {
+        size: 12,
+        refX: -4
+      }
+    });
+  }
+
+  protected getAbnormalBandMarkArea(
+    spec: any,
+    options: {
+      series_name: string;
+      isTransposed: boolean;
+      info: any;
+      text: string;
+    }
+  ) {
+    if (!spec.markArea) {
+      spec.markArea = [];
+    }
+    if (!spec.line) {
+      spec.line = {};
+    }
+
+    const { series_name, isTransposed = false, info, text } = options;
+
+    const timeField = Array.isArray(spec.xField) ? spec.xField[0] : spec.xField;
+
+    if (!timeField) {
+      console.error('No time field found in spec.xField');
+      return;
+    }
+
+    const { startValue, endValue } = options.info;
+    const datavalues = spec.data[0].values;
+
+    // 2. 标记预测数据
+    datavalues.forEach((item: any) => {
+      const timeValue = item[timeField];
+      if (timeValue === undefined) {
+        return;
+      }
+
+      // 3. 通用比较逻辑（支持字符串、数字或日期）
+      if (compareValues(timeValue, startValue) >= 0 && compareValues(timeValue, endValue) <= 0) {
+        item.forecast = true;
+      }
+    });
+
+    // 添加 lineDash
+    if (!spec.line.style) {
+      spec.line.style = {};
+    }
+    // spec.line.style.lineDash =
+    // `__FUNCTION__: (data => {
+    //   if (data.forecast) {
+    //     return [5, 5]; // 预测数据用虚线
+    //   }
+    //   return [0]; // 其他数据用实线
+    // })`
+
+    spec.line.style.lineDash = function (data) {
+      return data.forecast ? [5, 5] : [0];
+    };
+
+    //console.log("lineDash exists?", typeof spec.line.style.lineDash === 'function'); // 应为 true
+
+    if (spec.type === 'waterfall' || spec.type === 'bar') {
+      spec.markArea.push({
+        x: startValue,
+        x1: endValue,
+        label: {
+          text: text,
+          position: 'insideTop',
+          labelBackground: {
+            padding: 2,
+            style: {
+              fill: '#E8346D'
+            }
+          }
+        }
+      });
+    } else {
+      spec.markArea.push({
+        x: startValue,
+        x1: endValue,
+        label: {
+          text: text,
+          position: 'insideTop',
+          labelBackground: {
+            padding: 2,
+            style: {
+              fill: '#E8346D'
+            }
+          }
+        }
+      });
+    }
+    //console.log(spec.markArea)
+  }
+
   protected runBeforeLLM(): SpecInsightCtx {
     const { spec, insights, chartType } = this.context;
     const newSpec = merge({}, spec);
@@ -274,7 +462,8 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
     const pointIndexMap: Record<string, boolean> = {};
     const isStack = isStackChart(spec, chartType, cell);
     insights.forEach(insight => {
-      const { type, data, value, fieldId, info } = insight;
+      const { type, data, value, fieldId, info, seriesName, textContent } = insight;
+      const series_name = Array.isArray(seriesName) ? seriesName[0] : seriesName;
       const direction = transpose
         ? Number(value) >= 0
           ? 'right'
@@ -329,6 +518,26 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
                 ? `+${(info.change * 100).toFixed(1)}%`
                 : `${(info.change * 100).toFixed(1)}%`
           });
+          break;
+        case InsightType.AbnormalTrend:
+          this.getAbnormalTrendMarkLine(newSpec, {
+            series_name: String(series_name),
+            isTransposed: transpose,
+            text:
+              value === TrendType.INCREASING
+                ? `Abnormal upward trend +${(info.change * 100).toFixed(1)}%`
+                : `Abnormal downward trend ${(info.change * 100).toFixed(1)}%`,
+            info: info
+          });
+          break;
+        case InsightType.AbnormalBand:
+          this.getAbnormalBandMarkArea(newSpec, {
+            series_name: String(series_name),
+            isTransposed: transpose,
+            info: info,
+            text: textContent.plainText
+          });
+          break;
       }
     });
     this.updateContext({

@@ -26,8 +26,9 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
   const result: Insight[] = [];
   const { threshold = 0.2 } = options || {};
   const { insights, seriesDataMap, cell, spec } = context;
-  const { y: celly, color } = cell;
+  const { y: celly, color, x: cellx } = cell;
   const yField: string[] = isArray(celly) ? celly.flat() : [celly];
+  const xField: string[] = isArray(cellx) ? cellx.flat() : [cellx];
   const seriesField: string = isArray(color) ? color[0] : color;
   if (!seriesField) {
     return [];
@@ -38,13 +39,28 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
       if (isStackSeries(spec, measureId) || isPercenSeries(spec, measureId)) {
         return;
       }
-      const seriesDataset: number[] = seriesDataMap[series]
-        .map(d => Number(d.dataItem[measureId]))
-        .filter(v => isValidData(v) && !isNaN(v));
+
+      const xyPairs: { x: string; y: number }[] = [];
+      seriesDataMap[series].forEach(d => {
+        const xValue = String(d.dataItem[xField[0]]);
+        const yValue = Number(d.dataItem[measureId]);
+
+        if (isValidData(yValue) && !isNaN(yValue)) {
+          xyPairs.push({
+            x: xValue,
+            y: yValue
+          });
+        }
+      });
+
+      const seriesDataset: number[] = xyPairs.map(pair => pair.y);
+
       const { trend, pValue, zScore } = originalMKTest(seriesDataset, 0.05, false);
       if (trend !== TrendType.NO_TREND) {
         const startValue = seriesDataset[0];
         const endValue = seriesDataset[seriesDataset.length - 1];
+        const startDimValue = xyPairs[0].x;
+        const endDimValue = xyPairs[xyPairs.length - 1].x;
         seriesTrendInfo.push({
           trend,
           pValue,
@@ -52,7 +68,9 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
           measureId,
           series,
           info: {
+            startDimValue,
             startValue,
+            endDimValue,
             endValue,
             change: endValue / startValue - 1
           }
@@ -60,6 +78,7 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
       }
     });
   });
+  //console.log(seriesTrendInfo)
 
   let overallTrendInsights = insights.filter(v => v.type === InsightType.OverallTrend);
   if (overallTrendInsights.length === 0) {
