@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { SpecInsightCtx, SpecInsightOptions } from '../../types';
 import { AtomName } from '../../types/atom';
 import { BaseAtom } from '../base';
@@ -9,7 +10,7 @@ import { isStackChart } from '../dataInsight/utils';
 import { Factory } from '../../core/factory';
 import type { BaseAtomConstructor } from '../../types';
 import type { DataItem } from '@visactor/generate-vchart';
-import VChart from '@visactor/vchart';
+
 // 辅助函数：通用值比较
 function compareValues(a: any, b: any): number {
   // 如果是日期字符串，转换为时间戳比较
@@ -415,7 +416,7 @@ export class SpecInsightAtom extends BaseAtom<SpecInsightCtx, SpecInsightOptions
     //   return [0]; // 其他数据用实线
     // })`
 
-    spec.line.style.lineDash = function (data) {
+    spec.line.style.lineDash = function (data: any) {
       return data.forecast ? [5, 5] : [0];
     };
 
