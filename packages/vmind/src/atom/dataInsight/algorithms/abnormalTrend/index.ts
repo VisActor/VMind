@@ -78,7 +78,6 @@ const abnormalTrendAlgo = (context: DataInsightExtractContext, options: Abnormal
       }
     });
   });
-  //console.log(seriesTrendInfo)
 
   let overallTrendInsights = insights.filter(v => v.type === InsightType.OverallTrend);
   if (overallTrendInsights.length === 0) {
