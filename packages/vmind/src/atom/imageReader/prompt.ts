@@ -18,6 +18,7 @@ When executing the task, you need to meet the following requirements:
 8. If the type is treemap, the background color of each block needs to be used as the group value
 9. If the type is heatmap, you need to return all correlation coefficient values, set the two dimensions of each correlation coefficient to 'name' and 'name1', with the value as 'value'
 10. For the type property of each element object in the axes field, it must be 'band' or 'linear'
+11. If the type is linearProgress, the metric value must be between 0 and 1
 
 # Answer
 \`\`\`
