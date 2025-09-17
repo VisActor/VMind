@@ -118,6 +118,10 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
       simpleVChartSpec,
       data ??
         originalSeries?.reduce((acc, cur) => {
+          // 对比漏斗图，group字段可能不会在data中，特殊处理
+          if (type === 'comparativeFunnel' && 'group' in cur) {
+            cur.data?.forEach(item => (item.group = cur.group as string));
+          }
           acc.push(...cur.data);
           return acc;
         }, [])
@@ -192,6 +196,11 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
     cell.x = 'name';
     cell.y = 'name1';
     cell.size = 'value';
+  }
+  if (chartType === 'comparativeFunnel') {
+    cell.x = 'name';
+    cell.y = 'value';
+    cell.category = 'group';
   }
 
   const fieldInfo = ['name', 'value', 'group', 'value1', 'name1'].reduce((res, field) => {

@@ -19,12 +19,13 @@ When executing the task, you need to meet the following requirements:
 9. If the type is heatmap, you need to return all correlation coefficient values, set the two dimensions of each correlation coefficient to 'name' and 'name1', with the value as 'value'
 10. For the type property of each element object in the axes field, it must be 'band' or 'linear'
 11. If the type is linearProgress, the metric value must be between 0 and 1
+12. If the type is 'funnel' and consists of two funnel charts, return the type as 'comparativeFunnel'
 
 # Answer
 \`\`\`
 {
     /** 图表的类型 */
-    type:  "common"|"area"|"line"|"bar"|"rangeColumn"|"rangeArea"|"map"|"pie"|"radar"|"rose"|"scatter"|"sequence"|"circularProgress"|"linearProgress"|"wordCloud"|"funnel"|"waterfall"|"boxPlot"|"gauge"|"sankey"|"treemap"|"sunburst"|"circlePacking"|"heatmap"|"liquid"|"venn"|"mosaic"|"bidirectionalBar";
+    type:  "common"|"area"|"line"|"bar"|"rangeColumn"|"rangeArea"|"map"|"pie"|"radar"|"rose"|"scatter"|"sequence"|"circularProgress"|"linearProgress"|"wordCloud"|"funnel"|"waterfall"|"boxPlot"|"gauge"|"sankey"|"treemap"|"sunburst"|"circlePacking"|"heatmap"|"liquid"|"venn"|"mosaic"|"bidirectionalBar"|"comparativeFunnel";
    /**
   * "none" - 无坐标系
   * "rect" - 直角坐标系
