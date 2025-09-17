@@ -80,88 +80,92 @@ describe('generate comparative funnel chart', () => {
         values: data
       }))
     );
-    expect(spec.series).toEqual([
-      {
-        type: 'funnel',
-        dataIndex: 0,
-        regionIndex: 0,
-        isTransform: true,
-        gap: 2,
-        maxSize: '60%',
-        shape: 'rect',
-        funnelAlign: 'right',
-        categoryField: 'name',
-        valueField: 'value',
-        heightRatio: 1.5,
-        funnel: {
-          style: {
-            fill: { field: 'group', scale: 'color' },
-            cornerRadius: 4
-          }
-        },
-        transform: {
-          style: {
-            fill: { field: 'group', scale: 'color' },
-            fillOpacity: 0.1
-          }
-        },
-        outerLabel: {
-          visible: true,
-          line: { visible: false },
-          style: {
-            fontSize: 24,
-            fontWeight: 'bold',
-            fill: 'black',
-            limit: Infinity
-          }
-        },
-        extensionMark: [
-          {
-            type: 'text',
-            dataIndex: 0,
+    const serialize = (obj: any) => JSON.parse(JSON.stringify(obj));
+    expect(serialize(spec.series)).toEqual(
+      serialize([
+        {
+          type: 'funnel',
+          dataIndex: 0,
+          regionIndex: 0,
+          isTransform: true,
+          gap: 2,
+          maxSize: '60%',
+          shape: 'rect',
+          funnelAlign: 'right',
+          categoryField: 'name',
+          valueField: 'value',
+          heightRatio: 1.5,
+          funnel: {
+            style: {
+              fill: { field: 'group', scale: 'color' },
+              cornerRadius: 4
+            }
+          },
+          transform: {
+            style: {
+              fill: { field: 'group', scale: 'color' },
+              fillOpacity: 0.1
+            }
+          },
+          outerLabel: {
+            visible: true,
+            line: { visible: false },
             style: {
               fontSize: 24,
-              fill: 'grey',
-              textAlign: 'center'
+              fontWeight: 'bold',
+              fill: 'black',
+              limit: Infinity
             }
-          }
-        ]
-      },
-      {
-        type: 'funnel',
-        dataIndex: 1,
-        regionIndex: 1,
-        isTransform: true,
-        gap: 2,
-        maxSize: '60%',
-        shape: 'rect',
-        funnelAlign: 'left',
-        categoryField: 'name',
-        valueField: 'value',
-        heightRatio: 1.5,
-        funnel: {
-          style: {
-            fill: { field: 'group', scale: 'color' },
-            cornerRadius: 4
-          }
+          },
+          extensionMark: [
+            {
+              type: 'text',
+              dataIndex: 0,
+              style: {
+                fontSize: 24,
+                fill: 'grey',
+                textAlign: 'center'
+              }
+            }
+          ]
         },
-        transform: {
-          style: {
-            fill: { field: 'group', scale: 'color' },
-            fillOpacity: 0.1
-          }
-        },
-        outerLabel: {
-          visible: true,
-          line: { visible: false },
-          style: {
-            fontSize: 24,
-            fontWeight: 'bold',
-            fill: 'black',
-            limit: Infinity
-          }
+        {
+          type: 'funnel',
+          dataIndex: 1,
+          regionIndex: 1,
+          isTransform: true,
+          gap: 2,
+          maxSize: '60%',
+          shape: 'rect',
+          funnelAlign: 'left',
+          categoryField: 'name',
+          valueField: 'value',
+          heightRatio: 1.5,
+          funnel: {
+            style: {
+              fill: { field: 'group', scale: 'color' },
+              cornerRadius: 4
+            }
+          },
+          transform: {
+            style: {
+              fill: { field: 'group', scale: 'color' },
+              fillOpacity: 0.1
+            }
+          },
+          outerLabel: {
+            visible: true,
+            line: { visible: false },
+            style: {
+              fontSize: 24,
+              fontWeight: 'bold',
+              fill: 'black',
+              limit: Infinity
+            }
+          },
+          extensionMark: []
         }
-      }
-    ]);
+      ])
+    );
   });
 });

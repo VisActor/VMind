@@ -1,5 +1,5 @@
 import { array } from '@visactor/vutils';
-import { GenerateChartInput } from '../types';
+import { DataItem, GenerateChartInput } from '../types';
 import { data, discreteLegend, formatXFields } from './common';
 
 const title = (context: GenerateChartInput) => {
@@ -31,8 +31,8 @@ const layout = (context: GenerateChartInput) => {
 };
 
 const comparativeFunnelSeries = (context: GenerateChartInput) => {
-  const { spec, dataTable, series, cell } = context;
-  const generateSeries = (index, align: 'left' | 'right') => {
+  const { spec, cell } = context;
+  const generateSeries = (index: number, align: 'left' | 'right') => {
     return {
       type: 'funnel',
       dataIndex: index,
@@ -60,7 +60,7 @@ const comparativeFunnelSeries = (context: GenerateChartInput) => {
       outerLabel: {
         visible: true,
         line: { visible: false },
-        formatMethod: (label, datum) => datum[array(cell.y)[0]],
+        formatMethod: (data: any, datum: DataItem) => datum[array(cell.y)[0]],
         style: {
           fontSize: 24,
           fontWeight: 'bold',
@@ -74,15 +74,15 @@ const comparativeFunnelSeries = (context: GenerateChartInput) => {
               type: 'text',
               dataIndex: 0,
               style: {
-                text: data => data[array(cell.x)[0]],
+                text: (data: any) => data[array(cell.x)[0]],
                 fontSize: 24,
                 fill: 'grey',
                 textAlign: 'center',
-                x: (data, ctx) => {
+                x: (data: any, ctx: any) => {
                   const { vchart } = ctx;
                   return vchart.getCurrentSize().width / 2 - 10;
                 },
-                y: (data, ctx) => {
+                y: (data: DataItem, ctx: any) => {
                   const { getPoints } = ctx;
                   const [tl, tr, br, bl] = getPoints(data);
                   return (tl.y + bl.y) / 2;
