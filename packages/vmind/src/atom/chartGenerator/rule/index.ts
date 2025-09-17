@@ -194,6 +194,7 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
   }
   if (chartType === 'heatmap') {
     cell.x = 'name';
+    // 热图有两个维度数据，因此新增name1字段
     cell.y = 'name1';
     cell.size = 'value';
   }
