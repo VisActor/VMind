@@ -48,6 +48,11 @@ describe('generateChart', () => {
           grid: {
             visible: false
           },
+          label: {
+            style: {
+              angle: 90
+            }
+          },
           domainLine: {
             visible: false
           }
@@ -260,6 +265,11 @@ describe('generateChart', () => {
           orient: 'bottom',
           grid: {
             visible: false
+          },
+          label: {
+            style: {
+              angle: 90
+            }
           },
           domainLine: {
             visible: false

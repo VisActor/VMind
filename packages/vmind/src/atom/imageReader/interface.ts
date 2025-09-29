@@ -30,7 +30,8 @@ export interface SimpleVChartSpec {
     | 'liquid'
     | 'venn'
     | 'mosaic'
-    | 'bidirectionalBar';
+    | 'bidirectionalBar'
+    | 'comparativeFunnel';
   /**
    * "none" - 无坐标系
    * "rect" - 直角坐标系

@@ -74,7 +74,12 @@ export const basicHeatMapAxes = (context: GenerateChartInput) => {
         }
       },
       userConfig: {
-        type: 'band'
+        type: 'band',
+        label: {
+          style: {
+            angle: 90
+          }
+        }
       },
       filters: [axis => axis.orient === 'bottom', axis => axis.orient === 'top']
     },

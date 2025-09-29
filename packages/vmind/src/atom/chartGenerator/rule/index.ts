@@ -89,6 +89,23 @@ const formatDataTable = (simpleVChartSpec: SimpleVChartSpec, data: DataTable) =>
     finalData.reverse();
     return finalData;
   }
+  // 热力图特殊处理
+  else if (type === 'heatmap') {
+    // 拿到所有的'name'，并设置值为1
+    const finalData = Array.from(
+      new Set(data.map(item => item.name).concat(data.map(item => item.name1)))
+        .keys()
+        .map(key => ({ name: key, name1: key, value: 1 }))
+    );
+    // 模型识别数据可能不全，尽可能补全数据
+    for (const item of data) {
+      const obj = { name: item.name1, name1: item.name, value: item.value as number };
+      if (finalData.findIndex(i => i.name === item.name && i.name1 === item.name1) === -1) {
+        finalData.push(item as typeof obj, obj);
+      }
+    }
+    return finalData;
+  }
 
   return data;
 };
@@ -101,6 +118,10 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
       simpleVChartSpec,
       data ??
         originalSeries?.reduce((acc, cur) => {
+          // 对比漏斗图，group字段可能不会在data中，特殊处理
+          if (type === 'comparativeFunnel' && 'group' in cur) {
+            cur.data?.forEach(item => (item.group = cur.group as string));
+          }
           acc.push(...cur.data);
           return acc;
         }, [])
@@ -171,8 +192,19 @@ export const getContextBySimpleVChartSpec = (simpleVChartSpec: SimpleVChartSpec)
     cell.x = 'value';
     cell.y = 'value1';
   }
+  if (chartType === 'heatmap') {
+    cell.x = 'name';
+    // 热图有两个维度数据，因此新增name1字段
+    cell.y = 'name1';
+    cell.size = 'value';
+  }
+  if (chartType === 'comparativeFunnel') {
+    cell.x = 'name';
+    cell.y = 'value';
+    cell.category = 'group';
+  }
 
-  const fieldInfo = ['name', 'value', 'group', 'value1'].reduce((res, field) => {
+  const fieldInfo = ['name', 'value', 'group', 'value1', 'name1'].reduce((res, field) => {
     if (firstDatum && field in firstDatum) {
       res.push({
         fieldName: field,

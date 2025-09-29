@@ -29,3 +29,4 @@ export * from './waterfall';
 export * from './wordcloud';
 
 export * from './bidirectionalBar';
+export * from './comparativeFunnel';
