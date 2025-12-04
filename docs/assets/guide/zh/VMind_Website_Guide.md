@@ -3,6 +3,10 @@
 
 本篇文章的目的是为了帮助你更有效地使用 VMind 网站，让你能更快地找到你需要的信息。
 
+## VMind OpenAPI
+
+VMind 提供了 OpenAPI 接口，你可以通过调用这些接口来实现更高级的智能生成能力。你可以在[VMind OpenAPI](./VMind_OpenAPI)章节了解更多关于 OpenAPI 的信息。
+
 ## 快速开始
 
 ### 快速上手

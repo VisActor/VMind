@@ -9,6 +9,13 @@
       }
     },
     {
+      "path": "VMind_OpenAPI",
+      "title": {
+        "zh": "VMind OpenAPI",
+        "en": "VMind OpenAPI"
+      }
+    },
+    {
       "path": "Intro_to_VMind",
       "title": {
         "zh": "VMind简介",
