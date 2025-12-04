@@ -42,13 +42,6 @@
         "zh": "数据开发",
         "en": "Data Development"
       }
-    },
-    {
-      "path": "Open_API",
-      "title": {
-        "zh": "VMind Open API",
-        "en": "VMind Open API"
-      }
     }
   ]
 }

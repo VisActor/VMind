@@ -3,6 +3,10 @@
 
 The purpose of this article is to help you use the VMind website more effectively and quickly find the information you need.
 
+## VMind OpenAPI
+
+VMind provides OpenAPI interfaces that allow you to achieve more advanced intelligent generation capabilities by calling these interfaces. You can learn more about OpenAPI in the [VMind OpenAPI](./VMind_OpenAPI) section.
+
 ## Quick Start
 
 ### Getting Started
