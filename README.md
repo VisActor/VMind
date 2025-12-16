@@ -307,6 +307,15 @@ If you would like to contribute, please read the [Code of Conduct ](./CODE_OF_CO
 Small streams converge to make great rivers and seas!
 
 <a href="https://github.com/visactor/vmind/graphs/contributors"><img src="https://contrib.rocks/image?repo=visactor/vmind" /></a>
+## Star History
+
+<a href="https://gitdata.xuanhun520.com/#visactor/vmind&Date">
+<picture >
+
+  <img style="width: 800px; height: 533px;" alt="Star History Chart" src="https://gitdata.xuanhun520.com/api/starimg?repos=visactor/vmind&type=Date&theme=dark" />
+</picture>
+</a>
+
 
 # License
 
