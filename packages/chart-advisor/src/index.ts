@@ -1,20 +1,98 @@
-import { DimensionDataset, MeasureDataset, ChartType, ScreenSize, UserPurpose } from './type';
-import type {
+import {
+  DimensionDataset,
+  MeasureDataset,
+  ChartType,
+  ScreenSize,
+  UserPurpose,
   AdviseResult,
-  Scorer,
   AdviserParams,
-  ScoreResult,
   DataTypeName,
   MeasureField,
-  DimensionField
-} from './type';
-import { scorer as defaultScorer } from './score';
+  DimensionField,
+  OldScorer,
+  ChartData,
+  OldScoreResult
+} from './types';
+
 import * as dataUtils from './dataUtil';
 import { isNil } from '@visactor/vutils';
 import { isNaN } from './dataUtil';
+import { createBarScorer } from './scorers/bar';
+import { createLineScorer } from './scorers/line';
+import { createPieScorer } from './scorers/pie';
+import { defaultConfig } from './rules/config';
 
 export { fold, omit } from './fieldUtils';
 export { FOLD_NAME, FOLD_VALUE, COLOR_FIELD, FOLD_VALUE_MAIN, FOLD_VALUE_SUB, GROUP_FIELD } from './constant';
+
+function convertToChartData(params: any, chartType: string): ChartData {
+  const { inputDataSet, dimList, measureList, aliasMap = {} } = params;
+
+  const dimensions = dimList.map((d: any) => aliasMap[d.uniqueID] ?? d.uniqueID);
+  const metrics = measureList.map((m: any) => aliasMap[m.uniqueID] ?? m.uniqueID);
+
+  const data = inputDataSet.map((row: any) => {
+    const newRow: Record<string, any> = {};
+    for (const id in row) {
+      const name = aliasMap[id] ?? id;
+      newRow[name] = row[id];
+    }
+    return newRow;
+  });
+
+  return {
+    data,
+    dimensions,
+    metrics,
+    chartType
+  };
+}
+
+const scorerAdapter: OldScorer = params => {
+  const { purpose } = params;
+
+  const calBar = (): OldScoreResult => {
+    const chartData = convertToChartData(params, 'bar');
+    const scoreResult = createBarScorer(defaultConfig)(chartData, defaultConfig);
+    return {
+      chartType: ChartType.BAR,
+      score: scoreResult.score,
+      originScore: scoreResult.score,
+      fullMark: 1, // Simplified fullMark
+      scoreDetails: scoreResult.details as any // To be compatible with OldScoreResult
+    };
+  };
+
+  const calLine = (): OldScoreResult => {
+    const chartData = convertToChartData(params, 'line');
+    const scoreResult = createLineScorer(defaultConfig)(chartData, defaultConfig);
+    return {
+      chartType: ChartType.LINE,
+      score: scoreResult.score,
+      originScore: scoreResult.score,
+      fullMark: 1,
+      scoreDetails: scoreResult.details as any
+    };
+  };
+
+  const calPie = (): OldScoreResult => {
+    const chartData = convertToChartData(params, 'pie');
+    const scoreResult = createPieScorer(defaultConfig)(chartData, defaultConfig);
+    return {
+      chartType: ChartType.PIE,
+      score: scoreResult.score,
+      originScore: scoreResult.score,
+      fullMark: 1,
+      scoreDetails: scoreResult.details as any
+    };
+  };
+
+  // More chart type calculators can be added here following the same pattern.
+
+  const scoreCalculators: (() => OldScoreResult)[] = [calBar, calLine, calPie];
+
+  return scoreCalculators;
+};
 
 export function chartAdvisor(params: AdviserParams): AdviseResult {
   const {
@@ -26,7 +104,7 @@ export function chartAdvisor(params: AdviserParams): AdviseResult {
     maxPivotColumn = 0,
     purpose = UserPurpose.NONE,
     screen = ScreenSize.LARGE,
-    scorer = defaultScorer
+    scorer = scorerAdapter
   } = params;
 
   const measureDatasets: MeasureDataset[] = [];
@@ -47,7 +125,7 @@ export function chartAdvisor(params: AdviserParams): AdviseResult {
         measureSet.data.push(parseFloat(row[uniqueID]));
       }
     });
-    const dataNotNull = measureSet.data.filter(each => !isNil(each) && !isNaN(each));
+    const dataNotNull = measureSet.data.filter(each => !isNil(each) && !isNaN(Number(each)));
     measureSet.min = Math.min(...dataNotNull);
     measureSet.max = Math.max(...dataNotNull);
     measureSet.mean = dataUtils.calMean(measureSet);
@@ -95,35 +173,21 @@ export function chartAdvisor(params: AdviserParams): AdviseResult {
       return score;
     });
 
+    if (scores.length === 0) {
+      return {
+        chartType: ChartType.TABLE,
+        scores: []
+      };
+    }
+
     scores.sort((chart1, chart2) => chart2.score - chart1.score);
-    // console.log(scores)
+
     if (scores[0].score === 0) {
       return {
         chartType: ChartType.TABLE,
         scores: []
       };
     }
-    // console.log(scores)
-
-    // scores.forEach(score => {
-    //   let cell = score.cell
-    //   if (!Array.isArray(cell)) {
-    //     cell = [cell]
-    //   }
-    //   //将所有的key转换为string
-    //   cell.forEach(cl => {
-    //     Object.entries(cl).forEach(([k, v]) => {
-    //       if (k === 'cartesianInfo' || k === 'foldInfo') {
-    //         cl[k] = null
-    //       }
-    //       else {
-    //         cl[k] = v.map(value => String(value))
-    //       }
-    //     })
-    //   })
-
-    //   score.cell = cell
-    // })
 
     return {
       chartType: scores[0].chartType,
@@ -139,11 +203,10 @@ export function chartAdvisor(params: AdviserParams): AdviseResult {
 }
 
 export {
-  Scorer,
+  OldScorer as Scorer,
   AdviserParams,
-  ScoreResult,
-  ChartType,
   AdviseResult,
+  ChartType,
   DataTypeName,
   MeasureField,
   DimensionField,
