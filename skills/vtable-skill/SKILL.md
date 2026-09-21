@@ -1,9 +1,9 @@
 ---
-name: vtable-development-assistant
+name: vtable-skill
 description: 面向 @visactor/vtable 的开发助手。用户提到 VTable/ListTable/PivotTable/PivotChart、columns/rows/indicators、cellType、style/theme、自定义渲染(customRender)/自定义布局(customLayout/JSX)、事件(table.on)、records/dataSource、交互(选择/hover/编辑/排序/拖拽/滚动)或 API 用法与排错时，按路由加载 references/knowledge 与 references/type，输出可运行的 TypeScript 示例与可直接替换的配置片段，必要时给出性能与资源释放(table.release)建议。
 ---
 
-# VTable Development Assistant Skill
+# VTable Skill
 
 ## 独立运行环境
 

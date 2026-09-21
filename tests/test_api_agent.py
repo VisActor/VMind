@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("api_agent", ROOT / "evals/scripts/api_agent.py")
 api = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(api)
-SKILL = "vchart-development-assistant"
+SKILL = "vchart-skill"
 
 
 @pytest.fixture
@@ -199,7 +199,7 @@ def test_incomplete_api_execution_is_not_a_success(workspace, config, kind):
 
 
 def test_image_input_is_sent_but_base64_is_not_persisted(workspace, config):
-    image = ROOT / "evals/cases/vchart-development-assistant/inputs/reference-bars.png"
+    image = ROOT / "evals/cases/vchart-skill/inputs/reference-bars.png"
     # Find by fixture name to keep the input directory layout independent of this test.
     image = next((ROOT / "evals/cases").rglob(image.name))
     shutil.copyfile(image, workspace / "inputs/reference.png")

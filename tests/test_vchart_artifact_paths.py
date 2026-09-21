@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT_DIR = REPO_ROOT / "skills" / "vchart-development-assistant" / "scripts"
+SCRIPT_DIR = REPO_ROOT / "skills" / "vchart-skill" / "scripts"
 
 
 def command(script: str) -> list[str]:

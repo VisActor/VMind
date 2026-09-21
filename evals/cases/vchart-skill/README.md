@@ -16,13 +16,13 @@ These 32 fixed VChart tasks cover chart generation, diagnosis, data handling, in
 Configure the environment and model using the [evaluation guide](../../README.md), then run from the repository root:
 
 ```bash
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group all --list
-uv run python evals/scripts/run.py --skill vchart-development-assistant --case vchart-grouped --browser
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group core --browser
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group extended --list
+uv run python evals/scripts/run.py --skill vchart-skill --group all --list
+uv run python evals/scripts/run.py --skill vchart-skill --case vchart-grouped --browser
+uv run python evals/scripts/run.py --skill vchart-skill --group core --browser
+uv run python evals/scripts/run.py --skill vchart-skill --group extended --list
 ```
 
-`--list` lists tasks without calling a model. Repeat `--case` to select several cases; `--skill vchart-development-assistant --group all` selects all 32 tasks for this Skill. With this Skill selected and no case or group selection, the default is core. Start with one case and inspect its results and usage before expanding the run.
+`--list` lists tasks without calling a model. Repeat `--case` to select several cases; `--skill vchart-skill --group all` selects all 32 tasks for this Skill. With this Skill selected and no case or group selection, the default is core. Start with one case and inspect its results and usage before expanding the run.
 
 The continuation case in core has three independent Agent invocations, so the group contains ten task turns. Each turn may involve multiple model API requests.
 

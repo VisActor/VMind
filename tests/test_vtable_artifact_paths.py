@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT_DIR = REPO_ROOT / "skills" / "vtable-development-assistant" / "scripts"
+SCRIPT_DIR = REPO_ROOT / "skills" / "vtable-skill" / "scripts"
 
 
 @pytest.mark.parametrize("script", ["generate_demo_html.py", "generate_diagnosis_html.py"])

@@ -25,7 +25,7 @@
 2. 切换到项目根目录：
 
    ```bash
-   cd /path/to/vchart-development-assistant
+   cd /path/to/vchart-skill
    ```
 
 3. 验证模板文件存在：
@@ -38,7 +38,7 @@
 
 4. 重新运行脚本
 
-**💡 提示**：脚本必须在 `vchart-development-assistant` 目录下运行，因为模板路径是相对路径。
+**💡 提示**：脚本必须在 `vchart-skill` 目录下运行，因为模板路径是相对路径。
 
 ---
 
@@ -267,7 +267,7 @@
 
 3. 使用正确路径运行脚本：
    ```bash
-   python3 skills/vchart-development-assistant/scripts/generate_demo_html.py \
+   python3 skills/vchart-skill/scripts/generate_demo_html.py \
      --spec-file spec.js \
      --output-dir chart-output
    ```
@@ -452,7 +452,7 @@ python3 -m http.server 8000
 1. **始终在项目根目录运行脚本**
 
    ```bash
-   cd vchart-development-assistant
+   cd vchart-skill
    python3 scripts/generate_*.py ...
    ```
 

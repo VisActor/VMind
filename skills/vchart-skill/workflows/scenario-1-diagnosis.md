@@ -229,7 +229,7 @@ vchart.renderAsync();
 
 ```bash
 # 最小示例
-python3 skills/vchart-development-assistant/scripts/generate_diagnosis_html.py --config-file config.js --output-dir ./chart-output
+python3 skills/vchart-skill/scripts/generate_diagnosis_html.py --config-file config.js --output-dir ./chart-output
 
 # 完整示例
 python3 scripts/generate_diagnosis_html.py \
@@ -339,7 +339,7 @@ const solutions = [
 **步骤 2：运行脚本生成 HTML**
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_diagnosis_html.py \
+python3 skills/vchart-skill/scripts/generate_diagnosis_html.py \
   --title "字段映射错误诊断" \
   --desc "柱状图 Y 轴数据显示问题分析" \
   --config-file config.js \

@@ -134,3 +134,11 @@ Completed: both VTable HTML templates and the public npm lockfile now pin 1.26.8
 The first ad hoc interaction run is preserved in `.cache/vtable-1.26.8-qhs4n3ct/`: two checks failed because the probe clicked away from the sort icon and requested diagnosis.html instead of the generator's demo.html. Correcting the probe resolved both without runtime code changes. These checks validate fixed-example compatibility with 1.26.8, not live model quality or full-library coverage. Changes remain local and uncommitted.
 
 Local checkpoint (2026-09-21): the user authorized committing the verified deterministic CI and VTable 1.26.8 changes before renaming the public Skills. Reuse the successful checks above; review the staged diff and run repository hooks. No push.
+
+## Public Skill names (2026-09-21)
+
+Approved: rename the public Skills to `vchart-skill` and `vtable-skill` after local checkpoint `8f33962`. Update runtime directories/frontmatter, references, bilingual installation/debugging guides, per-Skill case directories, runner selection and test paths together. Preserve case IDs, task prompts, fixtures and expected outcomes. Keep historical source names in provenance with an explicit current-name mapping; existing generated run snapshots remain untouched. Validate discovery, isolated copies, API harness mechanics and fixed browser smoke without model calls.
+
+Completed: new names are consistent across Skill folders/frontmatter, runtime instructions, installation/debugging commands, case catalogs and runner/tests. The 106 Python regressions, Ruff, both Skill validators, discovery of all 36 cases and fixed VChart/VTable browser smoke passed (`.cache/browser-smoke-w5gt5p71/`). Compared all task definitions and expectations with checkpoint 8f33962: only Skill ownership names changed; prompts, case IDs and acceptance criteria are preserved. Updated guide links resolve and active runtime/evaluation/docs entrypoints contain no old names. No model calls or global installation changes. The preceding CI/version checkpoint is committed; this subsequent rename remains uncommitted for review.
+
+Local rename commit (2026-09-21): the user approved committing this rename separately. Reuse the successful regression/browser checks above, review the staged rename/content diff and run the repository hooks. No push or history rewriting.

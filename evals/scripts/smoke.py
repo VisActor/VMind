@@ -14,7 +14,7 @@ from run import ROOT, load_expectations, load_tasks, prepare, write_json
 
 
 def source_code(skill: str, records: list[dict]) -> str:
-    if skill == "vchart-development-assistant":
+    if skill == "vchart-skill":
         return (
             "const spec = "
             + json.dumps(
@@ -32,7 +32,7 @@ def source_code(skill: str, records: list[dict]) -> str:
             )
             + ";"
         )
-    if skill == "vtable-development-assistant":
+    if skill == "vtable-skill":
         return (
             "const tableInstance = new VTable.ListTable({\n"
             "  container: document.getElementById('container'),\n"

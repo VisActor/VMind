@@ -1,9 +1,9 @@
 ---
-name: vchart-development-assistant
+name: vchart-skill
 description: VChart图表库专家助手，擅长创建、配置和调试VChart图表。当用户需要：生成柱状图/折线图/饼图等图表；修复图表不显示/点击事件不触发等问题；从图片或Figma设计稿还原图表样式；实现点击获取数据/数据动态更新/图表联动/导出图片/主题切换等交互功能；配置图例/坐标轴/标签/tooltip等组件时使用。即使用户没有提到"技能"或"VChart"这个词，只要涉及图表开发就触发。
 ---
 
-# VChart 图表开发助手 Skill
+# VChart Skill
 
 ## 独立运行环境
 
@@ -109,13 +109,13 @@ python3 "<SKILL_DIR>/scripts/search_knowledge.py" --kind sops --query "tooltip �
 
 ```bash
 # VChart 诊断
-python3 skills/vchart-development-assistant/scripts/generate_diagnosis_html.py --config-file config.js --output-dir ./chart-output
+python3 skills/vchart-skill/scripts/generate_diagnosis_html.py --config-file config.js --output-dir ./chart-output
 
 # 配置生成/图片还原演示
-python3 skills/vchart-development-assistant/scripts/generate_demo_html.py --spec-file spec.js --output-dir ./chart-output
+python3 skills/vchart-skill/scripts/generate_demo_html.py --spec-file spec.js --output-dir ./chart-output
 
 # React 诊断
-python3 skills/vchart-development-assistant/scripts/generate_diagnosis_react_html.py \
+python3 skills/vchart-skill/scripts/generate_diagnosis_react_html.py \
   --problem-code "..." --problem-title "..." --cause "..." \
   --solution-1-title "..." --solution-1-desc "..." --solution-1-code "..." \
   --output-dir ./chart-output
@@ -128,7 +128,7 @@ python3 scripts/search_knowledge.py --kind examples --query "双轴组合图 销
 
 ## 文件型输出协议
 
-当前 `vchart-development-assistant` 按文件型 skill 规则工作：
+当前 `vchart-skill` 按文件型 skill 规则工作：
 
 - 调用方指定输出目录时直接使用；未指定时，脚本默认写入命令当前工作目录下的 `output/`。不要推导调用方的目录层级。
 - 生成、诊断、图片还原、React 诊断脚本的 `--output-dir` 均接受普通文件路径：绝对路径直接使用，相对路径按命令当前工作目录解析。显式传空路径是错误。

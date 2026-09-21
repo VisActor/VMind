@@ -6,8 +6,8 @@
 
 | Skill | 用例数 | 分组 | 用例说明 |
 | --- | --- | --- | --- |
-| `vchart-development-assistant` | 32 | core（8）、extended（24） | [VChart](vchart-development-assistant/README.zh-CN.md) |
-| `vtable-development-assistant` | 4 | core（4） | [VTable](vtable-development-assistant/README.zh-CN.md) |
+| `vchart-skill` | 32 | core（8）、extended（24） | [VChart](vchart-skill/README.zh-CN.md) |
+| `vtable-skill` | 4 | core（4） | [VTable](vtable-skill/README.zh-CN.md) |
 
 ## 目录结构
 
@@ -35,12 +35,12 @@ cases/
 uv run python evals/scripts/run.py --group all --list
 
 # 选择 Skill，再选择该 Skill 内的分组
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group core --browser
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group extended --list
-uv run python evals/scripts/run.py --skill vtable-development-assistant --group core --browser
+uv run python evals/scripts/run.py --skill vchart-skill --group core --browser
+uv run python evals/scripts/run.py --skill vchart-skill --group extended --list
+uv run python evals/scripts/run.py --skill vtable-skill --group core --browser
 
 # 单独运行一个用例
-uv run python evals/scripts/run.py --skill vtable-development-assistant --case vtable-list --browser
+uv run python evals/scripts/run.py --skill vtable-skill --case vtable-list --browser
 ```
 
 `--skill` 选择用例目录，`--group` 选择该 Skill 内的分组。`--group all` 在指定 Skill 时选择该 Skill 的全部用例，未指定 Skill 时选择所有用例。默认仍为 VChart 的 core 组；仅指定 Skill 时选择其 core 组。当前 VTable 没有 extended 组，选择空分组会报错。

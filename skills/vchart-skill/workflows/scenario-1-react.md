@@ -679,7 +679,7 @@ python3 scripts/generate_diagnosis_react_html.py \
 若有多个解决方案，继续添加参数：
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_diagnosis_react_html.py \
+python3 skills/vchart-skill/scripts/generate_diagnosis_react_html.py \
   --problem-code "..." \
   --problem-title "..." \
   --cause "..." \
@@ -758,7 +758,7 @@ Path("diagnosis_react.html").write_text(html)
 #!/bin/bash
 
 # 批量诊断脚本示例
-python3 skills/vchart-development-assistant/scripts/generate_diagnosis_react_html.py \
+python3 skills/vchart-skill/scripts/generate_diagnosis_react_html.py \
   --problem-code "问题代码1" \
   --problem-title "问题1" \
   --cause "原因1" \
@@ -767,7 +767,7 @@ python3 skills/vchart-development-assistant/scripts/generate_diagnosis_react_htm
   --solution-1-code "代码1" \
   --output-dir chart-example-1
 
-python3 skills/vchart-development-assistant/scripts/generate_diagnosis_react_html.py \
+python3 skills/vchart-skill/scripts/generate_diagnosis_react_html.py \
   --problem-code "问题代码2" \
   --problem-title "问题2" \
   --cause "原因2" \
@@ -848,7 +848,7 @@ const exportImage = useCallback(() => {
 1. **JSX 代码转义**：命令行中传递 JSX 代码时，使用单引号包裹整个代码块，内部使用转义的双引号
 2. **代码长度**：避免在命令行中传递超过 10 行的复杂代码，考虑使用配置文件方式
 3. **方案编号**：确保方案编号连续（1, 2, 3...），不要跳号
-4. **路径问题**：在 `vchart-development-assistant` 目录下运行脚本，确保模板文件路径正确
+4. **路径问题**：在 `vchart-skill` 目录下运行脚本，确保模板文件路径正确
 
 ---
 

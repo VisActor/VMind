@@ -1,7 +1,7 @@
 [
   {
     "id": "vtable-list",
-    "skill": "vtable-development-assistant",
+    "skill": "vtable-skill",
     "inputs": [
       "sales.csv"
     ],
@@ -11,7 +11,7 @@
   },
   {
     "id": "vtable-pivot",
-    "skill": "vtable-development-assistant",
+    "skill": "vtable-skill",
     "inputs": [
       "sales.csv"
     ],
@@ -21,7 +21,7 @@
   },
   {
     "id": "vtable-filter",
-    "skill": "vtable-development-assistant",
+    "skill": "vtable-skill",
     "inputs": [
       "sales.csv"
     ],
@@ -31,7 +31,7 @@
   },
   {
     "id": "vtable-diagnosis",
-    "skill": "vtable-development-assistant",
+    "skill": "vtable-skill",
     "inputs": [
       "broken-table.js"
     ],

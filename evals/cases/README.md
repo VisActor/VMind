@@ -6,8 +6,8 @@ Cases are maintained in separate Skill directories. Each catalog owns its tasks,
 
 | Skill | Cases | Groups | Guide |
 | --- | --- | --- | --- |
-| `vchart-development-assistant` | 32 | core (8), extended (24) | [VChart](vchart-development-assistant/README.md) |
-| `vtable-development-assistant` | 4 | core (4) | [VTable](vtable-development-assistant/README.md) |
+| `vchart-skill` | 32 | core (8), extended (24) | [VChart](vchart-skill/README.md) |
+| `vtable-skill` | 4 | core (4) | [VTable](vtable-skill/README.md) |
 
 ## Directory structure
 
@@ -35,12 +35,12 @@ Set up the environment and model using the [evaluation guide](../README.md), the
 uv run python evals/scripts/run.py --group all --list
 
 # Select a Skill, then a group within that Skill
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group core --browser
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group extended --list
-uv run python evals/scripts/run.py --skill vtable-development-assistant --group core --browser
+uv run python evals/scripts/run.py --skill vchart-skill --group core --browser
+uv run python evals/scripts/run.py --skill vchart-skill --group extended --list
+uv run python evals/scripts/run.py --skill vtable-skill --group core --browser
 
 # Run one case
-uv run python evals/scripts/run.py --skill vtable-development-assistant --case vtable-list --browser
+uv run python evals/scripts/run.py --skill vtable-skill --case vtable-list --browser
 ```
 
 `--skill` selects a catalog; `--group` selects a group within it. With a Skill selected, `--group all` selects all its cases; without a Skill, it selects every case. The default remains VChart core. Selecting only a Skill uses its core group. VTable currently has no extended group; an empty selection is an error.

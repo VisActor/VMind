@@ -120,7 +120,7 @@ python3 scripts/generate_demo_html.py \
 **使用示例**：
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_diagnosis_react_html.py \
+python3 skills/vchart-skill/scripts/generate_diagnosis_react_html.py \
   --problem-code "const Chart = () => <BarChart />" \
   --problem-title "图表不显示" \
   --cause "数据格式错误" \
@@ -325,7 +325,7 @@ node -e "const s=require('fs').readFileSync('spec.js','utf8'); console.log(s.inc
 ### ✅ 文件组织建议
 
 ```
-vchart-development-assistant/
+vchart-skill/
 ├── configs/                 # 存放诊断配置文件
 │   ├── config_bar.js
 │   ├── config_line.js

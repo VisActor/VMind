@@ -255,7 +255,7 @@ vchart.renderAsync();
 **最小示例**（使用默认参数）：
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_demo_html.py --spec-file spec.js --output-dir ./chart-output
+python3 skills/vchart-skill/scripts/generate_demo_html.py --spec-file spec.js --output-dir ./chart-output
 ```
 
 **完整示例**（自定义所有参数）：
@@ -332,7 +332,7 @@ const spec = {
 **步骤 2：运行脚本生成 HTML**
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_demo_html.py \
+python3 skills/vchart-skill/scripts/generate_demo_html.py \
   --title "柱状图标签功能示例" \
   --desc "展示如何配置数据标签" \
   --feature "在柱子上显示数值标签" \

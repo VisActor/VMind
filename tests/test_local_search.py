@@ -5,7 +5,7 @@ import pytest
 
 MODULE = (
     Path(__file__).resolve().parents[1]
-    / "skills/vchart-development-assistant/scripts/search_knowledge.py"
+    / "skills/vchart-skill/scripts/search_knowledge.py"
 )
 spec = importlib.util.spec_from_file_location("local_search", MODULE)
 search_module = importlib.util.module_from_spec(spec)

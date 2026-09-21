@@ -16,13 +16,13 @@
 先按 [评测指南](../../README.zh-CN.md) 配置环境和模型，再从仓库根目录执行：
 
 ```bash
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group all --list
-uv run python evals/scripts/run.py --skill vchart-development-assistant --case vchart-grouped --browser
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group core --browser
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group extended --list
+uv run python evals/scripts/run.py --skill vchart-skill --group all --list
+uv run python evals/scripts/run.py --skill vchart-skill --case vchart-grouped --browser
+uv run python evals/scripts/run.py --skill vchart-skill --group core --browser
+uv run python evals/scripts/run.py --skill vchart-skill --group extended --list
 ```
 
-`--list` 只列出任务，不调用模型。可重复传入 `--case` 选择多个用例；`--skill vchart-development-assistant --group all` 选择本 Skill 的全部 32 个任务。指定本 Skill 后，未指定用例或分组时默认运行 core。建议先跑单个用例，查看结果和用量，再扩大范围。
+`--list` 只列出任务，不调用模型。可重复传入 `--case` 选择多个用例；`--skill vchart-skill --group all` 选择本 Skill 的全部 32 个任务。指定本 Skill 后，未指定用例或分组时默认运行 core。建议先跑单个用例，查看结果和用量，再扩大范围。
 
 core 中的续改用例包含三轮独立 Agent 执行，所以整组共有 10 轮任务执行；每轮内部可能包含多次模型 API 请求。
 

@@ -67,7 +67,7 @@ const solutions = [
 **最小示例**（使用默认参数）：
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_diagnosis_html.py \
+python3 skills/vchart-skill/scripts/generate_diagnosis_html.py \
   --config-file config.js \
   --output-dir chart-output
 ```
@@ -75,7 +75,7 @@ python3 skills/vchart-development-assistant/scripts/generate_diagnosis_html.py \
 **完整示例**（自定义所有参数）：
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_diagnosis_html.py \
+python3 skills/vchart-skill/scripts/generate_diagnosis_html.py \
   --title "字段映射错误诊断" \
   --desc "柱状图 Y 轴数据显示问题分析" \
   --config-file configs/bar_yfield_error.js \
@@ -140,7 +140,7 @@ const spec = {
 **最小示例**（使用默认参数）：
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_demo_html.py \
+python3 skills/vchart-skill/scripts/generate_demo_html.py \
   --spec-file spec.js \
   --output-dir chart-output
 ```
@@ -148,7 +148,7 @@ python3 skills/vchart-development-assistant/scripts/generate_demo_html.py \
 **完整示例**（配置生成场景）：
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_demo_html.py \
+python3 skills/vchart-skill/scripts/generate_demo_html.py \
   --title "柱状图标签功能示例" \
   --desc "展示如何配置数据标签" \
   --feature "在柱子上显示数值标签，支持自定义格式化" \
@@ -160,7 +160,7 @@ python3 skills/vchart-development-assistant/scripts/generate_demo_html.py \
 **完整示例**（图片还原场景）：
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_demo_html.py \
+python3 skills/vchart-skill/scripts/generate_demo_html.py \
   --title "销售趋势图还原" \
   --desc "基于设计稿还原的折线图" \
   --feature "还原了渐变填充、数据标签位置、坐标轴样式" \
@@ -210,7 +210,7 @@ python3 skills/vchart-development-assistant/scripts/generate_demo_html.py \
 **单方案示例**：
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_diagnosis_react_html.py \
+python3 skills/vchart-skill/scripts/generate_diagnosis_react_html.py \
   --problem-code "const Chart = () => <BarChart data={data}><Bar xField=\"cat\" yField=\"values\" /></BarChart>" \
   --problem-title "图表 Y 轴没有数据显示" \
   --cause "Bar 组件的 yField 值为 'values'，但数据字段名为 'value'" \
@@ -224,7 +224,7 @@ python3 skills/vchart-development-assistant/scripts/generate_diagnosis_react_htm
 **多方案示例**：
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_diagnosis_react_html.py \
+python3 skills/vchart-skill/scripts/generate_diagnosis_react_html.py \
   --problem-code "const Chart = () => { const data = getData(); return <BarChart data={data} />; }" \
   --problem-title "图表渲染性能问题" \
   --cause "getData() 在每次渲染时重新执行，导致不必要的计算" \
@@ -346,12 +346,12 @@ python3 scripts/generate_diagnosis_react_html.py --help
 
 ```bash
 # 使用默认标题和调用方输出目录
-python3 skills/vchart-development-assistant/scripts/generate_demo_html.py \
+python3 skills/vchart-skill/scripts/generate_demo_html.py \
   --spec-file spec.js \
   --output-dir chart-output
 
 # 等同于
-python3 skills/vchart-development-assistant/scripts/generate_demo_html.py \
+python3 skills/vchart-skill/scripts/generate_demo_html.py \
   --title "VChart 图表示例" \
   --desc "基于需求生成的可运行图表配置" \
   --spec-file spec.js \

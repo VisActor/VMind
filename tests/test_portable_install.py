@@ -16,7 +16,7 @@ def test_evaluation_lockfile_uses_public_npm_registry():
     assert resolved and all(urlsplit(url).hostname == "registry.npmjs.org" for url in resolved)
 
 
-@pytest.mark.parametrize("skill", ["vchart-development-assistant", "vtable-development-assistant"])
+@pytest.mark.parametrize("skill", ["vchart-skill", "vtable-skill"])
 def test_copied_skill_generates_without_source_checkout(tmp_path, skill):
     installed = tmp_path / "installed skill"
     shutil.copytree(ROOT / "skills" / skill, installed)

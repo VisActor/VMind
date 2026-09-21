@@ -101,7 +101,7 @@ def test_custom_inputs_are_copied_without_modifying_sources(tmp_path):
     prompt.write_text("Explain the provided data")
     data = tmp_path / "input.csv"
     data.write_text("x,y\n1,2\n")
-    task = runner.custom_task("vtable-development-assistant", prompt, [data], None)
+    task = runner.custom_task("vtable-skill", prompt, [data], None)
     workspace = runner.prepare(task, tmp_path / "custom")
     assert (workspace / "inputs/input.csv").read_bytes() == data.read_bytes()
     (workspace / "inputs/input.csv").write_text("changed copy")
@@ -112,13 +112,13 @@ def test_custom_task_rejects_missing_or_duplicate_inputs(tmp_path):
     prompt = tmp_path / "prompt.md"
     prompt.write_text("Task")
     with pytest.raises(ValueError, match="must be a file"):
-        runner.custom_task("vtable-development-assistant", prompt, [tmp_path / "absent"], None)
+        runner.custom_task("vtable-skill", prompt, [tmp_path / "absent"], None)
     for name in ["first", "second"]:
         (tmp_path / name).mkdir()
         (tmp_path / name / "same.csv").touch()
     with pytest.raises(ValueError, match="Duplicate"):
         runner.custom_task(
-            "vtable-development-assistant",
+            "vtable-skill",
             prompt,
             [tmp_path / "first/same.csv", tmp_path / "second/same.csv"],
             None,
@@ -130,7 +130,7 @@ def test_custom_html_must_be_within_outputs(tmp_path, html):
     prompt = tmp_path / "prompt.md"
     prompt.write_text("Task")
     with pytest.raises(ValueError, match="relative .html"):
-        runner.custom_task("vtable-development-assistant", prompt, [], html)
+        runner.custom_task("vtable-skill", prompt, [], html)
 
 
 def test_custom_task_checks_answer_without_inventing_artifact_requirements(tmp_path):
@@ -156,7 +156,7 @@ def test_custom_cli_rejects_ambiguous_selection_before_model_access(tmp_path, mo
     monkeypatch.setattr(
         sys,
         "argv",
-        ["run.py", "--skill", "vchart-development-assistant", "--prompt-file", str(prompt), *extra],
+        ["run.py", "--skill", "vchart-skill", "--prompt-file", str(prompt), *extra],
     )
     with pytest.raises(SystemExit) as failed:
         runner.main()
@@ -166,12 +166,12 @@ def test_custom_cli_rejects_ambiguous_selection_before_model_access(tmp_path, mo
 @pytest.mark.parametrize(
     "skill,cases,group,count,skills",
     [
-        (None, None, None, 8, {"vchart-development-assistant"}),
-        ("vchart-development-assistant", None, "extended", 24, {"vchart-development-assistant"}),
-        ("vchart-development-assistant", None, "all", 32, {"vchart-development-assistant"}),
-        ("vtable-development-assistant", None, None, 4, {"vtable-development-assistant"}),
+        (None, None, None, 8, {"vchart-skill"}),
+        ("vchart-skill", None, "extended", 24, {"vchart-skill"}),
+        ("vchart-skill", None, "all", 32, {"vchart-skill"}),
+        ("vtable-skill", None, None, 4, {"vtable-skill"}),
         (None, None, "all", 36, set(runner.SKILLS)),
-        (None, ["vtable-list"], None, 1, {"vtable-development-assistant"}),
+        (None, ["vtable-list"], None, 1, {"vtable-skill"}),
     ],
 )
 def test_fixed_selection_scopes_groups_to_skills(skill, cases, group, count, skills):
@@ -186,12 +186,12 @@ def test_fixed_selection_scopes_groups_to_skills(skill, cases, group, count, ski
 )
 def test_invalid_skill_selection_fails_before_model_access(cases, group, message):
     with pytest.raises(ValueError, match=message):
-        runner.select_tasks(runner.load_tasks(), "vtable-development-assistant", cases, group)
+        runner.select_tasks(runner.load_tasks(), "vtable-skill", cases, group)
 
 
 def test_skill_cli_lists_fixed_cases_without_custom_prompt_or_credentials(monkeypatch, capsys):
     monkeypatch.setattr(
-        sys, "argv", ["run.py", "--skill", "vtable-development-assistant", "--list"]
+        sys, "argv", ["run.py", "--skill", "vtable-skill", "--list"]
     )
     runner.main()
     lines = capsys.readouterr().out.splitlines()
@@ -202,14 +202,14 @@ def test_skill_cli_lists_fixed_cases_without_custom_prompt_or_credentials(monkey
 def test_preparation_uses_inputs_from_the_selected_catalog(tmp_path, monkeypatch):
     catalogs = tmp_path / "cases"
     for skill, value in [
-        ("vchart-development-assistant", "chart"),
-        ("vtable-development-assistant", "table"),
+        ("vchart-skill", "chart"),
+        ("vtable-skill", "table"),
     ]:
         folder = catalogs / skill / "inputs"
         folder.mkdir(parents=True)
         (folder / "same.csv").write_text(value)
     monkeypatch.setattr(runner, "CASES", catalogs)
-    task = {"id": "test", "skill": "vtable-development-assistant", "inputs": ["same.csv"]}
+    task = {"id": "test", "skill": "vtable-skill", "inputs": ["same.csv"]}
     workspace = runner.prepare(task, tmp_path / "run")
     assert (workspace / "inputs/same.csv").read_text() == "table"
 

@@ -42,7 +42,7 @@ def test_catalog_fixture_inventory_matches_input_bytes(catalog):
 
 
 def test_selection_covers_every_vchart_task_once():
-    folder = ROOT / "evals/cases/vchart-development-assistant"
+    folder = ROOT / "evals/cases/vchart-skill"
     tasks = json.loads((folder / "tasks.json").read_text())
     selection = json.loads((folder / "selection.json").read_text())
     ids = [c["id"] for c in selection["cases"]]

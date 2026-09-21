@@ -8,8 +8,8 @@ VChart and VTable development skills for agents that can read files and run comm
 
 | Skill | Tasks |
 | --- | --- |
-| [vchart-development-assistant](skills/vchart-development-assistant/SKILL.md) | Chart generation, diagnosis, image replication and React integration |
-| [vtable-development-assistant](skills/vtable-development-assistant/SKILL.md) | List tables, pivot tables/charts, interactions and diagnosis |
+| [vchart-skill](skills/vchart-skill/SKILL.md) | Chart generation, diagnosis, image replication and React integration |
+| [vtable-skill](skills/vtable-skill/SKILL.md) | List tables, pivot tables/charts, interactions and diagnosis |
 
 Each skill includes its instructions, local references, templates and scripts. No separate VisActor CLI, MCP server, model key or hosted VisActor API is required. The host agent supplies the model.
 
@@ -20,8 +20,8 @@ Each skill includes its instructions, local references, templates and scripts. N
 Run these commands in the project where you want to use the Skills:
 
 ```bash
-npx skills add VisActor/VMind --skill vchart-development-assistant
-npx skills add VisActor/VMind --skill vtable-development-assistant
+npx skills add VisActor/VMind --skill vchart-skill
+npx skills add VisActor/VMind --skill vtable-skill
 ```
 
 Follow the installer's prompts to select Codex or Claude Code. You can install either Skill independently. More installation options are documented in the [Skills CLI reference](https://github.com/vercel-labs/skills#usage).
@@ -53,8 +53,8 @@ This section is for contributors editing Skills or running local tests. Start wi
 From the root of your local repository, install the working copy of either Skill:
 
 ```bash
-npx skills add ./skills/vchart-development-assistant
-npx skills add ./skills/vtable-development-assistant
+npx skills add ./skills/vchart-skill
+npx skills add ./skills/vtable-skill
 ```
 
 Alternatively, copy the complete Skill directory into your agent's skill directory, including its references, templates and scripts. Do not copy only `SKILL.md`. See the [local debugging guide](docs/debugging.md) for Codex and Claude Code workspace setup. Refresh the installed copy after changing a Skill before retesting.

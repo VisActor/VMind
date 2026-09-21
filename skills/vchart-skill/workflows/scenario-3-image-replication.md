@@ -198,7 +198,7 @@ python3 scripts/generate_demo_html.py --spec-file spec.js
 **完整示例**（图片还原场景）：
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_demo_html.py \
+python3 skills/vchart-skill/scripts/generate_demo_html.py \
   --title "图表还原结果" \
   --desc "基于图片分析生成的可运行示例" \
   --feature "还原了颜色、标签位置、坐标轴与图例布局" \
@@ -271,7 +271,7 @@ const spec = {
 **步骤 2：运行脚本生成 HTML**
 
 ```bash
-python3 skills/vchart-development-assistant/scripts/generate_demo_html.py \
+python3 skills/vchart-skill/scripts/generate_demo_html.py \
   --title "折线图还原示例" \
   --desc "根据截图还原的折线图" \
   --feature "还原了数据趋势、颜色和标签样式" \

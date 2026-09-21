@@ -11,9 +11,9 @@
 按 [评测指南](../../README.zh-CN.md) 配置环境和模型后，在仓库根目录执行：
 
 ```bash
-uv run python evals/scripts/run.py --skill vtable-development-assistant --group all --list
-uv run python evals/scripts/run.py --skill vtable-development-assistant --case vtable-list --browser
-uv run python evals/scripts/run.py --skill vtable-development-assistant --group core --browser
+uv run python evals/scripts/run.py --skill vtable-skill --group all --list
+uv run python evals/scripts/run.py --skill vtable-skill --case vtable-list --browser
+uv run python evals/scripts/run.py --skill vtable-skill --group core --browser
 ```
 
 ## 核心用例（core）

@@ -115,13 +115,13 @@ uv run python evals/scripts/run.py --case vchart-grouped --model MODEL_ID --brow
 
 ```bash
 # 8 个 VChart 核心任务，包含三轮续改，共 10 次独立模型会话
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group core --browser
+uv run python evals/scripts/run.py --skill vchart-skill --group core --browser
 
 # 4 个 VTable 任务
-uv run python evals/scripts/run.py --skill vtable-development-assistant --group core --browser
+uv run python evals/scripts/run.py --skill vtable-skill --group core --browser
 
 # 24 个额外的 VChart 任务
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group extended --browser
+uv run python evals/scripts/run.py --skill vchart-skill --group extended --browser
 ```
 
 使用 `--group all` 运行全部 36 个任务，或重复传入 `--case` 选择多个任务。显式指定 case 时，以 case 选择为准。`--skill` 选择 Skill；分组在该 Skill 内生效。默认选择 VChart 的 core 组。指定 Skill 后，`--group all` 仅选择该 Skill 的全部任务。`--timeout 600` 设置每轮任务的执行时限。建议从少量任务开始，检查 `usage.json` 后再扩大范围。

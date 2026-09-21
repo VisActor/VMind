@@ -115,13 +115,13 @@ Then run the relevant group:
 
 ```bash
 # 8 VChart core tasks, 10 independent model conversations including three edit turns
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group core --browser
+uv run python evals/scripts/run.py --skill vchart-skill --group core --browser
 
 # 4 VTable tasks
-uv run python evals/scripts/run.py --skill vtable-development-assistant --group core --browser
+uv run python evals/scripts/run.py --skill vtable-skill --group core --browser
 
 # 24 additional VChart tasks
-uv run python evals/scripts/run.py --skill vchart-development-assistant --group extended --browser
+uv run python evals/scripts/run.py --skill vchart-skill --group extended --browser
 ```
 
 Use `--group all` for all 36 tasks, or repeat `--case` to select several. Explicit cases override groups. `--skill` selects a Skill and groups apply within it. The default is VChart core. With a Skill selected, `--group all` selects only its cases. `--timeout 600` sets the per-turn execution deadline. Start small and inspect `usage.json` before expanding the run.

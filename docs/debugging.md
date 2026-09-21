@@ -11,14 +11,14 @@ The following local setup uses a fresh directory so it does not overwrite an exi
 ```bash
 debug_workspace="$(mktemp -d)"
 mkdir -p "$debug_workspace/inputs" "$debug_workspace/outputs"
-cp evals/cases/vchart-development-assistant/inputs/sales.csv "$debug_workspace/inputs/"
+cp evals/cases/vchart-skill/inputs/sales.csv "$debug_workspace/inputs/"
 ```
 
 Choose one host. For **Codex**:
 
 ```bash
 mkdir -p "$debug_workspace/.agents/skills"
-cp -R skills/vchart-development-assistant skills/vtable-development-assistant "$debug_workspace/.agents/skills/"
+cp -R skills/vchart-skill skills/vtable-skill "$debug_workspace/.agents/skills/"
 cd "$debug_workspace"
 codex
 ```
@@ -27,7 +27,7 @@ For **Claude Code**, instead run this from the repository root after the shared 
 
 ```bash
 mkdir -p "$debug_workspace/.claude/skills"
-cp -R skills/vchart-development-assistant skills/vtable-development-assistant "$debug_workspace/.claude/skills/"
+cp -R skills/vchart-skill skills/vtable-skill "$debug_workspace/.claude/skills/"
 cd "$debug_workspace"
 claude
 ```
@@ -37,10 +37,10 @@ You can also open that workspace in the corresponding app. The scripts need Pyth
 In Codex CLI, send:
 
 ```text
-$vchart-development-assistant Use every row in inputs/sales.csv to build a grouped bar chart comparing sales by region and quarter. Write editable source and runnable HTML under outputs/.
+$vchart-skill Use every row in inputs/sales.csv to build a grouped bar chart comparing sales by region and quarter. Write editable source and runnable HTML under outputs/.
 ```
 
-In Claude Code, send the same request with `/vchart-development-assistant` instead of `$vchart-development-assistant`. For a table, select `vtable-development-assistant` and ask for a sortable detail table. Inspect the generated source and HTML, then continue the conversation with changes or errors to investigate.
+In Claude Code, send the same request with `/vchart-skill` instead of `$vchart-skill`. For a table, select `vtable-skill` and ask for a sortable detail table. Inspect the generated source and HTML, then continue the conversation with changes or errors to investigate.
 
 After editing this repository's Skill, refresh the installed copy before retesting (or create another fresh workspace with these steps). Record the host/model, prompt, inputs and observed result when reporting a problem. Logs and tool access in this route are managed by the host; they do not automatically appear in `evals/runs/`.
 
@@ -60,13 +60,13 @@ Or supply a task without editing the case catalogue:
 
 ```bash
 uv run python evals/scripts/run.py \
-  --skill vchart-development-assistant \
+  --skill vchart-skill \
   --prompt-file evals/examples/chart-prompt.md \
-  --input evals/cases/vchart-development-assistant/inputs/sales.csv \
+  --input evals/cases/vchart-skill/inputs/sales.csv \
   --browser --html demo.html
 ```
 
-Use `--skill vtable-development-assistant` for tables. Replace the prompt/data paths with your own files. Relative paths are resolved from your shell's current directory. Each `--input` is copied into `inputs/<filename>`; repeat the flag for multiple files with distinct basenames. Inputs are optional for explanatory tasks. All generated artifacts go to the run workspace's `outputs/`.
+Use `--skill vtable-skill` for tables. Replace the prompt/data paths with your own files. Relative paths are resolved from your shell's current directory. Each `--input` is copied into `inputs/<filename>`; repeat the flag for multiple files with distinct basenames. Inputs are optional for explanatory tasks. All generated artifacts go to the run workspace's `outputs/`.
 
 `--html` names an output HTML path relative to `outputs/`; the runner includes it in the task instructions and checks that it exists. With `--browser`, this path is required and rendering checks/screenshots run after generation. Omit both flags for text answers or tasks you will inspect yourself. Custom runs check process completion and a nonempty final answer, plus any explicitly requested HTML/browser checks; they do not invent case-specific semantic or data assertions. Success remains `needs-review`.
 

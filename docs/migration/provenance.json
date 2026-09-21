@@ -258,5 +258,9 @@
       "skills/vchart-development-assistant/references/sops/tooltip-crosshair-sync.md",
       "skills/vchart-development-assistant/references/sops/tooltip-usage.md"
     ]
+  },
+  "currentSkillNames": {
+    "vchart-development-assistant": "vchart-skill",
+    "vtable-development-assistant": "vtable-skill"
   }
 }

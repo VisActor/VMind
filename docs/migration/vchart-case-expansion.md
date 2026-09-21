@@ -9,7 +9,7 @@ The first migrated six-case set established standalone execution but was too nar
 - 2 preserve the previously reviewed grouped-bar and field-diagnosis baselines.
 - 4 supplement empty inputs, Chinese fields, full input retention and image replication.
 - One placeholder FAQ is excluded; 703 unselected pool entries remain deferred, not exhaustively reviewed or claimed redundant.
-- [Coverage table](../../evals/cases/vchart-development-assistant/README.md), [source decisions](../../evals/cases/vchart-development-assistant/selection.json) and [fixture hashes](../../evals/cases/vchart-development-assistant/fixtures.json) are separate from Agent inputs.
+- [Coverage table](../../evals/cases/vchart-skill/README.md), [source decisions](../../evals/cases/vchart-skill/selection.json) and [fixture hashes](../../evals/cases/vchart-skill/fixtures.json) are separate from Agent inputs.
 
 ## Runner scope
 
@@ -51,6 +51,6 @@ All **24 extended tasks remain not-run**. No claim of full VChart capability cov
 
 ## Archived source inventory
 
-The original 728-case pool comprises 407 examples, 206 FAQs and 115 tutorials; overlapping subsets are not additive. The 12 legacy E2E definitions have unresolved inputCase references and empty image baselines, so they were not imported as runnable tests. The excluded FAQ is the 0-template placeholder. `evals/cases/vchart-development-assistant/selection.json` retains source IDs, original prompts, source document paths, adaptation decisions and deferred IDs. Original keyword assertions and private absolute paths are not part of task workspaces. No legacy screenshots with uncertain reuse rights were imported.
+The original 728-case pool comprises 407 examples, 206 FAQs and 115 tutorials; overlapping subsets are not additive. The 12 legacy E2E definitions have unresolved inputCase references and empty image baselines, so they were not imported as runnable tests. The excluded FAQ is the 0-template placeholder. `evals/cases/vchart-skill/selection.json` retains source IDs, original prompts, source document paths, adaptation decisions and deferred IDs. Original keyword assertions and private absolute paths are not part of task workspaces. No legacy screenshots with uncertain reuse rights were imported.
 
 These are migration records. The public case guides describe current coverage, execution and acceptance without requiring familiarity with the source repository.

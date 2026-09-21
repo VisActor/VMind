@@ -11,9 +11,9 @@ Four fixed tasks cover list tables, pivot tables, filtering and field diagnosis.
 Configure the environment and model using the [evaluation guide](../../README.md), then run from the repository root:
 
 ```bash
-uv run python evals/scripts/run.py --skill vtable-development-assistant --group all --list
-uv run python evals/scripts/run.py --skill vtable-development-assistant --case vtable-list --browser
-uv run python evals/scripts/run.py --skill vtable-development-assistant --group core --browser
+uv run python evals/scripts/run.py --skill vtable-skill --group all --list
+uv run python evals/scripts/run.py --skill vtable-skill --case vtable-list --browser
+uv run python evals/scripts/run.py --skill vtable-skill --group core --browser
 ```
 
 ## Core cases (core)

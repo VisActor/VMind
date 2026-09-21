@@ -8,8 +8,8 @@
 
 | Skill | 能力 |
 | --- | --- |
-| [vchart-development-assistant](skills/vchart-development-assistant/SKILL.md) | 图表生成、问题诊断、图片还原和 React 集成 |
-| [vtable-development-assistant](skills/vtable-development-assistant/SKILL.md) | 明细表、透视表与透视图、交互和问题诊断 |
+| [vchart-skill](skills/vchart-skill/SKILL.md) | 图表生成、问题诊断、图片还原和 React 集成 |
+| [vtable-skill](skills/vtable-skill/SKILL.md) | 明细表、透视表与透视图、交互和问题诊断 |
 
 每个 Skill 都包含完整指令、本地参考资料、模板和脚本。无需额外安装 VisActor CLI、MCP 服务，也无需为 Skill 单独配置模型 Key 或访问 VisActor 托管 API。模型能力由宿主 Agent 提供。
 
@@ -20,8 +20,8 @@
 在你准备使用 Skills 的项目目录中执行：
 
 ```bash
-npx skills add VisActor/VMind --skill vchart-development-assistant
-npx skills add VisActor/VMind --skill vtable-development-assistant
+npx skills add VisActor/VMind --skill vchart-skill
+npx skills add VisActor/VMind --skill vtable-skill
 ```
 
 按照安装器提示选择 Codex 或 Claude Code。两个 Skill 可以按需单独安装。更多安装选项见 [Skills CLI 说明](https://github.com/vercel-labs/skills#usage)。
@@ -53,8 +53,8 @@ VChart 知识检索在本地读取随 Skill 附带的示例和 SOP，采用关�
 在本地仓库根目录执行，安装当前工作副本中的 Skill：
 
 ```bash
-npx skills add ./skills/vchart-development-assistant
-npx skills add ./skills/vtable-development-assistant
+npx skills add ./skills/vchart-skill
+npx skills add ./skills/vtable-skill
 ```
 
 也可以将 Skill 的完整目录复制到 Agent 的技能目录中，包括参考资料、模板和脚本，不要只复制 `SKILL.md`。Codex 和 Claude Code 的调试工作区准备方式见 [本地调试指南](docs/debugging.md)。修改 Skill 后，请先更新安装副本，再重新测试。

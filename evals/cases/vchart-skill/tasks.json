@@ -1,7 +1,7 @@
 [
   {
     "id": "vchart-grouped",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "inputs": [
       "sales.csv"
     ],
@@ -11,7 +11,7 @@
   },
   {
     "id": "vchart-diagnosis",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "inputs": [
       "broken-chart.js"
     ],
@@ -21,7 +21,7 @@
   },
   {
     "id": "vchart-stack",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "core",
     "family": "generation",
     "inputs": [
@@ -31,7 +31,7 @@
   },
   {
     "id": "vchart-percent",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "core",
     "family": "generation",
     "inputs": [
@@ -41,7 +41,7 @@
   },
   {
     "id": "vchart-line",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "generation",
     "inputs": [
@@ -51,7 +51,7 @@
   },
   {
     "id": "vchart-line-null",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "core",
     "family": "data",
     "inputs": [
@@ -61,7 +61,7 @@
   },
   {
     "id": "vchart-area-stack",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "generation",
     "inputs": [
@@ -71,7 +71,7 @@
   },
   {
     "id": "vchart-pie",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "generation",
     "inputs": [
@@ -81,7 +81,7 @@
   },
   {
     "id": "vchart-scatter",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "generation",
     "inputs": [
@@ -91,7 +91,7 @@
   },
   {
     "id": "vchart-heatmap",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "generation",
     "inputs": [
@@ -101,7 +101,7 @@
   },
   {
     "id": "vchart-radar",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "generation",
     "inputs": [
@@ -111,7 +111,7 @@
   },
   {
     "id": "vchart-funnel",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "generation",
     "inputs": [
@@ -121,7 +121,7 @@
   },
   {
     "id": "vchart-dual-axis",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "generation",
     "inputs": [
@@ -131,7 +131,7 @@
   },
   {
     "id": "vchart-negative",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "data",
     "inputs": [
@@ -141,7 +141,7 @@
   },
   {
     "id": "vchart-long-labels",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "layout",
     "inputs": [
@@ -151,7 +151,7 @@
   },
   {
     "id": "vchart-legend",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "interaction",
     "inputs": [
@@ -161,7 +161,7 @@
   },
   {
     "id": "vchart-tooltip",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "interaction",
     "inputs": [
@@ -171,7 +171,7 @@
   },
   {
     "id": "vchart-zoom",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "interaction",
     "inputs": [
@@ -181,7 +181,7 @@
   },
   {
     "id": "vchart-reference-line",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "annotation",
     "inputs": [
@@ -191,7 +191,7 @@
   },
   {
     "id": "vchart-qa-label",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "core",
     "family": "answer",
     "inputs": [],
@@ -199,7 +199,7 @@
   },
   {
     "id": "vchart-missing-data",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "core",
     "family": "answer",
     "inputs": [],
@@ -207,7 +207,7 @@
   },
   {
     "id": "vchart-empty-data",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "answer",
     "inputs": [
@@ -217,7 +217,7 @@
   },
   {
     "id": "vchart-chinese-fields",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "data",
     "inputs": [
@@ -227,7 +227,7 @@
   },
   {
     "id": "vchart-complete-data",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "data",
     "inputs": [
@@ -237,7 +237,7 @@
   },
   {
     "id": "vchart-react",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "react",
     "inputs": [
@@ -247,7 +247,7 @@
   },
   {
     "id": "vchart-image-replication",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "image",
     "inputs": [
@@ -257,7 +257,7 @@
   },
   {
     "id": "vchart-edit",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "core",
     "family": "continuation",
     "inputs": [
@@ -272,7 +272,7 @@
   },
   {
     "id": "vchart-format",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "formatting",
     "inputs": [
@@ -282,7 +282,7 @@
   },
   {
     "id": "vchart-numeric-sort",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "data",
     "inputs": [
@@ -292,7 +292,7 @@
   },
   {
     "id": "vchart-bubble",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "generation",
     "inputs": [
@@ -302,7 +302,7 @@
   },
   {
     "id": "vchart-step-line",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "generation",
     "inputs": [
@@ -312,7 +312,7 @@
   },
   {
     "id": "vchart-log-axis",
-    "skill": "vchart-development-assistant",
+    "skill": "vchart-skill",
     "group": "extended",
     "family": "axis",
     "inputs": [

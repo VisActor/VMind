@@ -20,7 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CASES = ROOT / "evals/cases"
 SKILLS = sorted(path.parent.name for path in (ROOT / "skills").glob("*/SKILL.md"))
-DEFAULT_SKILL = "vchart-development-assistant"
+DEFAULT_SKILL = "vchart-skill"
 
 
 def load_tasks() -> list[dict]:
@@ -390,8 +390,8 @@ def main() -> None:
                 "artifacts": [args.html] if args.html else [],
                 "html": args.html,
                 "engine": {
-                    "vchart-development-assistant": "vchart",
-                    "vtable-development-assistant": "vtable",
+                    "vchart-skill": "vchart",
+                    "vtable-skill": "vtable",
                 }.get(task["skill"]),
                 "requireAnswer": True,
                 "review": [
