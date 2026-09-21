@@ -3,6 +3,7 @@ import path from 'node:path';
 import http from 'node:http';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { useLocalAssets } from './local-browser-assets.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const directory = path.resolve(process.argv[2] || '');
@@ -19,6 +20,7 @@ const checks = [];
 const errors = [];
 const requests = [];
 let browser;
+let assetFailures = [];
 const server = http.createServer(async (req, res) => {
   try {
     const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
@@ -34,6 +36,9 @@ await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 try {
   browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: {width: 1440, height: 1000} });
+  if (process.argv.includes('--local-assets')) {
+    assetFailures = await useLocalAssets(page, `http://127.0.0.1:${server.address().port}`, path.join(root, 'evals'));
+  }
   page.on('pageerror', error => errors.push(String(error)));
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   page.on('requestfailed', request => requests.push({url:request.url(),error:request.failure()?.errorText}));
@@ -97,7 +102,8 @@ try {
   await new Promise(resolve => server.close(resolve));
 }
 checks.push({name:'pageErrors',passed:errors.length===0},{name:'networkErrors',passed:requests.length===0});
-const result = {status:checks.every(check=>check.passed)?'passed':'failed',checks,errors,requests,visualReview:'not-run'};
+if (process.argv.includes('--local-assets')) checks.push({name:'localAssets',passed:assetFailures.length===0});
+const result = {status:checks.every(check=>check.passed)?'passed':'failed',checks,errors,requests,assetFailures,visualReview:'not-run'};
 await fs.writeFile(path.join(directory,'browser.json'),JSON.stringify(result,null,2)+'\n');
 console.log(JSON.stringify(result));
 process.exitCode=result.status==='passed'?0:1;

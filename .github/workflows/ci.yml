@@ -1,0 +1,69 @@
+name: Skills CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: skills-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint and regressions
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --locked
+      - run: uv run --locked ruff check skills tests evals/scripts
+      - run: uv run --locked pytest tests -q
+
+  browser:
+    name: Browser smoke (no model)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          python-version: '3.12'
+          enable-cache: true
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: evals/package-lock.json
+          registry-url: https://registry.npmjs.org
+      - run: uv sync --locked
+      - run: npm ci --prefix evals --ignore-scripts --no-audit --no-fund
+      - run: node evals/node_modules/playwright/cli.js install --with-deps chromium
+      - run: node --test tests/test_browser_assets.mjs
+      - run: uv run --locked python evals/scripts/smoke.py --output-dir .cache/ci-browser-smoke
+      - name: Save browser evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: browser-smoke
+          path: |
+            .cache/ci-browser-smoke/summary.json
+            .cache/ci-browser-smoke/*/*.json
+            .cache/ci-browser-smoke/*/*.log
+            .cache/ci-browser-smoke/*/*.png
+            .cache/ci-browser-smoke/*/workspace/outputs/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7

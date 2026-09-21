@@ -14,7 +14,27 @@ The recommended development loop is [direct Skill debugging in Codex or Claude C
 
 The runner installs the selected Skill from the current checkout into each case workspace. You do not need to install it into your global Agent directory first. The default runner calls a configurable OpenAI-compatible model API and does not require Codex or Claude Code. An optional --runner codex mode tests that host separately; the Skills themselves can be used by other compatible agents.
 
-## In your contribution
+## Continuous integration
+
+`Skills CI` runs on pull requests and pushes to `main`/`develop`, with two jobs:
+
+- **Lint and regressions**: install locked Python dependencies, run Ruff and the deterministic test suite, including per-Skill case/input contracts and a simulated model API.
+- **Browser smoke (no model)**: use copied Skills to generate one fixed VChart chart and one VTable table, then check rendering, runtime records and browser errors. Pinned npm packages serve CDN requests locally; unexpected external requests fail. Save JSON reports, logs, generated HTML and screenshots for seven days.
+
+Neither job calls a model or needs model credentials. Browser smoke checks script/template integration, not Skill quality on model-generated tasks. Model evaluation remains a separate local development activity.
+
+To run browser smoke locally:
+
+```bash
+npm ci --prefix evals --ignore-scripts
+node evals/node_modules/playwright/cli.js install chromium
+node --test tests/test_browser_assets.mjs
+uv run python evals/scripts/smoke.py
+```
+
+On Linux, use `install --with-deps chromium` when system libraries are missing. Each run creates a new evidence directory under `.cache/`; `--output-dir PATH` selects an explicit directory that must not exist yet.
+
+## Before committing
 
 Enable the repository's Git hooks after cloning or switching from the historical SDK checkout:
 

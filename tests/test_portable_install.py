@@ -1,11 +1,19 @@
+import json
 import shutil
 import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_evaluation_lockfile_uses_public_npm_registry():
+    lock = json.loads((ROOT / "evals/package-lock.json").read_text())
+    resolved = [package["resolved"] for package in lock["packages"].values() if "resolved" in package]
+    assert resolved and all(urlsplit(url).hostname == "registry.npmjs.org" for url in resolved)
 
 
 @pytest.mark.parametrize("skill", ["vchart-development-assistant", "vtable-development-assistant"])

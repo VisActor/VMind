@@ -2,6 +2,13 @@
   "name": "visactor-skills-evals",
   "private": true,
   "type": "module",
-  "scripts": {"check": "node scripts/check-browser.mjs"},
-  "devDependencies": {"playwright": "1.61.1"}
+  "scripts": {
+    "check": "node scripts/check-browser.mjs"
+  },
+  "devDependencies": {
+    "@visactor/vchart": "2.0.21",
+    "@visactor/vtable": "1.26.8",
+    "monaco-editor": "0.45.0",
+    "playwright": "1.61.1"
+  }
 }

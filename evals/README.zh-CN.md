@@ -6,6 +6,8 @@
 
 日常开发 Skill，**推荐先使用 Codex 或 Claude Code**，具体步骤见 [直接调试指南](../docs/debugging.md)。下面的 API harness 是执行指定任务和可重复 case 的另一种方式。评测命令默认选择 API，并不代表它是整体使用体验的首选。
 
+GitHub CI 只运行确定性回归和固定配置的浏览器冒烟，不执行下文的模型任务。不调用模型的浏览器命令及检查范围见 [持续集成说明](../CONTRIBUTING.md#continuous-integration)。
+
 ## 贡献者快速上手
 
 以下命令均在仓库根目录执行。runner 会将当前工作副本中选定的 Skill 复制到每个任务的工作区，无需预先全局安装 Skill。

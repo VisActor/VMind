@@ -6,6 +6,8 @@ Run the selected Skill against a fixed prompt and input files through a configur
 
 For everyday Skill development, **start with Codex or Claude Code** using the [direct debugging guide](../docs/debugging.md). The API harness below is an alternative for selected tasks and repeatable cases. Its CLI default is API; that does not make it the recommended overall user experience.
 
+GitHub CI runs deterministic regressions and fixed browser smoke tests only. It does not run the model tasks below. For the model-free browser command and its checks, see [Continuous integration](../CONTRIBUTING.md#continuous-integration).
+
 ## Contributor quickstart
 
 Run commands from the repository root. The runner copies the current checkout's selected Skill into each task workspace; no global Skill installation is needed.
