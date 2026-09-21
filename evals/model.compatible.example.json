@@ -1,0 +1,8 @@
+{
+  "api": "openai-chat-completions",
+  "base_url": "https://your-provider.example/v1",
+  "model": "MODEL_ID",
+  "api_key_env": "MY_MODEL_API_KEY",
+  "max_output_tokens": 4096,
+  "output_token_parameter": "max_tokens"
+}

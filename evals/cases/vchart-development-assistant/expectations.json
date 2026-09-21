@@ -1,0 +1,248 @@
+{
+  "vchart-grouped": {
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "sales.csv",
+    "review": [
+      "六根柱的分组、图例、数值标签正确；无遮挡"
+    ]
+  },
+  "vchart-diagnosis": {
+    "html": "diagnosis.html",
+    "engine": "vchart",
+    "review": [
+      "明确解释字段不匹配，East=120、West=80 的修复图正常显示"
+    ]
+  },
+  "vchart-stack": {
+    "review": [
+      "East总高270、West170、North210；同地区两个季度堆叠而非并排。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "sales.csv"
+  },
+  "vchart-percent": {
+    "review": [
+      "各地区总高100%；East Q1为120/270，West为80/170，North为100/210；金额不冒充百分比。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart"
+  },
+  "vchart-line": {
+    "review": [
+      "两条线各3点；顺序正确，无跨系列连接。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "trend.csv"
+  },
+  "vchart-line-null": {
+    "review": [
+      "Feb没有假0且线断开；Mar=0、Jan=10、Apr=20保留。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart"
+  },
+  "vchart-area-stack": {
+    "review": [
+      "Jan总高18、Feb32、Mar33；上下边界正确，无系列覆盖冒充堆叠。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart"
+  },
+  "vchart-pie": {
+    "review": [
+      "A/B/C/D对应40/30/20/10%；标签无重叠或裁切。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "share.csv"
+  },
+  "vchart-scatter": {
+    "review": [
+      "A(1,4)、B(2,2)、C(3,5)、D(4,1)，不能使用分类轴等距冒充数值轴。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "points.csv"
+  },
+  "vchart-heatmap": {
+    "review": [
+      "四格10、0、20、5均存在；颜色深浅与值一致，0格不缺失。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "heat.csv"
+  },
+  "vchart-radar": {
+    "review": [
+      "五维80/60/40/90/70正确；统一尺度，不逐维自动归一化。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "radar.csv"
+  },
+  "vchart-funnel": {
+    "review": [
+      "顺序1000/600/300/100；宽度递减，标签完整。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "funnel.csv"
+  },
+  "vchart-dual-axis": {
+    "review": [
+      "营收100/120/90/150；毛利率20/25/10/30%；两系列绑定正确轴。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart"
+  },
+  "vchart-negative": {
+    "review": [
+      "A=-20、B=0、C=30、D=-5；正负在零线两侧。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "signed.csv"
+  },
+  "vchart-long-labels": {
+    "review": [
+      "三个完整中文标签可读、无重叠、无裁切；120/80/100正确。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "long-labels.csv"
+  },
+  "vchart-legend": {
+    "review": [
+      "真实点击Online图例，Online隐藏但Store仍在；再次点击恢复。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "trend.csv"
+  },
+  "vchart-tooltip": {
+    "review": [
+      "实际悬停不同柱子，tooltip对应正确地区/季度/金额和单位。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "sales.csv"
+  },
+  "vchart-zoom": {
+    "review": [
+      "源数据40行保留；初始窗口约前10天，实际拖动后能看到第40天。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart"
+  },
+  "vchart-reference-line": {
+    "review": [
+      "总量270/170/210；参考线准确位于200，标注与线可读。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart"
+  },
+  "vchart-qa-label": {
+    "review": [
+      "解释有效的label显示配置，可附位置与样式；不伪造API，不无谓索要spec；outputs目录为空。"
+    ],
+    "artifacts": [],
+    "answerOnly": true
+  },
+  "vchart-missing-data": {
+    "review": [
+      "询问年份、营收数据及必要口径；不编造公司事实，不生成产物。"
+    ],
+    "artifacts": [],
+    "answerOnly": true
+  },
+  "vchart-empty-data": {
+    "review": [
+      "明确零条记录不足以判断趋势，不能称为营收为0，不生成产物。"
+    ],
+    "artifacts": [],
+    "answerOnly": true
+  },
+  "vchart-chinese-fields": {
+    "review": [
+      "杭州90、南京70、上海120；字段正确，单位万元。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "chinese.csv"
+  },
+  "vchart-complete-data": {
+    "review": [
+      "40条记录及点全部保留，包括第40天120；不从预览补造。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "sequence.csv"
+  },
+  "vchart-react": {
+    "review": [
+      "浏览器中React组件实际渲染；四值40/30/20/10正确，控制台无错误；JSX与HTML一致。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "artifacts": [
+      "spec.js",
+      "demo.html",
+      "chart.jsx"
+    ]
+  },
+  "vchart-image-replication": {
+    "review": [
+      "与参考图并排复核：Quarterly sales、Q1/Q2/Q3、40/70/55、蓝色柱、零起点、无截图背景替代。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart"
+  },
+  "vchart-edit": {
+    "review": [
+      "三轮依次生成、仅改标题、仅改颜色；数据、标签和非目标配置保持；前轮快照不变。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart"
+  },
+  "vchart-format": {
+    "review": [
+      "20%、25%、10%、30%正确；不能变成0.2%或乘两次。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart"
+  },
+  "vchart-numeric-sort": {
+    "review": [
+      "顺序Two=2、Ten=10、Twenty=20、Hundred=100，不能按字符串排序。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "sort.csv"
+  },
+  "vchart-bubble": {
+    "review": [
+      "四个坐标正确；size10/20/40/80对应单调递增大小。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "points.csv"
+  },
+  "vchart-step-line": {
+    "review": [
+      "Jan10、Feb20、Mar15；只有Online三点且为阶梯线。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart"
+  },
+  "vchart-log-axis": {
+    "review": [
+      "1、10、100、1000在纵轴等距；刻度和数据准确，无无效log(0)。"
+    ],
+    "html": "demo.html",
+    "engine": "vchart",
+    "records": "log.csv"
+  }
+}

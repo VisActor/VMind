@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+
+subject=$(sed -n '1p' "$1")
+if ! printf '%s\n' "$subject" |
+  grep -Eq '^(feat|fix|refactor|test|docs|chore|perf|build|ci|style|revert)(\([^)]+\))?!?: .+'; then
+  echo "Use a Conventional Commit subject, for example: feat: add chart interaction cases" >&2
+  exit 1
+fi

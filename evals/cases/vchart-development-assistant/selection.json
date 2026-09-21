@@ -1,0 +1,4003 @@
+{
+  "sourceCommit": "de047fd5e44d2379abafeed9209536ed823e2811",
+  "sourceCaseFile": "ai/skill-workspaces/vchart-skill/quality/cases/blind-full.json",
+  "sourceCaseFileSha256": "b5b49748e4548dcd93431677a0f6b090289f3ffb0d908c0ac694cc455cf545b6",
+  "sourceCount": 728,
+  "selectedLegacyCount": 24,
+  "cases": [
+    {
+      "id": "vchart-grouped",
+      "family": "generation",
+      "group": "core",
+      "reason": "Preserve migration baseline: complete grouped data or broken field repair.",
+      "origin": "migration-baseline",
+      "legacy": null,
+      "initialStatus": "previously-reviewed"
+    },
+    {
+      "id": "vchart-diagnosis",
+      "family": "diagnosis",
+      "group": "core",
+      "reason": "Preserve migration baseline: complete grouped data or broken field repair.",
+      "origin": "migration-baseline",
+      "legacy": null,
+      "initialStatus": "previously-reviewed"
+    },
+    {
+      "id": "vchart-stack",
+      "family": "generation",
+      "group": "core",
+      "reason": "Protect additive stacking, distinct from grouped bars.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-bar-chart-stack-column",
+        "prompt": "请生成一个 VChart「堆叠柱状图」示例，覆盖 bar chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "堆叠柱状图",
+        "sourcePath": "docs/assets/examples/zh/bar-chart/stack-column.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-percent",
+      "family": "generation",
+      "group": "core",
+      "reason": "Protect normalization denominator and percentage axis.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-bar-chart-stack-percentage-column",
+        "prompt": "请生成一个 VChart「百分比堆叠柱状图」示例，覆盖 bar chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "百分比堆叠柱状图",
+        "sourcePath": "docs/assets/examples/zh/bar-chart/stack-percentage-column.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-line",
+      "family": "generation",
+      "group": "extended",
+      "reason": "Protect series grouping and chronological order.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-line-chart-multi-line",
+        "prompt": "请生成一个 VChart「多系列折线图」示例，覆盖 line chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "多系列折线图",
+        "sourcePath": "docs/assets/examples/zh/line-chart/multi-line.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-line-null",
+      "family": "data",
+      "group": "core",
+      "reason": "Distinguish missing values from zero.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-line-chart-null-value-line",
+        "prompt": "请生成一个 VChart「存在空值折线图」示例，覆盖 line chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "存在空值折线图",
+        "sourcePath": "docs/assets/examples/zh/line-chart/null-value-line.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-area-stack",
+      "family": "generation",
+      "group": "extended",
+      "reason": "Protect filled stacked boundaries.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-area-chart-stacked-area",
+        "prompt": "请生成一个 VChart「堆叠面积图」示例，覆盖 area chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "堆叠面积图",
+        "sourcePath": "docs/assets/examples/zh/area-chart/stacked-area.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-pie",
+      "family": "generation",
+      "group": "extended",
+      "reason": "Protect angular encoding and label layout.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-pie-chart-pie-label",
+        "prompt": "请生成一个 VChart「饼图标签布局」示例，覆盖 pie chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "饼图标签布局",
+        "sourcePath": "docs/assets/examples/zh/pie-chart/pie-label.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-scatter",
+      "family": "generation",
+      "group": "extended",
+      "reason": "Protect two quantitative axes.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-scatter-chart-basic-scatter",
+        "prompt": "请生成一个 VChart「基础散点图」示例，覆盖 scatter chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "基础散点图",
+        "sourcePath": "docs/assets/examples/zh/scatter-chart/basic-scatter.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-heatmap",
+      "family": "generation",
+      "group": "extended",
+      "reason": "Protect rectangular data and zero-valued cells.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-heatmap-chart-basic-heatmap",
+        "prompt": "请生成一个 VChart「基础热力图」示例，覆盖 heatmap chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "基础热力图",
+        "sourcePath": "docs/assets/examples/zh/heatmap-chart/basic-heatmap.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-radar",
+      "family": "generation",
+      "group": "extended",
+      "reason": "Protect polar encoding and shared scale.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-radar-chart-basic-radar",
+        "prompt": "请生成一个 VChart「基础雷达图」示例，覆盖 radar chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "基础雷达图",
+        "sourcePath": "docs/assets/examples/zh/radar-chart/basic-radar.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-funnel",
+      "family": "generation",
+      "group": "extended",
+      "reason": "Protect ordered conversion stages.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-funnel-chart-basic-funnel",
+        "prompt": "请生成一个 VChart「基础漏斗图」示例，覆盖 funnel chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "基础漏斗图",
+        "sourcePath": "docs/assets/examples/zh/funnel-chart/basic-funnel.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-dual-axis",
+      "family": "generation",
+      "group": "extended",
+      "reason": "Protect mixed units and per-series axis binding.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-combination-dual-axis",
+        "prompt": "请生成一个 VChart「双轴图」示例，覆盖 combination 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "双轴图",
+        "sourcePath": "docs/assets/examples/zh/combination/dual-axis.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-negative",
+      "family": "data",
+      "group": "extended",
+      "reason": "Protect sign and zero baseline.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-bar-chart-bi-direction-bar",
+        "prompt": "请生成一个 VChart「双向条形图」示例，覆盖 bar chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "双向条形图",
+        "sourcePath": "docs/assets/examples/zh/bar-chart/bi-direction-bar.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-long-labels",
+      "family": "layout",
+      "group": "extended",
+      "reason": "Protect long label layout without dropping meaning.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-axis-axis-label-autowrap",
+        "prompt": "请生成一个 VChart「坐标轴文本自动换行」示例，覆盖 axis 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "坐标轴文本自动换行",
+        "sourcePath": "docs/assets/examples/zh/axis/axis-label-autoWrap.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-legend",
+      "family": "interaction",
+      "group": "extended",
+      "reason": "Protect actual interactive visibility, not presence of legend config.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-legend-custom-interaction",
+        "prompt": "请生成一个 VChart「自定义图例交互」示例，覆盖 legend 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "自定义图例交互",
+        "sourcePath": "docs/assets/examples/zh/legend/custom-interaction.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-tooltip",
+      "family": "interaction",
+      "group": "extended",
+      "reason": "Protect displayed datum binding and formatter.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-tooltip-custom-mark-tooltip",
+        "prompt": "请生成一个 VChart「自定义 tooltip 内容行」示例，覆盖 tooltip 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "自定义 tooltip 内容行",
+        "sourcePath": "docs/assets/examples/zh/tooltip/custom-mark-tooltip.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-zoom",
+      "family": "interaction",
+      "group": "extended",
+      "reason": "Protect viewport filtering without data truncation.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-data-zoom-data-zoom-span",
+        "prompt": "请生成一个 VChart「缩略轴支持窗口最大最小值配置」示例，覆盖 data zoom 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "缩略轴支持窗口最大最小值配置",
+        "sourcePath": "docs/assets/examples/zh/data-zoom/data-zoom-span.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-reference-line",
+      "family": "annotation",
+      "group": "extended",
+      "reason": "Protect aggregation and coordinate-space annotation.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-marker-mark-line-basic",
+        "prompt": "请生成一个 VChart「markLine」示例，覆盖 marker 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "markLine",
+        "sourcePath": "docs/assets/examples/zh/marker/mark-line-basic.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-qa-label",
+      "family": "answer",
+      "group": "core",
+      "reason": "Protect explanation-only routing.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-tutorial-chart-concepts-series-label",
+        "prompt": "请根据 VChart 教程「Label 数据标签」生成一个面向真实业务使用的最小可运行示例，并说明关键步骤。",
+        "sourceKind": "tutorial",
+        "sourceTitle": "Label 数据标签",
+        "sourcePath": "docs/assets/guide/zh/tutorial_docs/Chart_Concepts/Series/Label.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-missing-data",
+      "family": "answer",
+      "group": "core",
+      "reason": "Protect missing-input clarification.",
+      "origin": "adapted-website",
+      "legacy": null,
+      "adaptation": "Retain clarification intent.",
+      "initialStatus": "not-run",
+      "websiteSource": {
+        "path": "ai/evals/vagent-website/cases.json",
+        "caseId": "R02.2",
+        "adaptation": "Retain clarification intent."
+      }
+    },
+    {
+      "id": "vchart-empty-data",
+      "family": "answer",
+      "group": "extended",
+      "reason": "Protect empty dataset semantics.",
+      "origin": "supplemental-gap",
+      "legacy": null,
+      "adaptation": "Explicit addition for a workflow or boundary missing from the selected legacy tasks.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-chinese-fields",
+      "family": "data",
+      "group": "extended",
+      "reason": "Protect Unicode and punctuation in field names.",
+      "origin": "supplemental-gap",
+      "legacy": null,
+      "adaptation": "Explicit addition for a workflow or boundary missing from the selected legacy tasks.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-complete-data",
+      "family": "data",
+      "group": "extended",
+      "reason": "Protect complete input reading beyond preview length.",
+      "origin": "supplemental-gap",
+      "legacy": null,
+      "adaptation": "Explicit addition for a workflow or boundary missing from the selected legacy tasks.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-react",
+      "family": "react",
+      "group": "extended",
+      "reason": "Protect declarative React workflow.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-tutorial-cross-terminal-and-developer-ecology-react",
+        "prompt": "请根据 VChart 教程「React VChart」生成一个面向真实业务使用的最小可运行示例，并说明关键步骤。",
+        "sourceKind": "tutorial",
+        "sourceTitle": "React VChart",
+        "sourcePath": "docs/assets/guide/zh/tutorial_docs/Cross-terminal_and_Developer_Ecology/react.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-image-replication",
+      "family": "image",
+      "group": "extended",
+      "reason": "Protect image-driven extraction and reconstruction.",
+      "origin": "supplemental-gap",
+      "legacy": null,
+      "adaptation": "Explicit addition for a workflow or boundary missing from the selected legacy tasks.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-edit",
+      "family": "continuation",
+      "group": "core",
+      "reason": "Protect file-based successive edits and preservation.",
+      "origin": "adapted-website",
+      "legacy": null,
+      "adaptation": "Latest-artifact file edits only. Excludes website selection/version-routing behavior; each turn receives previous workspace snapshot.",
+      "initialStatus": "not-run",
+      "websiteSource": {
+        "path": "ai/evals/vagent-website/cases.json",
+        "caseId": "R01",
+        "adaptation": "Latest-artifact file edits only. Excludes website selection/version-routing behavior; each turn receives previous workspace snapshot."
+      }
+    },
+    {
+      "id": "vchart-format",
+      "family": "formatting",
+      "group": "extended",
+      "reason": "Protect consistent fraction-to-percent formatting.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-faq-59-19-vchart-图表标签格式化的方法有哪些-br",
+        "prompt": "VChart 图表标签格式化的方法有哪些？</br> 请说明在 VChart 里应该怎么做，并给出最小可运行代码。",
+        "sourceKind": "faq",
+        "sourceTitle": "19. VChart 图表标签格式化的方法有哪些？</br>",
+        "sourcePath": "docs/assets/faq/zh/59- What are the methods for formatting chart labels in VChart.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-numeric-sort",
+      "family": "data",
+      "group": "extended",
+      "reason": "Protect numeric order versus lexical order.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-data-data-fields-sort",
+        "prompt": "请生成一个 VChart「数据排序」示例，覆盖 data 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "数据排序",
+        "sourcePath": "docs/assets/examples/zh/data/data-fields-sort.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-bubble",
+      "family": "generation",
+      "group": "extended",
+      "reason": "Protect third quantitative channel distinct from scatter.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-scatter-chart-bubble-scatter",
+        "prompt": "请生成一个 VChart「气泡散点图」示例，覆盖 scatter chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "气泡散点图",
+        "sourcePath": "docs/assets/examples/zh/scatter-chart/bubble-scatter.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-step-line",
+      "family": "generation",
+      "group": "extended",
+      "reason": "Protect interpolation semantics and deliberate filtering.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-line-chart-step-line",
+        "prompt": "请生成一个 VChart「阶梯折线图」示例，覆盖 line chart 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "阶梯折线图",
+        "sourcePath": "docs/assets/examples/zh/line-chart/step-line.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    },
+    {
+      "id": "vchart-log-axis",
+      "family": "axis",
+      "group": "extended",
+      "reason": "Protect nonlinear axis geometry.",
+      "origin": "adapted-legacy",
+      "legacy": {
+        "id": "vchart-example-axis-log-axis",
+        "prompt": "请生成一个 VChart「log轴」示例，覆盖 axis 场景的核心配置，并给出最小可运行代码。",
+        "sourceKind": "example",
+        "sourceTitle": "log轴",
+        "sourcePath": "docs/assets/examples/zh/axis/log-axis.md"
+      },
+      "adaptation": "Replace unspecified data with bundled synthetic input; judge behavior and data instead of keyword matching.",
+      "initialStatus": "not-run"
+    }
+  ],
+  "unselected": [
+    {
+      "id": "vchart-example-area-chart-area-style",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-area-with-marker",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-basic-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-horizontal-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-negative-values-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-null-value-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-percentage-stacked-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-range-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-segment-range-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-smoothed-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-stacked-dash-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-step-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-stream-graph",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-area-chart-unstacked-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-animation",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-axis-band-size",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-axis-break",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-axis-inner-offset",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-axis-label-autohide",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-axis-label-autohide-and-autorotate",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-axis-label-autolimit",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-axis-label-autorotate",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-axis-richtext-label",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-axis-sync",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-axis-vertical-label",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-disable-sampling",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-flush",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-grid-style",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-interactive",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-inverse",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-label-container-align",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-multiple-layers-of-axis",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-multiple-layers-of-axis-1",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-on-zero",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-polar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-style",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-subtick-and-subgrid",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-axis-symlog-axis",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-bar-background",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-bar-break-by-axis",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-bar-customized-label",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-bar-functional-label-position",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-bar-markpoint",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-bar-poly-regression-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-basic-bar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-basic-column",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-bi-direction-stack-column",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-gradient-column",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-group-bar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-group-bar-with-bargapingroup",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-group-bar-with-padding",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-group-column",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-group-stack-column",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-group-stack-percentage-column",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-population-pyramid",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-stack-percentage-bar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-bar-chart-tgi-bar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-box-plot-basic-box-plot",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-box-plot-box-plot-style",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-box-plot-grouped-box-plot",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-brush-brush-datazoom",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-brush-polygon-brush",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-brush-rect-linked-brush",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-brush-x-linked-brush",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-calendar-calendar-basic",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-calendar-calendar-custom-event",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-candlestick-chart-candlestick-basic",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-candlestick-chart-candlestick-with-ma",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-candlestick-chart-candlestick-with-volume",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-chart-3d-area3d",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-chart-3d-bar3d",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-chart-3d-funnel3d",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-chart-3d-line3d",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-chart-3d-pie3d",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-chart-3d-scatter3d",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-chart-3d-wordcloud3d",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-circle-packing-chart-basic-circle-packing",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-circle-packing-chart-bubble-circle-packing",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-circle-packing-chart-circle-packing-multiple-roots",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-circle-packing-chart-circle-packing-padding",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-combination-bar-autobandsize",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-combination-bar-combine",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-combination-bar-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-combination-col-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-combination-col-pie",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-combination-easing-visualization",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-combination-line-pie",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-combination-polar-combine",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-combination-scatter-combine",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-combination-single-region",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-correlation-chart-correlation-chart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-crosshair-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-crosshair-multiple-region",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-crosshair-polar-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-crosshair-polar-rect",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-crosshair-rect",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-custom-bar-image-extension",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-custom-business-funnel",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-custom-custom-shape",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-custom-mark",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-custom-pie-extend-bars",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-custom-pie-extension",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-custom-pie-extension-icon",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-custom-rect-html",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-custom-series-extension",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-custom-state-sort",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-data-basic-data",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-data-data-fields-alias",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-data-data-fields-domain",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-data-data-filter",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-data-zoom-data-zoom-big-data",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-data-zoom-data-zoom-lock",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-data-zoom-data-zoom-polar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-data-zoom-filter-mode-axis",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-data-zoom-preview-data",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-data-zoom-state-with-data",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-extension-chart-sequence-scatter-kde",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-extension-chart-sequence-scatter-link-classification",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-extension-chart-sequence-scatter-link-neighborhood",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-extension-chart-timeline-arrow",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-extension-chart-timeline-basic",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-extension-chart-timeline-group",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-extension-chart-timeline-vertical",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-extension-chart-timeline-with-icon",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-funnel-chart-comparative-funnel-template",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-funnel-chart-conversion-funnel",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-funnel-chart-custom-funnel",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-funnel-chart-funnel-custom-annotation",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-funnel-chart-funnel-template",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-funnel-chart-rect-funnel",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-funnel-chart-transform-funnel",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gantt-gantt-basic",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gantt-gantt-customlayout",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gantt-gantt-dependency-link-create",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gantt-gantt-dependency-link-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gantt-gantt-edit",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gantt-gantt-interaction-creation-button",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gantt-gantt-interaction-drag-table-width",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gantt-gantt-interaction-drag-taskbar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gantt-gantt-table-mergecell",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gantt-gantt-taskshowmode",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gauge-chart-basic-gauge",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gauge-chart-clock",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gauge-chart-gauge-gradient",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gauge-chart-gauge-progress",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gauge-chart-gauge-progress-tick",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gauge-chart-gauge-segment",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gauge-chart-gauge-segment-custom-tick",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gauge-chart-gauge-segment-tick",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gauge-chart-gauge-track",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gradient-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gradient-bar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gradient-enhancement-gradient-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gradient-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-gradient-scatter",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-histogram-chart-histogram-basis",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-histogram-chart-histogram-bin",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-histogram-chart-histogram-different-bin",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-histogram-chart-histogram-regression-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-histogram-chart-histogram-stack",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-interaction-area-chart-element-highlight",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-interaction-combination-chart-highlight-by-key",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-interaction-element-active",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-interaction-highlight-by-legend",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-interaction-line-chart-element-highlight-by-group",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-interaction-pie-chart-active-by-legend",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-interaction-pie-chart-multiple-select",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-interaction-rose-chart-highlight-by-name",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-label-bar-label",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-label-bar-label-syncstate",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-label-combination-chart-label",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-label-label-formatter",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-label-label-mark-tooltip",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-label-line-label",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-label-richtext-label",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-layout-align-self",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-layout-custom-layout",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-layout-grid-layout",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-layout-region-relative-overlap",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-legend-continuous",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-legend-custom-data",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-legend-custom-line-legend",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-legend-custom-ui",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-legend-discrete-legend-scale",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-legend-float",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-legend-focus",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-legend-multiple-legends",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-legend-scrollbar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-legend-single-select",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-line-chart-basic-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-line-chart-dash-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-line-chart-horizontal-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-line-chart-line-axes-padding",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-line-chart-line-custom-state",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-line-chart-line-default-select",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-line-chart-line-overlap",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-line-chart-line-sampling",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-line-chart-percentage-stacked-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-line-chart-smoothed-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-line-chart-stacked-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-line-chart-unstacked-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-liquid-chart-liquid-chart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-liquid-chart-liquid-chart-background",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-liquid-chart-liquid-chart-reverse",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-liquid-chart-liquid-chart-shape",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-liquid-chart-liquid-chart-smart-invert",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-liquid-chart-liquid-chart-target",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-map-chart-basic-map",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-map-chart-map-with-flying-lines",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-map-chart-scatter-map",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-bar-poly-regression-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-cartesian-mark-area-pos",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-cartesian-mark-line-pos",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-geo-mark-point",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-histogram-regression-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-area-basic",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-area-multi",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-area-quadrant",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-area-range",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-area-with-label",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-line-axis",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-line-cagr",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-line-color-with-series",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-line-coordinates",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-line-custom-label-back",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-line-hierarchy-diff",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-line-multi",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-line-part-regression",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-line-ref-series",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-line-total-diff",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-point-basic",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-mark-point-image",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-polar-mark-area-pos",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-polar-mark-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-polar-mark-line-pos",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-polar-mark-point",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-scatter-regression-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-marker-trend-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-mosaic-chart-basic-mosaic",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-mosaic-chart-group-mosaic",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-mosaic-chart-simple-mosaic",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pattern-accessible-column",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pattern-accessible-pie",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pattern-dynamic-texture-bar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pattern-dynamic-texture-progress",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pictogram-chart-pictogram-bagua",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pictogram-chart-pictogram-cat",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pictogram-chart-pictogram-chinamap",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pictogram-chart-pictogram-cow",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pictogram-chart-pictogram-guwen",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pictogram-chart-pictogram-heart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pictogram-chart-pictogram-keyboard",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pictogram-chart-pictogram-mall",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pictogram-chart-pictogram-route",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pictogram-chart-pictogram-route-swimming",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pictogram-chart-pictogram-seat-map",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pie-chart-basic-pie",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pie-chart-customized-legend-pie",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pie-chart-linear-color-pie",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pie-chart-nested-pie",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pie-chart-pie-indicator",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pie-chart-pie-indicator-fitstrategy",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pie-chart-radius-scale-pie",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pie-chart-richtext-autoellipsis",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pie-chart-richtext-autowrap",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pie-chart-ring",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pivot-chart-pivot-chart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pivot-chart-pivot-chart-pie",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pivot-chart-pivot-chart-radar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pivot-chart-pivot-chart-scatter",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-pivot-chart-pivot-chart-wordcloud",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-player-basic-player",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-player-continuous-player",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-progress-circular-progress",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-progress-circular-progress-tick",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-progress-circular-progress-with-text",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-progress-linear-progress",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-progress-linear-progress-with-multi-label",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-progress-linear-progress-with-target-value",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-progress-linear-progress-with-text",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-progress-segment-linear-progress",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-radar-chart-multiple-radar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-radar-chart-radar-with-innerradius",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-radar-chart-stack-percent-radar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-radar-chart-stack-radar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-range-column-chart-range-bar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-range-column-chart-range-column",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-rose-chart-basic-rose",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-rose-chart-rose-grouped",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-rose-chart-rose-stacked",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-rose-chart-rose-stacked-group",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sankey-chart-align-nodes-left-sankey",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sankey-chart-another-data-structure-sankey",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sankey-chart-basic-sankey",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sankey-chart-customized-node",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sankey-chart-direction-sankey",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sankey-chart-hierarchical-sankey",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sankey-chart-interection-sankey",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sankey-chart-namekey-sankey",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sankey-chart-sankey-with-scrollbar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sankey-chart-specified-node",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-scatter-chart-jitter-scatter",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-scatter-chart-one-dimension-scatter",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-scatter-chart-scatter-regression-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-scatter-chart-scatter-shape",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-scatter-chart-stack-scatter",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-scrollbar-basic-scrollbar-bar-chart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-scrollbar-roam-drag-zoom",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-scrollbar-roam-scroll",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-scrollbar-scrollbar-line-chart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-scrollbar-scrollbar-specified-value",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sequence-chart-nba-player-event",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sequence-chart-social-media-event",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-appear-animation-config",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-area-streamlight",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-bar-highlight-animation",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-bar-onebyone-group",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-bar-onebyone-rect",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-bar-onebyone-series",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-bar-to-scatter",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-disappear-animation",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-disappear-animation-gaussion-blur",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-disappear-animation-wipe",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-dynamic-comparative-bar-chart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-dynamic-line-chart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-dynamic-rose-chart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-pie-preset-animation",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-ranking-bar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-ring-carousel-animation",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-simple-animation-arrangement",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-timeline-scatter",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-storytelling-weekly-activity",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sunburst-chart-basic-sunburst",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sunburst-chart-sunburst-auto-label",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-sunburst-chart-sunburst-layout",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-theme-theme-style",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-theme-theme-switch",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-title-basic-title",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-title-richtext-title",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-title-style-title",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-tooltip-area-mark-tooltip",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-tooltip-bar-group-tooltip",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-tooltip-custom-tooltip",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-tooltip-custom-tooltip-handler",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-tooltip-enterable-tooltip",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-tooltip-format-method",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-tooltip-line-group-tooltip",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-tooltip-time-axis-tooltip",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-treemap-chart-basic-treemap",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-treemap-chart-treemap-show-parent-level",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-venn-chart-venn-chart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-venn-chart-venn-chart-hollow",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-area-growth",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-area-load",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-bar-highlight",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-bar-streamlight",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-bilateral-growth",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-column-parallel-highlight",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-column-parallel-streamlight",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-double-axis-load",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-funnel",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-gauge",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-line-growth",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-line-load",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-liquid",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-pie-relocate",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-pie-scale",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-radar-ridial",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-sankey",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-scatter-ripple",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-vscreen-word-cloud-scale",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-waterfall-basic-waterfall",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-waterfall-collect-waterfall",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-waterfall-direction-waterfall",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-word-cloud-chart-word-cloud-basic",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-word-cloud-chart-word-cloud-clip",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-word-cloud-chart-word-cloud-enlarge",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-word-cloud-chart-word-cloud-format",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-word-cloud-chart-word-cloud-no-valuefield",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-word-cloud-chart-word-cloud-rotate",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-word-cloud-chart-word-cloud-shape-basis",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-word-cloud-chart-word-cloud-shape-custom-color",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-word-cloud-chart-word-cloud-shape-geometry",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-word-cloud-chart-word-cloud-shape-rotate",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-word-cloud-chart-word-cloud-shape-text",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-example-word-cloud-chart-word-cloud-shrink",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-0-0-template",
+      "decision": "exclude-placeholder",
+      "reason": "Template stub is not a user task."
+    },
+    {
+      "id": "vchart-faq-1-64-tooltip是否支持修改背景色-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-10-49-如何更改图例的颜色-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-100-vchart-中-tooltip-如何实现多列显示",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-101-43-vchart-怎么配置嵌套饼图-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-102-react-组件中如何自动更新图表数据",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-103-鼠标移入图表区域-hover-显示内容怎么更换",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-104-67-使用vchart图表库时x轴数据重叠和y轴数据不显示的问题-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-105-75-如何自定义tooltip形状-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-106-83-vchart-饼图如何设置默认选中一个区域-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-107-面积图-如何不显示-point-图形-的情况下-仍然能让数据点响应-hover-事件",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-108-47-如何配置双轴图的坐标轴刻度对齐",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-109-109-how-to-implement-a-combination-of-line-chart-and-stacked-bar-chart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-11-63-如何在图表中显示一个色块区域-区域是覆盖在指定的-x-轴范围之内-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-110-如何自定义仪表图指针样式",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-111-33-组合图如何实现对x轴的标签进行排序排序-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-112-漏斗图点击图例怎么添加过渡动画",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-113-74-柱状图如何改变柱宽-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-114-如何给图表添加标题",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-115-漏斗图百分比文字颜色如何修改",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-116-当环形图设置有间隔时-环形的底部能否增加背景颜色",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-117-如何实现当鼠标悬浮于图例上时-圆形的图例扩大一圈高亮显示-并且去掉长方形的灰色的背景",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-118-32-如何在vchart图表库中实现点的hover效果-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-119-67-如何绑定饼图label的点击事件-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-12-38-vchart-坐标轴网格线如何设置为虚线-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-120-58-折线图如何设置自适应y轴区间-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-121-13-如何自定义雷达图富文本轴标签样式-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-122-如何为图表自定义主题-如在-vchart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-123-能否给数据添加平均值横线",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-124-在-pc-端上鼠标悬浮在数据点上出现的-tooltip-这种效果-在小程序上有类似这样手指触碰屏幕提示数据点位置的-api-吗",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-125-99-词云如何顶满外层容器显示-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-126-107-组合图折线图被遮住-导致无法hover出tooltip-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-127-22-如何设置vchart柱状图的x-y轴文字和柱状大小-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-128-0-如何实现柱形图同维度数据前后重叠而不是堆叠效果-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-129-双轴图中如何自定义-tooltip",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-13-辅助线的-label-如何自动换行",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-130-折线图如何配置不同线段的颜色",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-131-91-连续轴的刻度范围可以通过配置尽量的贴近数据范围吗-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-132-94-vchart-饼图如何自定义扇形颜色-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-133-如何控制离散图例的显示顺序",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-134-带指标卡环形图如何动态更新指标值",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-135-柱状图如何根据不同的数值自定义柱子的颜色",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-136-87-如何避免饼图扇区的hover时描边被遮挡-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-137-97-柱状图支持对某一列单独设置颜色吗-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-138-词云图中如何自定义词语的字体大小",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-139-如何配置图表自适应容器宽高",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-14-如何自定义饼图的-label-文字内容-颜色-布局",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-140-6-如何配置桑基图的高亮效果-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-141-8-如何绘制多行布局的折线图-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-142-14-如何在-vchart-中根据-tooltip-行为-进行埋点-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-143-66-如何设置x轴和y轴标签的最大数量-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-144-80-tooltip浮层如何支持总计数据的展示-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-145-2-如何实现鼠标悬浮时展示缩略文字的全部内容-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-146-如何配置漏斗图的转化宽度",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-147-如何实现仪表图的分段圆角效果",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-148-在小程序中-柱图数据过多时-如何配置横向滚动条",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-15-52-饼图标签如何实现换行效果-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-150-5-如何对轴标签进行格式化-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-151-图例组件如何限制图形的宽度",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-152-73-标签如何显示多行-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-153-4-如何对数据指定字段进行排序-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-154-24-条形进度图分段展示-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-155-65-如何在vchart中调整轴标签之间的间距-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-156-106-在折线图中如何给多条折线指定不同颜色-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-157-90-vchart-中如何单独配置图例的样式-改变图形的形状-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-158-85-如何配置图元hover状态-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-159-如何配置-tooltip-文字提示-自动换行",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-16-如何实现图表-tooltip-常驻显示",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-160-如何禁用图例的默认交互行为",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-161-如何自定义轴-label-显示间距",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-162-线图和堆积柱状图组合-如何定义轴的映射关系",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-163-53-如何限制tooltip的行数-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-164-如何在-notebook-中使用-visactor-vchart-显示图表",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-165-图例组件如何配置默认选中效果",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-167-如何实现百分比条形和-tgi-图的组合",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-168-折线图有多条线-如何设置右侧坐标轴-并且某条线是根据右侧坐标轴绘制的",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-169-如何设置图表-tooltip-显示内容的顺序",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-17-112-vchart-图表库中的-tooltip-和横坐标如何使用-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-170-50-如何为柱状图每根柱子设置不同颜色-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-171-1-如何实现多分组柱状图以及按照分组维度高亮的交互-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-172-71-柱系列是否可以监听事件回调-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-173-104-如何去除轴刻度值-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-174-如何实现柱形图同维度数据前后重叠而不是堆叠效果",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-175-vchart-中如何定义-label-显示的数值小数位数",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-176-如何监听柱状图的点击事件来自定义柱子的样式",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-177-使用-visactor-react-vchart-如何在点击事件中获取对应数据点信息",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-178-31-雷达图如何根据分组设置不同的填充颜色-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-179-102-条形图数值标签右对齐展示-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-18-图表的轴标签如何做截断-换行等效果",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-180-180-how-to-use-charts-libraries-in-vue",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-181-95-vchart-雷达图如何格式化tooltip-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-182-46-vchart-怎么给一根线配置不同的颜色-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-183-29-不用函数能配置-y-轴的单位吗-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-184-如何自定义图例的形状和文字样式",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-185-111-如何在vchart中设置title的字号为semi的heading-4-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-186-110-如何在vchart的tooltip卡片底部添加自定义内容-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-187-77-如何监听数据维度的事件并拿到对应数据-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-188-34-vchart图表中-如何设置legend不跟随渐变色并绘制圆角矩形的图例-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-189-如何自定义仪表图的刻度值",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-19-面积图渐变色如何配置-能否支持堆叠面积图配置不同渐变方向的渐变色",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-190-9-如何绘制双轴图-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-191-vchart-仪表盘如何自定义标题的显示位置",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-192-地图组件-如何根据数值自定义区块颜色",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-193-如何清空图表和数据",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-194-如何自定义图例的文本内容",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-195-36-如何令x轴的标签全部展示-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-196-25-如何自定义图例形状-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-197-85-vchart-组合图中如何配置动画-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-198-96-vchart-如何设置折线图的legend和tooltip的形状类型-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-199-vchart-图表点击数据点-展示操作列表",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-2-vchart-中-tooltip-中怎么能自定义展示数据中的字段",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-20-88-如何使轴标签带上图形-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-200-环形图-hover-的时候-如何配置边框的样式",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-201-组合图中-如何配置十字辅助线的作用范围-在某一个子图内-或者作用于整个组合图表",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-202-84-vchart是否支持将图元设置为选中状态-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-203-51-如何限制-tootlip-内容宽度-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-204-如何根据数值设定词云里面单个词语的颜色和透明度",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-205-图表-tooltip-如何配置将维度和指标展现成单行或者多行",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-206-35-vchart多线图能否限制默认渲染的线条-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-207-47-如何在移动端触发图表-tooltip-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-208-如何配置-markline-文字标签的位置-可以配置显示在线起点-终点或者线段中间",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-209-105-hover-超长label时候上方显示的这个tip能否配置修改背景颜色和文字颜色-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-21-78-vchart堆积柱图如何调整tooltip中内容的展示顺序-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-210-27-时间轴如何设置时间间隔-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-211-x-轴数据过于密集-如何配置忽略一部分显示内容",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-212-60-vchart-图表中数据采样的方法有哪些-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-22-15-如何设置柱状图的标签居中-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-23-76-如何自定义图例形状-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-24-13-如何在vchart中配置自定义主题-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-25-16-如何监听-datazoom-的操作-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-26-81-轴标签如何使用html渲染-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-27-如何自定义-tooltip-组件的挂载节点",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-28-44-vchart-如何配置出相关性散点图-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-29-26-如何控制图表以及图表内组件的布局间距-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-3-17-如何解决堆叠折线图和双向柱状图组合后-折线图部分分岔的问题-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-30-如何给图例-legend-添加提示信息",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-31-45-vchart-可以服务端渲染吗-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-32-42-vchart如何配置折线图的点稀疏一点-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-33-双轴图中如何自定义-tooltip-显示内容",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-34-11-如何实现条形图标签左对齐-标签的样式保持一致-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-35-23-如何禁用图表交互-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-36-如何在图表中配置一个能够在移动端响应的-datazoom-组件",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-37-数据全-0-时-如何配置-x-轴的位置",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-38-环形图-label-如何自适应环的大小",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-39-如何自定义饼图引导线的长度",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-4-坐标轴刻度的时间区间长度是给定的-一个季度-我怎么能设定比如只显示三个坐标轴刻度么-或者自适应的均匀些",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-41-92-折线图支持按照y轴分段设置背景颜色吗-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-42-vchart-如何设置-tooltip-的展示条数-数据过多时支持滚动-分页-合并展示等效果",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-43-20-缩略轴手柄图元形状是否支持svg-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-45-如何控制堆叠以及图例的显示顺序-同时在-tooltip-上添加总计信息的展示",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-46-70-词云如何在小画布上显示所有词-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-47-103-tooltip-和-legend-shape如何配置为带圆角的矩形-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-48-图表中如何自定义-tooltip-的位置-偏移量",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-49-43-组合图层级如何配置-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-5-10-怎么让图在canvas的最左边-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-50-79-如何调整线图中线的层级-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-51-如何在-react-中使用图表库-如-vchart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-52-68-图例形状是否可以设置为长方形-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-53-28-如何在折线图的axes上配置轴单位的展示-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-54-44-柱状图如何配置hover时的图元外边框-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-55-100-如何修改-tooltip-内容项的标记图形-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-56-37-vchart-如何设置柱状图的柱子宽度-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-57-在-chart-层面监听事件-是否可以通过-event-参数获取具体点击的元素类型-类似于-dom-的-target-参数",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-58-55-如何在使用vchart时-在onbrushend事件最后清除框选-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-6-19-图表如何导出图片-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-60-39-vchart-如何配置饼图大小-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-62-如何实现反向-y-轴效果",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-63-如何配置坐标轴的范围",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-64-环形图中心指标能否设置选中时展示",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-65-37-如何禁止被缩略的-tooltip-展示-已经自定义-tooltip-不需要重复展示-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-66-如何自定义-tooltip-的位置-避免遮挡",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-67-61-vchart-如何设置坐标轴宽度-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-68-101-折线图展示内容目前默认是全部选择展示-是否可以有渠道反选-例如有个按钮一键不展示-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-69-86-如何实现图例点击时仅选中当前项-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-7-108-react-如何画组合图-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-70-折线图和柱状图如何同时展示",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-71-70-树图支持配置hover时的样式吗-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-72-柱状图如何设置柱子宽度",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-73-12-vchart图表库中面积图y轴展示异常-数值低的反而更高-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-74-7-如何调整柱状图的柱间距-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-75-如何实现图例的标题和-图例左右分开显示",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-76-组合图滚动条如何设置",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-77-漏斗图如何自定义显示文字内容",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-78-图表滚动条如何配置默认滚动的位置",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-8-59-tooltip是否支持自定义双行显示内容-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-80-漏斗图转化层的背景颜色如何修改",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-81-3-如何解决在组合图中-上层面积图遮挡下层点图的问题-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-82-如何在-taro-框架中使用图表组件",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-83-线-柱双轴图中-如何自定义不同系列的颜色",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-84-40-vchart-中图例翻页器箭头的样式如何配置-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-85-面积图-x-轴如何隔几个点显示刻度",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-86-41-vchart折线图如何支持强调某个点-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-87-93-vchart-饼图label显示不全-该如何处理-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-88-72-饼图标签如何自定义-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-89-36-当使用堆叠柱状图时-如何在点击事件中获取与被点击柱子同维度的所有数据-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-9-18-如何在line-chart的tooltip中显示-加和-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-90-vchart-如何实现类似-echarts-的-profile-效果",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-91-21-如何在tooltip中添加自定义项-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-92-98-折线图如何设置一段虚线-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-93-如何设置折线的分段样式-比如-末尾虚线",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-94-69-如何设置柱状图交互时的背景宽度-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-95-30-如何实现趋势图的x轴标签贴边的效果-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-97-如何在小程序中使用图表库",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-98-48-如何以-react-的方式-自定义图例-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-faq-99-71-折线图能分段吗-br",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-animation-animation-attributes-and-settings",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-animation-animation-cases",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-animation-animation-types",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-animation-configuration-and-choreography-of-complex-animations",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-basic-a-basic-spec",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-basic-deepseek-with-cursor",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-basic-how-to-get-vchart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-basic-how-to-import-vchart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-basic-quickly-get-started-with-visactor-using-trae-context-doc",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-axes",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-brush",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-crosshair",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-data-data-types-and-interface",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-data-dataset-and-data-processing",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-datazoom",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-indicator",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-legend",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-marker",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-player",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-scrollbar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-series-composition-and-effect-of-series",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-series-mark",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-title",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-tooltip",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-concepts-understanding-vchart",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-extensions-about-extensions",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-extensions-candlestick",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-extensions-conversion-funnel",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-extensions-map-label",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-extensions-regression-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-extensions-series-break",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-extensions-timeline",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-plugins-formatter",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-3d-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-3d-bar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-3d-funnel",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-3d-scatter",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-3d-wordcloud",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-area",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-bar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-boxplot",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-candlestick",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-chart-types",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-circlepacking",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-combination",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-correlation",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-funnel",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-gauge",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-heatmap",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-histogram",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-line",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-liquid",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-map",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-mosaic",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-pictogram",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-progress",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-radar",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-rangearea",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-rangecolumn",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-rose",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-sankey",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-scatter",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-sequence",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-sunburst",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-treemap",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-waterfall",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-chart-types-wordcloud",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-contribution-guide",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-arco-design",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-harmony",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-lynx",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-midscene",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-mini-app-block",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-mini-app-how",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-mini-app-lark",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-mini-app-tt",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-mini-app-wx",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-node",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-omi",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-openinula",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-python",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-react-lynx",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-semi-design",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-svg",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-taro",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-univer",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-cross-terminal-and-developer-ecology-vue",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-event",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-extend-custom-animation",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-extend-custom-layout",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-extend-custom-mark",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-extend-richtext-and-dom",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-function",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-getting-started",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-intelligent-visualization-getting-started-with-data-video",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-intelligent-visualization-vmind-getting-started",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-layout-layout-cases-example-custom",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-layout-layout-cases-example-grid",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-layout-layout-strategy",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-load-on-demand",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-progressive-render",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-self-adaption-media-query",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-theme-apply-theme",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-theme-arco-design",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-theme-color-theme",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-theme-customize-theme",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-theme-semi-design",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-theme-theme",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-theme-theme-concept-and-design-rules",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-theme-theme-extension",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-theme-ve-o-design",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-vchart-skill-usage",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    },
+    {
+      "id": "vchart-tutorial-vchart-website-guide",
+      "decision": "defer-not-reviewed",
+      "reason": "Not selected for the first coverage set; not claimed redundant or passing."
+    }
+  ]
+}

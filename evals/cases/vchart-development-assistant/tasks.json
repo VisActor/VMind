@@ -1,0 +1,323 @@
+[
+  {
+    "id": "vchart-grouped",
+    "skill": "vchart-development-assistant",
+    "inputs": [
+      "sales.csv"
+    ],
+    "prompt": "读取 inputs/sales.csv 的全部数据，生成按地区分组、对比 Q1/Q2 销售额的柱状图。保留六条原始数据，显示图例和数值标签。输出 outputs/spec.js 与 outputs/demo.html。使用已安装 Skill 的生成脚本，不修改 Skill。",
+    "group": "core",
+    "family": "generation"
+  },
+  {
+    "id": "vchart-diagnosis",
+    "skill": "vchart-development-assistant",
+    "inputs": [
+      "broken-chart.js"
+    ],
+    "prompt": "inputs/broken-chart.js 中图表不显示，请诊断字段绑定错误，解释原因并生成修复后的可运行诊断 HTML。保留 East=120、West=80。将修复后的配置保存到 outputs/spec.js，诊断页保存到 outputs/diagnosis.html。",
+    "group": "core",
+    "family": "diagnosis"
+  },
+  {
+    "id": "vchart-stack",
+    "skill": "vchart-development-assistant",
+    "group": "core",
+    "family": "generation",
+    "inputs": [
+      "sales.csv"
+    ],
+    "prompt": "读取全部 sales.csv，按地区绘制堆叠柱图，每根柱按季度堆叠，显示季度图例和总量意义。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-percent",
+    "skill": "vchart-development-assistant",
+    "group": "core",
+    "family": "generation",
+    "inputs": [
+      "sales.csv"
+    ],
+    "prompt": "用 sales.csv 全部记录做按地区的百分比堆叠柱图，季度为系列，纵轴展示百分比。不要把原始金额直接当比例。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-line",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "generation",
+    "inputs": [
+      "trend.csv"
+    ],
+    "prompt": "用 trend.csv 画 Online、Store 两条月度折线，月份按 Jan、Feb、Mar，显示数据点和图例。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-line-null",
+    "skill": "vchart-development-assistant",
+    "group": "core",
+    "family": "data",
+    "inputs": [
+      "line-null.json"
+    ],
+    "prompt": "用 line-null.json 绘制月度折线。Feb 缺失，应断开连接；Mar 是真实的0，需要显示为0。不能补造缺失值。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-area-stack",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "generation",
+    "inputs": [
+      "trend.csv"
+    ],
+    "prompt": "用 trend.csv 绘制按渠道堆叠的月度面积图。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-pie",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "generation",
+    "inputs": [
+      "share.csv"
+    ],
+    "prompt": "用 share.csv 绘制饼图，展示分类、百分比标签和引导线，标签可读。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-scatter",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "generation",
+    "inputs": [
+      "points.csv"
+    ],
+    "prompt": "用 points.csv 画散点图，x、y分别映射横纵坐标，点旁标注item；所有点大小相同。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-heatmap",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "generation",
+    "inputs": [
+      "heat.csv"
+    ],
+    "prompt": "用 heat.csv 绘制day×slot热力图，颜色表示value，格内显示数值，包括真实零值。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-radar",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "generation",
+    "inputs": [
+      "radar.csv"
+    ],
+    "prompt": "用 radar.csv 画雷达图，五个维度，所有辐射轴统一0到100。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-funnel",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "generation",
+    "inputs": [
+      "funnel.csv"
+    ],
+    "prompt": "用 funnel.csv 做按Visit→Signup→Trial→Paid的漏斗图，标明阶段和人数。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-dual-axis",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "generation",
+    "inputs": [
+      "dual.csv"
+    ],
+    "prompt": "用 dual.csv 做季度营收柱图与毛利率折线的双轴组合图：左轴营收，右轴百分比，清楚标注单位。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-negative",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "data",
+    "inputs": [
+      "signed.csv"
+    ],
+    "prompt": "用 signed.csv 画双向条形图，显示零基线和数值标签，完整保留负数与零。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-long-labels",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "layout",
+    "inputs": [
+      "long-labels.csv"
+    ],
+    "prompt": "用 long-labels.csv 画柱状图，完整显示三个长中文分类名称，可以换行，不使用省略号。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-legend",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "interaction",
+    "inputs": [
+      "trend.csv"
+    ],
+    "prompt": "用 trend.csv 画两条渠道折线，点击图例能隐藏和恢复对应系列。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-tooltip",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "interaction",
+    "inputs": [
+      "sales.csv"
+    ],
+    "prompt": "用 sales.csv 画地区分组柱图，悬停柱子显示地区、季度和销售额，金额后有“万元”。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-zoom",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "interaction",
+    "inputs": [
+      "sequence.csv"
+    ],
+    "prompt": "用 sequence.csv 全40行绘制折线图，提供dataZoom缩略轴，初始展示前10天；可拖动查看后续区间。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-reference-line",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "annotation",
+    "inputs": [
+      "sales.csv"
+    ],
+    "prompt": "把 sales.csv 两个季度按地区汇总画柱图，增加y=200红色虚线并标注“目标200”。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-qa-label",
+    "skill": "vchart-development-assistant",
+    "group": "core",
+    "family": "answer",
+    "inputs": [],
+    "prompt": "VChart柱状图怎么显示每根柱子的数值？只解释配置并给简短代码片段，不生成文件、不索要我没有的spec。"
+  },
+  {
+    "id": "vchart-missing-data",
+    "skill": "vchart-development-assistant",
+    "group": "core",
+    "family": "answer",
+    "inputs": [],
+    "prompt": "帮我分析我们公司今年的营收表现。我还没有提供公司数据，也没有指定年份。请先说明需要哪些资料，不生成图表或文件。"
+  },
+  {
+    "id": "vchart-empty-data",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "answer",
+    "inputs": [
+      "empty.json"
+    ],
+    "prompt": "empty.json是当前查询结果。请说明能否据此判断销售趋势；不要造示例数据，不生成图表或文件。"
+  },
+  {
+    "id": "vchart-chinese-fields",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "data",
+    "inputs": [
+      "chinese.csv"
+    ],
+    "prompt": "用 chinese.csv 原始中文字段绘制地区营收柱图，保留完整字段名和单位，不把中文键错当英文别名。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-complete-data",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "data",
+    "inputs": [
+      "sequence.csv"
+    ],
+    "prompt": "读取 sequence.csv 全40行，按天绘制折线图，保留每条原始记录和每个点，不抽样、聚合或只读取前几行。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-react",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "react",
+    "inputs": [
+      "share.csv"
+    ],
+    "prompt": "用 React 和 @visactor/react-vchart 绘制 share.csv 的柱状图，提供可直接浏览器打开的React demo及组件源文件 outputs/chart.jsx；不要仅用命令式new VChart伪装React。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-image-replication",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "image",
+    "inputs": [
+      "reference-bars.png"
+    ],
+    "prompt": "根据 inputs/reference-bars.png 还原VChart图表。图中的标题、分类、数据和颜色尽量一致，必须生成真实VChart而非把图片作为背景。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-edit",
+    "skill": "vchart-development-assistant",
+    "group": "core",
+    "family": "continuation",
+    "inputs": [
+      "share.csv"
+    ],
+    "prompt": "用share.csv创建柱图，标题“渠道占比”，蓝色柱和数值标签。输出outputs/spec.js和outputs/demo.html。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。",
+    "steps": [
+      "用inputs/share.csv创建柱图，标题“渠道占比”，蓝色柱和数值标签。用Skill脚本生成outputs/spec.js和outputs/demo.html。",
+      "基于工作区已有outputs/spec.js和outputs/demo.html，只把标题改为“渠道复盘”，其他内容保持。仍输出同名文件。",
+      "基于刚才的新版，只把柱子改为深绿色，保留“渠道复盘”标题、全部数据和数值标签。仍输出同名文件。"
+    ]
+  },
+  {
+    "id": "vchart-format",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "formatting",
+    "inputs": [
+      "dual.csv"
+    ],
+    "prompt": "用dual.csv画毛利率柱图，数据中的margin为0到1的小数，柱顶标签和纵轴都显示百分数。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-numeric-sort",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "data",
+    "inputs": [
+      "sort.csv"
+    ],
+    "prompt": "用sort.csv绘制按value数值升序的条形图，保留原数值和分类。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-bubble",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "generation",
+    "inputs": [
+      "points.csv"
+    ],
+    "prompt": "用points.csv画气泡散点图，x和y为位置，size映射气泡大小，保留item供tooltip识别。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-step-line",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "generation",
+    "inputs": [
+      "trend.csv"
+    ],
+    "prompt": "用trend.csv仅Online记录绘制阶梯折线，月度变化以水平和垂直线段表达，不用平滑曲线。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  },
+  {
+    "id": "vchart-log-axis",
+    "skill": "vchart-development-assistant",
+    "group": "extended",
+    "family": "axis",
+    "inputs": [
+      "log.csv"
+    ],
+    "prompt": "用log.csv画点线图，纵轴为以10为底的对数轴，横轴分类A到D，不添加0值。 输出 outputs/spec.js 和 outputs/demo.html，使用已安装 Skill 的生成脚本。"
+  }
+]

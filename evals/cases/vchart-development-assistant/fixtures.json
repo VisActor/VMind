@@ -1,0 +1,78 @@
+{
+  "broken-chart.js": {
+    "sha256": "7fcfceb8ada142b852472dffb46515dec840bc719f7d24363ab0d2537017895f",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "chinese.csv": {
+    "sha256": "59044c138b24d2cb02f1f1f36057a9237fbd07d848cce6b35e89b686f80965ac",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "dual.csv": {
+    "sha256": "6f7850eadfe14761a93569e46c8b118968ec3cc28765f4d89e0bd7e804f5468e",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "empty.json": {
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "funnel.csv": {
+    "sha256": "9fbecffecddbdb452af125c30526510364308422d2590ffb1cd3c85eebece10e",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "heat.csv": {
+    "sha256": "4e1a6986743f2309a2810f46fe61de950df49d9142dbc4482084816f501ce96b",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "line-null.json": {
+    "sha256": "4821c37453fbc157c25f36e6851ac7734e201024ea7b592a4958b50c65ca1686",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "log.csv": {
+    "sha256": "49d9d30fcbcc03af1fec7ec4ad47415ceb6759a24ad5127bb59ec20db10f83ca",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "long-labels.csv": {
+    "sha256": "23e6835b034423783d3ecdf5b502014b6669719baeea594025d442f264ac8dca",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "points.csv": {
+    "sha256": "3a2ad1e6130b064a78948094dbf65c7b7b0f87b7b09017486d6e18dd5ebcb8f0",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "radar.csv": {
+    "sha256": "67b75166e72b11e588c2590e2207d848595574e3c3a534db8ba3680a7c98b076",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "reference-bars.png": {
+    "sha256": "b2092c6366af61ea67fea626cd6a1c5655fbd8563f65ee2ce0046200b0756fda",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "reference-bars.svg": {
+    "sha256": "08ffcd9ace5983466501a55db739124351f9f75adb2f91c929a416cf34d1dfe6",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "sales.csv": {
+    "sha256": "965d1fe4e828191a50b6ee85861cb12fec70fd21b928383c39f0daf06bc84ca8",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "sequence.csv": {
+    "sha256": "6413133f28ba17b937ba478925d8fdb6b00de4fcf6d417f929f029a816f02557",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "share.csv": {
+    "sha256": "9c5200a6e4c96c1d8fe6244b3211596fabc40048355868b517a91885595b0f90",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "signed.csv": {
+    "sha256": "14ddaa22d62eee6a481938665440aa064049a752b8ab8735e725e49407bdcede",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "sort.csv": {
+    "sha256": "2a8a37fbebe8e9a0178eb74dd8f4dd690be36b4d0002d798edd2477cfb4b1552",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "trend.csv": {
+    "sha256": "b47b43c965f9dd8fa6831966b5f73dd410cf0801b653e74f17a7e800c9712fca",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  }
+}

@@ -1,3 +1,0 @@
-#!/usr/bin/env node
-var app = require('../dist/typescript-json-schema-cli.js');
-app.run();

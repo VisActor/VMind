@@ -1,0 +1,7 @@
+{
+  "name": "visactor-skills-evals",
+  "private": true,
+  "type": "module",
+  "scripts": {"check": "node scripts/check-browser.mjs"},
+  "devDependencies": {"playwright": "1.61.1"}
+}

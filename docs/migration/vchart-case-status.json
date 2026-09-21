@@ -1,0 +1,21 @@
+{
+  "selectedVchart": 32,
+  "core": {
+    "reviewed": 8,
+    "passed": 7,
+    "failed": 1,
+    "reusedPriorEvidence": [
+      "vchart-grouped",
+      "vchart-diagnosis"
+    ]
+  },
+  "extended": {
+    "notRun": 24
+  },
+  "newRun": "20260918T072831Z-e48b6216",
+  "failure": "vchart-line-null: month labels clipped in preview",
+  "tests": {
+    "passed": 61
+  },
+  "commitOrPush": false
+}

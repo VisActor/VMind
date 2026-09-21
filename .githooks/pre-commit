@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+git diff --cached --check
+
+# Keep documentation-only commits independent of the Python environment.
+if git diff --cached --name-only --diff-filter=ACMR |
+  grep -Eq '\.py$|^(pyproject\.toml|uv\.lock|ruff\.toml)$'; then
+  if ! command -v uv >/dev/null 2>&1; then
+    echo "Install uv and add it to PATH before committing Python changes." >&2
+    exit 1
+  fi
+  uv run --locked ruff check skills tests evals/scripts
+fi
