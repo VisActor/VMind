@@ -77,6 +77,12 @@ uv run ruff check skills tests evals/scripts
 
 [用例目录](evals/cases/README.zh-CN.md) 收录 32 个 VChart 任务和 4 个 VTable 任务，按 Skill 分目录维护，并提供明确的验收条件。runner 默认执行包含 8 个任务的 VChart 核心组；收录用例并不代表所有任务均已执行。
 
+## 版本管理
+
+Skills 按整个仓库统一管理版本。每次正式发布使用 Git tag 标识一个包含 Skill 指令、参考资料、模板和脚本的版本快照，`vchart-skill` 和 `vtable-skill` 不单独维护版本号。
+
+反馈问题或复现结果时，请记录发布 tag 或 commit SHA；分支内容会随开发变化。VTable `1.26.8` 等依赖版本表示底层库的版本，不是 Skill 的发布版本。历史 VMind SDK 的 tag 保持不变，仍归属于原 SDK。
+
 ## VMind 历史版本
 
 原 VMind SDK 不再维护，其代码和文档仍可通过 [历史发布版本](https://github.com/VisActor/VMind/releases) 获取。

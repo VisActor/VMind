@@ -77,6 +77,12 @@ For fixed prompt/data runs, observable execution logs, browser checks and screen
 
 The [case catalog](evals/cases/README.md) includes 32 VChart tasks and 4 VTable tasks, organized by Skill with explicit acceptance criteria. The runner defaults to the 8-task VChart core group; curated coverage does not mean every task has been executed.
 
+## Versioning
+
+Skills are versioned together at repository level. Each formal Skills release is identified by a Git tag covering the Skill instructions, references, templates and scripts. `vchart-skill` and `vtable-skill` do not have separate version numbers.
+
+Use a release tag or commit SHA to identify the version when reporting an issue or reproducing a result; branch contents can change. Dependency versions such as VTable `1.26.8` identify the underlying library, not the Skill release. Historical VMind SDK tags remain unchanged and belong to the earlier SDK.
+
 ## Earlier VMind versions
 
 The previous VMind SDK is no longer maintained. Its code and documentation remain in [historical releases](https://github.com/VisActor/VMind/releases).
