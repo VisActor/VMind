@@ -1,0 +1,157 @@
+/**
+ * ============================================================================
+ * 1. CSS Token Defaults
+ * ============================================================================
+ * These are default fallback values. Presets override the required color
+ * tokens, and may override explicitly allowed optional tokens such as display
+ * typography. These ensure the design system works even if a preset is
+ * incomplete.
+ */
+
+:root {
+  /* Spacing scale — foundation for all layout */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 48px;
+  --space-xl: 80px;
+
+  /* Content width constraints */
+  --max-content-width: 1040px;
+  --max-chart-width: 920px;
+  --hero-title-measure: 920px;
+  --hero-copy-measure: 760px;
+  --hero-display-measure: 960px;
+  --measure-context-note: 54ch;
+  --measure-quote-block: 48ch;
+  --measure-data-artifact-caption: 62ch;
+  --measure-timeline-rail-copy: 36ch;
+  --metric-affix-scale: 0.56em;
+  --metric-affix-scale-kpi: 0.6em;
+  --metric-affix-scale-display: 0.56em;
+  --metric-affix-scale-hero: 0.58em;
+
+  /* Border radius scale */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+
+  /* Component tone aliases — presets may override these without rewriting component CSS */
+  --component-radius-sm: var(--radius-sm);
+  --component-radius-md: var(--radius-md);
+  --component-radius-lg: var(--radius-lg);
+
+  /* Shadows - light theme defaults */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.15);
+  /* Dark presets should override: --shadow-card: none; */
+  --component-shadow-card: var(--shadow-card);
+  --component-shadow-card-hover: var(--shadow-card-hover);
+  --component-shadow-elevated: var(--shadow-elevated);
+
+  /* Card design tokens */
+  --card-padding: var(--space-md);
+  --card-gap: var(--space-xs);
+  --card-border: 1px solid var(--border);
+  --component-border: var(--card-border);
+  --component-surface-neutral: var(--surface);
+  --component-surface-raised: var(--surface-strong);
+  --component-surface-accent: color-mix(in srgb, var(--surface) 92%, var(--accent-soft) 8%);
+  --component-surface-action: var(--surface);
+
+  /* Typography — display defaults to body unless a preset explicitly overrides it */
+  --font-body: 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-display: var(--font-body);
+  --font-mono: 'Source Code Pro', 'Fira Code', monospace;
+
+  /* Reading */
+  --type-reading-headline-size: clamp(1.6rem, 1.403rem + 0.809vw, 2.05rem);
+  --type-reading-headline-line-height: 1.06;
+  --type-reading-subtitle-size: clamp(0.98rem, 0.916rem + 0.261vw, 1.125rem);
+  --type-reading-subtitle-line-height: 1.52;
+  --type-reading-body-size: clamp(0.875rem, 0.842rem + 0.135vw, 0.95rem);
+  --type-reading-body-line-height: 1.66;
+
+  /* Display */
+  --type-display-hero-size: clamp(2.35rem, 1.868rem + 1.978vw, 3.45rem);
+  --type-display-hero-dominant-size: clamp(2.538rem, 2.017rem + 2.136vw, 3.726rem);
+  --type-display-hero-line-height: 1.02;
+  --type-display-metric-size: clamp(3rem, 2.167rem + 3.416vw, 4.9rem);
+  --type-display-metric-line-height: 1;
+  --type-display-metric-tracking: -0.03em;
+
+  /* Meta */
+  --type-meta-label-size: clamp(0.72rem, 0.707rem + 0.054vw, 0.75rem);
+  --type-meta-label-line-height: 1.2;
+  --type-meta-label-tracking: 0.08em;
+  --type-meta-source-size: clamp(0.68rem, 0.662rem + 0.072vw, 0.72rem);
+  --type-meta-source-line-height: 1.5;
+
+  /* Shared typography aliases */
+  --type-section-heading-size: var(--type-reading-headline-size);
+  --type-section-heading-line-height: var(--type-reading-headline-line-height);
+  --type-section-heading-emphasis-size: clamp(1.66rem, 1.454rem + 0.845vw, 2.13rem);
+  --type-section-heading-emphasis-line-height: 1.03;
+  --type-heading-weight: 700;
+  --type-heading-tracking: 0;
+  --type-body-copy-size: var(--type-reading-body-size);
+  --type-body-copy-line-height: var(--type-reading-body-line-height);
+  --type-chart-title-size: var(--type-reading-subtitle-size);
+  --type-chart-title-line-height: 1.42;
+  --type-support-title-size: var(--type-reading-subtitle-size);
+  --type-support-title-line-height: 1.35;
+  --type-hero-subtitle-size: clamp(1rem, 0.926rem + 0.306vw, 1.17rem);
+  --type-hero-subtitle-restrained-size: clamp(0.96rem, 0.889rem + 0.293vw, 1.123rem);
+  --type-hero-subtitle-line-height: 1.72;
+  --type-big-stat-size: clamp(2.12rem, 1.739rem + 1.564vw, 2.99rem);
+  --type-compact-metric-size: clamp(1.17rem, 0.845rem + 1.332vw, 1.911rem);
+  --type-inline-metric-size: clamp(1.56rem, 1.127rem + 1.776vw, 2.548rem);
+  --type-quote-mark-size: clamp(1.326rem, 0.996rem + 1.356vw, 2.08rem);
+  --type-delta-icon-size: clamp(0.778rem, 0.764rem + 0.058vw, 0.81rem);
+
+  /* KPI / component sizing */
+  --kpi-value-size: var(--type-compact-metric-size);
+  --kpi-label-size: var(--type-meta-label-size);
+  --type-metric-weight: 700;
+
+  /* Callout & narrative */
+  --highlight-border-width: 4px;
+  --section-bar-width: 3px;
+
+  /* Badge */
+  --badge-padding: 4px 12px;
+  --badge-size: var(--type-meta-label-size);
+
+  /* Chart heights by context */
+  --chart-height-report: 380px;
+  --chart-height-immersive: 500px;
+  --chart-height-scrolly: min(65vh, 550px);
+  --chart-height-mobile: 280px;
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --type-reading-headline-size: clamp(2.05rem, 1.25rem + 1vw, 2.25rem);
+    --type-reading-subtitle-size: clamp(1.125rem, 0.905rem + 0.275vw, 1.18rem);
+    --type-reading-body-size: clamp(0.95rem, 0.83rem + 0.15vw, 0.98rem);
+
+    --type-display-hero-size: clamp(3.45rem, 1.45rem + 2.5vw, 3.95rem);
+    --type-display-hero-dominant-size: clamp(3.726rem, 1.566rem + 2.7vw, 4.266rem);
+    --type-display-metric-size: clamp(4.9rem, 2.5rem + 3vw, 5.5rem);
+
+    --type-meta-label-size: clamp(0.75rem, 0.63rem + 0.15vw, 0.78rem);
+    --type-meta-source-size: clamp(0.72rem, 0.64rem + 0.1vw, 0.74rem);
+
+    --type-section-heading-emphasis-size: clamp(2.13rem, 1.29rem + 1.05vw, 2.34rem);
+    --type-hero-subtitle-size: clamp(1.17rem, 0.93rem + 0.3vw, 1.23rem);
+    --type-hero-subtitle-restrained-size: clamp(1.123rem, 0.891rem + 0.29vw, 1.181rem);
+    --type-big-stat-size: clamp(2.99rem, 1.51rem + 1.85vw, 3.36rem);
+    --type-compact-metric-size: clamp(1.911rem, 0.975rem + 1.17vw, 2.145rem);
+    --type-inline-metric-size: clamp(2.548rem, 1.3rem + 1.56vw, 2.86rem);
+    --type-quote-mark-size: clamp(2.08rem, 0.832rem + 1.56vw, 2.392rem);
+    --type-delta-icon-size: clamp(0.81rem, 0.682rem + 0.16vw, 0.842rem);
+  }
+}

@@ -1,0 +1,44 @@
+/* Quote block */
+.quote-block {
+  max-width: var(--measure-quote-block);
+  padding-left: calc(var(--space-sm) + 6px);
+  margin-block: calc(var(--space-xs) * 0.75) var(--space-sm);
+  position: relative;
+}
+
+.quote-block::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.04em;
+  left: 0;
+  font-size: var(--type-quote-mark-size);
+  line-height: 1;
+  color: color-mix(in srgb, var(--accent) 92%, white 8%);
+  font-weight: 700;
+}
+
+.quote-block > p {
+  font-family: var(--font-display);
+  font-size: var(--type-reading-subtitle-size);
+  font-style: normal;
+  line-height: var(--type-chart-title-line-height);
+  color: var(--text-primary);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.quote-block cite {
+  display: block;
+  margin-top: calc(var(--space-xs) * 0.6);
+  font-family: var(--font-mono);
+  font-size: var(--type-meta-source-size);
+  font-style: normal;
+  letter-spacing: var(--type-meta-label-tracking);
+  line-height: var(--type-meta-source-line-height);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.quote-block cite:empty {
+  display: none;
+}

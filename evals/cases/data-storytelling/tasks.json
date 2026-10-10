@@ -1,0 +1,56 @@
+[
+  {
+    "id": "story-retention-html",
+    "skill": "data-storytelling",
+    "inputs": [
+      "monthly_retention.csv",
+      "segment_retention.csv"
+    ],
+    "prompt": "面向增长负责人，分析四个月订阅留存变化和分群差异，区分数据事实与原因假设，生成中文 HTML 数据故事。至少一张真实 VSeed 图表，明确变化的百分点和建议验证的行动。 输入文件：inputs/monthly_retention.csv, inputs/segment_retention.csv。这些是模拟测试数据。已授权从分析、计划到构建端到端完成，无需等待计划确认。使用安装的 data-storytelling Skill 和固定脚本，保留 outputs/runtime/ 下的 plan.md、dataset_map.json、chart_specs.json、spec_map.json、素材报告和页面片段，最终文件为 outputs/output.html。不要读取参考答案；缺失能力或部分完成必须如实说明。",
+    "group": "core",
+    "family": "html"
+  },
+  {
+    "id": "story-regional-scrolly",
+    "skill": "data-storytelling",
+    "inputs": [
+      "margin_steps.csv",
+      "regional_margin.csv"
+    ],
+    "prompt": "面向区域业务负责人解释营收规模和利润率的差异，生成中文 scrollytelling 数据故事。至少三个阅读步骤，步骤应驱动同一真实 VSeed 主图的标注、高亮或数据状态变化；说明 share 列口径，不将其擅自改称营收占比。 输入文件：inputs/margin_steps.csv, inputs/regional_margin.csv。这些是模拟测试数据。已授权从分析、计划到构建端到端完成，无需等待计划确认。使用安装的 data-storytelling Skill 和固定脚本，保留 outputs/runtime/ 下的 plan.md、dataset_map.json、chart_specs.json、spec_map.json、素材报告和页面片段，最终文件为 outputs/output.html。不要读取参考答案；缺失能力或部分完成必须如实说明。",
+    "group": "core",
+    "family": "scrolly"
+  },
+  {
+    "id": "story-retention-deck",
+    "skill": "data-storytelling",
+    "inputs": [
+      "monthly_retention.csv",
+      "segment_retention.csv"
+    ],
+    "prompt": "面向增长负责人制作中文 Web-PPT，以留存下滑为主线，包含开场、真实 VSeed 图表证据和最终判断/下一步；至少三页且支持键盘翻页。输出 HTML deck，不是 pptx。 输入文件：inputs/monthly_retention.csv, inputs/segment_retention.csv。这些是模拟测试数据。已授权从分析、计划到构建端到端完成，无需等待计划确认。使用安装的 data-storytelling Skill 和固定脚本，保留 outputs/runtime/ 下的 plan.md、dataset_map.json、chart_specs.json、spec_map.json、素材报告和页面片段，最终文件为 outputs/output-ppt.html。不要读取参考答案；缺失能力或部分完成必须如实说明。",
+    "group": "core",
+    "family": "ppt"
+  },
+  {
+    "id": "story-supply-assets",
+    "skill": "data-storytelling",
+    "inputs": [
+      "buffer_gap.csv",
+      "risk_nodes.csv"
+    ],
+    "prompt": "面向供应链管理者分析风险节点和缓冲缺口，生成中文 HTML 数据故事。至少一张真实 VSeed 图表；在 Plan 中声明有助理解机制的 SVG 素材，通过 asset registry、normalize 和 composer 引用。不要用 SVG 代替统计图表，也不要把风险数量直接等同于缺口因果。 输入文件：inputs/buffer_gap.csv, inputs/risk_nodes.csv。这些是模拟测试数据。已授权从分析、计划到构建端到端完成，无需等待计划确认。使用安装的 data-storytelling Skill 和固定脚本，保留 outputs/runtime/ 下的 plan.md、dataset_map.json、chart_specs.json、spec_map.json、素材报告和页面片段，最终文件为 outputs/output.html。不要读取参考答案；缺失能力或部分完成必须如实说明。",
+    "group": "extended",
+    "family": "html"
+  },
+  {
+    "id": "story-vegas-feature",
+    "skill": "data-storytelling",
+    "inputs": [
+      "las_vegas_gp_mock.csv"
+    ],
+    "prompt": "使用模拟赛事经营数据，面向商业运营读者生成中文 feature 风格 HTML 数据故事。明确标为模拟数据，不将它写成真实新闻。至少一张真实 VSeed 图表。可规划主题开篇图；没有宿主生图工具时执行 Plan 的 fallback，交付时披露，页面不留坏图或占位图片。 输入文件：inputs/las_vegas_gp_mock.csv。这些是模拟测试数据。已授权从分析、计划到构建端到端完成，无需等待计划确认。使用安装的 data-storytelling Skill 和固定脚本，保留 outputs/runtime/ 下的 plan.md、dataset_map.json、chart_specs.json、spec_map.json、素材报告和页面片段，最终文件为 outputs/output.html。不要读取参考答案；缺失能力或部分完成必须如实说明。",
+    "group": "extended",
+    "family": "html"
+  }
+]

@@ -1,0 +1,39 @@
+/* Chart wrapper and attribution */
+.chart-wrapper {
+  margin-block: var(--space-lg);
+  width: 100%;
+  max-width: var(--max-chart-width);
+  margin-inline: auto;
+}
+
+h3.chart-title {
+  font-size: var(--type-chart-title-size);
+  font-weight: 600;
+  line-height: var(--type-chart-title-line-height);
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+  margin-top: 0;
+}
+
+.chart-container {
+  width: 100%;
+  height: var(--chart-height-report);
+}
+
+.chart-container.scrolly {
+  height: var(--chart-height-scrolly);
+}
+
+p.source-line {
+  font-size: var(--type-meta-source-size);
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+  line-height: var(--type-meta-source-line-height);
+  margin-bottom: 0;
+}
+
+@media (max-width: 480px) {
+  .chart-container {
+    height: var(--chart-height-mobile);
+  }
+}

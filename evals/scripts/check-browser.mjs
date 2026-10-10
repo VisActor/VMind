@@ -45,6 +45,8 @@ try {
   page.on('response', response => { if (response.status() >= 400) requests.push({url:response.url(),status:response.status()}); });
   // Observe the instance produced by the installed template, without changing its options or data.
   await page.addInitScript(() => {
+    window.__storyBuilds = [];
+    window.__VSEED_AFTER_BUILD_SPEC__ = payload => window.__storyBuilds.push(payload);
     let module;
     Object.defineProperty(window, 'VTable', {configurable:true, get:()=>module, set(value) {
       module = new Proxy(value, {get(target, key) {
@@ -60,9 +62,39 @@ try {
   });
   await page.goto(`http://127.0.0.1:${server.address().port}/${expected.html}`, {waitUntil:'networkidle',timeout:60000});
   await page.waitForFunction(() => [...document.querySelectorAll('canvas')].some(c => c.width > 0 && c.height > 0), null, {timeout:15000});
+  if (expected.engine === 'story') {
+    await page.waitForFunction(() => {
+      const charts = [...document.querySelectorAll('[data-chart-id]')];
+      return charts.length > 0 && charts.every(c => c.querySelector('canvas'));
+    }, null, {timeout:15000});
+    const builds = await page.evaluate(() => JSON.parse(JSON.stringify(window.__storyBuilds, (key, value) => typeof value === 'function' ? '[function]' : value)));
+    await fs.writeFile(path.join(directory, 'runtime-spec.json'), JSON.stringify(builds, null, 2) + '\n');
+    checks.push({name:'storyChartsCompiled',passed:builds.length > 0});
+    if (expected.deck) {
+      const slides = page.locator('.deck-slide');
+      checks.push({name:'deckSlides',passed:await slides.count() >= 2});
+      const before = await page.locator('.deck-slide.is-active').getAttribute('data-slide-label');
+      await page.keyboard.press('ArrowRight');
+      await page.waitForFunction(previous => document.querySelector('.deck-slide.is-active')?.dataset.slideLabel !== previous, before, {timeout:5000});
+      await page.waitForFunction(() => {
+        const slide = document.querySelector('.deck-slide.is-active');
+        const rect = slide.getBoundingClientRect();
+        return Math.abs(rect.x) < 1 && Math.abs(rect.y) < 1 &&
+          [...slide.querySelectorAll('.headline, .chart-frame')].every(node => Number(getComputedStyle(node).opacity) > 0.99);
+      }, null, {timeout:5000});
+      checks.push({name:'deckNavigation',passed:true});
+      await page.screenshot({path:path.join(directory,'deck-next.png')});
+      await page.keyboard.press('ArrowLeft');
+      await page.waitForFunction(previous => {
+        const slide = document.querySelector('.deck-slide.is-active');
+        const rect = slide.getBoundingClientRect();
+        return slide.dataset.slideLabel === previous && Math.abs(rect.x) < 1 && Math.abs(rect.y) < 1 && Number(getComputedStyle(slide.querySelector('.headline')).opacity) > 0.99;
+      }, before, {timeout:5000});
+    }
+  }
   await page.screenshot({path:path.join(directory,'screenshot.png'),fullPage:true});
-  const rendering = await page.evaluate(() => {
-    const canvas = [...document.querySelectorAll('canvas')].find(c => c.width > 100 && c.height > 100);
+  const rendering = await page.evaluate(story => {
+    const canvas = [...document.querySelectorAll(story ? '.chart-container canvas' : 'canvas')].find(c => c.width > 100 && c.height > 100);
     if (!canvas) return {passed:false,reason:'No chart/table canvas'};
     try {
       const pixels = canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
@@ -70,7 +102,7 @@ try {
       for(let i=0;i<pixels.length;i+=40) if(pixels[i+3]>0 && Math.min(pixels[i],pixels[i+1],pixels[i+2])<245) colored++;
       return {passed:colored>20,coloredSamples:colored};
     } catch(error) {return {passed:false,reason:String(error)};}
-  });
+  }, expected.engine === 'story');
   checks.push({name:'nonBlankCanvas',...rendering});
   if (expected.engine === 'vchart') {
     const spec = await page.evaluate(() => JSON.stringify(window.vchart?.getSpec?.() ?? null, (key, value) => typeof value === 'function' ? '[function]' : value, 2));

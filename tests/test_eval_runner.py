@@ -48,7 +48,7 @@ def test_timeout_is_a_failure_and_keeps_early_output(tmp_path):
 
 
 def test_visual_review_is_never_implied_by_file_existence(tmp_path):
-    task = runner.load_tasks()[0]
+    task = next(t for t in runner.load_tasks() if t["id"] == "vchart-grouped")
     workspace = runner.prepare(task, tmp_path / "case")
     for filename in ["spec.js", "demo.html"]:
         (workspace / "outputs" / filename).write_text("fixture")
@@ -170,7 +170,7 @@ def test_custom_cli_rejects_ambiguous_selection_before_model_access(tmp_path, mo
         ("vchart-skill", None, "extended", 24, {"vchart-skill"}),
         ("vchart-skill", None, "all", 32, {"vchart-skill"}),
         ("vtable-skill", None, None, 4, {"vtable-skill"}),
-        (None, None, "all", 36, set(runner.SKILLS)),
+        (None, None, "all", len(runner.load_tasks()), set(runner.SKILLS)),
         (None, ["vtable-list"], None, 1, {"vtable-skill"}),
     ],
 )
@@ -190,9 +190,7 @@ def test_invalid_skill_selection_fails_before_model_access(cases, group, message
 
 
 def test_skill_cli_lists_fixed_cases_without_custom_prompt_or_credentials(monkeypatch, capsys):
-    monkeypatch.setattr(
-        sys, "argv", ["run.py", "--skill", "vtable-skill", "--list"]
-    )
+    monkeypatch.setattr(sys, "argv", ["run.py", "--skill", "vtable-skill", "--list"])
     runner.main()
     lines = capsys.readouterr().out.splitlines()
     assert len(lines) == 4
@@ -236,3 +234,19 @@ def test_catalog_loader_rejects_ambiguous_ownership(tmp_path, monkeypatch, probl
     monkeypatch.setattr(runner, "CASES", catalogs)
     with pytest.raises(ValueError, match="does not belong|Duplicate case id"):
         runner.load_tasks()
+
+
+def test_story_acceptance_requires_intermediates_but_not_standalone_spec_js(tmp_path):
+    task = next(t for t in runner.load_tasks() if t["id"] == "story-retention-html")
+    directory = tmp_path / "story"
+    workspace = runner.prepare(task, directory)
+    contract = runner.load_expectations(task)
+    assert "spec.js" not in contract["artifacts"]
+    for filename in contract["artifacts"]:
+        file = workspace / "outputs" / filename
+        file.parent.mkdir(parents=True, exist_ok=True)
+        file.write_text("fixture")
+    execution = {"exitCode": 0, "timedOut": False}
+    assert runner.evaluate_files(task, directory, execution)["status"] == "needs-review"
+    (workspace / "outputs/runtime/spec_map.json").unlink()
+    assert runner.evaluate_files(task, directory, execution)["status"] == "failed"

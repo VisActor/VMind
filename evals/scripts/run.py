@@ -392,6 +392,7 @@ def main() -> None:
                 "engine": {
                     "vchart-skill": "vchart",
                     "vtable-skill": "vtable",
+                    "data-storytelling": "story",
                 }.get(task["skill"]),
                 "requireAnswer": True,
                 "review": [

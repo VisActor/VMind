@@ -18,7 +18,7 @@ Choose one host. For **Codex**:
 
 ```bash
 mkdir -p "$debug_workspace/.agents/skills"
-cp -R skills/vchart-skill skills/vtable-skill "$debug_workspace/.agents/skills/"
+cp -R skills/vchart-skill skills/vtable-skill skills/data-storytelling "$debug_workspace/.agents/skills/"
 cd "$debug_workspace"
 codex
 ```
@@ -27,12 +27,12 @@ For **Claude Code**, instead run this from the repository root after the shared 
 
 ```bash
 mkdir -p "$debug_workspace/.claude/skills"
-cp -R skills/vchart-skill skills/vtable-skill "$debug_workspace/.claude/skills/"
+cp -R skills/vchart-skill skills/vtable-skill skills/data-storytelling "$debug_workspace/.claude/skills/"
 cd "$debug_workspace"
 claude
 ```
 
-You can also open that workspace in the corresponding app. The scripts need Python 3.9+, and generated HTML needs a browser and public CDN access. The API harness, uv environment and its model configuration are not required for this path.
+You can also open that workspace in the corresponding app. VChart/VTable scripts need Python 3.9+; data-storytelling needs Python 3.10+ and Node.js for JS checks, and generated HTML needs a browser and public CDN access. The API harness, uv environment and its model configuration are not required for this path.
 
 In Codex CLI, send:
 
@@ -48,7 +48,7 @@ Historical generation/browser runs in this migration used Codex. Claude Code's s
 
 ## Alternative: a simple model API harness
 
-Use this when you have an API endpoint or want repeatable runs on selected cases. It loads one Skill and provides the bounded tools needed for these tasks. It does not provide an interactive coding-agent application. Only OpenAI-compatible Chat Completions with tool calling and token usage is supported; native protocols are outside the current scope.
+Use this when you have an API endpoint and want to experiment with a bounded VChart/VTable task whose inputs and outputs are clear. It loads one Skill and provides a limited tool loop, but has not been validated as a reliable end-to-end evaluator even for every VChart/VTable case. Use Codex or Claude Code for data-storytelling end-to-end tasks, multi-step debugging and everyday interactive work. Only OpenAI-compatible Chat Completions with tool calling and token usage is supported; native protocols are outside the current scope.
 
 Follow [API setup](../evals/README.md#contributor-quickstart) to configure your endpoint, model and key environment variable. Run a built-in case with:
 

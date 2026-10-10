@@ -7,8 +7,11 @@
   },
   "devDependencies": {
     "@visactor/vchart": "2.0.21",
+    "@visactor/vseed": "0.6.5",
     "@visactor/vtable": "1.26.8",
+    "gsap": "3.15.0",
     "monaco-editor": "0.45.0",
-    "playwright": "1.61.1"
+    "playwright": "1.61.1",
+    "story-vchart": "npm:@visactor/vchart@2.1.7"
   }
 }

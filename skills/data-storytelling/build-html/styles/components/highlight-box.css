@@ -1,0 +1,174 @@
+/* Highlight / editorial annotation box */
+.highlight-box {
+  position: relative;
+  display: grid;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg) var(--space-md) calc(var(--space-lg) + var(--space-sm));
+  border: var(--component-border);
+  border-radius: var(--component-radius-lg);
+  background: var(--component-surface-accent);
+  margin-block: var(--space-md);
+  overflow: hidden;
+}
+
+.highlight-box::before {
+  content: "";
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  width: var(--highlight-border-width);
+  height: calc(100% - (var(--space-md) * 2));
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+
+/* Variant: fully bordered (executive summary style) */
+.highlight-box.bordered {
+  background: var(--component-surface-neutral);
+}
+
+.highlight-box .highlight-label {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--type-meta-label-size);
+  font-weight: 700;
+  letter-spacing: var(--type-meta-label-tracking);
+  line-height: var(--type-meta-label-line-height);
+  text-transform: uppercase;
+}
+
+.highlight-box .highlight-title {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: var(--type-body-copy-size);
+  font-weight: 700;
+  line-height: var(--type-body-copy-line-height);
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+.highlight-box .highlight-note,
+.highlight-box p {
+  margin: 0;
+  font-size: var(--type-body-copy-size);
+  line-height: var(--type-body-copy-line-height);
+  color: var(--text-primary);
+}
+
+.highlight-box .highlight-note {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.highlight-box strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.highlight-box.text-accent {
+  grid-template-columns: minmax(72px, 0.14fr) minmax(0, 1fr) minmax(180px, 0.34fr);
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-color: color-mix(in srgb, var(--border) 82%, transparent);
+  background: var(--component-surface-accent);
+}
+
+.highlight-box.text-accent::before {
+  display: none;
+}
+
+.highlight-box.text-accent .highlight-label {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  padding-right: var(--space-md);
+  border-right: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+
+.highlight-box.text-accent .highlight-title {
+  font-size: var(--type-body-copy-size);
+}
+
+.highlight-box.text-accent .highlight-note {
+  color: var(--text-secondary);
+}
+
+.highlight-box.with-corner-asset {
+  isolation: isolate;
+  background:
+    linear-gradient(90deg, transparent 58%, color-mix(in srgb, var(--accent-soft) 28%, transparent)),
+    var(--component-surface-accent);
+}
+
+.highlight-box.with-corner-asset > :not(.highlight-corner-asset) {
+  position: relative;
+  z-index: 1;
+}
+
+.highlight-corner-asset {
+  position: absolute;
+  right: calc(var(--space-sm) * -1);
+  bottom: calc(var(--space-sm) * -1);
+  width: min(26%, 260px);
+  max-height: 80%;
+  color: var(--accent);
+  opacity: 0.52;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.highlight-corner-asset svg {
+  width: 100%;
+  height: auto;
+}
+
+.chart-narrative-rail .content-side .highlight-box.text-accent,
+.story-container.narrative-rail .content-side .highlight-box.text-accent {
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+}
+
+.chart-narrative-rail .content-side .highlight-box.text-accent .highlight-label,
+.story-container.narrative-rail .content-side .highlight-box.text-accent .highlight-label {
+  align-self: auto;
+  padding-right: 0;
+  padding-bottom: var(--space-xs);
+  border-right: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 720px) {
+  .highlight-box {
+    padding: var(--space-md) var(--space-md) var(--space-md) calc(var(--space-lg) + var(--space-xs));
+  }
+
+  .highlight-box.text-accent {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+
+  .highlight-box.text-accent .highlight-label {
+    align-self: auto;
+    padding-right: 0;
+    padding-bottom: var(--space-xs);
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .highlight-corner-asset {
+    width: min(42%, 180px);
+  }
+}
+
+.highlight-box[data-motion-primitive="mask-reveal"] {
+  overflow: hidden;
+  will-change: clip-path, opacity;
+}
+
+.highlight-box[data-motion-primitive="reveal-soft"] {
+  will-change: transform, opacity;
+}

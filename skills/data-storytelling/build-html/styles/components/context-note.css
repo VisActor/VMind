@@ -1,0 +1,54 @@
+/* Local commentary layer between body copy and highlight-box */
+.context-note {
+  max-width: var(--measure-context-note);
+  margin-block: calc(var(--space-xs) * 1.2);
+  padding-left: calc(var(--space-xs) + 4px);
+  border-left: 2px solid color-mix(in srgb, var(--accent) 44%, transparent);
+}
+
+.context-note .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--type-meta-label-size);
+  font-weight: 700;
+  letter-spacing: var(--type-meta-label-tracking);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.context-note .tag::before {
+  content: "";
+  width: 14px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.context-note p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--type-body-copy-size);
+  line-height: var(--type-body-copy-line-height);
+}
+
+.context-note.bracket {
+  position: relative;
+  padding-left: calc(var(--space-sm) + 2px);
+  border-left: 0;
+}
+
+.context-note.bracket::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 10px;
+  height: calc(100% - 8px);
+  border-left: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  border-radius: 8px 0 0 8px;
+}

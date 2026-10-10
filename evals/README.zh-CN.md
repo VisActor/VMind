@@ -4,7 +4,7 @@
 
 通过可配置的模型 API，让指定 Skill 执行固定 prompt 和输入文件。默认 runner 不需要安装或登录 Codex、Claude Code。这是一个带工具调用循环的轻量评测工具，不提供托管服务，也不是通用 Agent 框架。
 
-日常开发 Skill，**推荐先使用 Codex 或 Claude Code**，具体步骤见 [直接调试指南](../docs/debugging.md)。下面的 API harness 是执行指定任务和可重复 case 的另一种方式。评测命令默认选择 API，并不代表它是整体使用体验的首选。
+日常开发 Skill，**推荐先使用 Codex 或 Claude Code**，具体步骤见 [直接调试指南](../docs/debugging.md)。下面的 API harness 是输入、产物边界清晰的 VChart/VTable 任务的实验性入口；它可以让模型实际生成产物并接受固定检查，不只是检查 Skill 加载或工具调用。但结果受限于工具和上下文预算，不推荐用于数据叙事端到端评测。评测命令默认选择 API，并不代表它是整体使用体验的首选。
 
 GitHub CI 只运行确定性回归和固定配置的浏览器冒烟，不执行下文的模型任务。不调用模型的浏览器命令及检查范围见 [持续集成说明](../CONTRIBUTING.md#continuous-integration)。
 
@@ -65,7 +65,7 @@ printf '\n'
 export SKILLS_EVAL_API_KEY
 ```
 
-如果输入过程中被中断、终端无法显示输入字符，请运行 `stty echo`。不要把 Key 写入 JSON、case prompt 或命令行参数。也可以复用已有环境变量，例如已导出 `OPENAI_API_KEY` 时，将 `api_key_env` 设置为 `OPENAI_API_KEY`。仓库中的 `.env` 文件**不会自动加载**。
+如果输入过程中被中断、终端无法显示输入字符，请运行 `stty echo`。如果希望只维护一个本地配置文件，可在被 Git 忽略的 `evals/*.local.json` 中另加 `"api_key": "实际密钥"`。`api_key_env` 始终填写环境变量名，不是密钥本身。runner 会在当前进程把本地密钥放入该环境变量，并从运行日志的配置快照中移除 `api_key`。不要把 Key 写入跟踪的 JSON、case prompt 或命令行参数。也可以复用已有环境变量，例如已导出 `OPENAI_API_KEY` 时，将 `api_key_env` 设置为 `OPENAI_API_KEY`。仓库中的 `.env` 文件**不会自动加载**。
 
 部分兼容服务要求使用 `max_tokens`，此时修改 `output_token_parameter` 即可。`request_options` 可选参数包括 `temperature`、`top_p` 和 `reasoning_effort`，仅填写所选模型支持的参数和值。工具不强制指定模型、temperature 或推理强度。使用 `--config /path/to/config.json` 切换配置，使用 `--model MODEL_ID` 覆盖本次运行的模型。实际生效的配置会作为快照保存在运行日志中，不包含 Key。
 
@@ -77,9 +77,9 @@ cp evals/model.compatible.example.json evals/another-model.local.json
 uv run python evals/scripts/run.py --config evals/another-model.local.json --case vchart-grouped
 ```
 
-所有 `evals/*.local.json` 均被 Git 忽略。API Key 保存在环境变量中。同一 endpoint 下的不同模型也可以通过 `--model` 切换。
+所有 `evals/*.local.json` 均被 Git 忽略。API Key 可以保存在被忽略的本地 JSON 的 `api_key` 字段，或由环境变量提供。同一 endpoint 下的不同模型也可以通过 `--model` 切换。
 
-对于采用 Azure 风格 HTTP 鉴权的兼容网关，将 `api_key_header` 设置为 `api-key`，默认值对应 `Authorization: Bearer ...`。可选的 `api_version` 会追加 `api-version` 查询参数。`base_url` 应填写服务商规定的基础地址；如果接口要求 deployment 路径，也要包含该路径。此时切换模型可能还需要同步修改 deployment 路径。这些配置沿用 Chat Completions 消息与工具协议，不会启用 Responses 适配器。凭据仍然只从指定环境变量读取。
+对于采用 Azure 风格 HTTP 鉴权的兼容网关，将 `api_key_header` 设置为 `api-key`，默认值对应 `Authorization: Bearer ...`。可选的 `api_version` 会追加 `api-version` 查询参数。`base_url` 应填写服务商规定的基础地址；如果接口要求 deployment 路径，也要包含该路径。此时切换模型可能还需要同步修改 deployment 路径。这些配置沿用 Chat Completions 消息与工具协议，不会启用 Responses 适配器。请求阶段从指定环境变量读取凭据；本地 JSON 的 `api_key` 会先装入该变量。
 
 API 调用仍会消耗 token。限制按**每个 case 的每一轮任务**计算，不是整个任务组的总限制。`max_total_tokens` 累加已完成请求中服务商报告的用量，包括重复输入的上下文。达到阈值后，runner 停止发起后续请求；单次请求仍可能超过剩余额度，因此它不是账单硬上限。`max_output_tokens` 限制单次响应长度；如果服务商将推理 token 纳入该参数，也会计入限制。请求次数、工具调用次数、上下文大小和超时提供额外约束。runner 不会自动重试、压缩上下文或静默裁剪会话历史。文件读取结果会明确标记是否截断以及后续读取位置。服务商缺少 usage 时，运行会失败；发生超时的请求仍可能被服务商计费。
 
@@ -124,7 +124,7 @@ uv run python evals/scripts/run.py --skill vtable-skill --group core --browser
 uv run python evals/scripts/run.py --skill vchart-skill --group extended --browser
 ```
 
-使用 `--group all` 运行全部 36 个任务，或重复传入 `--case` 选择多个任务。显式指定 case 时，以 case 选择为准。`--skill` 选择 Skill；分组在该 Skill 内生效。默认选择 VChart 的 core 组。指定 Skill 后，`--group all` 仅选择该 Skill 的全部任务。`--timeout 600` 设置每轮任务的执行时限。建议从少量任务开始，检查 `usage.json` 后再扩大范围。
+使用 `--group all` 运行全部 41 个任务，或重复传入 `--case` 选择多个任务。显式指定 case 时，以 case 选择为准。`--skill` 选择 Skill；分组在该 Skill 内生效。默认选择 VChart 的 core 组。指定 Skill 后，`--group all` 仅选择该 Skill 的全部任务。`--timeout 600` 设置每轮任务的执行时限。建议从少量任务开始，检查 `usage.json` 后再扩大范围。
 
 API runner 会将所选 `SKILL.md` 加入初始指令，提供四个工具：`read_file`、`list_files`、`write_file` 和 `run_skill_script`。读取范围限于选定的已安装 Skill、任务输入和输出，写入范围限于 outputs。只能执行 Skill 自带的 HTML 生成脚本和知识检索脚本，脚本不会获得模型凭据。参考资料按需读取。检查器的预期结果保存在工作区外，无法通过这些工具读取。这是受限的工具接口，不是操作系统沙箱：应仅运行已审查的 Skill 脚本，在浏览器中执行前检查生成的 HTML。
 
@@ -167,7 +167,7 @@ uv run python evals/scripts/run.py --runner codex --case vchart-grouped --browse
 
 `cases/<skill-name>/tasks.json` 保存 prompt 和输入文件名。`cases/<skill-name>/expectations.json` 由检查器读取，不会复制到 Agent 的任务工作区。输入采用可公开分享的合成数据。
 
-当前收录 32 个 VChart 任务和 4 个 VTable 任务。各 Skill 的用例目录、分组和验收条件见 [用例说明](cases/README.zh-CN.md)。收录数量与实际执行数量分别统计。VChart 核心组覆盖分组、诊断、堆叠、百分比归一化、空值、解释、澄清和基于文件的续改；扩展组包含 React、图片还原、坐标轴、交互及更多图表类型。
+当前收录 32 个 VChart 任务、4 个 VTable 任务和 5 个数据叙事任务。各 Skill 的用例目录、分组和验收条件见 [用例说明](cases/README.zh-CN.md)。收录数量与实际执行数量分别统计。VChart 核心组覆盖分组、诊断、堆叠、百分比归一化、空值、解释、澄清和基于文件的续改；扩展组包含 React、图片还原、坐标轴、交互及更多图表类型。
 
 三轮续改任务每轮都会启动独立的 Agent 执行，将上一轮文件状态复制到新工作区。它验证的是对已有产物的修改能力，不是会话记忆。每轮都有独立日志和产物，某轮失败后，后续轮次不会执行。纯文本任务不要求 HTML；如果生成了未要求的输出文件，则判定失败。
 
@@ -205,3 +205,27 @@ node evals/scripts/check-browser.mjs evals/runs/RUN/CASE
 ```
 
 该命令只替换浏览器证据；原 `result.json` 仍记录初次评测结果。修改 Skill 或输入后，应创建新运行。
+
+## 图表与表格基础任务的真实 API 记录（2026-10-09）
+
+使用本地配置的 `gpt-5.4-2026-03-05` 接口和 40,000 tokens 累计阈值，两个代表性用例都未完成。`vchart-grouped` 发起 3 次请求，服务商报告共 56,700 tokens，写出了 `spec.js`，但尚未生成 HTML 就停止。`vtable-list` 发起 5 次请求，报告共 49,748 tokens，写出了 `spec.js` 和 `demo.html`，但未给出最终回复，浏览器检查也未通过。阈值在两次请求之间检查，因此最后一次请求可能超过阈值。两次运行报告的缓存输入 tokens 均为 0。详细日志保存在本地被 Git 忽略的 `evals/runs/` 中。
+
+这两次失败不能证明 VChart/VTable 任务无法通过模型 API 完成，但也不能称当前 harness 已可靠支持这些基础用例。评估 Skill 修改时，应结合生成产物、用量和独立复核，而不只看 runner 退出码。
+
+## 数据叙事调试
+
+数据叙事端到端任务推荐在 Codex / Claude Code 中运行。API harness 虽暴露部分计划、VSeed、素材、HTML/PPT 和 JavaScript 脚本，但目前的有限工具循环与不断增长的上下文尚未完成真实模型故事用例。它不提供 Python 分析沙箱、浏览器工具或图片生成。不能仅凭 API harness 失败判定故事质量或 Skill 正确性。
+
+```bash
+uv run python evals/scripts/run.py --skill data-storytelling --list
+```
+
+用例、输入和验收条件见 [数据叙事用例](cases/data-storytelling/README.zh-CN.md)，可在完整 Agent 中使用。API 直跑仍可用于调查，但不作为推荐的端到端评测方式。故事需要读取更多参考资料并写多个中间文件；单纯提高预算不能解决上下文增长。已尝试一个真实模型用例，结果和用量见下文；其余用例尚未运行。
+
+浏览器保存编译后的图表 spec、截图、页面和网络错误；Web-PPT 另检查翻页。它不自动判定叙事质量、所有数字或整页布局，不做像素相似度验收。
+
+### 首次真实模型运行（2026-10-09）
+
+`story-retention-html` 使用 `evals/visactor.local.json` 中的 `gpt-5.4-2026-03-05`，通过 OpenAI 兼容 API 发起 5 次请求。模型读取了输入与多份 Skill 参考资料，写出了 `runtime/dataset_map.json`（4 条月度记录、3 条分群记录及排序副本）。第 5 次请求后，服务商累计报告 166,990 tokens，超过本地配置的 160,000 上限，runner 停止；`plan.md`、HTML 与其余中间产物均未生成，评测结果为 `failed`。日志在被忽略的 `evals/runs/20261009T094650Z-99a5c791/`。
+
+5 次请求的 prompt tokens 分别为 9,910、29,998、36,085、43,379、46,693；服务商报告的缓存 tokens 均为 0。此前读取的 Skill 内容随对话历史再次进入后续请求。这个结果不能说明模型生成的故事质量，只说明该用例与当前 API harness / 预算组合未完成。不要直接批量提高预算；先检查参考资料读取与上下文开销。

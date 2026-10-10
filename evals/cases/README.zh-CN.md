@@ -8,6 +8,7 @@
 | --- | --- | --- | --- |
 | `vchart-skill` | 32 | core（8）、extended（24） | [VChart](vchart-skill/README.zh-CN.md) |
 | `vtable-skill` | 4 | core（4） | [VTable](vtable-skill/README.zh-CN.md) |
+| `data-storytelling` | 5 | core (3), extended (2) | [Data storytelling](data-storytelling/README.zh-CN.md) |
 
 ## 目录结构
 

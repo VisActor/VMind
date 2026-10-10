@@ -1,0 +1,24 @@
+/* User-provided image evidence, not decorative media */
+.image-evidence {
+  display: grid;
+  gap: var(--space-xs);
+  margin: var(--space-md) 0;
+  color: var(--text-primary);
+}
+
+.image-evidence img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: var(--component-border);
+  border-radius: var(--component-radius-md);
+  background: var(--component-surface-neutral);
+}
+
+.image-evidence figcaption {
+  margin: 0;
+  max-width: var(--measure-context-note);
+  color: var(--text-secondary);
+  font-size: var(--type-meta-source-size);
+  line-height: var(--type-meta-source-line-height);
+}

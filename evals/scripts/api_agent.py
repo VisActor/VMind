@@ -1,4 +1,4 @@
-"""Small, bounded Chat Completions tool loop for the two installed Skills."""
+"""Small, bounded Chat Completions tool loop for installed Skills."""
 
 from __future__ import annotations
 
@@ -31,9 +31,54 @@ SCRIPTS = {
     "search_knowledge.py",
 }
 
+# Keep imports in the installed Skill; do not expose a --skill-dir override.
+STORY_SCRIPTS = {
+    "assemble_story_specs.py": {
+        "--plan-file": "read",
+        "--dataset-json": "read",
+        "--specs-json": "read",
+        "--output": "write",
+        "--requests-output": "write",
+    },
+    "normalize_story_assets.py": {
+        "--plan-file": "read",
+        "--assets-dir": "read",
+        "--user-assets-dir": "read",
+        "--output": "write",
+        "--report-output": "write",
+    },
+    "compose_story.py": {
+        "--target": "value",
+        "--runtime-dir": "read",
+        "--body-file": "read",
+        "--config-file": "read",
+        "--output": "write",
+    },
+    "validate_story_plan.py": {"--plan-file": "read", "--format": "value"},
+    "validate_js.py": {},
+    "build-html/scripts/prepare_story_head.py": {
+        "--preset": "value",
+        "--plan-file": "read",
+        "--head-output": "write",
+        "--format": "value",
+    },
+    "build-ppt/scripts/prepare_story_head.py": {
+        "--preset": "value",
+        "--plan-file": "read",
+        "--head-output": "write",
+        "--format": "value",
+    },
+}
+
 
 def load_config(path: Path, model: str | None = None) -> dict:
     config = json.loads(path.read_text(encoding="utf-8"))
+    direct_key = config.pop("api_key", None) if isinstance(config, dict) else None
+    if direct_key is not None:
+        if not path.name.endswith(".local.json"):
+            raise ValueError("api_key is allowed only in a local config (*.local.json)")
+        if not isinstance(direct_key, str) or not direct_key.strip():
+            raise ValueError("api_key must be a nonempty string")
     allowed = {
         "api",
         "base_url",
@@ -90,6 +135,8 @@ def load_config(path: Path, model: str | None = None) -> dict:
         r"[A-Za-z_][A-Za-z0-9_]*", config["api_key_env"]
     ):
         raise ValueError("api_key_env must name an environment variable")
+    if direct_key is not None:
+        os.environ[config["api_key_env"]] = direct_key
     config.setdefault("max_output_tokens", 4096)
     config.setdefault("output_token_parameter", "max_completion_tokens")
     if config["output_token_parameter"] not in {"max_tokens", "max_completion_tokens"}:
@@ -156,7 +203,7 @@ TOOLS = [
     ),
     schema(
         "run_skill_script",
-        "Run a bundled Python Skill script by filename with separate CLI arguments. No shell, arbitrary Python or generated code execution. Read the script/help for supported flags. Output paths must be inside outputs/.",
+        "Run a bundled Python Skill script by filename (or build-html/scripts/prepare_story_head.py or build-ppt/scripts/prepare_story_head.py) with separate CLI arguments. No shell, arbitrary Python or generated code execution. Read the script/help for supported flags. Output paths must be inside outputs/. Omit --skill-dir; the installed directory is automatic.",
         {"script": STRING, "args": {"type": "array", "items": STRING}},
         ["script", "args"],
     ),
@@ -223,6 +270,8 @@ class WorkspaceTools:
         raise ValueError(f"Unknown tool: {name}")
 
     def run_script(self, name: str, args: list[str], timeout: float) -> dict:
+        if self.skill.name == "data-storytelling" and name in STORY_SCRIPTS:
+            return self.run_story_script(name, args, timeout)
         if name not in SCRIPTS or not (self.skill / "scripts" / name).is_file():
             raise ValueError("Not an allowed bundled script")
         script = self.path(str(self.skill / "scripts" / name))
@@ -274,6 +323,46 @@ class WorkspaceTools:
             [sys.executable, "-B", str(script), *normalized],
             cwd=self.workspace,
             env=env,
+            capture_output=True,
+            text=True,
+            timeout=min(timeout, 30),
+            check=False,
+        )
+        return {
+            "exit_code": result.returncode,
+            "stdout": result.stdout[: self.max_output],
+            "stderr": result.stderr[: self.max_output],
+            "truncated": len(result.stdout) > self.max_output
+            or len(result.stderr) > self.max_output,
+        }
+
+    def run_story_script(self, name: str, args: list[str], timeout: float) -> dict:
+        relative = name if "/" in name else f"scripts/{name}"
+        script = self.path(str(self.skill / relative))
+        if not isinstance(args, list) or not all(isinstance(a, str) for a in args):
+            raise ValueError("args must be a string array")
+        if name == "validate_js.py":
+            if len(args) != 1 or args[0].startswith("-"):
+                raise ValueError("validate_js.py requires one HTML path")
+            normalized = [str(self.path(args[0]))]
+        elif args == ["--help"]:
+            normalized = args
+        else:
+            policy = STORY_SCRIPTS[name]
+            if len(args) % 2:
+                raise ValueError("Use separate flag and value arguments")
+            normalized = []
+            for flag, value in zip(args[::2], args[1::2], strict=True):
+                if flag not in policy:
+                    raise ValueError(f"Unsupported flag {flag}")
+                kind = policy[flag]
+                if kind != "value":
+                    value = str(self.path(value, write=kind == "write"))
+                normalized.extend([flag, value])
+        result = subprocess.run(
+            [sys.executable, "-B", str(script), *normalized],
+            cwd=self.workspace,
+            env={k: v for k, v in os.environ.items() if k in {"PATH", "LANG", "LC_ALL", "TMPDIR"}},
             capture_output=True,
             text=True,
             timeout=min(timeout, 30),

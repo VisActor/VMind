@@ -9,7 +9,7 @@ export function assetPath(url, nodeModules, versions) {
   }
   const pathname = decodeURIComponent(parsed.pathname).slice(1);
   for (const [name, version] of Object.entries(versions)) {
-    const prefix = `${name}@${version}/`;
+    const prefix = `${version.startsWith('npm:') ? version.slice(4) : `${name}@${version}`}/`;
     if (!pathname.startsWith(prefix)) continue;
     const directory = path.resolve(nodeModules, name);
     const file = path.resolve(directory, pathname.slice(prefix.length));
@@ -26,7 +26,7 @@ export async function useLocalAssets(page, origin, evalsDirectory) {
     await fs.readFile(path.join(evalsDirectory, 'package.json'), 'utf8')
   );
   const versions = Object.fromEntries(
-    ['@visactor/vchart', '@visactor/vtable', 'monaco-editor'].map(name => [name, devDependencies[name]])
+    ['@visactor/vchart', '@visactor/vtable', 'monaco-editor', '@visactor/vseed', 'story-vchart', 'gsap'].map(name => [name, devDependencies[name]])
   );
   const failures = [];
   await page.route('**/*', async route => {

@@ -1,0 +1,39 @@
+/* ===========================================
+   STORY BASE — Minimal Reset & Essentials
+   Only provides: reset, typography defaults, chart
+   container basics, responsive breakpoints, and
+   reduced-motion handling.
+
+   Layout, components, colors are YOUR job —
+   design freely based on the data and audience.
+   =========================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--page-bg);
+    color: var(--text-primary);
+    font-family: var(--font-body, 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif);
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
+}
+
+img, svg, canvas { display: block; max-width: 100%; }
+p, ul, ol { margin: 0; }
+h1, h2, h3 { margin: 0; }
+button, input, select { font: inherit; }
+
+/* ===========================================
+   ACCESSIBILITY
+   =========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.12s !important;
+    }
+}

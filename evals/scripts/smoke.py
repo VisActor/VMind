@@ -103,6 +103,9 @@ def main() -> None:
                 break
         results.append({"case": task["id"], "passed": passed})
         print(f"{task['id']}: {'passed' if passed else 'failed'} ({directory})", flush=True)
+    from story_smoke import run_story_smoke
+
+    results.extend(run_story_smoke(output))
     write_json(output / "summary.json", {"checks": results, "modelCalls": 0})
     print(f"Evidence: {output}")
     raise SystemExit(0 if all(result["passed"] for result in results) else 1)

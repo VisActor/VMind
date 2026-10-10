@@ -1,0 +1,30 @@
+{
+  "monthly_retention.csv": {
+    "sha256": "d06aeb88af1efbd4a630b8dd7f47daf0848f39630f27bed9bdc55a0623fa143d",
+    "provenance": "Synthetic evaluation data; MIT; not factual reporting data."
+  },
+  "segment_retention.csv": {
+    "sha256": "b75c3fcfc495a79298b41cdbea5896592e7e898870adba54737046bfd8fae170",
+    "provenance": "Synthetic evaluation data; MIT; not factual reporting data."
+  },
+  "margin_steps.csv": {
+    "sha256": "6103bf7cef5a2676aca30f326f40c5a255ec6c7b0a1a4aa610ff67a494d30069",
+    "provenance": "Synthetic evaluation data; MIT; not factual reporting data."
+  },
+  "regional_margin.csv": {
+    "sha256": "a87dd77110f85847072a0411ffe83d05ff0fdff81b9bfc1841dce09f0d38a1a2",
+    "provenance": "Synthetic evaluation data; MIT; not factual reporting data."
+  },
+  "buffer_gap.csv": {
+    "sha256": "52ce474dde942f2864175407b446ba092c6ef986c7c58861d831660e39057359",
+    "provenance": "Synthetic evaluation data; MIT; not factual reporting data."
+  },
+  "risk_nodes.csv": {
+    "sha256": "4ae625c7bafa91d8a925f01808e4d39791c16c8533561733510414e3347ecabb",
+    "provenance": "Synthetic evaluation data; MIT; not factual reporting data."
+  },
+  "las_vegas_gp_mock.csv": {
+    "sha256": "1db394cc05f1287cdeadf6262a3fafa9d1de541746bed6fe4dd4d7929fbcb4cf",
+    "provenance": "Synthetic evaluation data; MIT; not factual reporting data."
+  }
+}

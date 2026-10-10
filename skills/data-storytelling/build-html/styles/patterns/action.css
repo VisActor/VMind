@@ -1,0 +1,182 @@
+/* Action pattern */
+.action-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.action-card {
+  background: var(--component-surface-action);
+  border-radius: 0 0 var(--component-radius-lg) var(--component-radius-lg);
+  padding: var(--card-padding);
+  padding-top: calc(var(--card-padding) + var(--section-bar-width));
+  border: var(--component-border);
+  border-top: none;
+  box-shadow: var(--component-shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--component-shadow-elevated);
+}
+
+.action-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--section-bar-width);
+  background: var(--accent);
+}
+
+.action-card h3,
+.action-card h4 {
+  font-size: var(--type-support-title-size);
+  font-weight: 600;
+  line-height: var(--type-support-title-line-height);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.action-card p {
+  font-size: var(--type-body-copy-size);
+  color: var(--text-secondary);
+  line-height: var(--type-body-copy-line-height);
+  margin: 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: var(--badge-padding);
+  border-radius: var(--radius-md);
+  font-size: var(--badge-size);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.badge.priority-1 {
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  background: var(--component-surface-accent);
+}
+
+.badge.priority-2 {
+  color: var(--text-primary);
+  border: 1.5px solid var(--border);
+  background: var(--component-surface-raised);
+}
+
+.badge.priority-3 {
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border);
+  background: transparent;
+}
+
+.action-card.with-asset {
+  isolation: isolate;
+}
+
+.action-card.with-asset .action-card-asset {
+  width: min(180px, 58%);
+  height: clamp(56px, 7vw, 96px);
+  margin: auto calc(var(--card-padding) * -0.35) calc(var(--card-padding) * -0.35) auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  color: var(--accent);
+  opacity: 0.48;
+  pointer-events: none;
+}
+
+.action-card.with-asset .action-card-asset:empty {
+  display: none;
+}
+
+.action-card.with-asset .action-card-asset svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.action-rowlines {
+  display: grid;
+  margin-top: var(--space-md);
+  border-top: 1px solid var(--border);
+}
+
+.action-rowline {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) minmax(120px, max-content);
+  gap: var(--space-md);
+  align-items: center;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.action-rowline .badge {
+  justify-self: start;
+}
+
+.action-rowline-main {
+  display: grid;
+  gap: calc(var(--space-xs) * 0.75);
+}
+
+.action-rowline-main h4 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: var(--type-support-title-size);
+  font-weight: 700;
+  line-height: var(--type-support-title-line-height);
+}
+
+.action-rowline-main p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--type-body-copy-size);
+  line-height: var(--type-body-copy-line-height);
+}
+
+.action-rowline-meta {
+  justify-self: end;
+  max-width: 18ch;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--type-meta-source-size);
+  font-weight: 700;
+  letter-spacing: var(--type-meta-label-tracking);
+  line-height: var(--type-meta-source-line-height);
+  text-align: right;
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .action-card.with-asset .action-card-asset {
+    width: min(150px, 64%);
+    height: 64px;
+  }
+
+  .action-rowline {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+    align-items: start;
+  }
+
+  .action-rowline-meta {
+    justify-self: start;
+    max-width: none;
+    text-align: left;
+  }
+}

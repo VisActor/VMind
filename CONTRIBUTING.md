@@ -19,7 +19,7 @@ The runner installs the selected Skill from the current checkout into each case 
 `Skills CI` runs on pull requests and pushes to `main`/`develop`, with two jobs:
 
 - **Lint and regressions**: install locked Python dependencies, run Ruff and the deterministic test suite, including per-Skill case/input contracts and a simulated model API.
-- **Browser smoke (no model)**: use copied Skills to generate one fixed VChart chart and one VTable table, then check rendering, runtime records and browser errors. Pinned npm packages serve CDN requests locally; unexpected external requests fail. Save JSON reports, logs, generated HTML and screenshots for seven days.
+- **Browser smoke (no model)**: use copied Skills to generate a fixed VChart chart, VTable table, HTML data story and Web-PPT deck, then check rendering, runtime records and browser errors. Pinned npm packages serve CDN requests locally; unexpected external requests fail. Save JSON reports, logs, generated HTML and screenshots for seven days.
 
 Neither job calls a model or needs model credentials. Browser smoke checks script/template integration, not Skill quality on model-generated tasks. Model evaluation remains a separate local development activity.
 

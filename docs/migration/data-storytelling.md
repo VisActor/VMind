@@ -1,0 +1,38 @@
+# Data Storytelling migration
+
+Status: migrated and locally verified on `codex/migrate-chart-table-skills`.
+
+Source: `skills/data-storytelling` on the local `codex/data-storytelling-skills` branch, runtime commit `54e265131209a7210f45622711291c1a7a70dced`. The source runtime is clean. Tests adapted during the initial import included then-uncommitted source work; this refresh selectively carries the new VSeed runtime and CDN contracts. Current source governance edits remain out of scope, and source files remain untouched.
+
+Scope:
+
+- Copy the independently installable runtime, HTML/Web-PPT builders, local VSeed assembly and asset normalization. Exclude architecture history, testing guides and the internal evaluation framework.
+- Use public pinned dependencies, host-provided image generation and file-based data handoff. Standard charts only; the private infographic dependency is not shipped.
+- Preserve behavioral regressions; add representative synthetic-data cases under `evals/cases/data-storytelling`. Keep expected answers outside agent inputs.
+- Extend the existing bounded API harness only for bundled story scripts. Keep logs and browser evidence; no model calls in CI.
+- Verify isolated installation, deterministic chart assembly, HTML/Web-PPT rendering and existing chart/table behavior. Visual review remains separate from automated checks.
+
+## Validation (2026-10-09)
+
+- 216 Python tests and 69 subtests passed, including independently copied HTML/PPT builds through API tool dispatch, source dataset ownership, annotation warnings, asset binding and path confinement. Existing VChart/VTable regressions remain green.
+- 29 Node tests passed: pinned VSeed compilation/annotation/encoding contracts and public dependency routing, including distinct VChart versions for standalone charts and stories.
+- Ruff, Skill metadata validation, runtime relative links, JS syntax, public-registry lockfile and case discovery passed. Catalog now contains 41 tasks (32 VChart, 4 VTable, 5 storytelling).
+- Fixed VChart/VTable browser checks passed in `.cache/story-migration/browser/`. Final story HTML and Web-PPT checks passed in `.cache/story-migration/browser-ready/`, using copied Skills and local pinned public npm assets. Graph compilation, nonblank chart rendering, page/resource errors and deck navigation were checked. Logs, generated files, specs and screenshots are retained. No model calls in smoke.
+- Inspected HTML and deck screenshots. An earlier deck screenshot caught a transition before content became visible; the browser probe now waits for active-slide geometry and text/chart opacity before capture. These are technical smoke fixtures, not editorial-quality model outputs or pixel comparison targets.
+
+The VSeed 0.6.5 refresh passed 100 targeted Python tests and 69 subtests, 44 published-package Node tests including numeric range geometry and invalid-axis guards, Ruff, `npm ci` against the public registry, and all four fixed browser smoke tasks (VChart, VTable, story HTML and story Web-PPT) under `.cache/story-refresh-vseed-065-20261009/`. This is deterministic runtime evidence; no new model run or editorial visual review was performed for the refresh.
+
+Final local regression run on 2026-10-10 passed 217 Python tests and 69 subtests, 47 Node tests, and Ruff. It also corrected the copied-story API test's expected VSeed URL to 0.6.5. The fixed browser smoke was not repeated because its inputs did not change after the VSeed refresh run.
+
+## Adaptations
+
+- Runtime uses public unpkg URLs; removed the dormant private infographic renderer. Unsupported infographic entries fail explicitly. Story dependencies are VSeed 0.6.5 / VChart 2.1.7 / VTable 1.26.8 / GSAP 3.15.0. The older standalone-chart dependency stays pinned separately through an npm alias in evals.
+- Synced upstream numeric `annotationArea.range` guidance from `54e265131`: linear-axis bands and scatter rectangles, percent-coordinate rules and decision quadrants. Kept the public-CDN adapter and updated the local npm pin and geometry regressions to VSeed 0.6.5. Source-only governance and generated reports remain excluded.
+- Python scripts use local imports instead of source-checkout path injection. Data handoff is file-based, and authorized end-to-end requests need not stop for another plan confirmation.
+- Asset lookups reject traversal and symlink escape. Included the upstream MIT license for bundled @chenglou/pretext 0.0.5.
+- API tooling exposes only the listed bundled commands and declared input/output paths. It does not add shell execution, arbitrary Python, browser or image-generation tools.
+- Selected 5 tasks from four small synthetic-data families, covering HTML, scrolly, Web-PPT, SVG assets and feature/image fallback. Excluded old infographic tasks, external-data reporting and platform-specific roadshow material. The same retention inputs deliberately exercise two build targets. Expected intermediates are explicitly listed; no standalone spec.js is required for stories.
+
+## Limits
+
+One live model case was attempted with `gpt-5.4-2026-03-05` using `evals/visactor.local.json`: `story-retention-html` failed at the configured 160,000-token limit after 5 requests (166,990 provider-reported tokens, zero cached tokens). Only `runtime/dataset_map.json` was produced; `plan.md` and HTML were not. Evidence: ignored `evals/runs/20261009T094650Z-99a5c791/`. The other four model cases remain not-run; no narrative-quality claim is implied. Browser smoke uses npm assets locally and does not establish CDN availability on every user's network. Public dependency assets were verified in the npm registry. The current API harness is not recommended for end-to-end story evaluation; raising the token budget alone does not address the growing context or limited tool environment. Direct Codex/Claude Code use remains recommended. No remote CI run, push, PR update or global Skill installation was performed.

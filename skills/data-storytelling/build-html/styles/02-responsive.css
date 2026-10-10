@@ -1,0 +1,53 @@
+/* Global responsive utilities */
+@media (min-width: 1440px) {
+  :root {
+    --max-content-width: 1200px;
+    --max-chart-width: 1120px;
+    --hero-title-measure: 1040px;
+    --hero-copy-measure: 820px;
+    --hero-display-measure: 1080px;
+    --measure-context-note: 64ch;
+    --measure-data-artifact-caption: 68ch;
+    --measure-quote-block: 60ch;
+    --measure-timeline-rail-copy: 40ch;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --max-content-width: 1320px;
+    --max-chart-width: 1260px;
+    --hero-title-measure: 1140px;
+    --hero-copy-measure: 900px;
+    --hero-display-measure: 1160px;
+    --measure-context-note: 72ch;
+    --measure-data-artifact-caption: 72ch;
+    --measure-quote-block: 68ch;
+    --measure-timeline-rail-copy: 44ch;
+  }
+}
+
+@media (max-width: 768px) {
+  section {
+    padding: var(--space-lg) 0;
+  }
+
+  .story-container {
+    padding: 0 var(--space-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  section {
+    padding: var(--space-md) 0;
+  }
+
+  .story-container {
+    padding: 0 var(--space-sm);
+  }
+
+  footer {
+    padding: var(--space-md) var(--space-sm);
+    font-size: var(--type-meta-source-size);
+  }
+}

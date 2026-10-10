@@ -8,6 +8,7 @@ Cases are maintained in separate Skill directories. Each catalog owns its tasks,
 | --- | --- | --- | --- |
 | `vchart-skill` | 32 | core (8), extended (24) | [VChart](vchart-skill/README.md) |
 | `vtable-skill` | 4 | core (4) | [VTable](vtable-skill/README.md) |
+| `data-storytelling` | 5 | core (3), extended (2) | [Data storytelling](data-storytelling/README.md) |
 
 ## Directory structure
 

@@ -1,0 +1,32 @@
+{
+  "skill": "data-storytelling",
+  "sourceBranch": "codex/data-storytelling-skills",
+  "runtimeCommit": "54e265131209a7210f45622711291c1a7a70dced",
+  "sourceRuntime": "skills/data-storytelling",
+  "excluded": [
+    "addr/",
+    "TESTING.md",
+    "__pycache__/"
+  ],
+  "sourceTestSnapshots": {
+    "ai/skill-workspaces/data-storytelling/tests/test_compose_story.py": "4251a4a5f624b4cad1da9794f131535974552e92b111fd35b9fe764f0710d3e0",
+    "ai/skill-workspaces/data-storytelling/tests/test_local_vseed_generation.py": "9203c6f60424b222d4fe2f0c85f9f250fe0ebce637e0d0d58fd7bd634d21a8ac",
+    "ai/skill-workspaces/data-storytelling/tests/vseed-runtime.test.cjs": "7bd47f181a02bc6d19466e8ba8135855030108b45f4c4b821ba7b84eddec0e11",
+    "evals/data-storytelling-workspace/tests/test_story_motion_runtime.py": "ae73b04959c653611ebafb3448968415785da29fecff3e6659c9682bb94690c5",
+    "evals/data-storytelling-workspace/tests/test_story_text_layout_runtime.py": "7a2124008e2da268f5cd90511c4b19d1c32838d9bfa71efd977385f8bc891456",
+    "evals/data-storytelling-workspace/tests/test_validate_js.py": "4bd5ec718f5ae68237467cfaf309bceb2c494f83a180c0e6cd22683b82e98813",
+    "evals/data-storytelling-workspace/tests/test_compose_template_cdn.py": "7d1798c36e2e7380ceaf86e7b227de008ccd6a3299bed242ce7064f76cd7c62e"
+  },
+  "testSnapshotNote": "Hashes identify the upstream test revisions selectively adapted here; VSeed runtime, JS validation and CDN contract snapshots were refreshed for the 0.6.5 migration. Other hashes remain from the initial import. Current uncommitted source governance tests and the internal eval adapter are not migrated; source files are untouched.",
+  "cases": {
+    "story-retention-html": "subscription-retention-alert",
+    "story-retention-deck": "subscription-retention-alert",
+    "story-regional-scrolly": "regional-margin-scrolly",
+    "story-supply-assets": "supply-chain-asset-heavy",
+    "story-vegas-feature": "las-vegas-gp-feature"
+  },
+  "modelCaseStatus": {
+    "story-retention-html": "failed-token-budget",
+    "others": "not-run"
+  }
+}

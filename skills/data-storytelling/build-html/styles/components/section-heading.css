@@ -1,0 +1,49 @@
+/* Section heading and intro text */
+.section-heading {
+  margin-bottom: var(--space-md);
+}
+
+.section-heading .label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin-bottom: var(--space-xs);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--type-meta-label-size);
+  font-weight: 700;
+  line-height: var(--type-meta-label-line-height);
+  letter-spacing: var(--type-meta-label-tracking);
+  text-transform: uppercase;
+}
+
+.section-heading .label::after {
+  content: "";
+  flex: 0 0 32px;
+  width: 32px;
+  height: 1px;
+  background: color-mix(in srgb, var(--accent) 52%, transparent);
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-section-heading-size);
+  font-weight: var(--type-heading-weight);
+  letter-spacing: var(--type-heading-tracking);
+  line-height: var(--type-section-heading-line-height);
+  text-wrap: balance;
+}
+
+.section-heading.with-bar h2 {
+  border-left: var(--section-bar-width) solid var(--accent);
+  padding-left: var(--space-sm);
+}
+
+.section-intro {
+  margin-bottom: var(--space-md);
+  color: var(--text-secondary);
+  font-size: var(--type-body-copy-size);
+  line-height: var(--type-body-copy-line-height);
+}

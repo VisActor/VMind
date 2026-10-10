@@ -1,0 +1,108 @@
+{
+  "story-retention-html": {
+    "html": "output.html",
+    "engine": "story",
+    "deck": false,
+    "review": [
+      "数据、计算口径、单位和文案一致；模拟数据标识清楚，不杜撰因果或来源。",
+      "计划、真实图表、素材/降级报告和最终 HTML 可追溯；人工检查可读性、布局和交互。",
+      "月度留存从 91% 到 82%，下降 9 个百分点；新用户与企业客户留存相差 15 个百分点。"
+    ],
+    "artifacts": [
+      "output.html",
+      "runtime/plan.md",
+      "runtime/dataset_map.json",
+      "runtime/chart_specs.json",
+      "runtime/spec_map.json",
+      "runtime/asset_resolution_report.json",
+      "runtime/resolved_asset_bindings.json",
+      "runtime/page.json",
+      "runtime/body.html"
+    ]
+  },
+  "story-regional-scrolly": {
+    "html": "output.html",
+    "engine": "story",
+    "deck": false,
+    "review": [
+      "数据、计算口径、单位和文案一致；模拟数据标识清楚，不杜撰因果或来源。",
+      "计划、真实图表、素材/降级报告和最终 HTML 可追溯；人工检查可读性、布局和交互。",
+      "实际滚动每一步，确认主图状态变化与当前文字对应；不同正确叙事与样式均可接受。"
+    ],
+    "artifacts": [
+      "output.html",
+      "runtime/plan.md",
+      "runtime/dataset_map.json",
+      "runtime/chart_specs.json",
+      "runtime/spec_map.json",
+      "runtime/asset_resolution_report.json",
+      "runtime/resolved_asset_bindings.json",
+      "runtime/page.json",
+      "runtime/body.html"
+    ]
+  },
+  "story-retention-deck": {
+    "html": "output-ppt.html",
+    "engine": "story",
+    "deck": true,
+    "review": [
+      "数据、计算口径、单位和文案一致；模拟数据标识清楚，不杜撰因果或来源。",
+      "计划、真实图表、素材/降级报告和最终 HTML 可追溯；人工检查可读性、布局和交互。",
+      "月度留存从 91% 到 82%，下降 9 个百分点；新用户与企业客户留存相差 15 个百分点。",
+      "实际键盘翻页，至少三页，结尾收束且不溢出；HTML Web-PPT，不要求 pptx。"
+    ],
+    "artifacts": [
+      "output-ppt.html",
+      "runtime/plan.md",
+      "runtime/dataset_map.json",
+      "runtime/chart_specs.json",
+      "runtime/spec_map.json",
+      "runtime/asset_resolution_report.json",
+      "runtime/resolved_asset_bindings.json",
+      "runtime/page.json",
+      "runtime/slides.html"
+    ]
+  },
+  "story-supply-assets": {
+    "html": "output.html",
+    "engine": "story",
+    "deck": false,
+    "review": [
+      "数据、计算口径、单位和文案一致；模拟数据标识清楚，不杜撰因果或来源。",
+      "计划、真实图表、素材/降级报告和最终 HTML 可追溯；人工检查可读性、布局和交互。",
+      "SVG 源文件、normalized binding 与最终可见素材一致，不存在空容器或失效引用。"
+    ],
+    "artifacts": [
+      "output.html",
+      "runtime/plan.md",
+      "runtime/dataset_map.json",
+      "runtime/chart_specs.json",
+      "runtime/spec_map.json",
+      "runtime/asset_resolution_report.json",
+      "runtime/resolved_asset_bindings.json",
+      "runtime/page.json",
+      "runtime/body.html"
+    ]
+  },
+  "story-vegas-feature": {
+    "html": "output.html",
+    "engine": "story",
+    "deck": false,
+    "review": [
+      "数据、计算口径、单位和文案一致；模拟数据标识清楚，不杜撰因果或来源。",
+      "计划、真实图表、素材/降级报告和最终 HTML 可追溯；人工检查可读性、布局和交互。",
+      "不把模拟数据当事实报道；图片成功或 fallback 均允许，但必须与报告一致。"
+    ],
+    "artifacts": [
+      "output.html",
+      "runtime/plan.md",
+      "runtime/dataset_map.json",
+      "runtime/chart_specs.json",
+      "runtime/spec_map.json",
+      "runtime/asset_resolution_report.json",
+      "runtime/resolved_asset_bindings.json",
+      "runtime/page.json",
+      "runtime/body.html"
+    ]
+  }
+}

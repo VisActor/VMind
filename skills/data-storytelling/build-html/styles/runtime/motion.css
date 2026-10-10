@@ -1,0 +1,19 @@
+/* Entrance animation runtime hooks */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

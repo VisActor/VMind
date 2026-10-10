@@ -25,3 +25,9 @@ test('rejects unexpected hosts, versions and paths instead of accessing the netw
     'https://unpkg.com/monaco-editor@0.45.0/min/vs/loader.js?version=other',
   ]) assert.throws(() => assetPath(url, modules, versions));
 });
+
+test('keeps story and standalone chart versions distinct through npm aliases', () => {
+  const pinned = {...versions, 'story-vchart': 'npm:@visactor/vchart@2.1.7'};
+  assert.equal(assetPath('https://unpkg.com/@visactor/vchart@2.1.7/build/index.min.js', modules, pinned), path.join(modules, 'story-vchart/build/index.min.js'));
+  assert.equal(assetPath('https://unpkg.com/@visactor/vchart@2.0.21/build/index.min.js', modules, pinned), path.join(modules, '@visactor/vchart/build/index.min.js'));
+});

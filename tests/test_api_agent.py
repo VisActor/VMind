@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -65,6 +66,15 @@ def test_api_config_rejects_embedded_credentials_and_unknown_options(tmp_path):
         )
         with pytest.raises(ValueError):
             api.load_config(path)
+
+
+def test_local_config_accepts_key_without_returning_it_to_logged_config(tmp_path, monkeypatch):
+    path = tmp_path / "model.local.json"
+    path.write_text(json.dumps({"base_url": "https://example.invalid/v1", "model": "test", "api_key_env": "TEST_SKILLS_KEY", "api_key": "local-test-secret"}))
+    config = api.load_config(path)
+    assert os.environ.get("TEST_SKILLS_KEY") == "local-test-secret"
+    assert "api_key" not in config
+    assert "local-test-secret" not in json.dumps(config)
 
 
 def test_api_config_supports_model_override_and_legacy_token_parameter(tmp_path):
@@ -332,4 +342,59 @@ def test_listing_does_not_need_model_config_or_credentials(tmp_path):
         text=True,
         check=False,
     )
-    assert result.returncode == 0 and len(result.stdout.splitlines()) == 36
+    expected = {
+        task["id"]
+        for catalog in (ROOT / "evals/cases").glob("*/tasks.json")
+        for task in json.loads(catalog.read_text())
+    }
+    assert result.returncode == 0
+    assert {line.split()[0] for line in result.stdout.splitlines()} == expected
+
+
+@pytest.fixture
+def story_workspace(tmp_path):
+    root = tmp_path / "story/workspace"
+    shutil.copytree(ROOT / "skills/data-storytelling", root / ".agents/skills/data-storytelling")
+    (root / "inputs").mkdir()
+    (root / "outputs").mkdir()
+    return root
+
+
+@pytest.mark.parametrize(
+    "flag", ["--output", "--requests-output", "--head-output", "--report-output"]
+)
+def test_story_tools_reject_output_escape(story_workspace, flag):
+    name = {
+        "--output": "compose_story.py",
+        "--requests-output": "assemble_story_specs.py",
+        "--head-output": "build-html/scripts/prepare_story_head.py",
+        "--report-output": "normalize_story_assets.py",
+    }[flag]
+    with pytest.raises(ValueError, match="outside"):
+        api.WorkspaceTools(story_workspace, "data-storytelling", 1000).run_script(
+            name, [flag, "../outside.json"], 10
+        )
+
+
+def test_story_tools_cannot_override_skill_imports_or_run_generated_python(story_workspace):
+    tools = api.WorkspaceTools(story_workspace, "data-storytelling", 1000)
+    for name, args in [
+        ("build-html/scripts/prepare_story_head.py", ["--skill-dir", "outputs"]),
+        ("../outputs/code.py", []),
+        ("validate_js.py", ["../outside.html"]),
+    ]:
+        with pytest.raises(ValueError):
+            tools.run_script(name, args, 10)
+
+
+@pytest.mark.parametrize("target", ["html", "ppt"])
+def test_api_tools_build_an_independently_copied_story(story_workspace, target, monkeypatch):
+    monkeypatch.syspath_prepend(str(ROOT / "evals/scripts"))
+    from story_smoke import build_story
+
+    results = build_story(story_workspace, target)
+    assert all(result["exit_code"] == 0 for result in results)
+    html = (story_workspace / "outputs/output.html").read_text()
+    assert "https://unpkg.com/@visactor/vseed@0.6.5/" in html
+    assert "bytedance.net" not in html and "@dp/" not in html
+    assert str(ROOT) not in html

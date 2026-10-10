@@ -1,0 +1,125 @@
+/* Scrollytelling pattern */
+.scrolly-section {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  gap: var(--space-md);
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md);
+}
+
+.scrolly-section > .section-heading {
+  grid-column: 1 / -1;
+  justify-self: stretch;
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: 0;
+  text-align: left;
+  margin-bottom: var(--space-sm);
+}
+
+.scrolly-chart {
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+}
+
+.scrolly-steps {
+  display: flex;
+  flex-direction: column;
+}
+
+.scrolly-step {
+  min-height: 55vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: var(--space-xl) var(--space-md);
+  opacity: 0.35;
+  transition: opacity 0.4s ease, border-color 0.4s ease;
+  border-left: 3px solid transparent;
+}
+
+.scrolly-step h3 {
+  font-size: var(--type-chart-title-size);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-xs) 0;
+  line-height: var(--type-chart-title-line-height);
+}
+
+.scrolly-step p {
+  font-size: var(--type-body-copy-size);
+  color: var(--text-secondary);
+  line-height: var(--type-body-copy-line-height);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.scrolly-step p:last-child {
+  margin-bottom: 0;
+}
+
+.scrolly-step.is-active {
+  opacity: 1;
+  border-left-color: var(--accent);
+}
+
+.scrolly-step.is-active h3 {
+  color: var(--accent);
+}
+
+.scrolly-step:last-child {
+  padding-bottom: 60vh;
+}
+
+.scroll-scrub-section {
+  position: relative;
+  min-height: 300vh;
+}
+
+.scroll-scrub-sticky {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-scrub-chart {
+  width: 100%;
+  max-width: var(--max-chart-width);
+  height: var(--chart-height-immersive);
+  margin-inline: auto;
+}
+
+.scrub-progress-hint {
+  margin-top: var(--space-sm);
+  font-size: var(--type-meta-source-size);
+  line-height: var(--type-meta-source-line-height);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+@media (max-width: 960px) {
+  .scrolly-section {
+    grid-template-columns: 1fr;
+  }
+
+  .scrolly-chart {
+    position: static;
+    margin-bottom: var(--space-lg);
+  }
+
+  .scrolly-step {
+    min-height: 50vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .scroll-scrub-chart {
+    height: var(--chart-height-mobile);
+  }
+}
