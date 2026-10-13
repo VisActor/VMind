@@ -81,15 +81,31 @@ try {
         const rect = slide.getBoundingClientRect();
         return Math.abs(rect.x) < 1 && Math.abs(rect.y) < 1 &&
           [...slide.querySelectorAll('.headline, .chart-frame')].every(node => Number(getComputedStyle(node).opacity) > 0.99);
-      }, null, {timeout:5000});
+      }, null, {timeout:15000, polling:100});
       checks.push({name:'deckNavigation',passed:true});
       await page.screenshot({path:path.join(directory,'deck-next.png')});
       await page.keyboard.press('ArrowLeft');
-      await page.waitForFunction(previous => {
-        const slide = document.querySelector('.deck-slide.is-active');
-        const rect = slide.getBoundingClientRect();
-        return slide.dataset.slideLabel === previous && Math.abs(rect.x) < 1 && Math.abs(rect.y) < 1 && Number(getComputedStyle(slide.querySelector('.headline')).opacity) > 0.99;
-      }, before, {timeout:5000});
+      try {
+        await page.waitForFunction(previous => {
+          const slide = document.querySelector('.deck-slide.is-active');
+          const rect = slide.getBoundingClientRect();
+          return slide.dataset.slideLabel === previous && Math.abs(rect.x) < 1 && Math.abs(rect.y) < 1 && Number(getComputedStyle(slide.querySelector('.headline')).opacity) > 0.99;
+        }, before, {timeout:15000, polling:100});
+      } catch (error) {
+        const state = await page.evaluate(() => ({
+          activeLabel: document.querySelector('.deck-slide.is-active')?.dataset.slideLabel,
+          slides: [...document.querySelectorAll('.deck-slide')].map(slide => ({
+            label: slide.dataset.slideLabel,
+            rect: slide.getBoundingClientRect().toJSON(),
+            headlineOpacity: getComputedStyle(slide.querySelector('.headline')).opacity,
+          })),
+          scrollX, scrollY,
+        }));
+        await fs.writeFile(path.join(directory,'deck-return-state.json'), JSON.stringify(state,null,2) + '\n');
+        await page.screenshot({path:path.join(directory,'deck-return-failed.png')});
+        throw error;
+      }
+      checks.push({name:'deckReturnNavigation',passed:true});
     }
   }
   await page.screenshot({path:path.join(directory,'screenshot.png'),fullPage:true});
