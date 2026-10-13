@@ -21,9 +21,9 @@ Each skill includes its instructions, local references, templates and scripts. N
 Run these commands in the project where you want to use the Skills:
 
 ```bash
-npx skills add VisActor/VMind --skill vchart-skill
-npx skills add VisActor/VMind --skill vtable-skill
-npx skills add VisActor/VMind --skill data-storytelling
+npx skills add VisActor/skills --skill vchart-skill
+npx skills add VisActor/skills --skill vtable-skill
+npx skills add VisActor/skills --skill data-storytelling
 ```
 
 Follow the installer's prompts to select Codex or Claude Code. You can install each Skill independently. More installation options are documented in the [Skills CLI reference](https://github.com/vercel-labs/skills#usage).
@@ -51,7 +51,7 @@ Generated JavaScript/HTML is executable code. Preview your own or reviewed artif
 
 ## Development and maintenance
 
-This section is for contributors editing Skills or running local tests. Start with [CONTRIBUTING.md](CONTRIBUTING.md).
+This section is for contributors editing Skills or running local tests. The default and primary maintenance branch is `develop`. Start with [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Install from a local checkout
 
@@ -93,6 +93,6 @@ Use a release tag or commit SHA to identify the version when reporting an issue 
 
 ## Earlier VMind versions
 
-The previous VMind SDK is no longer maintained. Its code and documentation remain in [historical releases](https://github.com/VisActor/VMind/releases).
+The previous VMind SDK is no longer maintained. Its code and documentation remain in [historical releases](https://github.com/VisActor/skills/releases).
 
 [MIT license](LICENSE)

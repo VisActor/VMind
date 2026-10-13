@@ -1,5 +1,6 @@
 # VisActor Skills maintenance
 
+- Keep `develop` as the default and primary maintenance branch. Start new contribution branches from the latest `origin/develop` and target PRs to `develop`.
 - Runtime skills live in `skills/` and must work when copied independently.
 - Keep tests, fixed evaluation tasks and generated reports outside skill directories.
 - Maintain fixed browser smoke cases under `evals/smoke/<skill>/<case>/`, with configuration, inputs and expectations together. Keep model tasks under `evals/cases/`; do not embed case-specific data or configuration in the smoke runner.
