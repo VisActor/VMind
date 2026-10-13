@@ -21,6 +21,8 @@ The runner installs the selected Skill from the current checkout into each case 
 - **Lint and regressions**: install locked Python dependencies, run Ruff and the deterministic test suite, including per-Skill case/input contracts and a simulated model API.
 - **Browser smoke (no model)**: use copied Skills to generate a fixed VChart chart, VTable table, HTML data story and Web-PPT deck, then check rendering, runtime records and browser errors. Pinned npm packages serve CDN requests locally; unexpected external requests fail. Save JSON reports, logs, generated HTML and screenshots for seven days.
 
+Maintain browser smoke configurations, inputs and acceptance criteria together under `evals/smoke/<skill-name>/<case-id>/`. The runner discovers them automatically; see the [smoke case guide](evals/smoke/README.md) for the catalog, file contract and adding cases.
+
 Neither job calls a model or needs model credentials. Browser smoke checks script/template integration, not Skill quality on model-generated tasks. Model evaluation remains a separate local development activity.
 
 To run browser smoke locally:
@@ -28,8 +30,11 @@ To run browser smoke locally:
 ```bash
 npm ci --prefix evals --ignore-scripts
 node evals/node_modules/playwright/cli.js install chromium
-node --test tests/test_browser_assets.mjs
+node --test tests/test_browser_assets.mjs tests/test_browser_checks.mjs tests/test_story_vseed.cjs
 uv run python evals/scripts/smoke.py
+# Select a Skill or a single fixed browser case
+uv run python evals/scripts/smoke.py --skill data-storytelling
+uv run python evals/scripts/smoke.py --case story-ppt
 ```
 
 On Linux, use `install --with-deps chromium` when system libraries are missing. Each run creates a new evidence directory under `.cache/`; `--output-dir PATH` selects an explicit directory that must not exist yet.

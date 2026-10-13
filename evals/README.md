@@ -6,7 +6,7 @@ Run the selected Skill against a fixed prompt and input files through a configur
 
 For everyday Skill development, **start with Codex or Claude Code** using the [direct debugging guide](../docs/debugging.md). The API harness below is an experimental route for bounded VChart/VTable tasks with clear inputs and outputs. It can test actual model-generated artifacts against fixed checks, not just Skill loading or tool availability, but its results depend on its limited tools and context budget. It is not recommended for end-to-end data-storytelling evaluation. Its CLI default is API; that does not make it the recommended overall user experience.
 
-GitHub CI runs deterministic regressions and fixed browser smoke tests only. It does not run the model tasks below. For the model-free browser command and its checks, see [Continuous integration](../CONTRIBUTING.md#continuous-integration).
+GitHub CI runs deterministic regressions and fixed browser smoke tests only. It does not run the model tasks below. Browser cases keep their configuration, inputs and acceptance criteria together by Skill in [smoke/](smoke/README.md); that guide covers commands and adding cases. See also [Continuous integration](../CONTRIBUTING.md#continuous-integration).
 
 ## Contributor quickstart
 

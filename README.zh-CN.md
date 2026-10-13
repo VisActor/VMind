@@ -75,6 +75,8 @@ uv run pytest tests -q
 uv run ruff check skills tests evals/scripts
 ```
 
+固定浏览器 smoke 用例按 Skill 集中在 [evals/smoke/](evals/smoke/README.zh-CN.md)，每个用例的配置、输入和验收文件放在一起。按指南准备浏览器后，用 `uv run python evals/scripts/smoke.py` 执行全部用例，也可通过 `--skill data-storytelling` 或 `--case story-ppt` 单独选择。
+
 ### 通过模型 API 调试任务
 
 对于持有模型 API 的用户，轻量 harness 可以加载指定 Skill，执行固定 case 或自定义 prompt 与输入文件，支持 OpenAI 兼容的 Chat Completions 接口。目前应将它视为输入、产物边界清晰的 VChart/VTable 任务的实验性调试入口，而不是已验证可替代通用 Agent 的方案。数据叙事端到端任务及日常交互式调试推荐使用 Codex 或 Claude Code。

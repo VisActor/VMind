@@ -4,6 +4,8 @@
 
 Cases are maintained in separate Skill directories. Each catalog owns its tasks, inputs, acceptance criteria and guide.
 
+This catalog is for prompt-based Agent/model tasks. Fixed browser smoke configurations, inputs and acceptance criteria are maintained in the separate [smoke catalog](../smoke/README.md), also grouped by Skill.
+
 | Skill | Cases | Groups | Guide |
 | --- | --- | --- | --- |
 | `vchart-skill` | 32 | core (8), extended (24) | [VChart](vchart-skill/README.md) |

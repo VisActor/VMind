@@ -1,0 +1,15 @@
+{
+  "html": "output.html",
+  "engine": "story",
+  "deck": true,
+  "requiredChecks": [
+    "nonBlankCanvas",
+    "pageErrors",
+    "networkErrors",
+    "localAssets",
+    "storyChartsCompiled",
+    "deckSlides",
+    "deckNavigation",
+    "deckReturnNavigation"
+  ]
+}

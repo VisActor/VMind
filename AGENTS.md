@@ -2,6 +2,7 @@
 
 - Runtime skills live in `skills/` and must work when copied independently.
 - Keep tests, fixed evaluation tasks and generated reports outside skill directories.
+- Maintain fixed browser smoke cases under `evals/smoke/<skill>/<case>/`, with configuration, inputs and expectations together. Keep model tasks under `evals/cases/`; do not embed case-specific data or configuration in the smoke runner.
 - Preserve user changes. Do not commit or publish unless requested.
 - Use `uv run pytest` for Python tests and `uv run ruff check` for maintained Python tooling.
 - Test stable behavior; do not snapshot large instruction documents.

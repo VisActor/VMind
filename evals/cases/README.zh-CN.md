@@ -4,6 +4,8 @@
 
 用例按 Skill 分目录维护，每个目录包含任务、输入、验收条件和用例说明。
 
+本目录用于基于 prompt 的 Agent/模型任务；固定浏览器 smoke 的配置、输入与验收标准集中在独立的 [smoke 目录](../smoke/README.zh-CN.md)，同样按 Skill 分组。
+
 | Skill | 用例数 | 分组 | 用例说明 |
 | --- | --- | --- | --- |
 | `vchart-skill` | 32 | core（8）、extended（24） | [VChart](vchart-skill/README.zh-CN.md) |

@@ -3,6 +3,7 @@ import path from 'node:path';
 import http from 'node:http';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { withRequiredChecks } from './browser-checks.mjs';
 import { useLocalAssets } from './local-browser-assets.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -151,7 +152,8 @@ try {
 }
 checks.push({name:'pageErrors',passed:errors.length===0},{name:'networkErrors',passed:requests.length===0});
 if (process.argv.includes('--local-assets')) checks.push({name:'localAssets',passed:assetFailures.length===0});
-const result = {status:checks.every(check=>check.passed)?'passed':'failed',checks,errors,requests,assetFailures,visualReview:'not-run'};
+const allChecks = withRequiredChecks(checks, expected.requiredChecks);
+const result = {status:allChecks.every(check=>check.passed)?'passed':'failed',checks:allChecks,errors,requests,assetFailures,visualReview:'not-run'};
 await fs.writeFile(path.join(directory,'browser.json'),JSON.stringify(result,null,2)+'\n');
 console.log(JSON.stringify(result));
 process.exitCode=result.status==='passed'?0:1;

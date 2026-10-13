@@ -6,7 +6,7 @@
 
 日常开发 Skill，**推荐先使用 Codex 或 Claude Code**，具体步骤见 [直接调试指南](../docs/debugging.md)。下面的 API harness 是输入、产物边界清晰的 VChart/VTable 任务的实验性入口；它可以让模型实际生成产物并接受固定检查，不只是检查 Skill 加载或工具调用。但结果受限于工具和上下文预算，不推荐用于数据叙事端到端评测。评测命令默认选择 API，并不代表它是整体使用体验的首选。
 
-GitHub CI 只运行确定性回归和固定配置的浏览器冒烟，不执行下文的模型任务。不调用模型的浏览器命令及检查范围见 [持续集成说明](../CONTRIBUTING.md#continuous-integration)。
+GitHub CI 只运行确定性回归和固定配置的浏览器 smoke，不执行下文的模型任务。浏览器用例按 Skill 在 [smoke/](smoke/README.zh-CN.md) 集中维护配置、输入与验收标准，运行命令及新增方式见该指南；另见 [持续集成说明](../CONTRIBUTING.md#continuous-integration)。
 
 ## 贡献者快速上手
 

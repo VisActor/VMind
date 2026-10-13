@@ -1,0 +1,1 @@
+{"trend-chart": {"chartType": "line", "dimensions": [{"id": "month", "encoding": "xAxis"}], "measures": [{"id": "rate", "encoding": "yAxis", "numFormat": {"type": "percent", "fractionDigits": 1}}], "annotationPoint": [{"selector": {"month": "Jun"}, "measureId": "rate", "text": "\u8f6c\u6298\u70b9"}]}}

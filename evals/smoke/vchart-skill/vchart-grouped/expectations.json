@@ -1,0 +1,15 @@
+{
+  "html": "demo.html",
+  "engine": "vchart",
+  "records": "sales.csv",
+  "review": [
+    "六根柱的分组、图例、数值标签正确；无遮挡"
+  ],
+  "requiredChecks": [
+    "nonBlankCanvas",
+    "pageErrors",
+    "networkErrors",
+    "localAssets",
+    "completeRuntimeRecords"
+  ]
+}

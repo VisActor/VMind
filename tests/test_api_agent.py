@@ -388,11 +388,14 @@ def test_story_tools_cannot_override_skill_imports_or_run_generated_python(story
 
 
 @pytest.mark.parametrize("target", ["html", "ppt"])
-def test_api_tools_build_an_independently_copied_story(story_workspace, target, monkeypatch):
+def test_api_tools_build_an_independently_copied_story(tmp_path, target, monkeypatch):
     monkeypatch.syspath_prepend(str(ROOT / "evals/scripts"))
+    from smoke import load_cases, prepare_case
     from story_smoke import build_story
 
-    results = build_story(story_workspace, target)
+    case = next(case for case in load_cases() if case["id"] == f"story-{target}")
+    story_workspace = prepare_case(case, tmp_path / "story")
+    results = build_story(story_workspace, case["config"])
     assert all(result["exit_code"] == 0 for result in results)
     html = (story_workspace / "outputs/output.html").read_text()
     assert "https://unpkg.com/@visactor/vseed@0.6.5/" in html

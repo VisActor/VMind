@@ -1,0 +1,15 @@
+{
+  "html": "demo.html",
+  "engine": "vtable",
+  "records": "sales.csv",
+  "review": [
+    "六条记录完整；点击销售额表头能排序"
+  ],
+  "requiredChecks": [
+    "nonBlankCanvas",
+    "pageErrors",
+    "networkErrors",
+    "localAssets",
+    "completeRuntimeRecords"
+  ]
+}

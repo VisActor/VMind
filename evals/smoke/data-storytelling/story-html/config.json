@@ -1,0 +1,6 @@
+{
+  "builder": "story",
+  "target": "html",
+  "preset": "Swiss Modern",
+  "body": "body.html"
+}

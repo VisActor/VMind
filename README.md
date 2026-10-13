@@ -75,6 +75,8 @@ uv run pytest tests -q
 uv run ruff check skills tests evals/scripts
 ```
 
+Fixed browser smoke cases are maintained by Skill in [evals/smoke/](evals/smoke/README.md), with each case's configuration, inputs and acceptance criteria together. Run all with `uv run python evals/scripts/smoke.py`, or select `--skill data-storytelling` / `--case story-ppt` after the browser setup in that guide.
+
 ### Model API task debugging
 
 For users with model API access, a lightweight harness can load a selected Skill and run a fixed case or a custom prompt with input files. It supports OpenAI-compatible Chat Completions. Treat it as an experimental route for bounded VChart/VTable tasks with clear inputs and outputs, not as a validated replacement for a coding agent. For end-to-end data storytelling and everyday interactive debugging, use Codex or Claude Code.

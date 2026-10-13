@@ -51,7 +51,7 @@ jobs:
       - run: uv sync --locked
       - run: npm ci --prefix evals --ignore-scripts --no-audit --no-fund
       - run: node evals/node_modules/playwright/cli.js install --with-deps chromium
-      - run: node --test tests/test_browser_assets.mjs tests/test_story_vseed.cjs
+      - run: node --test tests/test_browser_assets.mjs tests/test_browser_checks.mjs tests/test_story_vseed.cjs
       - run: uv run --locked python evals/scripts/smoke.py --output-dir .cache/ci-browser-smoke
       - name: Save browser evidence
         if: ${{ always() }}
@@ -63,6 +63,7 @@ jobs:
             .cache/ci-browser-smoke/*/*.json
             .cache/ci-browser-smoke/*/*.log
             .cache/ci-browser-smoke/*/*.png
+            .cache/ci-browser-smoke/*/workspace/inputs/
             .cache/ci-browser-smoke/*/workspace/outputs/
           include-hidden-files: true
           if-no-files-found: warn

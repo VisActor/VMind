@@ -1,0 +1,6 @@
+{
+  "builder": "story",
+  "target": "ppt",
+  "preset": "Swiss Modern",
+  "body": "slides.html"
+}
