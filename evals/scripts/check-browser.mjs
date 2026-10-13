@@ -34,7 +34,7 @@ const server = http.createServer(async (req, res) => {
 });
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 try {
-  browser = await chromium.launch({ headless: true });
+  browser = await chromium.launch({ channel: 'chromium', headless: true });
   const page = await browser.newPage({ viewport: {width: 1440, height: 1000} });
   if (process.argv.includes('--local-assets')) {
     assetFailures = await useLocalAssets(page, `http://127.0.0.1:${server.address().port}`, path.join(root, 'evals'));
