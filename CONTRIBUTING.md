@@ -4,6 +4,8 @@ Changes to Skills should protect a concrete user task or failure mode. Keep runt
 
 ## Start here
 
+Use `develop` as the default and primary maintenance branch. Create contribution branches from the latest `origin/develop` and target pull requests to `develop`.
+
 The recommended development loop is [direct Skill debugging in Codex or Claude Code](docs/debugging.md). Use their existing harness for exploration and iterative fixes. The API harness is a lightweight alternative for fixed cases or a custom prompt with input files; it supports only OpenAI-compatible Chat Completions.
 
 1. Follow the [contributor quickstart](evals/README.md#contributor-quickstart) for prerequisites, API endpoint/model/key-environment configuration, commands and report interpretation.

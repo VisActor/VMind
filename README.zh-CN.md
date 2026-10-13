@@ -21,9 +21,9 @@
 在你准备使用 Skills 的项目目录中执行：
 
 ```bash
-npx skills add VisActor/VMind --skill vchart-skill
-npx skills add VisActor/VMind --skill vtable-skill
-npx skills add VisActor/VMind --skill data-storytelling
+npx skills add VisActor/skills --skill vchart-skill
+npx skills add VisActor/skills --skill vtable-skill
+npx skills add VisActor/skills --skill data-storytelling
 ```
 
 按照安装器提示选择 Codex 或 Claude Code。每个 Skill 都可以按需单独安装。更多安装选项见 [Skills CLI 说明](https://github.com/vercel-labs/skills#usage)。
@@ -51,7 +51,7 @@ data-storytelling 由当前 Agent 生成 VSeed 配置，再用本地脚本组装
 
 ## 开发与维护
 
-本节面向需要修改 Skills 或运行本地测试的贡献者，请先阅读 [贡献指南](CONTRIBUTING.md)。
+本节面向需要修改 Skills 或运行本地测试的贡献者。默认分支和主维护分支均为 `develop`，请先阅读 [贡献指南](CONTRIBUTING.md)。
 
 ### 从本地仓库安装
 
@@ -93,6 +93,6 @@ Skills 按整个仓库统一管理版本。每次正式发布使用 Git tag 标�
 
 ## VMind 历史版本
 
-原 VMind SDK 不再维护，其代码和文档仍可通过 [历史发布版本](https://github.com/VisActor/VMind/releases) 获取。
+原 VMind SDK 不再维护，其代码和文档仍可通过 [历史发布版本](https://github.com/VisActor/skills/releases) 获取。
 
 [MIT 许可证](LICENSE)
