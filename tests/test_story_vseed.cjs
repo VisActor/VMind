@@ -12,6 +12,64 @@ vm.runInThisContext('(function(module,exports){' + fs.readFileSync(filename, 'ut
 const runtime = bundle.exports;
 runtime.registerAll();
 
+// Exercise the private merge helper in a fresh realm for each test so a
+// regression cannot pollute this test runner or another test's prototypes.
+const storySource = fs.readFileSync(path.resolve(__dirname, '../skills/data-storytelling/scripts/vseed-render.js'), 'utf8');
+const helpersStart = storySource.indexOf('  function isPlainObject(value)');
+const helpersEnd = storySource.indexOf('  function getThemeChartConfig(', helpersStart);
+assert.ok(helpersStart >= 0 && helpersEnd > helpersStart, 'Story theme helpers must be available');
+const themeHelpers = storySource.slice(helpersStart, helpersEnd);
+function mergeResult(code) {
+  return JSON.parse(vm.runInNewContext(themeHelpers + '\nJSON.stringify((() => {\n' + code + '\n})())'));
+}
+
+for (const key of ['__proto__', 'constructor', 'prototype']) {
+  for (const nested of [false, true]) {
+    test(`theme merging rejects ${key} ${nested ? 'inside nested defaults' : 'at the root'}`, () => {
+      const value = key === 'constructor' ? {prototype: {polluted: true}} : {polluted: true};
+      const defaults = nested ? {style: {[key]: value, radius: 4}} : {[key]: value, radius: 4};
+      const result = mergeResult(`
+        const target = {};
+        mergeThemeDefaults(target, JSON.parse(${JSON.stringify(JSON.stringify(defaults))}));
+        return {
+          output: target,
+          prototypeClean: !Object.prototype.hasOwnProperty.call(Object.prototype, 'polluted'),
+          originalPrototype: Object.getPrototypeOf(target) === Object.prototype
+        };
+      `);
+      assert.deepEqual(result, {
+        output: nested ? {style: {radius: 4}} : {radius: 4},
+        prototypeClean: true,
+        originalPrototype: true,
+      });
+    });
+  }
+}
+
+test('theme defaults preserve unrelated settings and override supported nested values', () => {
+  assert.deepEqual(mergeResult(`
+    const target = {barMaxWidth: 30, style: {color: 'blue', radius: 1}, palette: ['old']};
+    const merged = mergeThemeDefaults(target, {barMaxWidth: 72, style: {radius: 4}, palette: ['new']});
+    return {sameTarget: merged === target, output: merged};
+  `), {
+    sameTarget: true,
+    output: {barMaxWidth: 72, style: {color: 'blue', radius: 4}, palette: ['new']},
+  });
+});
+
+test('theme merging creates own nested settings instead of mutating inherited objects', () => {
+  assert.deepEqual(mergeResult(`
+    const inherited = {style: {radius: 1}};
+    const target = Object.create(inherited);
+    mergeThemeDefaults(target, {style: {radius: 4}});
+    return {output: target, inherited, ownStyle: Object.prototype.hasOwnProperty.call(target, 'style')};
+  `), {
+    output: {style: {radius: 4}},
+    inherited: {style: {radius: 1}},
+    ownStyle: true,
+  });
+});
+
 const dataset = [{ category: 'A', group: 'East', value: 10, other: 20 }, { category: 'B', group: 'West', value: 20, other: 30 }];
 const field = (id, encoding) => ({ id, encoding });
 const bindings = {

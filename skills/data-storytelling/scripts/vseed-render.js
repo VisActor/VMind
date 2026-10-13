@@ -309,8 +309,14 @@
       return target
     }
     Object.entries(defaults).forEach(([key, defaultValue]) => {
+      if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+        return
+      }
       if (isPlainObject(defaultValue)) {
-        if (!isPlainObject(target[key])) {
+        if (
+          !Object.prototype.hasOwnProperty.call(target, key) ||
+          !isPlainObject(target[key])
+        ) {
           target[key] = {}
         }
         mergeThemeDefaults(target[key], defaultValue)
