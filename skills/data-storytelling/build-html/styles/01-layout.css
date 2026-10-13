@@ -1,0 +1,38 @@
+/**
+ * ============================================================================
+ * 2. Base Layout: Section, Container, Footer
+ * ============================================================================
+ * Core layout rule: section carries vertical padding only. Horizontal
+ * containment lives in .story-container. This fixes the padding inconsistency.
+ */
+
+section {
+  padding: var(--space-xl) 0 0;
+}
+section:last-of-type {
+  padding-bottom: var(--space-xl);
+}
+
+/* Standard inner content wrapper */
+.story-container {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+/* Footer */
+footer {
+  padding: var(--space-lg) var(--space-md);
+  border-top: var(--card-border);
+  color: var(--text-secondary);
+  font-size: var(--type-meta-source-size);
+  line-height: var(--type-meta-source-line-height);
+}
+
+footer p {
+  margin: 0;
+}
+
+footer p + p {
+  margin-top: var(--space-xs);
+}

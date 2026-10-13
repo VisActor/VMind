@@ -1,0 +1,17 @@
+{
+  "api": "openai-chat-completions",
+  "base_url": "https://api.openai.com/v1",
+  "model": "MODEL_ID",
+  "api_key_env": "SKILLS_EVAL_API_KEY",
+  "max_output_tokens": 4096,
+  "output_token_parameter": "max_completion_tokens",
+  "request_options": {},
+  "limits": {
+    "max_requests": 16,
+    "max_tool_calls": 48,
+    "max_total_tokens": 60000,
+    "max_context_chars": 120000,
+    "max_tool_output_chars": 12000,
+    "request_timeout_seconds": 90
+  }
+}

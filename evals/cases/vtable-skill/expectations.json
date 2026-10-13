@@ -1,0 +1,34 @@
+{
+  "vtable-list": {
+    "html": "demo.html",
+    "engine": "vtable",
+    "records": "sales.csv",
+    "review": [
+      "六条记录完整；点击销售额表头能排序"
+    ]
+  },
+  "vtable-pivot": {
+    "html": "demo.html",
+    "engine": "vtable",
+    "records": "sales.csv",
+    "review": [
+      "East:120/150，West:80/90，North:100/110；地区与季度方向正确"
+    ]
+  },
+  "vtable-filter": {
+    "html": "demo.html",
+    "engine": "vtable",
+    "records": "sales.csv",
+    "filter": true,
+    "review": [
+      "实际切换 Q1、Q2、全部，表格记录和数值随之变化"
+    ]
+  },
+  "vtable-diagnosis": {
+    "html": "diagnosis.html",
+    "engine": "vtable",
+    "review": [
+      "解释列 field 与 record 不匹配，修复后显示 East=120、West=80"
+    ]
+  }
+}

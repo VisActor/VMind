@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web-PPT Recipe / Layout Preview</title>
+  <link rel="stylesheet" href="../styles/deck-base.css">
+  <style>
+    .theme-switcher {
+      position: fixed;
+      top: clamp(12px, 2vw, 22px);
+      right: clamp(12px, 2vw, 22px);
+      z-index: 40;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 6px;
+      max-width: min(620px, 58vw);
+      padding: 8px;
+      border: var(--deck-component-border);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--deck-surface-strong) 82%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .theme-switcher button {
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--deck-muted);
+      cursor: pointer;
+      font: 700 10px / 1 var(--deck-font-mono);
+      letter-spacing: 0.08em;
+      padding: 8px 10px;
+      text-transform: uppercase;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .theme-switcher button[aria-pressed="true"] {
+      background: var(--deck-accent);
+      color: var(--deck-bg);
+    }
+
+    .preview-catalog .deck-slide {
+      padding-top: clamp(54px, 7vw, 92px);
+    }
+
+    .preview-catalog .deck-slide::before {
+      content: attr(data-slide-type) " / " attr(data-recipe) " / " attr(data-layout);
+      position: absolute;
+      left: clamp(18px, 3vw, 42px);
+      top: clamp(14px, 2.2vw, 28px);
+      z-index: 4;
+      padding: 7px 11px;
+      border: var(--deck-component-border);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--deck-surface-strong) 76%, transparent);
+      color: var(--deck-accent);
+      font: 700 10px / 1 var(--deck-font-mono);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .preview-catalog .slide-inner {
+      outline: 1px dashed color-mix(in srgb, var(--deck-accent) 34%, transparent);
+      outline-offset: clamp(10px, 1vw, 14px);
+    }
+
+    .preview-catalog .reveal,
+    .preview-catalog .deck-slide .metric-tile,
+    .preview-catalog .deck-slide .action-item,
+    .preview-catalog .deck-slide .process-step,
+    .preview-catalog .deck-slide .timeline-node,
+    .preview-catalog .deck-slide .comparison-panel,
+    .preview-catalog .deck-slide .quote-card,
+    .preview-catalog .deck-slide .evidence-grid figure,
+    .preview-catalog .deck-slide .reading-list li {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+      transition: none !important;
+    }
+
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(12px, 1.4vw, 18px);
+    }
+
+    .recipe-card {
+      min-height: 118px;
+      padding: clamp(14px, 1.5vw, 20px);
+      border: var(--deck-component-border);
+      border-radius: var(--deck-radius);
+      background: var(--deck-surface);
+    }
+
+    .recipe-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font: 700 clamp(11px, 0.95vw, 13px) / 1.2 var(--deck-font-mono);
+      color: var(--deck-accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .recipe-card span {
+      display: block;
+      color: var(--deck-muted);
+      font-size: clamp(13px, 1.05vw, 17px);
+      line-height: 1.45;
+    }
+
+    .deck-slide[data-recipe="inventory"] .slide-inner {
+      gap: clamp(14px, 1.8vw, 24px);
+    }
+
+    .deck-slide[data-recipe="inventory"] .headline {
+      font-size: clamp(40px, 4.1vw, 68px);
+      line-height: 1.04;
+    }
+
+    .deck-slide[data-recipe="inventory"] .intro {
+      font-size: clamp(15px, 1.15vw, 20px);
+      line-height: 1.45;
+    }
+
+    .deck-slide[data-recipe="inventory"] .recipe-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: clamp(10px, 1vw, 14px);
+    }
+
+    .deck-slide[data-recipe="inventory"] .recipe-card {
+      min-height: 70px;
+      padding: clamp(10px, 1vw, 14px);
+    }
+
+    .deck-slide[data-recipe="inventory"] .recipe-card strong {
+      margin-bottom: 7px;
+    }
+
+    .deck-slide[data-recipe="inventory"] .recipe-card span {
+      font-size: clamp(12px, 0.95vw, 15px);
+      line-height: 1.35;
+    }
+
+    .demo-atmosphere {
+      background:
+        radial-gradient(circle at 18% 30%, var(--deck-accent-soft), transparent 34%),
+        radial-gradient(circle at 78% 10%, color-mix(in srgb, var(--deck-accent) 14%, transparent), transparent 28%),
+        linear-gradient(135deg, var(--deck-surface-strong), var(--deck-bg));
+    }
+
+    .demo-chart {
+      width: 100%;
+      height: 100%;
+    }
+
+    .demo-chart text {
+      fill: var(--deck-muted);
+      font-family: var(--deck-font-mono);
+      font-size: 12px;
+    }
+
+    .demo-chart .grid {
+      stroke: var(--deck-line);
+      stroke-width: 1;
+    }
+
+    .demo-chart .axis {
+      stroke: color-mix(in srgb, var(--deck-fg) 26%, transparent);
+      stroke-width: 1.2;
+    }
+
+    .demo-chart .highlight-band {
+      fill: var(--deck-accent-soft);
+    }
+
+    .demo-chart .bar {
+      fill: color-mix(in srgb, var(--deck-accent) 76%, var(--deck-fg));
+    }
+
+    .demo-chart .bar-muted {
+      fill: color-mix(in srgb, var(--deck-muted) 28%, transparent);
+    }
+
+    .demo-chart .line {
+      fill: none;
+      stroke: var(--deck-accent);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .demo-chart .line-muted {
+      fill: none;
+      stroke: color-mix(in srgb, var(--deck-muted) 42%, transparent);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .demo-chart .area {
+      fill: var(--deck-accent-soft);
+    }
+
+    .demo-chart .point {
+      fill: var(--deck-accent);
+    }
+
+    .demo-scrolly-chart {
+      width: 100%;
+      height: 100%;
+    }
+
+    .demo-scrolly-chart text {
+      fill: var(--deck-muted);
+      font-family: var(--deck-font-mono);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .demo-scrolly-chart .grid {
+      stroke: var(--deck-line);
+      stroke-width: 1;
+    }
+
+    .demo-scrolly-chart .axis {
+      stroke: color-mix(in srgb, var(--deck-fg) 28%, transparent);
+      stroke-width: 1.2;
+    }
+
+    .demo-scrolly-chart .base-line {
+      fill: none;
+      stroke: color-mix(in srgb, var(--deck-muted) 38%, transparent);
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .demo-scrolly-chart .focus-line {
+      fill: none;
+      stroke: var(--deck-accent);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .demo-scrolly-chart .focus-band {
+      fill: var(--deck-accent-soft);
+    }
+
+    .demo-scrolly-chart .focus-point {
+      fill: var(--deck-accent);
+      stroke: var(--deck-surface-strong);
+      stroke-width: 7;
+    }
+
+    .demo-scrolly-chart .demo-step-layer {
+      opacity: 0;
+      transition: opacity 680ms ease;
+    }
+
+    .demo-scrolly-chart .demo-step-layer.is-active {
+      opacity: 1;
+    }
+
+  </style>
+</head>
+<body class="preview-catalog" data-deck-theme="Paper & Ink">
+  <nav class="theme-switcher" aria-label="Theme switcher">
+    <button type="button" data-deck-theme="Paper & Ink">Paper</button>
+    <button type="button" data-deck-theme="Swiss Modern">Swiss</button>
+    <button type="button" data-deck-theme="Indigo Porcelain">Indigo</button>
+    <button type="button" data-deck-theme="Dark Botanical">Botanical</button>
+    <button type="button" data-deck-theme="Pudding Neon">Neon</button>
+    <button type="button" data-deck-theme="Warm Earth">Earth</button>
+    <button type="button" data-deck-theme="Vintage Editorial">Vintage</button>
+  </nav>
+  <main class="deck-shell" data-deck-shell data-deck-axis="horizontal" data-deck-theme="Paper & Ink">
+    <canvas class="deck-bg-canvas" data-deck-bg-dark aria-hidden="true"></canvas>
+    <canvas class="deck-bg-canvas" data-deck-bg-light aria-hidden="true"></canvas>
+    <div class="deck-track" data-deck-track>
+      <section class="deck-slide" data-slide-type="cover" data-recipe="inventory" data-layout="wide-editorial" data-slide-label="inventory">
+        <div class="slide-inner">
+          <p class="deck-kicker reveal">Web-PPT capability preview</p>
+          <h1 class="headline reveal">现在内置的是 slide type、layout 和 markup 三层合同。</h1>
+          <p class="intro reveal">PPT Build 不复用 HTML section，而是把 plan pattern 转成固定 slide sequence；每张 slide 只承担一个阅读任务，并选择一个合法整页 layout。</p>
+          <div class="recipe-grid reveal">
+            <div class="recipe-card"><strong>opener-cover</strong><span>cover-intro → cover</span></div>
+            <div class="recipe-card"><strong>hero-stat</strong><span>hero-impact → single metric anchor</span></div>
+            <div class="recipe-card"><strong>hero-image</strong><span>hero-impact → image atmosphere anchor</span></div>
+            <div class="recipe-card"><strong>metric-board</strong><span>baseline-kpis → KPI board</span></div>
+            <div class="recipe-card"><strong>chart-read</strong><span>chart-narrative → chart reading slide</span></div>
+            <div class="recipe-card"><strong>scroll-scene</strong><span>scrollytelling → virtual step slide</span></div>
+            <div class="recipe-card"><strong>comparison</strong><span>comparison → pair or sequence</span></div>
+            <div class="recipe-card"><strong>timeline</strong><span>timeline → stage or sequence</span></div>
+            <div class="recipe-card"><strong>transition</strong><span>Story Breaks → break slide</span></div>
+            <div class="recipe-card"><strong>quote-evidence</strong><span>explicit quote → quote</span></div>
+            <div class="recipe-card"><strong>quote-pair</strong><span>two voices → paired evidence</span></div>
+            <div class="recipe-card"><strong>image-grid</strong><span>images / screenshots → evidence grid</span></div>
+            <div class="recipe-card"><strong>text-image</strong><span>one image / artifact + reading → split slide</span></div>
+            <div class="recipe-card"><strong>process-flow</strong><span>workflow steps → process slide</span></div>
+            <div class="recipe-card"><strong>methodology</strong><span>Methodology → system source slide</span></div>
+            <div class="recipe-card"><strong>closing</strong><span>ending role → final handoff</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="cover" data-recipe="layout-inventory" data-layout="wide-editorial" data-slide-label="layout">
+        <div class="slide-inner">
+          <p class="deck-kicker reveal">Layout recipes</p>
+          <h1 class="headline reveal">新增的一层不是组件，而是页面舞台。</h1>
+          <p class="intro reveal">Slide type 决定阅读任务；layout 决定视觉重心；markup 决定固定 slots。Build 只允许使用这些命名处理，不在单页临时写 CSS。</p>
+          <div class="recipe-grid reveal">
+            <div class="recipe-card"><strong>wide-editorial</strong><span>宽标题 + 宽主体，默认杂志式正文页</span></div>
+            <div class="recipe-card"><strong>diagonal-stage</strong><span>左右分区或强入口，固定斜切舞台</span></div>
+            <div class="recipe-card"><strong>evidence-stage</strong><span>quote / image / chart 成为页面主证据</span></div>
+            <div class="recipe-card"><strong>rowline-board</strong><span>行动、时间、流程和方法说明的行式简报</span></div>
+            <div class="recipe-card"><strong>split-argument</strong><span>左侧判断，右侧证据或约束</span></div>
+            <div class="recipe-card"><strong>scrolly-stage</strong><span>固定主图 + step 文案 crossfade</span></div>
+            <div class="recipe-card"><strong>quote-focus</strong><span>大引用或强停顿，低密度页</span></div>
+            <div class="recipe-card"><strong>closing-stage</strong><span>最后一页记忆句 / handoff</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="cover" data-recipe="opener-cover" data-layout="wide-editorial" data-slide-label="cover">
+        <div class="slide-inner">
+          <p class="deck-kicker reveal">opener-cover / cover</p>
+          <h1 class="headline reveal">排放没有回落，而是停在更高<span class="tone-accent">平台</span>。</h1>
+          <p class="intro reveal">先建立问题意识，再进入证据。这里不放图表、不放 KPI 组，也不抢后面章节的主数字。</p>
+          <div class="lead-meta reveal">
+            <span>2024 complete period</span>
+            <span>CO2 emissions</span>
+            <span>draft narrative</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="preview-hero-stat-monolith" class="deck-slide" data-slide-type="hero-stat" data-recipe="hero-stat" data-layout="diagonal-stage" data-stat-stage="monolith" data-slide-label="hero-stat">
+        <div class="slide-inner">
+          <p class="deck-kicker reveal">hero-stat / monolith</p>
+          <h1 class="headline reveal">29.21 亿元的峰值，先别急着庆祝。</h1>
+          <div class="stat-number-line reveal" aria-label="29.21 亿元">
+            <span class="big-number">29.21</span>
+            <span class="unit">亿元</span>
+          </div>
+          <p class="reading-caption reveal">峰值只是入口，质量仍需拆账。</p>
+          <p class="source-note reveal">Source: demo data contract</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="hero-stat" data-recipe="hero-stat-context" data-layout="diagonal-stage" data-stat-stage="context-cards" data-slide-label="hero-stat">
+        <div class="slide-inner">
+          <h1 class="headline reveal">大数字必须带着读法一起出现。</h1>
+          <div class="stat-stage reveal">
+            <div class="stat-primary">
+              <p class="deck-kicker">hero-stat / context-cards</p>
+              <div class="stat-number-line" aria-label="2.4 billion">
+                <span class="big-number">2.4</span>
+                <span class="unit">B</span>
+              </div>
+              <p class="reading-caption">触达规模已经进入平台级判断，而不是单点增长。</p>
+            </div>
+            <div class="stat-context-cards">
+              <article class="stat-context-card">
+                <span class="stat-context-icon">01</span>
+                <p>约等于 <strong>全球人口 30%</strong> 的触达规模。</p>
+              </article>
+              <article class="stat-context-card">
+                <span class="stat-context-icon">02</span>
+                <p>超过多个成熟市场的年度活跃用户总和。</p>
+              </article>
+              <article class="stat-context-card">
+                <span class="stat-context-icon">03</span>
+                <p>每秒新增用户已经足够影响容量规划。</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="hero-stat" data-recipe="hero-stat-delta" data-layout="wide-editorial" data-stat-stage="delta-compare" data-slide-label="hero-stat">
+        <div class="slide-inner">
+          <h1 class="headline reveal">变化方向先成立，原因留给下一页。</h1>
+          <p class="deck-kicker reveal">hero-stat / delta-compare</p>
+          <div class="stat-delta-compare reveal">
+            <div class="stat-compare-side is-previous">
+              <p class="stat-compare-label">2023 baseline</p>
+              <div class="stat-number-line" aria-label="1.7 billion">
+                <span class="big-number">1.7</span>
+                <span class="unit">B</span>
+              </div>
+            </div>
+            <div class="stat-arrow" aria-hidden="true">→</div>
+            <div class="stat-compare-side is-current">
+              <p class="stat-compare-label">2024 current</p>
+              <div class="stat-number-line" aria-label="2.4 billion">
+                <span class="big-number">2.4</span>
+                <span class="unit">B</span>
+              </div>
+            </div>
+          </div>
+          <p class="stat-delta-note reveal">+41.2% YoY</p>
+          <p class="reading-caption reveal">对比页只强化变化方向，不把原因、方案和图表塞在同一页。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="hero-stat" data-recipe="hero-stat-ticker" data-layout="wide-editorial" data-stat-stage="ticker" data-slide-label="hero-stat">
+        <div class="slide-inner">
+          <h1 class="headline reveal">里程碑数字需要仪式感，也需要一句判断。</h1>
+          <p class="deck-kicker reveal">hero-stat / ticker</p>
+          <div class="stat-ticker reveal" aria-label="128,450">
+            <span class="stat-ticker-digit">1</span>
+            <span class="stat-ticker-digit">2</span>
+            <span class="stat-ticker-digit">8</span>
+            <span class="stat-ticker-separator">,</span>
+            <span class="stat-ticker-digit">4</span>
+            <span class="stat-ticker-digit">5</span>
+            <span class="stat-ticker-digit">0</span>
+          </div>
+          <p class="reading-caption reveal">里程碑数字可以有仪式感，但仍然只服务一个清晰判断。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="hero-image" data-recipe="hero-image" data-layout="diagonal-stage" data-slide-label="hero-image">
+        <figure class="slide-background demo-atmosphere" aria-hidden="true">
+          <img src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%201600%20900'%3E%3Crect%20width='1600'%20height='900'%20fill='%23eef3f2'/%3E%3Ccircle%20cx='1120'%20cy='260'%20r='260'%20fill='%23cf4050'%20opacity='.16'/%3E%3Ccircle%20cx='420'%20cy='640'%20r='330'%20fill='%234d84a8'%20opacity='.18'/%3E%3Cpath%20d='M0,710C260,590%20420,780%20680,640S1140,520%201600,660V900H0Z'%20fill='%23f4e4c6'%20opacity='.48'/%3E%3C/svg%3E" alt="">
+        </figure>
+        <div class="slide-inner">
+          <p class="deck-kicker reveal">hero-image</p>
+          <h1 class="headline reveal">当氛围本身是入口锚点，hero 才不只是 cover。</h1>
+          <p class="cue reveal">背景图来自 resolved asset；文案压在安全可读区域。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="metric-board" data-recipe="metric-board" data-layout="wide-editorial" data-slide-label="metric-board">
+        <div class="slide-inner">
+          <h2 class="headline reveal">峰值账本有四个扣项</h2>
+          <div class="metric-tiles reveal">
+            <article class="metric-tile">
+              <div class="metric-label">净 GMV</div>
+              <div class="metric-value">¥26.88</div>
+              <div class="unit">亿元</div>
+              <p class="metric-reading">总 GMV 为 29.21 亿元，净 GMV 留存 92.0%。</p>
+            </article>
+            <article class="metric-tile">
+              <div class="metric-label">净毛利率</div>
+              <div class="metric-value">21.6</div>
+              <div class="unit">%</div>
+              <p class="metric-reading">峰值仍能产生利润，但不是所有渠道同等贡献。</p>
+            </article>
+            <article class="metric-tile">
+              <div class="metric-label">补贴 / GMV</div>
+              <div class="metric-value">15.6</div>
+              <div class="unit">%</div>
+              <p class="metric-reading">warmup 仅 5.1%，峰值日补贴强度明显放大。</p>
+            </article>
+            <article class="metric-tile">
+              <div class="metric-label">履约准时率</div>
+              <div class="metric-value">75.2</div>
+              <div class="unit">%</div>
+              <p class="metric-reading">warmup 为 91.0%，峰值把供应链压力推到前台。</p>
+            </article>
+          </div>
+          <p class="takeaway reveal">结论起点：GMV 峰值是真实的，但质量判断必须同时扣除补贴、退款、履约和系统摩擦。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="metric-reading" data-recipe="metric-board add-on" data-layout="rowline-board" data-slide-label="metric-reading">
+        <div class="slide-inner">
+          <h2 class="headline reveal">指标需要一起读，而不是逐个解释。</h2>
+          <ul class="reading-list reveal">
+            <li>总量说明问题的规模，不能单独解释结构变化。</li>
+            <li>同比变化说明反弹方向，但不等于长期趋势。</li>
+            <li>部门数量说明扩散范围，帮助判断是否只是单点异常。</li>
+          </ul>
+          <p class="takeaway reveal">如果每个 KPI 都要展开，拆到 metric-reading，不塞回指标板。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="chart-read" data-recipe="chart-read-wide-editorial" data-layout="wide-editorial" data-slide-label="chart-wide">
+        <div class="slide-inner">
+          <p class="deck-kicker reveal">chart-read / wide-editorial</p>
+          <h2 class="headline reveal">宽版图表页适合先让趋势自己说话。</h2>
+          <div class="chart-frame reveal" data-chart-id="demo-chart-wide">
+            <div class="chart-container">
+              <svg class="demo-chart" viewBox="0 0 840 420" role="img" aria-label="Demo wide chart">
+                <path class="grid" d="M70 70H780M70 150H780M70 230H780M70 310H780"></path>
+                <path class="axis" d="M70 336H780M70 52V336"></path>
+                <rect class="highlight-band" x="560" y="66" width="160" height="270" rx="10"></rect>
+                <rect class="bar-muted" x="110" y="234" width="58" height="102" rx="8"></rect>
+                <rect class="bar-muted" x="218" y="204" width="58" height="132" rx="8"></rect>
+                <rect class="bar-muted" x="326" y="186" width="58" height="150" rx="8"></rect>
+                <rect class="bar" x="434" y="146" width="58" height="190" rx="8"></rect>
+                <rect class="bar" x="542" y="116" width="58" height="220" rx="8"></rect>
+                <rect class="bar" x="650" y="96" width="58" height="240" rx="8"></rect>
+                <text x="102" y="374">Q1</text>
+                <text x="210" y="374">Q2</text>
+                <text x="318" y="374">Q3</text>
+                <text x="426" y="374">Q4</text>
+                <text x="534" y="374">Q5</text>
+                <text x="642" y="374">Q6</text>
+              </svg>
+            </div>
+          </div>
+          <p class="reading-caption reveal">标题给判断，图表占主要画幅，读法只保留一层。</p>
+          <p class="takeaway reveal">当图本身足够清楚时，用宽版承载主证据，不再切成左右两栏。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="chart-read" data-recipe="chart-read-evidence-stage" data-layout="evidence-stage" data-slide-label="chart-evidence">
+        <div class="slide-inner">
+          <h2 class="headline reveal">证据舞台把一个图表推到页面主角。</h2>
+          <div class="chart-frame reveal" data-chart-id="demo-chart-evidence">
+            <div class="chart-container">
+              <svg class="demo-chart" viewBox="0 0 840 420" role="img" aria-label="Demo evidence-stage chart">
+                <path class="grid" d="M72 76H782M72 158H782M72 240H782M72 322H782"></path>
+                <path class="area" d="M82 320C170 292 222 286 292 266C374 242 438 178 510 164C592 148 640 112 760 94L760 344L82 344Z"></path>
+                <path class="line-muted" d="M82 288C168 274 232 282 306 254C392 222 452 214 532 198C626 180 670 164 760 146"></path>
+                <path class="line" d="M82 320C170 292 222 286 292 266C374 242 438 178 510 164C592 148 640 112 760 94"></path>
+                <circle class="point" cx="760" cy="94" r="12"></circle>
+                <text x="82" y="374">Baseline</text>
+                <text x="650" y="374">Latest</text>
+              </svg>
+            </div>
+          </div>
+          <p class="reading-caption reveal">evidence-stage 适合主图复杂但结论很单一的页面。</p>
+          <p class="source-note reveal">Fixed SVG chart for layout preview</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="chart-read" data-recipe="chart-read-diagonal-stage" data-layout="diagonal-stage" data-slide-label="chart-stage">
+        <div class="slide-inner slide-split">
+          <div class="split-stack">
+            <p class="deck-kicker reveal">chart-read / diagonal-stage</p>
+            <h2 class="headline reveal">强舞台图表页适合关键拐点。</h2>
+            <p class="reading-caption reveal">左侧只讲为什么这一张图值得停顿，右侧承载单一主图。</p>
+            <p class="takeaway reveal">它不是默认图表页，只用于需要第一眼冲击的证据节点。</p>
+          </div>
+          <div class="chart-frame reveal" data-chart-id="demo-chart-diagonal">
+            <div class="chart-container">
+              <svg class="demo-chart" viewBox="0 0 720 420" role="img" aria-label="Demo diagonal chart">
+                <path class="grid" d="M58 82H674M58 166H674M58 250H674M58 334H674"></path>
+                <rect class="highlight-band" x="420" y="70" width="188" height="276" rx="18"></rect>
+                <path class="line-muted" d="M72 302C146 286 206 282 280 276C352 270 438 238 512 224C588 210 632 202 666 190"></path>
+                <path class="line" d="M72 316C150 292 206 270 278 260C356 250 426 198 504 144C568 100 618 96 666 88"></path>
+                <circle class="point" cx="504" cy="144" r="12"></circle>
+                <text x="58" y="382">Before</text>
+                <text x="570" y="382">After</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="chart-read" data-recipe="chart-read-split-argument" data-layout="split-argument" data-slide-label="chart-split">
+        <div class="slide-inner slide-split">
+          <div class="split-stack">
+            <p class="deck-kicker reveal">chart-read / split-argument</p>
+            <h2 class="headline reveal">曲线真正变化的是平台，不是峰值。</h2>
+            <p class="reading-caption reveal">先看低点后的新平台，再看最后一年是否继续抬升。</p>
+            <p class="takeaway reveal">takeaway 承接 chapter Claim，不复述图表标题。</p>
+          </div>
+          <div class="chart-frame reveal" data-chart-id="demo-emission-trend">
+            <div class="chart-container">
+              <svg class="demo-chart" viewBox="0 0 720 420" role="img" aria-label="Demo rising line chart">
+                <path class="grid" d="M60 70H680M60 150H680M60 230H680M60 310H680"></path>
+                <path class="area" d="M70 330 C170 280 230 252 320 242 C420 230 480 190 570 174 C630 164 650 144 670 130 L670 350 L70 350 Z"></path>
+                <path class="line" d="M70 330 C170 280 230 252 320 242 C420 230 480 190 570 174 C630 164 650 144 670 130"></path>
+                <circle class="point" cx="670" cy="130" r="13"></circle>
+                <text x="60" y="386">2019</text>
+                <text x="622" y="386">2024</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="deck-slide scroll-scene" data-slide-type="scroll-scene" data-recipe="scroll-scene" data-layout="scrolly-stage" data-slide-label="scroll-scene" data-chart-id="demo-platform">
+        <div class="slide-inner scroll-scene-inner">
+          <div class="scroll-scene-copy">
+            <p class="deck-kicker reveal">scroll-scene / scrollytelling</p>
+            <h2 class="headline reveal">同一张图，分三步建立判断。</h2>
+            <div class="scroll-step-stage reveal">
+              <article class="scroll-step-copy is-active" data-scroll-step="0">
+                <p class="step-label">Step 01</p>
+                <h3 class="step-title">先让读者看到旧基线。</h3>
+                <p class="step-body">第一步只保留低位区间，建立“如果只是反弹，应该回到哪里”的参照。</p>
+              </article>
+              <article class="scroll-step-copy" data-scroll-step="1">
+                <p class="step-label">Step 02</p>
+                <h3 class="step-title">再暴露回补后的斜率。</h3>
+                <p class="step-body">第二步高亮恢复段，让变化从孤立点变成连续推进，而不是一句抽象结论。</p>
+              </article>
+              <article class="scroll-step-copy" data-scroll-step="2">
+                <p class="step-label">Step 03</p>
+                <h3 class="step-title">最后落到新的平台。</h3>
+                <p class="step-body">第三步只强调末端高位：故事的判断从“是否反弹”变成“为什么停在高位”。</p>
+              </article>
+            </div>
+          </div>
+          <div class="chart-frame scroll-chart-stage reveal" data-chart-id="demo-platform">
+            <div class="chart-container" id="ppt-chart-demo-platform">
+              <svg class="demo-scrolly-chart" viewBox="0 0 760 500" role="img" aria-label="Demo step-driven line chart">
+                <path class="grid" d="M82 80H702M82 174H702M82 268H702M82 362H702"></path>
+                <path class="axis" d="M82 392H702M82 62V392"></path>
+                <path class="base-line" d="M94 326 C174 300 224 286 294 292 C370 298 438 246 506 226 C588 202 636 202 690 170"></path>
+                <text x="82" y="434">2019</text>
+                <text x="318" y="434">2021</text>
+                <text x="554" y="434">2023</text>
+                <text x="652" y="434">2024</text>
+                <g class="demo-step-layer is-active" data-demo-scroll-step="0">
+                  <path class="focus-band" d="M92 300H302V354H92Z"></path>
+                  <path class="focus-line" d="M94 326 C174 300 224 286 294 292"></path>
+                  <text x="100" y="286">旧基线区间</text>
+                </g>
+                <g class="demo-step-layer" data-demo-scroll-step="1">
+                  <path class="focus-band" d="M284 222H524V320H284Z"></path>
+                  <path class="focus-line" d="M294 292 C370 298 438 246 506 226"></path>
+                  <circle class="focus-point" cx="506" cy="226" r="12"></circle>
+                  <text x="346" y="212">恢复段斜率抬升</text>
+                </g>
+                <g class="demo-step-layer" data-demo-scroll-step="2">
+                  <path class="focus-band" d="M498 140H706V244H498Z"></path>
+                  <path class="focus-line" d="M506 226 C588 202 636 202 690 170"></path>
+                  <circle class="focus-point" cx="690" cy="170" r="15"></circle>
+                  <text x="520" y="126">末端停在高平台</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="quote" data-recipe="quote-evidence" data-layout="quote-focus" data-slide-label="quote">
+        <div class="slide-inner">
+          <p class="deck-kicker reveal">quote-evidence / quote</p>
+          <blockquote class="quote-block reveal">我们不是缺少数据，而是缺少一个能让判断停下来的证据瞬间。</blockquote>
+          <p class="attribution reveal">Interview excerpt · Product operations lead</p>
+          <p class="reading-caption reveal">引用页只保留一个定性证据，不把它扩写成正文页。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="quote-pair" data-recipe="quote-pair-evidence" data-layout="evidence-stage" data-slide-label="quote-pair">
+        <div class="slide-inner">
+          <p class="deck-kicker reveal">quote-pair-evidence / voices</p>
+          <h2 class="headline reveal">两条声音共同定义推进边界。</h2>
+          <div class="quote-pair reveal">
+            <div class="quote-card">
+              <p class="deck-kicker">Adoption</p>
+              <blockquote class="quote-block">“它已经变成会前准备的标准动作。”</blockquote>
+              <p class="attribution">Sales lead</p>
+              <p class="reading-caption">一线已经把它当成流程，而不是培训材料。</p>
+            </div>
+            <div class="quote-card">
+              <p class="deck-kicker">Governance</p>
+              <blockquote class="quote-block">“外部演示必须先把客户信息彻底拆开。”</blockquote>
+              <p class="attribution">Legal lead</p>
+              <p class="reading-caption">扩大试点的条件是先补齐治理边界。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="image-grid" data-recipe="image-evidence-grid" data-layout="evidence-stage" data-slide-label="image-grid">
+        <div class="slide-inner">
+          <h2 class="headline reveal">截图组用来证明状态差异，不是做相册。</h2>
+          <div class="evidence-grid reveal">
+            <figure class="evidence-figure">
+              <div class="evidence-image"><span class="image-placeholder">screen 01</span></div>
+              <figcaption class="image-caption">旧流程需要跨三个界面完成。</figcaption>
+            </figure>
+            <figure class="evidence-figure">
+              <div class="evidence-image"><span class="image-placeholder">screen 02</span></div>
+              <figcaption class="image-caption">关键状态没有入口提示。</figcaption>
+            </figure>
+            <figure class="evidence-figure">
+              <div class="evidence-image"><span class="image-placeholder">screen 03</span></div>
+              <figcaption class="image-caption">用户只能靠记忆恢复上下文。</figcaption>
+            </figure>
+            <figure class="evidence-figure">
+              <div class="evidence-image"><span class="image-placeholder">screen 04</span></div>
+              <figcaption class="image-caption">新版本把判断入口前置。</figcaption>
+            </figure>
+          </div>
+          <p class="reading-caption reveal">image-grid 支持 2-6 张真实图片，并按图片数量自适应布局。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="text-image" data-recipe="text-image-evidence" data-layout="split-argument" data-slide-label="text-image">
+        <div class="slide-inner slide-split">
+          <div class="split-stack">
+            <p class="deck-kicker reveal">text-image-evidence / text-image</p>
+            <h2 class="headline reveal">当一张图需要被读，而不是被看。</h2>
+            <p class="reading-caption reveal">左侧写判断路径，右侧只放一个主视觉证据。它不是 chart-read，因为视觉证据来自 asset，不来自 `Charts[*]`。</p>
+            <p class="takeaway reveal">适合产品截图、现场照片、版面证据或素材对照。</p>
+          </div>
+          <div class="visual-artifact reveal">
+            <svg viewBox="0 0 960 520" role="img" aria-label="Governance gate visual artifact">
+              <rect width="960" height="520" rx="28" fill="currentColor" opacity="0.04"></rect>
+              <path d="M160 364C236 258 310 206 382 206C450 206 489 292 554 292C620 292 674 224 800 166" fill="none" stroke="var(--deck-accent)" stroke-width="18" stroke-linecap="round"></path>
+              <circle cx="382" cy="206" r="44" fill="var(--deck-surface-strong)" stroke="var(--deck-accent)" stroke-width="10"></circle>
+              <circle cx="554" cy="292" r="44" fill="var(--deck-surface-strong)" stroke="var(--deck-line)" stroke-width="10"></circle>
+              <circle cx="800" cy="166" r="54" fill="var(--deck-accent-soft)" stroke="var(--deck-accent)" stroke-width="10"></circle>
+              <path d="M770 166L794 190L838 138" fill="none" stroke="var(--deck-accent)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"></path>
+              <text x="150" y="430" fill="var(--deck-muted)" font-family="var(--deck-font-mono)" font-size="24" font-weight="700">RESOLVED ASSET · GOVERNANCE GATE</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="process-flow" data-recipe="process-flow" data-layout="rowline-board" data-slide-label="process-flow">
+        <div class="slide-inner">
+          <h2 class="headline reveal">流程页讲机制，不讲时间线。</h2>
+          <div class="process-steps reveal">
+            <div class="process-step">
+              <div class="process-label">Step 01</div>
+              <h3>收集信号</h3>
+              <p class="process-note">把用户行为、异常状态和上下文放进同一判断口径。</p>
+            </div>
+            <div class="process-step">
+              <div class="process-label">Step 02</div>
+              <h3>压缩证据</h3>
+              <p class="process-note">去掉重复描述，只保留能改变判断的材料。</p>
+            </div>
+            <div class="process-step">
+              <div class="process-label">Step 03</div>
+              <h3>暴露选择</h3>
+              <p class="process-note">让用户看到下一步，而不是自己推导系统状态。</p>
+            </div>
+            <div class="process-step">
+              <div class="process-label">Step 04</div>
+              <h3>验证结果</h3>
+              <p class="process-note">把动作结果变成可复查的状态，而不是一次性反馈。</p>
+            </div>
+          </div>
+          <p class="takeaway reveal">如果步骤有真实日期，应该回到 timeline；没有时间锚点才用 process-flow。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="comparison" data-recipe="comparison-pair" data-layout="split-argument" data-slide-label="comparison">
+        <div class="slide-inner">
+          <h2 class="headline reveal">对照页只比较一个主维度。</h2>
+          <div class="slide-grid reveal">
+            <div class="comparison-panel">
+              <p class="deck-kicker">Old baseline</p>
+              <h3>低位恢复</h3>
+              <p class="intro">如果只是短期反弹，曲线会回到旧区间。</p>
+            </div>
+            <div class="comparison-panel">
+              <p class="deck-kicker">New plateau</p>
+              <h3>高位停留</h3>
+              <p class="intro">实际读法是新平台形成，后续章节再解释原因。</p>
+            </div>
+          </div>
+          <p class="difference-callout reveal">差异结论只保留一个：问题从“是否回落”变成“为何高位稳定”。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="timeline" data-recipe="timeline-stage" data-layout="rowline-board" data-slide-label="timeline">
+        <div class="slide-inner">
+          <h2 class="headline reveal">时间页保留节点，不重写历史。</h2>
+          <div class="timeline-nodes reveal">
+            <div class="timeline-node">
+              <div class="timeline-time">2019</div>
+              <p class="metric-label">baseline</p>
+              <p class="metric-reading">旧区间仍有效。</p>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-time">2020</div>
+              <p class="metric-label">shock</p>
+              <p class="metric-reading">一次性下探。</p>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-time">2021</div>
+              <p class="metric-label">rebound</p>
+              <p class="metric-reading">迅速回补。</p>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-time">2023</div>
+              <p class="metric-label">plateau</p>
+              <p class="metric-reading">高位稳定。</p>
+            </div>
+            <div class="timeline-node">
+              <div class="timeline-time">2024</div>
+              <p class="metric-label">latest</p>
+              <p class="metric-reading">继续偏高。</p>
+            </div>
+          </div>
+          <p class="takeaway reveal">节点太多就拆成 timeline-sequence，每页一个阶段。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="action" data-recipe="action-list" data-layout="rowline-board" data-slide-label="action">
+        <div class="slide-inner">
+          <h2 class="headline reveal">行动页负责收束，不继续分析。</h2>
+          <div class="action-items reveal">
+            <div class="action-item">
+              <p class="action-meta">Priority 1</p>
+              <h3>先锁定高位平台的主驱动。</h3>
+              <p class="action-reason">下一步看部门贡献，而不是继续争论单年峰值。</p>
+            </div>
+            <div class="action-item">
+              <p class="action-meta">Priority 2</p>
+              <h3>把口径和时间窗固定下来。</h3>
+              <p class="action-reason">避免不同章节用不同基线制造假冲突。</p>
+            </div>
+            <div class="action-item">
+              <p class="action-meta">Priority 3</p>
+              <h3>把异常值留给 appendix。</h3>
+              <p class="action-reason">主线只保留能改变判断的证据。</p>
+            </div>
+          </div>
+          <p class="closing-cue reveal">最终页给行动方向，而不是新证据。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="transition" data-recipe="transition-break" data-layout="quote-focus" data-slide-label="transition">
+        <div class="slide-inner">
+          <p class="deck-kicker reveal">Story Break / pivot</p>
+          <h2 class="transition-title reveal">从总量，转向<span class="tone-accent">结构</span>。</h2>
+          <p class="cue reveal">不是一年峰值，而是新平台。</p>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="methodology" data-recipe="system-methodology" data-layout="rowline-board" data-slide-label="methodology">
+        <div class="slide-inner">
+          <p class="deck-kicker reveal">Methodology / system slide</p>
+          <h2 class="headline reveal">方法页只交代口径，不继续推进叙事。</h2>
+          <ul class="reading-list reveal">
+            <li><strong>Data Source</strong><span>来自 plan.md 顶层 Methodology，不从 chapter 里临时发明来源。</span></li>
+            <li><strong>Time Range</strong><span>保留可复核的时间范围，例如 2024-01 至 2026-05。</span></li>
+            <li><strong>Caveats</strong><span>只写会影响解读的局限；异常值、样本缺口或口径限制要明确。</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="deck-slide" data-slide-type="closing" data-recipe="closing" data-layout="closing-stage" data-slide-label="closing">
+        <div class="slide-inner closing-inner">
+          <p class="deck-kicker reveal">closing / final handoff</p>
+          <h2 class="headline reveal">最后留下一个可复述的<span class="tone-accent">判断</span>。</h2>
+          <p class="cue reveal">结尾页不再证明新东西，只把听众带到下一场讨论。</p>
+          <div class="lead-meta reveal">
+            <span>End of deck</span>
+            <span>Q&A ready</span>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="deck-progress" aria-hidden="true"><div class="deck-progress-bar" data-deck-progress></div></div>
+    <nav class="deck-dots" data-deck-dots aria-label="Slide navigation"></nav>
+  </main>
+  <script>
+    window.STORY_DECK_THEMES = {
+      "Paper & Ink": {
+        polarity: "light",
+        vars: {
+          "--page-bg": "#faf9f7",
+          "--surface": "rgba(255, 253, 250, 0.88)",
+          "--surface-strong": "#fffdf9",
+          "--text-primary": "#1a1a1a",
+          "--text-secondary": "#5e564c",
+          "--accent": "#C41E3A",
+          "--accent-soft": "rgba(196, 30, 58, 0.08)",
+          "--border": "rgba(26, 26, 26, 0.1)",
+          "--font-display": "\"Times New Roman\", Georgia, \"Noto Serif SC\", \"Songti SC\", \"STSong\", \"SimSun\", serif",
+          "--component-radius-md": "2px",
+          "--component-border": "1px solid rgba(26, 26, 26, 0.16)",
+          "--component-shadow-card": "none",
+          "--type-heading-weight": "700",
+          "--type-metric-weight": "700",
+          "--section-bar-width": "2px",
+          "--highlight-border-width": "2px"
+        }
+      },
+      "Swiss Modern": {
+        polarity: "light",
+        vars: {
+          "--page-bg": "#ffffff",
+          "--surface": "rgba(245, 245, 245, 0.88)",
+          "--surface-strong": "#f5f5f5",
+          "--text-primary": "#121212",
+          "--text-secondary": "#666666",
+          "--accent": "#D64D4D",
+          "--accent-soft": "rgba(214, 77, 77, 0.08)",
+          "--border": "rgba(0, 0, 0, 0.12)",
+          "--font-display": "\"Helvetica Neue\", Helvetica, \"Inter\", Arial, \"Noto Sans SC\", \"PingFang SC\", sans-serif",
+          "--component-radius-md": "2px",
+          "--component-border": "1px solid rgba(0, 0, 0, 0.16)",
+          "--component-shadow-card": "none",
+          "--type-heading-weight": "700",
+          "--type-metric-weight": "800",
+          "--section-bar-width": "4px",
+          "--highlight-border-width": "3px"
+        }
+      },
+      "Indigo Porcelain": {
+        polarity: "light",
+        vars: {
+          "--page-bg": "#F3F6F8",
+          "--surface": "rgba(255, 255, 255, 0.90)",
+          "--surface-strong": "#FFFFFF",
+          "--text-primary": "#0A1F3D",
+          "--text-secondary": "#53616F",
+          "--accent": "#1F5E8C",
+          "--accent-soft": "rgba(31, 94, 140, 0.10)",
+          "--border": "rgba(10, 31, 61, 0.12)",
+          "--font-display": "\"Times New Roman\", Georgia, \"Noto Serif SC\", \"Songti SC\", serif",
+          "--component-radius-md": "4px",
+          "--component-border": "1px solid rgba(10, 31, 61, 0.16)",
+          "--component-shadow-card": "none",
+          "--type-heading-weight": "700",
+          "--type-metric-weight": "750",
+          "--section-bar-width": "2px",
+          "--highlight-border-width": "2px"
+        }
+      },
+      "Dark Botanical": {
+        polarity: "dark",
+        vars: {
+          "--page-bg": "#121820",
+          "--surface": "rgba(30, 37, 45, 0.88)",
+          "--surface-strong": "#1e252d",
+          "--text-primary": "#DEDCCA",
+          "--text-secondary": "#9E9C8D",
+          "--accent": "#F0A868",
+          "--accent-soft": "rgba(240, 168, 104, 0.12)",
+          "--border": "rgba(222, 220, 202, 0.1)",
+          "--font-display": "\"Times New Roman\", Georgia, \"Noto Serif SC\", \"Songti SC\", serif",
+          "--component-radius-md": "10px",
+          "--component-border": "1px solid rgba(222, 220, 202, 0.16)",
+          "--component-shadow-card": "none",
+          "--type-heading-weight": "600",
+          "--type-metric-weight": "700",
+          "--section-bar-width": "2px",
+          "--highlight-border-width": "3px"
+        }
+      },
+      "Pudding Neon": {
+        polarity: "dark",
+        vars: {
+          "--page-bg": "#1A1A1A",
+          "--surface": "#2C2C2C",
+          "--surface-strong": "#333333",
+          "--text-primary": "#F2F2F2",
+          "--text-secondary": "#A6A6A6",
+          "--accent": "#F9D75A",
+          "--accent-soft": "rgba(249, 215, 90, 0.15)",
+          "--border": "#444444",
+          "--component-radius-md": "10px",
+          "--component-border": "1px solid rgba(249, 215, 90, 0.18)",
+          "--component-shadow-card": "0 0 0 1px rgba(249, 215, 90, 0.08), 0 12px 30px rgba(0, 0, 0, 0.28)",
+          "--type-heading-weight": "800",
+          "--type-metric-weight": "800",
+          "--section-bar-width": "5px",
+          "--highlight-border-width": "5px"
+        }
+      },
+      "Warm Earth": {
+        polarity: "light",
+        vars: {
+          "--page-bg": "#FAF9F7",
+          "--surface": "rgba(255, 255, 255, 0.88)",
+          "--surface-strong": "#FFFFFF",
+          "--text-primary": "#2D2A26",
+          "--text-secondary": "#7A746B",
+          "--accent": "#e29e86",
+          "--accent-soft": "rgba(226, 158, 134, 0.12)",
+          "--border": "rgba(45, 42, 38, 0.10)",
+          "--component-radius-md": "12px",
+          "--component-border": "1px solid rgba(45, 42, 38, 0.10)",
+          "--component-shadow-card": "0 6px 18px rgba(45, 42, 38, 0.08)",
+          "--type-heading-weight": "700",
+          "--type-metric-weight": "700",
+          "--section-bar-width": "3px",
+          "--highlight-border-width": "4px"
+        }
+      },
+      "Vintage Editorial": {
+        polarity: "light",
+        vars: {
+          "--page-bg": "#FFF1E5",
+          "--surface": "rgba(255, 255, 255, 0.88)",
+          "--surface-strong": "#FFFFFF",
+          "--text-primary": "#2F2F2F",
+          "--text-secondary": "#6B6B6B",
+          "--accent": "#9E2F50",
+          "--accent-soft": "rgba(158, 47, 80, 0.10)",
+          "--border": "rgba(234, 223, 215, 0.6)",
+          "--font-display": "\"Times New Roman\", Georgia, \"Noto Serif SC\", \"Songti SC\", serif",
+          "--component-radius-md": "3px",
+          "--component-border": "1px solid rgba(158, 47, 80, 0.18)",
+          "--component-shadow-card": "none",
+          "--type-heading-weight": "700",
+          "--type-metric-weight": "700",
+          "--section-bar-width": "3px",
+          "--highlight-border-width": "3px"
+        }
+      }
+    };
+  </script>
+  <script src="../scripts/deck-runtime.js"></script>
+  <script>
+    window.renderVSeedScrolly = function renderPreviewScrollScene(containerId, chartId, stepIndex) {
+      if (chartId !== 'demo-platform') return;
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const index = Number(stepIndex) || 0;
+      container.querySelectorAll('[data-demo-scroll-step]').forEach((layer) => {
+        layer.classList.toggle('is-active', Number(layer.dataset.demoScrollStep) === index);
+      });
+    };
+    window.initStoryDeck();
+
+    const previewSlideNumber = Number(new URLSearchParams(window.location.search).get('slide'));
+    if (Number.isInteger(previewSlideNumber) && previewSlideNumber > 0) {
+      requestAnimationFrame(() => {
+        const shell = document.querySelector('[data-deck-shell]');
+        const track = document.querySelector('[data-deck-track]');
+        const slides = Array.from(document.querySelectorAll('.deck-slide'));
+        if (!shell || slides.length === 0) return;
+
+        const previewIndex = Math.min(previewSlideNumber - 1, slides.length - 1);
+        shell.style.setProperty('--deck-index', String(previewIndex));
+        shell.style.setProperty('--deck-progress', slides.length <= 1 ? '1' : String(previewIndex / (slides.length - 1)));
+        if (track) {
+          track.style.setProperty('--deck-index', String(previewIndex));
+        }
+        slides.forEach((slide, slideIndex) => {
+          const isActive = slideIndex === previewIndex;
+          slide.classList.toggle('is-active', isActive);
+          slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+        });
+        if (typeof window.fitStoryDeckMetricValues === 'function') {
+          window.fitStoryDeckMetricValues(slides[previewIndex]);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

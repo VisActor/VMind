@@ -1,0 +1,28 @@
+{
+  "files": [
+    "00-tokens.css",
+    "01-layout.css",
+    "components/big-stat.css",
+    "components/data-artifact.css",
+    "components/highlight-box.css",
+    "patterns/hero-impact.css",
+    "patterns/chart-narrative.css",
+    "components/section-heading.css",
+    "components/kpi-card.css",
+    "components/chart-wrapper.css",
+    "components/image-evidence.css",
+    "patterns/comparison.css",
+    "components/metric.css",
+    "runtime/text-layout.css",
+    "components/quote-block.css",
+    "components/inline-cite.css",
+    "components/context-note.css",
+    "components/delta-chip.css",
+    "patterns/action.css",
+    "patterns/timeline.css",
+    "patterns/scrollytelling.css",
+    "patterns/cover-intro.css",
+    "02-responsive.css",
+    "runtime/motion.css"
+  ]
+}

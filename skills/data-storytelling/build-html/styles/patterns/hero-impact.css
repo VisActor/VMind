@@ -1,0 +1,299 @@
+/**
+ * ============================================================================
+ * 12. Hero Block
+ * ============================================================================
+ */
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  padding: var(--space-xl) var(--space-md) 100px;
+  overflow: hidden;
+}
+
+/* Hero with background image (base capability — no default overlay) */
+.hero.with-image {
+  background-color: var(--surface-strong);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Overlay base (shared by dark/light) */
+.hero.with-image.overlay-dark::before,
+.hero.with-image.overlay-light::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Dark overlay (for dark presets) */
+.hero.with-image.overlay-dark::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.44) 0%,
+    rgba(0, 0, 0, 0.28) 58%,
+    rgba(0, 0, 0, 0.54) 100%
+  );
+}
+
+/* Light overlay (for light presets) */
+.hero.with-image.overlay-light::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.62) 0%,
+    rgba(255, 255, 255, 0.46) 52%,
+    rgba(255, 255, 255, 0.68) 100%
+  );
+}
+
+/* Hero with CSS-only gradient (no image) */
+.hero.with-gradient {
+  background:
+    radial-gradient(ellipse at 20% 30%, var(--accent-soft) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, var(--accent-soft) 0%, transparent 60%),
+    var(--surface-strong);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin-inline: auto;
+}
+
+.hero.with-image:not(.hero-image):not([data-hero-mode="image"]) .hero-inner {
+  padding: clamp(1.25rem, 2vw, 1.9rem);
+  border-radius: calc(var(--radius-lg) + 4px);
+  box-shadow: 0 24px 80px rgba(11, 20, 32, 0.16);
+}
+
+.hero.with-image.overlay-light:not(.hero-image):not([data-hero-mode="image"]) .hero-inner {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.84) 0%,
+    rgba(255, 255, 255, 0.66) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.46);
+  backdrop-filter: blur(8px);
+}
+
+.hero.with-image.overlay-dark:not(.hero-image):not([data-hero-mode="image"]) .hero-inner {
+  background: linear-gradient(
+    180deg,
+    rgba(12, 18, 27, 0.74) 0%,
+    rgba(12, 18, 27, 0.54) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.hero.with-image.overlay-dark h1,
+.hero.with-image.overlay-dark .subtitle,
+.hero.with-image.overlay-dark .hero-number-context {
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.hero.with-image.overlay-light .subtitle,
+.hero.with-image.overlay-light .hero-number-context {
+  color: rgba(19, 24, 31, 0.82);
+}
+
+.hero-title-accent {
+  color: var(--accent);
+  font-style: inherit;
+}
+
+.hero:is(.hero-image, [data-hero-mode="image"]) {
+  justify-content: flex-end;
+  text-align: left;
+  padding-bottom: clamp(132px, 20vh, 232px);
+}
+
+.hero:is(.hero-image, [data-hero-mode="image"]) .hero-inner {
+  max-width: var(--max-content-width);
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+  backdrop-filter: none;
+}
+
+.hero:is(.hero-image, [data-hero-mode="image"]) h1 {
+  max-inline-size: min(100%, 1120px);
+  font-size: var(--type-display-hero-dominant-size);
+  margin-inline: 0;
+  text-align: left;
+}
+
+.hero:is(.hero-image, [data-hero-mode="image"]) .hero-meta {
+  margin: 0 0 var(--space-sm);
+  color: color-mix(in srgb, currentColor 72%, transparent);
+  font-family: var(--font-mono);
+  font-size: var(--type-meta-label-size);
+  line-height: var(--type-meta-label-line-height);
+  letter-spacing: var(--type-meta-label-tracking);
+  text-transform: uppercase;
+}
+
+.hero.with-image.overlay-dark .hero-meta {
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.hero.with-image.overlay-light .hero-meta {
+  color: rgba(19, 24, 31, 0.66);
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: var(--type-display-hero-size);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: var(--type-display-hero-line-height);
+  margin-bottom: var(--space-md);
+  max-inline-size: var(--hero-title-measure);
+  margin-inline: auto;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+.hero .subtitle {
+  font-size: var(--type-hero-subtitle-size);
+  color: var(--text-secondary);
+  line-height: var(--type-hero-subtitle-line-height);
+  width: 100%;
+  max-inline-size: var(--hero-copy-measure);
+  margin: 0 auto;
+  text-wrap: pretty;
+}
+
+/* Scroll hint - SVG chevron with bounce animation */
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bounce 2s infinite;
+  width: 28px;
+  height: 28px;
+  opacity: 0.5;
+  /* SVG chevron via mask — inherits color from background */
+  background: var(--text-secondary);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(8px);
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: var(--space-lg) var(--space-sm);
+  }
+
+  .scroll-hint {
+    display: none;
+  }
+}
+
+/**
+ * ============================================================================
+ * 13. Hero Families / Weights — visual structure for hero-impact
+ * ============================================================================
+ */
+
+/* hero-bigstat: stat family */
+.hero:is(.hero-bigstat, [data-hero-mode="stat"]) {
+  --hero-bigstat-title-measure: var(--hero-title-measure);
+  --hero-bigstat-copy-measure: var(--hero-copy-measure);
+  text-align: left;
+}
+
+.hero:is(.hero-bigstat, [data-hero-mode="stat"]) .hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  row-gap: var(--space-sm);
+  gap: var(--space-sm);
+}
+
+.hero:is(.hero-bigstat, [data-hero-mode="stat"]) .hero-number {
+  align-self: flex-start;
+  margin: 0;
+  margin-bottom: var(--space-xs);
+  font-size: var(--type-display-metric-size);
+  font-weight: 800;
+  letter-spacing: var(--type-display-metric-tracking);
+  line-height: var(--type-display-metric-line-height);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero:is(.hero-bigstat, [data-hero-mode="stat"]) .hero-number .metric-prefix,
+.hero:is(.hero-bigstat, [data-hero-mode="stat"]) .hero-number .metric-suffix {
+  font-size: var(--metric-affix-scale-hero);
+}
+
+.hero:is(.hero-bigstat, [data-hero-mode="stat"]) h1 {
+  margin: 0;
+  width: 100%;
+  max-inline-size: var(--hero-bigstat-title-measure);
+  margin-top: 0;
+  margin-inline: 0;
+  text-align: left;
+}
+
+.hero:is(.hero-bigstat, [data-hero-mode="stat"]) .hero-number-context {
+  font-size: var(--type-body-copy-size);
+  color: var(--text-secondary);
+  line-height: var(--type-body-copy-line-height);
+  margin: 0;
+  width: 100%;
+  max-inline-size: var(--hero-bigstat-copy-measure);
+  text-align: left;
+}
+
+@media (max-width: 768px) {
+  .hero:is(.hero-bigstat, [data-hero-mode="stat"]) {
+    text-align: center;
+  }
+
+  .hero:is(.hero-bigstat, [data-hero-mode="stat"]) .hero-inner {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero:is(.hero-bigstat, [data-hero-mode="stat"]) .hero-number,
+  .hero:is(.hero-bigstat, [data-hero-mode="stat"]) h1,
+  .hero:is(.hero-bigstat, [data-hero-mode="stat"]) .hero-number-context {
+    text-align: center;
+  }
+
+  .hero:is(.hero-bigstat, [data-hero-mode="stat"]) h1 {
+    margin-inline: auto;
+    margin-bottom: var(--space-sm);
+  }
+
+  .hero:is(.hero-bigstat, [data-hero-mode="stat"]) .hero-number-context {
+    margin-inline: auto;
+  }
+
+  .hero:is(.hero-bigstat, [data-hero-mode="stat"]) .hero-number {
+    margin-bottom: var(--space-sm);
+  }
+}

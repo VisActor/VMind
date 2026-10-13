@@ -1,0 +1,13 @@
+/* Text layout runtime overrides */
+[data-text-layout] strong {
+  color: inherit;
+  font-weight: 700;
+}
+
+[data-text-layout] {
+  text-wrap: unset;
+}
+
+.pretext-line {
+  display: block;
+}

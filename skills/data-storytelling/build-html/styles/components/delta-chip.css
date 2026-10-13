@@ -1,0 +1,43 @@
+/* Compact change / comparison signal */
+.delta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: var(--text-primary);
+  font-size: var(--type-meta-label-size);
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+
+.delta-chip .icon {
+  font-size: var(--type-delta-icon-size);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.delta-chip strong {
+  font-weight: 700;
+  color: inherit;
+}
+
+.delta-chip.positive .icon,
+.delta-chip.positive strong {
+  color: var(--accent);
+}
+
+.delta-chip.neutral .icon,
+.delta-chip.neutral strong {
+  color: color-mix(in srgb, var(--text-secondary) 82%, var(--text-primary) 18%);
+}
+
+.delta-chip.negative .icon,
+.delta-chip.negative strong {
+  color: color-mix(in srgb, var(--text-primary) 82%, var(--text-secondary) 18%);
+}

@@ -1,0 +1,45 @@
+/* Big stat */
+.big-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--card-gap);
+}
+
+.big-stat .big-stat-value {
+  font-size: var(--type-big-stat-size);
+  font-weight: 700;
+  letter-spacing: var(--type-display-metric-tracking);
+  line-height: var(--type-display-metric-line-height);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.big-stat .big-stat-value .metric-prefix,
+.big-stat .big-stat-value .metric-suffix {
+  font-size: var(--metric-affix-scale-display);
+}
+
+.big-stat .big-stat-label {
+  font-family: var(--font-mono);
+  font-size: var(--type-meta-label-size);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--type-meta-label-tracking);
+  line-height: var(--type-meta-label-line-height);
+}
+
+.big-stat .trend {
+  font-size: var(--type-meta-source-size);
+  font-weight: 600;
+  line-height: var(--type-meta-source-line-height);
+  color: var(--text-secondary);
+}
+
+.big-stat .trend.up {
+  color: #22c55e;
+}
+
+.big-stat .trend.down {
+  color: var(--accent);
+}

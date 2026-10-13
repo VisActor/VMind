@@ -1,0 +1,152 @@
+/* Data artifact: hero/entry-level number object, not a KPI card */
+.data-artifact {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(260px, 0.38fr) minmax(360px, 0.62fr);
+  grid-template-areas:
+    "meta trace"
+    "value trace"
+    "unit trace"
+    "caption trace";
+  column-gap: var(--space-lg);
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: var(--hero-display-measure);
+  padding: var(--space-md) 0;
+  border: 0;
+  border-block: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.data-artifact-meta {
+  grid-area: meta;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: var(--space-xs) var(--space-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--type-meta-label-size);
+  font-weight: 700;
+  letter-spacing: var(--type-meta-label-tracking);
+  line-height: var(--type-meta-label-line-height);
+  text-transform: uppercase;
+}
+
+.data-artifact-value {
+  grid-area: value;
+  color: var(--text-primary);
+  font-size: var(--type-display-metric-size);
+  font-weight: var(--type-metric-weight);
+  line-height: var(--type-display-metric-line-height);
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-artifact-value .metric-prefix,
+.data-artifact-value .metric-suffix {
+  font-size: 0.42em;
+}
+
+.data-artifact-unit,
+.data-artifact-caption {
+  max-width: var(--measure-data-artifact-caption);
+  color: var(--text-secondary);
+  font-size: var(--type-body-copy-size);
+  line-height: var(--type-body-copy-line-height);
+}
+
+.data-artifact-unit {
+  grid-area: unit;
+}
+
+.data-artifact-caption {
+  grid-area: caption;
+  align-self: end;
+  max-width: 38ch;
+}
+
+.data-artifact-trace {
+  grid-area: trace;
+  min-height: clamp(140px, 16vw, 220px);
+  display: grid;
+  place-items: center;
+  margin-top: 0;
+  padding-left: var(--space-md);
+  color: var(--accent);
+  border-left: 1px solid var(--border);
+  border-top: 0;
+  border-bottom: 0;
+}
+
+.data-artifact-trace svg {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.data-artifact.data-artifact-no-trace {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "meta"
+    "value"
+    "unit"
+    "caption";
+  max-width: min(var(--hero-copy-measure), 100%);
+  row-gap: var(--space-sm);
+}
+
+@supports selector(:has(*)) {
+  .data-artifact:not(:has(.data-artifact-trace)) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "meta"
+      "value"
+      "unit"
+      "caption";
+    max-width: min(var(--hero-copy-measure), 100%);
+    row-gap: var(--space-sm);
+  }
+}
+
+.hero .data-artifact {
+  margin-top: var(--space-lg);
+}
+
+.hero .data-artifact-value {
+  font-size: var(--type-display-hero-size);
+}
+
+.hero .data-artifact-caption {
+  font-size: var(--type-hero-subtitle-restrained-size);
+  line-height: var(--type-hero-subtitle-line-height);
+}
+
+@media (max-width: 768px) {
+  .data-artifact {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "meta"
+      "value"
+      "unit"
+      "trace"
+      "caption";
+    max-width: min(var(--hero-copy-measure), 100%);
+    row-gap: var(--space-sm);
+  }
+
+  .data-artifact-trace {
+    min-height: clamp(120px, 32vw, 180px);
+    padding-top: var(--space-sm);
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .data-artifact-caption {
+    max-width: var(--measure-data-artifact-caption);
+  }
+}

@@ -1,0 +1,79 @@
+/* Inline citation anchor */
+.inline-cite {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  margin-inline: 0.08em;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  background: color-mix(in srgb, var(--accent-soft) 88%, var(--surface) 12%);
+  color: var(--accent);
+  font-size: 0.72em;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: super;
+  cursor: default;
+}
+
+.inline-cite-index {
+  display: block;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  transform: translateY(0.06em);
+}
+
+.inline-cite-panel {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%) translateY(6px);
+  width: min(320px, calc(100vw - 32px));
+  padding: 12px 14px;
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--border) 90%, var(--text-primary) 10%);
+  background: color-mix(in srgb, var(--surface) 96%, white 4%);
+  box-shadow: var(--shadow-card-hover);
+  color: var(--text-primary);
+  font-size: var(--type-body-copy-size);
+  line-height: var(--type-body-copy-line-height);
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+}
+
+.inline-cite-panel::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: color-mix(in srgb, var(--surface) 96%, white 4%);
+  border-right: 1px solid color-mix(in srgb, var(--border) 90%, var(--text-primary) 10%);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 90%, var(--text-primary) 10%);
+}
+
+.inline-cite:hover .inline-cite-panel,
+.inline-cite:focus-within .inline-cite-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.inline-cite-panel strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--type-meta-label-size);
+  font-weight: 700;
+  letter-spacing: var(--type-meta-label-tracking);
+  text-transform: uppercase;
+}

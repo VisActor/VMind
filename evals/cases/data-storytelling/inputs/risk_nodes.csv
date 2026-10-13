@@ -1,0 +1,6 @@
+node,delay_rate,risk_share,backlog_days
+Port West,0.37,0.28,11
+Port South,0.26,0.21,8
+Air Hub,0.12,0.09,3
+Rail North,0.18,0.15,5
+Warehouse East,0.14,0.27,6

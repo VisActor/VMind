@@ -1,0 +1,10 @@
+{
+  "broken-table.js": {
+    "sha256": "289f5f45dbbbd9e4be765ecd24b3da0184703d92ffe97566ab823ed90bf95765",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  },
+  "sales.csv": {
+    "sha256": "965d1fe4e828191a50b6ee85861cb12fec70fd21b928383c39f0daf06bc84ca8",
+    "provenance": "Authored synthetic evaluation fixture; MIT"
+  }
+}

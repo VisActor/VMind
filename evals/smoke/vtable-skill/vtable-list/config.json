@@ -1,0 +1,8 @@
+{
+  "builder": "demo",
+  "source": "spec.js",
+  "records": "sales.csv",
+  "numericFields": [
+    "sales"
+  ]
+}

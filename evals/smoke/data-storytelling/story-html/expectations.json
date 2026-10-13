@@ -1,0 +1,12 @@
+{
+  "html": "output.html",
+  "engine": "story",
+  "deck": false,
+  "requiredChecks": [
+    "nonBlankCanvas",
+    "pageErrors",
+    "networkErrors",
+    "localAssets",
+    "storyChartsCompiled"
+  ]
+}

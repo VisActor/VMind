@@ -1,0 +1,140 @@
+/* Metric runtime contract shared by KPI, stat, comparison and hero numbers */
+.metric-prefix,
+.metric-value,
+.metric-suffix {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.metric-value {
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  grid-area: 1 / 1;
+  justify-self: end;
+}
+
+.metric-value[data-number-flow="true"] {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.015em;
+  overflow: visible;
+}
+
+.metric-digit {
+  position: relative;
+  display: inline-block;
+  width: var(--metric-digit-width, 1ch);
+  height: 1em;
+  line-height: 1;
+  overflow: hidden;
+  vertical-align: baseline;
+  contain: paint;
+}
+
+.metric-digit-reel {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  transform: translateY(calc(var(--metric-digit-from, 0) * -1em));
+  animation: metric-digit-roll var(--metric-digit-duration, 0.9s) cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--metric-digit-delay, 0s);
+  animation-play-state: paused;
+}
+
+.metric-value[data-number-flow-state="active"] .metric-digit-reel {
+  animation-play-state: running;
+}
+
+.metric-digit-glyph {
+  display: block;
+  height: 1em;
+  line-height: 1;
+  text-align: center;
+  font: inherit;
+  letter-spacing: inherit;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+.metric-static-char {
+  display: inline-block;
+  line-height: 1;
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes metric-digit-roll {
+  0% {
+    transform: translateY(calc(var(--metric-digit-from, 0) * -1em));
+  }
+  100% {
+    transform: translateY(calc(var(--metric-digit-to, 0) * -1em));
+  }
+}
+
+.metric-prefix,
+.metric-suffix {
+  font-size: var(--metric-affix-scale);
+  line-height: 1;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+.metric-prefix:empty,
+.metric-suffix:empty {
+  display: none;
+}
+
+.kpi-card .kpi-value .metric-prefix,
+.kpi-card .kpi-value .metric-suffix {
+  font-size: var(--metric-affix-scale-kpi);
+}
+
+.metric-shell {
+  display: inline-flex;
+  align-self: flex-start;
+  width: max-content;
+  max-width: 100%;
+  align-items: baseline;
+  column-gap: var(--metric-affix-gap, 0.08em);
+  white-space: nowrap;
+}
+
+.metric-value-slot {
+  display: inline-grid;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.metric-value-slot::before {
+  content: attr(data-reserve);
+  grid-area: 1 / 1;
+  visibility: hidden;
+  white-space: pre;
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: transparent;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  pointer-events: none;
+}
+
+.stat-value {
+  font-size: var(--type-inline-metric-size);
+  font-weight: 800;
+  line-height: var(--type-display-metric-line-height);
+  letter-spacing: var(--type-display-metric-tracking);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-value .metric-prefix,
+.stat-value .metric-suffix {
+  font-size: var(--metric-affix-scale);
+}

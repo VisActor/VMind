@@ -1,0 +1,42 @@
+[
+  {
+    "id": "vtable-list",
+    "skill": "vtable-skill",
+    "inputs": [
+      "sales.csv"
+    ],
+    "prompt": "读取 inputs/sales.csv 全部六条数据，生成 VTable 明细表，列为地区、季度、销售额，销售额列可排序。保留全部原始记录。输出 outputs/spec.js 和 outputs/demo.html。",
+    "group": "core",
+    "family": "table"
+  },
+  {
+    "id": "vtable-pivot",
+    "skill": "vtable-skill",
+    "inputs": [
+      "sales.csv"
+    ],
+    "prompt": "使用 inputs/sales.csv 全部数据生成 VTable 透视表：地区为行，季度为列，销售额求和。不要用固定手算结果替代源记录。输出 outputs/spec.js 和 outputs/demo.html。",
+    "group": "core",
+    "family": "table"
+  },
+  {
+    "id": "vtable-filter",
+    "skill": "vtable-skill",
+    "inputs": [
+      "sales.csv"
+    ],
+    "prompt": "使用 inputs/sales.csv 生成 VTable 明细表，提供季度下拉筛选（全部、Q1、Q2）。切换筛选必须实际更新表格，不能只改标题。使用 select#quarter-filter，选项值分别为 all、Q1、Q2。初始显示全部六条数据，保留完整原始数据供切换恢复。输出 outputs/spec.js 和 outputs/demo.html。",
+    "group": "core",
+    "family": "table"
+  },
+  {
+    "id": "vtable-diagnosis",
+    "skill": "vtable-skill",
+    "inputs": [
+      "broken-table.js"
+    ],
+    "prompt": "inputs/broken-table.js 的表格单元格为空。诊断字段映射错误，保留两条输入记录，生成修复后的可运行诊断页面。修复后的代码存为 outputs/spec.js，诊断页存为 outputs/diagnosis.html。",
+    "group": "core",
+    "family": "table"
+  }
+]
