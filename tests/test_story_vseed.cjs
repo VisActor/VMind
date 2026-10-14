@@ -3,6 +3,7 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const path = require('node:path');
+const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const vm = require('node:vm');
 // Load the browser UMD contract independent of the npm package's ESM metadata.
@@ -293,3 +294,34 @@ test('four scatter quadrant ranges tile the visible axes and retain empty region
     [0, 50, 120, 200, 'middle'], [50, 100, 120, 200, 'middle'],
   ]);
 });
+
+// Keep normalized axes independent of raw quantity formatting through assembly and VSeed.
+const root = path.resolve(__dirname, '..');
+for (const [chartType, valueAxis, categoryAxis, orient] of [
+  ['columnPercent', 'yAxis', 'xAxis', 'left'],
+  ['barPercent', 'xAxis', 'yAxis', 'bottom'],
+]) {
+  test(`${chartType} retains percent ticks after assembling raw quantity formats`, async () => {
+    const spec = {
+      chartType,
+      dimensions: [{ id: 'period', encoding: categoryAxis }, { id: 'group', encoding: 'color' }],
+      measures: [{ id: 'amount', encoding: valueAxis, numFormat: { type: 'number', suffix: ' units' } }],
+    };
+    const dataset = [{ period: 'A', group: 'one', amount: 25 }, { period: 'A', group: 'two', amount: 75 }];
+    const assembled = JSON.parse(execFileSync('uv', ['run', '--locked', 'python', '-c', `
+import json,sys
+sys.path.insert(0, sys.argv[1])
+from local_chart_specs import assemble_local_specs
+s,d=json.load(sys.stdin)
+request={"chartId":"chart","datasetRef":"data","annotations":[],"contract":{"chart_type":s["chartType"],"dimensions":s["dimensions"],"measures":s["measures"]}}
+print(json.dumps(assemble_local_specs([request],{"data":d},{"chart":s})["chart"]["spec"]))
+`, path.join(root, 'skills/data-storytelling/scripts')], { cwd: root, input: JSON.stringify([spec, dataset]), encoding: 'utf8' }));
+    const builder = runtime.Builder.from(assembled);
+    await builder.prepare();
+    const chart = builder.build();
+    const axis = chart.axes.find(a => a.orient === orient && a.type === 'linear');
+    assert.deepEqual([0, 0.5, 1].map(value => axis.label.formatMethod(value)), ['0.00%', '50.00%', '100.00%']);
+    assert.deepEqual(assembled.dataset, dataset);
+    assert.equal(assembled.measures[0].numFormat.suffix, ' units');
+  });
+}

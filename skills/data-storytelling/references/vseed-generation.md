@@ -170,6 +170,10 @@ Plan 已确定两条业务阈值时，每个象限生成独立的 `range` 对象
 
 `0.253` 转为 `25.3%` 用 `type: percent`；原值已是 `25.3`、只增加百分号，用 `type: number, suffix: "%"`。显示单位缩放用 `ratio`，例如 `ratio: 10000, symbol: "万"`；不要再改原始 dataset 数值。
 
+**100% 构成图单独处理轴与指标。** `columnPercent / barPercent` 的数值轴固定使用归一化的 0–1 坐标，与原始输入是计数、金额还是份额无关。轴格式默认省略；要控制精度时使用 `autoFormat: false, numFormat: {type: "percent", fractionDigits: 0}`，不能用 `number + suffix: "%"`。指标格式仍对应输入值：原始金额保留金额格式，输入份额 0.253 则使用 percent。组装器不再把原始指标格式复制到归一化轴。浏览器核对轴上的 0 / 0.5 / 1 应显示 0% / 50% / 100%，同时核对 tooltip 的输入值读法。
+
+同轴指标混用普通数字、比例或百分数格式时，组装器发出 `SHARED_AXIS_FORMAT_MISMATCH` 提示，不阻断输出。格式不是业务单位：依据 `chart-contract.md` 核对数据与尺度，必要时修正映射或换算后重新组装；格式差异有合理依据时保留。没有提示也不代表量纲已通过验证。
+
 常用组件只在 Plan 要求或实际阅读需要时设置：
 
 - 标签：`label.enable`、`label.showValue`、`label.labelPosition`（不是 `visible / position`）。

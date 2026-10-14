@@ -1,7 +1,7 @@
 {
   "skill": "data-storytelling",
   "sourceBranch": "codex/data-storytelling-skills",
-  "runtimeCommit": "54e265131209a7210f45622711291c1a7a70dced",
+  "runtimeCommit": "b094f0a5f115c5b86708094b92133134600358c5",
   "sourceRuntime": "skills/data-storytelling",
   "excluded": [
     "addr/",
@@ -15,7 +15,9 @@
     "evals/data-storytelling-workspace/tests/test_story_motion_runtime.py": "ae73b04959c653611ebafb3448968415785da29fecff3e6659c9682bb94690c5",
     "evals/data-storytelling-workspace/tests/test_story_text_layout_runtime.py": "7a2124008e2da268f5cd90511c4b19d1c32838d9bfa71efd977385f8bc891456",
     "evals/data-storytelling-workspace/tests/test_validate_js.py": "4bd5ec718f5ae68237467cfaf309bceb2c494f83a180c0e6cd22683b82e98813",
-    "evals/data-storytelling-workspace/tests/test_compose_template_cdn.py": "7d1798c36e2e7380ceaf86e7b227de008ccd6a3299bed242ce7064f76cd7c62e"
+    "evals/data-storytelling-workspace/tests/test_compose_template_cdn.py": "7d1798c36e2e7380ceaf86e7b227de008ccd6a3299bed242ce7064f76cd7c62e",
+    "ai/skill-workspaces/data-storytelling/tests/test_chart_numeric_scales.py": "64212137c2bf3508587560f21d5c6033b666fb1ba0540d522ca97e452e986184",
+    "ai/skill-workspaces/data-storytelling/tests/percent-axis-runtime.test.cjs": "85858491b5e1755f4f78714b7338503b85021a27fbcf4df2e451676ef6a53a1c"
   },
   "testSnapshotNote": "Hashes identify the upstream test revisions selectively adapted here; VSeed runtime, JS validation and CDN contract snapshots were refreshed for the 0.6.5 migration. Other hashes remain from the initial import. Current uncommitted source governance tests and the internal eval adapter are not migrated; source files are untouched.",
   "cases": {
@@ -28,5 +30,32 @@
   "modelCaseStatus": {
     "story-retention-html": "failed-token-budget",
     "others": "not-run"
-  }
+  },
+  "initialRuntimeCommit": "54e265131209a7210f45622711291c1a7a70dced",
+  "runtimeCommitNote": "Latest upstream commit selectively synchronized; not a verbatim runtime snapshot. Keep initialRuntimeCommit and incrementalSyncs to reproduce the public adaptation.",
+  "incrementalSyncs": [
+    {
+      "commit": "b094f0a5f115c5b86708094b92133134600358c5",
+      "publicBaseCommit": "4e5788f6e1d35bc97174464315cdbc333835a198",
+      "runtimeFiles": [
+        "skills/data-storytelling/SKILL.md",
+        "skills/data-storytelling/build-ppt/BUILD.md",
+        "skills/data-storytelling/references/chart-contract.md",
+        "skills/data-storytelling/references/vseed-generation.md",
+        "skills/data-storytelling/scripts/local_chart_specs.py"
+      ],
+      "testAdaptations": {
+        "ai/skill-workspaces/data-storytelling/tests/test_chart_numeric_scales.py": "tests/data_storytelling/test_chart_numeric_scales.py",
+        "ai/skill-workspaces/data-storytelling/tests/percent-axis-runtime.test.cjs": "tests/test_story_vseed.cjs (two percent-axis integration tests)"
+      },
+      "scope": "Committed runtime diff plus selected deterministic regressions only. Exclude source governance, private evaluation materials, URL publisher/controller changes and uncommitted semantic experiments.",
+      "preservedAdaptations": [
+        "Public dependency URLs and existing pinned versions",
+        "Unsupported private infographic rendering remains removed",
+        "Local Python imports and confined asset paths",
+        "f9831e6 mergeThemeDefaults prototype-pollution fix",
+        "Public per-Skill evaluation cases and browser smoke layout"
+      ]
+    }
+  ]
 }

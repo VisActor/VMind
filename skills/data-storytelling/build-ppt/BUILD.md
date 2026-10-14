@@ -179,6 +179,7 @@ Build 不配置页面效果，不输出效果相关的 `data-*` 属性、class�
 - [ ] 每张 slide 都有合法 `data-slide-type`、`data-layout` 和固定 shell；没有未登记 wrapper、slot、class 或 page-level treatment
 - [ ] 图表来自 `spec_map.json`；plan 声明 Charts 时，`spec_map.json` 非空，最终 HTML 包含对应 `data-chart-id` 的 `chart-frame`
 - [ ] deck 保持 plan 的 chapter 顺序、Role、Pattern、Claim、Story Breaks 和顶层 Methodology 边界；可见数字、单位、时间范围与 `plan.md` / Key Numbers 精确匹配
+- [ ] 实际图表的轴、标签和 tooltip 符合 `chart-contract.md` 与 `vseed-generation.md` 的数值约定；发现证据或映射错误时回到对应的分析 / Plan / 配置修正并重新构建，不只手改最终 HTML
 - [ ] 证据和素材只来自 plan、`spec_map.json` 与 `resolved_asset_bindings.json`；没有新增 quote、临时图片、流程步骤、asset prompt / brief、素材缺失说明、空 asset 容器或坏图片引用
 - [ ] 最后一章有明确收束表达；`closing` 如存在，只出现一次且位于最后，`Story Breaks` 只出现在指定 chapter 之后且不新增数据结论
 - [ ] 已执行 `validate_js.py runtime/output-ppt.html` 且通过
