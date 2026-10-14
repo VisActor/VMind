@@ -1,4 +1,4 @@
-# VisActor Agent Skills
+# VisActor Skills
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
