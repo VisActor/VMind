@@ -53,8 +53,42 @@ def synchronize_number_formats(spec: dict[str, Any]) -> None:
         else ("xAxis", "yAxis")
     )
     for axis in axes:
+        # Percent stacks plot normalized coordinates regardless of input units.
+        # A raw measure formatter is valid for tooltips, not for the 0..1 axis.
+        percent_axis = {"columnPercent": "yAxis", "barPercent": "xAxis"}.get(spec["chartType"])
+        if axis == percent_axis:
+            config = spec.get(axis, {})
+            fmt = config.get("numFormat") if isinstance(config, dict) else None
+            if isinstance(fmt, dict) and (fmt.get("type") != "percent" or fmt.get("ratio", 1) != 1):
+                raise ValueError(
+                    f"{axis}: {spec['chartType']} uses normalized 0..1 coordinates. "
+                    "Omit the axis format or use numFormat.type=percent without scaling; "
+                    "number + suffix=% would display 1% instead of 100%."
+                )
+            continue
         measures = [measure for measure in spec["measures"] if measure["encoding"] == axis]
         formats = [measure.get("numFormat") for measure in measures]
+        # Display formats suggest a scale mismatch, but cannot prove units.
+        # Keep semantic review advisory instead of blocking valid ratio data.
+        format_conventions = set()
+        for fmt in formats:
+            if not isinstance(fmt, dict):
+                continue
+            if fmt.get("type") == "percent":
+                format_conventions.add("fraction")
+            elif fmt.get("type") == "number":
+                format_conventions.add(
+                    "percentage-points" if fmt.get("suffix") == "%" else "number"
+                )
+        if len(format_conventions) > 1:
+            _LOGGER.warning(
+                "WARNING SHARED_AXIS_FORMAT_MISMATCH axis=%s measures=%s: "
+                "Display conventions differ on one numeric axis; formats alone cannot establish units. "
+                "Check Plan/data comparability; use independent axes or documented conversions if needed. "
+                "Keep valid mappings when the difference is intentional.",
+                axis,
+                ",".join(measure["id"] for measure in measures),
+            )
         if (
             not formats
             or not isinstance(formats[0], dict)
