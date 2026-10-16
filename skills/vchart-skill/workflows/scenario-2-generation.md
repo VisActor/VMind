@@ -250,8 +250,6 @@ vchart.renderAsync();
 
 推荐使用 `scripts/generate_demo_html.py` 脚本，通过 spec 文件生成可运行 HTML。
 
-脚本需要 Python 3.9+ 和 Node.js（`node` 在 PATH 中），无需安装 npm 包。缺少宿主全局对象时校验会提示 `RUNTIME_VALIDATION_DEFERRED`，仍需打开 HTML 验证实际渲染。
-
 > 💡 **参数详情**：参见 [脚本参数参考](../references/SCRIPT_PARAMS_REFERENCE.md#generate_demo_htmlpy)
 
 #### 脚本使用示例
