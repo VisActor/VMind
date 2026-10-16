@@ -97,6 +97,10 @@ python3 skills/vchart-skill/scripts/generate_diagnosis_html.py \
 
 **用途**：生成 VChart 配置示例演示 HTML
 
+**运行环境**：Python 3.9+ 和 Node.js，`node` 命令必须在 `PATH` 中；无需安装 npm 包。先用 `python3 --version` 和 `node --version` 检查环境，缺少 Node.js 时先安装再执行。
+
+脚本默认检查 JavaScript 语法，并对可在独立环境执行的配置检查已知 API 错误。若源码依赖 `window`、`document`、`VChart` 等宿主全局对象，会打印 `RUNTIME_VALIDATION_DEFERRED` 提示，生成 HTML 后由浏览器使用真实环境执行 Spec 检查。生成成功不代表浏览器渲染或视觉验收通过；需要打开 HTML 检查图表和错误信息。
+
 **适用场景**：
 
 - [scenario-2-generation.md](../workflows/scenario-2-generation.md)（配置生成）
@@ -112,6 +116,7 @@ python3 skills/vchart-skill/scripts/generate_diagnosis_html.py \
 | `--tips`      | string | ❌   | `"补充编辑提示"`                 | 编辑提示，指导用户可调整的配置项        |
 | `--spec-file` | path   | ❌   | 使用内置示例                     | 包含完整 VChart spec 配置的 JS 文件路径 |
 | `--output-dir` | path  | ❌   | -                                | 调用方输出目录（绝对路径或相对于命令当前工作目录），输出文件固定为 `demo.html` |
+| `--validate` | flag | ❌ | 默认执行校验 | 兼容参数；不改变默认校验行为 |
 
 ### Spec 文件格式
 

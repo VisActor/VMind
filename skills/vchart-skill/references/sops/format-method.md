@@ -467,3 +467,12 @@ tooltip: { mark: { content: [{ valueFormatter: '{value:.1%}' }] } }
 - 用户在讨论配置 → 输出 JavaScript 代码片段
 - 用户需要可运行 demo → 参考 `workflows/scenario-2-generation.md` 的输出规范生成完整 HTML
 - 用户有现有代码需要修复 → 参考 `workflows/scenario-1-diagnosis.md` 的输出规范
+
+
+## 配置与交付边界
+
+`label.formatter` / `nonLeafLabel.formatter` 是模板字符串（或字符串数组），不能传函数。函数使用 `formatMethod: (text, datum) => ...`。类型以 [ILabelSpec](../type-details/ILabelSpec-Type-Definition.md) 为准，不把其他库的 `formatter` 约定搬来。
+
+Tooltip 的 `mark.title.value` 和 `mark.content[].value` 可以是函数；字符串格式化使用其专属 `keyFormatter` / `valueFormatter`。不要把所有叫 formatter 的字段或所有函数统一替换。详见 [ITooltipSpec](../type-details/ITooltipSpec-Type-Definition.md)。
+
+Treemap 的布局 datum 与原始记录不同，颜色、文字、tooltip 需要统一解包，参见 [层级数据](hierarchy-data.md)。需要占比时从实际输入求和；多行文本使用字符串数组。用户要求完整文本时，空间不足应隐藏或换行、保留 tooltip，不能以省略号冒充完整显示；允许省略时可采用相应策略。

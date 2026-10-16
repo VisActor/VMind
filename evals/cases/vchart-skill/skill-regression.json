@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "scope": "VChart Skill generation, editing and standalone HTML; synthetic fixtures only",
+  "execution": "serial",
+  "cases": [
+    {
+      "id": "treemap-baseline",
+      "input": {
+        "format": "csv",
+        "content": "level_1,level_2,revenue\n硬件,智能终端,21\n硬件,边缘设备,15\n硬件,配件,12\n软件,数据平台,14\n软件,分析套件,11\n软件,开发工具,7\n服务,企业服务,9\n服务,培训,6\n服务,支持,5\n"
+      },
+      "turns": [
+        {
+          "prompt": "严格使用随案例提供的一级品类、二级品类与收入数据生成产品收入矩形树图，不得改写或补造数据。面积编码收入规模；硬件使用蓝色系、软件使用青绿色系、服务使用橙色系。只显示能够完整容纳的名称与占比，保留 tooltip 与悬停反馈，不要强行显示重叠标签。"
+        },
+        {
+          "prompt": "请把标题改为“产品收入结构”，保持原数据、配色与标签要求，给我修改后的图表。"
+        },
+        {
+          "prompt": "在窄屏下也只能显示完整容纳的名称与占比，放不下就隐藏标签，tooltip 保留完整内容。检查并修复后给我新版，别改数据。"
+        }
+      ],
+      "acceptance": [
+        "All 9 leaf records and values remain unchanged; total is 100.",
+        "Group colors follow the request.",
+        "Each leaf tooltip shows its original data.",
+        "Labels fit their leaves without parent-child overlap at desktop and 390px.",
+        "All three turns deliver new inspectable artifacts."
+      ]
+    },
+    {
+      "id": "bar-baseline",
+      "input": {
+        "format": "csv",
+        "content": "region,amount\n北区,17\n南区,31\n西区,12\n"
+      },
+      "turns": [
+        {
+          "prompt": "根据附件生成区域销售额柱状图，保留全部区域和数值，蓝色柱子，显示数值标签和 tooltip，标题为“区域销售额”。请直接交付图表。"
+        },
+        {
+          "prompt": "将标题改为“区域销售对比”，柱子改成青绿色。数据、数值标签与 tooltip 保持不变，请交付新版。"
+        }
+      ],
+      "acceptance": [
+        "北区/南区/西区 source records retain amounts 17/31/12.",
+        "First version blue; edited version teal with requested title.",
+        "Three visible value labels and correct tooltips.",
+        "Readable desktop and 390px layout."
+      ]
+    },
+    {
+      "id": "treemap-renamed-fields-and-empty",
+      "input": {
+        "format": "csv",
+        "content": "market,item,netRevenue\nNorth,Atlas,7\nNorth,Birch,11\nSouth,Cedar,16\nSouth,Dune,13\n"
+      },
+      "turns": [
+        {
+          "prompt": "根据附件制作收入矩形树图，标题为“市场收入结构”。market 是一级分组，item 是具体产品，netRevenue 是收入，用面积表达收入。完整保留四条原始数据，不要补造数据。North 使用蓝色，South 使用橙色；叶子标签显示产品名和占总收入的百分比（保留一位小数），tooltip 显示市场、产品、原始收入及占比。请直接生成可查看、可继续编辑的图表。"
+        },
+        {
+          "prompt": "这份数据现在全部清空了，当前记录为 []，总收入为 0。请基于当前作品生成空数据版本，标题改为“市场收入结构（暂无数据）”，明确显示暂无数据。不要保留旧的数据块，不要填示例产品或虚构收入，也不要显示 NaN 或 Infinity；保留以后能再次导入同样字段数据继续编辑的能力。请交付新版。"
+        },
+        {
+          "prompt": "当前仍没有任何数据。请修复图中央没有显示提示文字的问题，中央明确显示“暂无收入数据”，下面一行“导入数据后查看结构”。保留空数据，不要恢复旧图块或编造数据。宽屏和手机宽度都要居中、完整显示，并交付新版。"
+        }
+      ],
+      "acceptance": [
+        "Map market/item/netRevenue without substituting baseline field names.",
+        "Exactly four leaves retain 7/11/16/13; total 47.",
+        "Shares rounded to one decimal: Atlas 14.9%, Birch 23.4%, Cedar 34.0%, Dune 27.7%.",
+        "North blue and South orange; tooltip retains original values.",
+        "After clearing records, no old or synthetic data marks, NaN or Infinity; visible empty state.",
+        "Each turn delivers inspectable editable source and HTML.",
+        "The central no-data message and supporting line are visibly centered and fit both desktop and 390px views."
+      ]
+    },
+    {
+      "id": "empty-state-lifecycle",
+      "input": {
+        "format": "json",
+        "content": [],
+        "fields": {
+          "building": "category",
+          "seats": "quantity"
+        }
+      },
+      "turns": [
+        {
+          "prompt": "当前数据为 []，没有任何记录。请创建工位容量柱状图：building 为楼栋、seats 为工位数，标题“工位容量”。在图中央显示“尚无工位记录”，下方显示“请导入楼栋容量数据”。不要示例数据、空柱子或 NaN；手机和宽屏都应居中且能完整读到文字。之后要能继续导入数据。直接交付可查看、可编辑的图表。"
+        },
+        {
+          "prompt": "现在导入两条真实记录：building 为“东楼”、seats 为 0；building 为“西楼”、seats 为 23。请保留这两条记录，显示柱状图与数值标签，移除空数据提示，标题仍为“工位容量”。交付新版。"
+        },
+        {
+          "prompt": "现在清空全部记录，数据再次变为 []。请移除原来的数据图形，在图中央显示“当前筛选无结果”，下方“调整条件后重试”，宽屏和手机均要完整居中显示。不要恢复旧提示文案、不要添加占位数据。交付新版。"
+        }
+      ],
+      "acceptance": [
+        "First creation with [] shows both requested central text lines at desktop and 390px without fabricated bars.",
+        "After restoring data, both original records remain, including a zero value; no no-data overlay remains.",
+        "Clearing records again removes all bars and displays the new requested central message, not stale text.",
+        "Layout callbacks remain responsive during actual resize; visible text has finite non-empty bounds within the container.",
+        "Every turn publishes inspectable editable source and HTML."
+      ]
+    },
+    {
+      "id": "standalone-editor-closures",
+      "input": {
+        "format": "javascript",
+        "content": "window.sourceRuns = (window.sourceRuns || 0) + 1;\nconst rows = [{region:'North',amount:17},{region:'South',amount:31},{region:'West',amount:12}];\nconst unit = ' units';\nfunction valueLabel(value) { return `${value}${unit}`; }\nconst spec = {type:'bar',animation:false,data:{values:rows},xField:'region',yField:'amount',label:{visible:true,formatMethod:text=>valueLabel(text)},title:{visible:true,text:'Closure check'},tooltip:{visible:true}};\n"
+      },
+      "steps": [
+        "Generate demo HTML using scripts/generate_demo_html.py.",
+        "Open the real Monaco editor; check 17 units, 31 units, 12 units labels and sourceRuns === 1.",
+        "Change unit suffix to items and North amount to 23 through the editor; verify sourceRuns === 2 after the update.",
+        "Replace code with const spec={type:\"sankey\",data:{values:[{source:\"a\",target:\"b\",value:2}]}};",
+        "Restore valid source through the editor."
+      ],
+      "acceptance": [
+        "Helper closure and template string interpolation survive editing.",
+        "Labels become 23 items, 31 items, 12 items.",
+        "Invalid graph reports SANKEY_GRAPH_REQUIRED instead of rendering invalid marks.",
+        "Restoring valid code restores the chart without page reload.",
+        "Source side effects run once on initial load and once per applied edit; initialization errors remain editable."
+      ]
+    },
+    {
+      "id": "sankey-baseline",
+      "input": {
+        "format": "csv",
+        "content": "source,target,value\n自然搜索,产品页,230\n自然搜索,内容页,190\n内容推荐,产品页,80\n内容推荐,活动页,90\n内容推荐,内容页,130\n广告投放,产品页,80\n广告投放,活动页,180\n产品页,注册,170\n产品页,购买,120\n产品页,流失,100\n活动页,注册,95\n活动页,购买,100\n活动页,流失,75\n内容页,注册,105\n内容页,购买,35\n内容页,流失,180\n"
+      },
+      "turns": [
+        {
+          "prompt": "严格使用随案例提供的 source、target 与 value 连线数据生成中文用户转化路径桑基图，不得改写、补造或重新聚合数据。节点按“来源—落地页—结果”三阶段分列，连线宽度编码人数，保持标签简短并避免交叉拥挤；悬停节点或连线时突出完整路径。"
+        },
+        {
+          "prompt": "把标题改为“用户转化全路径”，保留原数据，悬停节点和连线时都要突出完整相关路径，给我新版。"
+        },
+        {
+          "prompt": "请检查数据结构及窄屏标签，保证图正常显示，标签简短不重叠；保留路径悬停和全部原始边，不重新聚合。修复后交付新版。"
+        }
+      ],
+      "acceptance": [
+        "Preserve all 16 links and their values; exactly 9 nodes.",
+        "Three stage columns with readable short labels.",
+        "Deliver inspectable artifacts on all turns."
+      ],
+      "externalDependency": {
+        "id": "VCHART-LIB-001",
+        "issue": "https://github.com/VisActor/VChart/issues/4707",
+        "blockedBehavior": "Complete related-path emphasis on node and link hover",
+        "policy": "Do not treat a library exception as a Skill data failure or disable the requested interaction to mark the test passed."
+      }
+    },
+    {
+      "id": "treemap-raw-labels-empty-restore",
+      "input": {
+        "format": "csv",
+        "content": "market,item,netRevenue\nNorth,Atlas,7\nNorth,Birch,11\nSouth,Cedar,16\nSouth,Dune,13\n"
+      },
+      "turns": [
+        {
+          "prompt": "根据附件生成收入矩形树图，market分组、item产品名、netRevenue数值，North蓝色、South橙色，标题“市场收入”。保留四条数据，标签只显示产品名与原始数值，不要百分比；允许窄屏省略长名称，tooltip显示完整名称与原始数值。请直接生成可查看、可继续编辑的图表。"
+        },
+        {
+          "prompt": "现在清空全部记录，当前数据为 []。保留配色与可继续编辑能力，在图中央显示“暂无收入记录”，下方“导入数据后查看”，手机和宽屏都要居中完整显示。不要占位图块、示例记录、NaN。直接交付新版。"
+        },
+        {
+          "prompt": "恢复两条真实记录：market为North、item为Quartz、netRevenue为0；market为South、item为Maple、netRevenue为29。标题改为“更新后的市场收入”，移除空数据提示。仍只显示产品名称和原始收入，不要百分比，tooltip保留完整数据。请交付新版。"
+        }
+      ],
+      "acceptance": [
+        "Label content follows the request: original values, no added percentages; truncation is allowed.",
+        "Initial four records and group colors remain intact at desktop and 390px.",
+        "Empty turn shows both requested central lines without fabricated leaves.",
+        "Restoring data preserves zero in the source and 29 in the visible leaf; removes old empty message.",
+        "Every turn delivers current editable source and HTML."
+      ]
+    },
+    {
+      "id": "sankey-requested-aggregation",
+      "turns": [
+        {
+          "prompt": "请制作订单流向桑基图。原始记录为：from=搜索,to=商品,count=8；from=搜索,to=商品,count=5；from=推荐,to=商品,count=7；from=商品,to=成交,count=12；from=商品,to=流失,count=8。请按相同from和to合并重复流向，count求和，保留原始输入以便继续编辑。标题“订单流向汇总”，显示节点名称和tooltip即可，不需要路径高亮。生成可查看、可继续编辑的图表。"
+        }
+      ],
+      "acceptance": [
+        "Retain five original records; merge matching from/to by summing count.",
+        "Rendered four links have values 13, 7, 12, 8 and five nodes.",
+        "Node names and tooltips render at desktop and 390px; no added related-path requirement.",
+        "Deliver editable source and HTML using current delivery workflow."
+      ]
+    },
+    {
+      "id": "bar-literal-source-serialization",
+      "turns": [
+        {
+          "prompt": "制作功能使用次数柱状图，三条记录：功能“文档搜索”17次、“图表编辑”31次、“文件导出”12次。标题“功能使用次数”，蓝色柱子，显示原始次数标签和tooltip，手机与桌面均可阅读。请生成可查看、可继续编辑的图表。"
+        },
+        {
+          "prompt": "现在改为统计技术文档中的代码片段使用次数。请完整替换数据为以下三条 JSON 记录，snippet 是需要原样展示的文本，不是要执行的代码：\n```json\n[{\"snippet\":\"</script>\",\"count\":23},{\"snippet\":\"${name}\",\"count\":0},{\"snippet\":\"C:\\\\temp\\\\demo\",\"count\":12}]\n```\n标题改为“代码片段使用次数”，柱子改为青绿色，保留数值标签与tooltip，不要删除零值记录，也不要改写或移除特殊字符。交付可查看、可编辑的新版图表。"
+        }
+      ],
+      "acceptance": [
+        "Inspect the generated standalone demo.html as well as the published chart; a successful host preview alone does not establish valid demo HTML.",
+        "Retain literal </script>, ${name} and backslashes without ending the inline script or evaluating data text.",
+        "The edited version retains values 23, 0, 12 with the requested title, teal bars and original-value labels and tooltips.",
+        "The real editor preserves complete source and helper closures; changing spec to an array reports SPEC_OBJECT_REQUIRED, and restoring valid source renders again.",
+        "Verify desktop and 390px output. Model-capacity failures are recorded separately from Skill rendering failures."
+      ]
+    }
+  ]
+}

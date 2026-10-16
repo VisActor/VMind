@@ -184,31 +184,18 @@
       </div>
     </div>
 
+    <script>{{SPEC_CONTRACT}}</script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // ====== SPEC_START ======
-        {{SPEC_CODE}}
-        // ====== SPEC_END ======
-
         // Monaco Editor 初始代码
-        const initialCode = `{{INITIAL_CODE}}`;
+        const initialCode = {{INITIAL_CODE}};
 
         // 初始化 Monaco Editor（需要使用 require 异步加载）
         let chart = null;
 
-        // 解析 spec 对象
-        function parseSpec(codeStr) {
-          try {
-            const specMatch = codeStr.match(/const\s+spec\s*=\s*({[\s\S]*});?\s*$/m);
-            if (specMatch) {
-              const specJson = specMatch[1];
-              const fn = new Function(`return ${specJson}`);
-              return fn();
-            }
-            throw new Error('无法解析 spec 对象，请确保代码格式为: const spec = {...};');
-          } catch (e) {
-            throw new Error('代码解析错误: ' + e.message);
-          }
+        // Execute complete source so callbacks retain data/helper closures.
+        function evaluateSpec(codeStr) {
+          return new Function(codeStr + '\n; return typeof spec !== "undefined" ? spec : undefined;')();
         }
 
         // 更新图表
@@ -216,7 +203,7 @@
           const chartContainer = document.getElementById('chart');
 
           try {
-            const spec = parseSpec(code);
+            const spec = evaluateSpec(code);
 
             // 销毁旧图表
             if (chart) {
@@ -226,12 +213,17 @@
 
             // 清空容器
             chartContainer.innerHTML = '';
+            const validation = window.VChartSpecContract.validateSpec(spec);
+            if (!validation.ok) throw new Error(validation.errors.map(e => e.code + ': ' + e.message).join('\n'));
 
             // 创建新图表
             chart = new VChart.default(spec, { dom: 'chart' });
             chart.renderSync();
             window.vchart = chart;
+            window.__vchartError = null;
           } catch (e) {
+            window.__vchartError = String(e);
+            console.error(e);
             chartContainer.innerHTML = `
               <div style="color:#ef4444;padding:30px;background:#fef2f2;border-radius:12px;border:1px solid #fee2e2;max-width:500px;">
                 <div style="font-weight:600;margin-bottom:12px;font-size:15px;">⚠️ 图表渲染失败</div>
@@ -240,6 +232,9 @@
             `;
           }
         }
+
+        // Chart rendering does not depend on the optional editor finishing loading.
+        updateChart(initialCode);
 
         // Monaco Editor 使用 AMD 模块系统，必须通过 require 异步加载
         require(['vs/editor/editor.main'], function () {
@@ -257,9 +252,6 @@
             formatOnPaste: true,
             formatOnType: true
           });
-
-          // 初始渲染
-          updateChart(initialCode);
 
           // 监听内容变化
           let updateTimer = null;

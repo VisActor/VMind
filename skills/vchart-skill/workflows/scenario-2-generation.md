@@ -31,6 +31,8 @@
 
 ## 通用步骤
 
+创建或更新产物均遵循 [校验与交付](artifact-delivery.md)。按 SOP 路由表核对数据契约，再设置可选配置。
+
 ### 步骤 1：意图识别
 
 **使用 `topkey/*.json` 将用户自然语言映射到配置项**：
@@ -248,6 +250,8 @@ vchart.renderAsync();
 
 推荐使用 `scripts/generate_demo_html.py` 脚本，通过 spec 文件生成可运行 HTML。
 
+脚本需要 Python 3.9+ 和 Node.js（`node` 在 PATH 中），无需安装 npm 包。缺少宿主全局对象时校验会提示 `RUNTIME_VALIDATION_DEFERRED`，仍需打开 HTML 验证实际渲染。
+
 > 💡 **参数详情**：参见 [脚本参数参考](../references/SCRIPT_PARAMS_REFERENCE.md#generate_demo_htmlpy)
 
 #### 脚本使用示例
@@ -277,7 +281,7 @@ python3 scripts/generate_demo_html.py \
 - `--tips`：编辑提示（指导用户可调整的配置项）
 - `--output-dir`：调用方输出目录；接受绝对路径或相对于命令当前工作目录的路径
 
-示例中的 `./chart-output` 应替换为调用方指定的目录。最终答复 使用实际生成文件的路径，HTML 路径以脚本报告为准。
+示例中的 `./chart-output` 应替换为调用方指定的目录；文件交付遵循 [校验与交付流程](artifact-delivery.md)。
 
 #### Spec 文件结构
 

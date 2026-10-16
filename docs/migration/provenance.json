@@ -262,5 +262,25 @@
   "currentSkillNames": {
     "vchart-development-assistant": "vchart-skill",
     "vtable-development-assistant": "vtable-skill"
-  }
+  },
+  "incrementalSyncs": [
+    {
+      "sourceCommit": "e6dacaa57326c31a71f7ad333979537e4742e734",
+      "sourceSkill": "vchart-development-assistant",
+      "targetSkill": "vchart-skill",
+      "scope": "Complete-source editor and safe serialization, shared graph/hierarchy/custom-mark validation, concise delivery and chart guidance, focused tests and synthetic serial cases.",
+      "preservedAdaptations": [
+        "Public pinned CDN dependencies",
+        "Local keyword retrieval and public tooltip SOPs",
+        "Independent installation and output paths",
+        "Explicit Node.js dependency diagnostics",
+        "Rendering before optional Monaco loads",
+        "Public error diagnostics and window.vchart inspection"
+      ],
+      "deferred": [
+        "Responsive media-query repair",
+        "VChart Sankey related-path and HTML tooltip-title library fixes"
+      ]
+    }
+  ]
 }

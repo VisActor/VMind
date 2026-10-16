@@ -17,6 +17,9 @@ VChart 示例 HTML 生成脚本
 from __future__ import annotations
 
 import argparse
+import json
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -27,25 +30,26 @@ def get_script_dir() -> Path:
     return Path(__file__).parent.resolve()
 
 
-def escape_js_string(s: str) -> str:
-    """转义 JavaScript 字符串中的特殊字符"""
-    s = s.replace("\\", "\\\\")
-    s = s.replace("`", "\\`")
-    s = s.replace("\n", "\\n")
-    return s
-
-
 def validate_spec_code(spec_code: str) -> bool:
-    """验证 spec 代码基本格式"""
-    # 检查是否包含基本的 spec 结构
-    if (
-        "const spec" not in spec_code
-        and "let spec" not in spec_code
-        and "var spec" not in spec_code
-    ):
-        return False
-    if "type:" not in spec_code:
-        return False
+    """Check source and known API mistakes; never claim browser acceptance."""
+    node = shutil.which("node")
+    if not node:
+        raise RuntimeError(
+            "Node.js is required for Spec validation; install Node.js "
+            "and ensure the node command is on PATH."
+        )
+    result = subprocess.run(
+        [node, str(get_script_dir() / "validate_spec.cjs"), "--stdin"],
+        input=spec_code,
+        capture_output=True,
+        text=True,
+        timeout=5,
+    )
+    if result.returncode:
+        raise ValueError("Spec validation failed: " + (result.stdout or result.stderr).strip())
+    report = json.loads(result.stdout)
+    for warning in report.get("warnings", []):
+        print(f"⚠️ {warning['code']}: {warning['message']}", file=sys.stderr)
     return True
 
 
@@ -74,7 +78,9 @@ def main():
         parser.add_argument("--spec-file", help="包含完整 spec 代码的文件路径")
         parser.add_argument("--output-dir", help="输出目录：绝对路径或相对于当前工作目录的路径")
         parser.add_argument("--output", default="output/demo.html", help="输出 HTML 文件路径")
-        parser.add_argument("--validate", action="store_true", help="验证 spec 代码格式")
+        parser.add_argument(
+            "--validate", action="store_true", help="兼容参数：语法及可独立执行的 Spec 校验默认执行"
+        )
         args = parser.parse_args()
 
         # 检查模板文件
@@ -99,10 +105,6 @@ def main():
 
             spec_code = spec_path.read_text(encoding="utf-8")
 
-            # 验证 spec 代码格式
-            if args.validate and not validate_spec_code(spec_code):
-                print("⚠️  警告: Spec 代码格式可能不正确", file=sys.stderr)
-                print("   请确保包含 'const spec = {...}' 和 'type: \"...\"'", file=sys.stderr)
         else:
             # 使用内置示例
             spec_code = """const spec = {
@@ -121,15 +123,18 @@ def main():
 };"""
             print("ℹ️  使用内置示例 spec", file=sys.stderr)
 
-        # 转义 spec 代码供 JavaScript 字符串使用
-        initial_code_escaped = escape_js_string(spec_code.strip())
+        validate_spec_code(spec_code)
+        initial_code_json = json.dumps(spec_code, ensure_ascii=False).replace("<", "\\u003c")
 
-        # 填充 spec 和 initialCode 模板变量
-        html = html.replace("{{SPEC_CODE}}", spec_code)
-        html = html.replace("{{INITIAL_CODE}}", initial_code_escaped)
+        # Embed source only as data; initial render and edits share one evaluator.
+        html = html.replace(
+            "{{SPEC_CONTRACT}}",
+            (get_script_dir() / "spec-contract.cjs").read_text(encoding="utf-8"),
+        )
+        html = html.replace("{{INITIAL_CODE}}", initial_code_json)
 
         # 检查模板占位符是否都被替换
-        if "{{SPEC_CODE}}" in html or "{{INITIAL_CODE}}" in html:
+        if "{{SPEC_CONTRACT}}" in html or "{{INITIAL_CODE}}" in html:
             print("❌ 错误: 模板占位符替换失败", file=sys.stderr)
             print(f"💡 提示: 请检查模板文件: {template_path}", file=sys.stderr)
             sys.exit(1)
