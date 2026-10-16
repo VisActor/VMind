@@ -32,6 +32,8 @@
 | 诊断 Workflow | `workflows/scenario-1-diagnosis.md` |
 | React 诊断 Workflow | `workflows/scenario-1-react.md` |
 | 生成 Workflow | `workflows/scenario-2-generation.md` |
+| 新建/修复文件校验与交付 | `workflows/artifact-delivery.md` |
+| 层级图数据与回调 | `references/sops/hierarchy-data.md` |
 | 图片还原 Workflow | `workflows/scenario-3-image-replication.md` |
 | 图表类型选择 | `references/chart/chart-type-guide.md` |
 | 常见问题 | `references/chart/common-issues.md` |
@@ -98,6 +100,7 @@
 
 | 图表类型 / 需求 | 固定路径 |
 | --- | --- |
+| Treemap 层级字段、颜色、标签与 tooltip | `references/examples/treemap/hierarchy-treemap.js`（先读 `references/sops/hierarchy-data.md`） |
 | 基础柱状图 | `references/examples/bar/basic-bar.md` |
 | 分组柱状图 | `references/examples/bar/grouped-bar.md` |
 | 堆叠柱状图 | `references/examples/bar/stacked-bar.md` |
@@ -117,14 +120,9 @@
 - `waterfall`、复杂交互、多图联动等如果没有固定本地 example，优先本地检索；检索无命中时直接基于 `type-meta`、`topkey` 和现有知识构建。
 - 不允许为了找“更像的例子”而扫描本地 example 目录。
 
-## SOP 直达表
+## SOP 入口
 
-| 场景 | 固定路径 |
-| --- | --- |
-| CDN / HTML 适配 | `references/sops/cdn-script-adaption.md` |
-| formatter / formatMethod | `references/sops/format-method.md` |
-| tooltip 基础用法 | `references/sops/tooltip-usage.md` |
-| tooltip / crosshair 联动 | `references/sops/tooltip-crosshair-sync.md` |
+任务到参考文件的映射统一维护在 [SOP 索引](sops/SOP_INDEX.md)。按图表类型和当前需求读取匹配项。
 
 ## API 直达表
 

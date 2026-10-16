@@ -32,7 +32,7 @@ npx skills add VisActor/skills --skill data-storytelling
 
 - Node.js 和 npm，用于执行上述安装命令。
 - 具备文件系统和 Shell 工具的 Agent，以及该 Agent 自身的模型访问权限。
-- VChart/VTable 脚本需要 Python 3.9+；data-storytelling 需要 Python 3.10+ 和 Node.js（校验 JavaScript）。脚本使用 Python 标准库。
+- VChart/VTable 脚本需要 Python 3.9+；data-storytelling 需要 Python 3.10+。VChart 演示 HTML 生成和 data-storytelling 的 JavaScript 校验还需要 Node.js，确保 `node` 命令在 `PATH` 中。这些脚本仅使用 Python 标准库和 Node.js 内置模块，运行时无需安装 npm 包。
 - 浏览器和网络连接，用于打开生成的 HTML。模板通过公开的 unpkg CDN 加载固定版本的 VChart/VTable、React（需要时）和 Monaco，因此并非完全离线运行。data-storytelling 另加载固定版本的 VSeed 与 GSAP。
 
 VChart 知识检索在本地读取随 Skill 附带的示例和 SOP，采用关键词匹配，无需托管的语义检索服务。未匹配的问题可继续查阅内置类型定义与 API 参考资料。

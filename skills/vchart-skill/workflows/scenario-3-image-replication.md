@@ -214,7 +214,7 @@ python3 skills/vchart-skill/scripts/generate_demo_html.py \
 - `--tips`：可调整的关键配置（如：color/label/axes）
 - `--output-dir`：调用方输出目录；接受绝对路径或相对于命令当前工作目录的路径
 
-示例中的 `./chart-output` 应替换为调用方指定的目录。最终答复 使用实际生成文件的路径，HTML 路径以脚本报告为准。
+示例中的 `./chart-output` 应替换为调用方指定的目录；文件交付遵循 [校验与交付流程](artifact-delivery.md)。
 
 #### Spec 文件结构
 

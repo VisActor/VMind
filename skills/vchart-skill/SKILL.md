@@ -8,6 +8,7 @@ description: VChart图表库专家助手，擅长创建、配置和调试VChart�
 ## 独立运行环境
 
 - Python 3.9+；生成脚本仅使用标准库。脚本路径相对于本 Skill 安装目录，数据和输出路径相对于命令工作目录。
+- 生成演示 HTML 还需要 Node.js（`node` 命令在 `PATH` 中），仅使用内置模块，无需安装 npm 包。可用 `python3 --version` 和 `node --version` 检查环境；缺少 Node.js 时请先安装。
 - 将示例中的 `<SKILL_DIR>` 或仓库相对路径替换为实际安装目录；不要假设调用方拥有源仓库。
 - HTML 在浏览器中通过公开 unpkg CDN 加载固定版本的图表库和编辑器，需要网络；不需要 VisActor 托管 API、登录或模型 Key。本 Skill 使用宿主 Agent 的模型。
 - 不要修改已安装的 Skill 文件；只在用户指定的输出目录写入产物。确认数据来自用户提供的完整输入。
@@ -135,6 +136,8 @@ python3 scripts/search_knowledge.py --kind examples --query "双轴组合图 销
 - 文档中的 `./chart-output` 是独立使用示例；调用方指定目录时替换为该目录。通过已加载 skill 的实际路径定位脚本，不要依赖命令从某个特定目录运行。
 - 源代码与生成 HTML 保存在输出目录。续改以调用方指定的现有源文件为基础，保留未要求更改的内容。
 - 最终答复简要说明结果并链接真实的源文件和 HTML；HTML 路径以脚本成功输出为准。只有调用方明确要求结构化输出时才返回 JSON，不强制内部平台的代码块协议。
+- 创建、修改或修复文件后执行 [校验与交付流程](workflows/artifact-delivery.md)，交付本轮源码和 HTML。
+- 已知图表类型，或涉及空数据、格式化、交互时，按 [SOP 索引](references/sops/SOP_INDEX.md) 读取匹配的契约；本地检索未命中也不能跳过。
 
 ---
 
@@ -460,13 +463,13 @@ python3 scripts/search_knowledge.py --kind examples --query "双轴组合图 销
 
 ## 输出规范
 
-所有场景处理完成后，**必须输出可直接运行的 HTML 文件**，不得只返回 spec 片段。
+新建图表或实际修改产物时，**必须交付可直接运行的 HTML 文件**和完整源文件，不得只返回 spec 片段。纯解释未修改文件时按宿主的消息协议回答。
 
 ### 模板选择与硬约束
 
 | 场景                | 使用模板                        | 强制要求                                            |
 | ------------------- | ------------------------------- | --------------------------------------------------- |
-| 配置生成 / 视觉还原 | `template/demo.html`            | 替换标题/描述占位；替换 `{{SPEC_CODE}}` 为完整 spec |
+| 配置生成 / 视觉还原 | `template/demo.html`            | 由生成器注入完整源码和共享校验器 |
 | 问题诊断（纯 JS）   | `template/diagnosis.html`       | 嵌入用户代码/问题点，并给出修复后 spec              |
 | 问题诊断（React）   | `template/diagnosis-react.html` | React 场景输出 React 诊断 HTML                      |
 | API 交互增强        | `template/demo.html`            | 包含 spec + 事件监听 + 交互函数 + 控制按钮          |
@@ -474,7 +477,7 @@ python3 scripts/search_knowledge.py --kind examples --query "双轴组合图 销
 **输出校验清单**（回答时提醒用户可直接保存为 .html 打开）：
 
 - 包含对应模板的完整 HTML（含 CDN 引用），非截断/片段
-- 替换 `{{SPEC_CODE}}` 为完整 spec（或修复后的 spec）
+- 使用生成器嵌入完整源码，保留 helper 与回调闭包；不手工拼接可执行源码
 - 标题/描述占位已替换；如无描述填入简短用途
 - 如需本地预览，建议 `python3 -m http.server 8000`
 

@@ -150,3 +150,12 @@ VChart.default.useRegisters([VChart.registerBarChart, VChart.registerTooltip]);
 | `Cannot read properties of undefined (reading 'uniqueTooltip')` | `VChart.globalConfig` 不存在 | 改为 `VChart.default.globalConfig` |
 | `VChart.ThemeManager is undefined` | 直接访问 ThemeManager | 改为 `VChart.default.ThemeManager` |
 | `registerFormatPlugin is not defined` | 在 CDN 中使用了 import 变量名 | 改为 `VChart.registerFormatPlugin` |
+
+
+## 配置与交付边界
+
+纯浏览器 HTML 使用已加载的 UMD 命名空间，构造器是 `window.VChart.default || window.VChart`。npm 示例的 import 不可直接放进普通 script。完整 UMD 已包含常规图表；按需构建才需核对图表注册。报空白不能直接归因于注册：先核对当前源码的数据结构和真实错误。
+
+保持模板/宿主指定的版本，不为试错擅自升级 CDN。配置脚本提供 `spec` 对象，交给宿主或模板构造图表；不要在配置里重复创建实例。构造和 `renderSync()` 完成不等于有数据图形，须检查实际结果。
+
+如确实使用额外插件，先核对该版本的导出及注册方式；不要假设 UMD 命名空间与 npm 默认导出完全相同。生成标准演示使用 Skill 生成器，独立 HTML 也执行配置校验。

@@ -32,7 +32,7 @@ Requirements:
 
 - Node.js and npm to run the installation commands above.
 - An agent with filesystem and shell tools, plus its own model access.
-- Python 3.9+ for VChart/VTable; Python 3.10+ and Node.js (JavaScript validation) for data-storytelling. Python scripts use the standard library.
+- Python 3.9+ for VChart/VTable; Python 3.10+ for data-storytelling. VChart demo HTML generation and data-storytelling JavaScript validation also require Node.js, with `node` available on `PATH`. These scripts use only Python's standard library and Node.js built-in modules; no npm packages are required to run them.
 - A browser and internet access for generated HTML. Templates fetch pinned VChart/VTable, React (when needed), and Monaco packages from the public unpkg CDN. Data-storytelling also loads pinned VSeed and GSAP. This is not a fully offline bundle.
 
 VChart knowledge search reads bundled example/SOP files locally. It uses keyword matching, not a hosted semantic search service; unmatched questions fall back to the included type and API references.
